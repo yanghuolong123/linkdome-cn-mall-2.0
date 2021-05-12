@@ -1,0 +1,45 @@
+.ivu-select-selection{
+  height: 42px!important;
+  line-height: 42px!important;
+}
+.ivu-select .ivu-select-dropdown{
+  max-height: 210px!important;
+}
+/*选择框相关样式*/
+.selector-container input,.selector-container .ivu-select-selected-value,.selector-container .ivu-select-selection{
+  height: 42px!important;
+  line-height: 42px!important;
+}
+.selector-container{
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  .el-tag{
+    max-width: 60%!important;
+  }
+  .flex-center+.flex-center{
+    margin-top:15px;
+  }
+  .w-select{
+    width: 230Px;//Px不会转rem，勿删
+  }
+  .el-cascader__search-input{
+    height: 28px!important;
+    line-height: 28px!important;
+    min-width: 45px!important;
+    margin-left: 10px!important;
+  }
+  .el-cascader__tags{
+    flex-wrap: nowrap;
+  }
+}
+/*边框样式*/
+.common-card{
+  border-radius: 6px;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0px 0px 18px 0px rgba(160, 163, 164, .5);
+  &:hover{
+    border:1px solid #23aeee;
+  }
+}
