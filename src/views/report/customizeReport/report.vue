@@ -25,7 +25,7 @@
 		<div class="pdf-text-box" v-if="showPDF">
 			<!-- 封面 -->
 			<report-cover
-				:pageTotal='`${12+allHeatMap.length}`'
+				:pageTotal='`${10}`'
 				titleName='凌图智慧报告'
 				:suggestText='suggestText'
 			></report-cover>
@@ -52,11 +52,6 @@
 				:tableData='tableData'
 			></report-week-five>
 			
-			<!-- <report-gate-table title='出入口客流' page='3'
-			  :listTitle='gateTitle'
-			  :tableColumn='gateTableColumn'
-			  :tableData='gateTableData'
-			></report-gate-table> -->
 			
 			<!-- 店铺 -->
 			<report-chart :chartHeight='600' :clickData='clickData' title='店铺客流' page='6' :listTitle='shopTitle'
@@ -69,29 +64,29 @@
 			<report-chart-multi title='店铺客流' page='8' :listTitle='formatStoreTitle'
 													:dataList='allFormatStore'></report-chart-multi>
 			<!-- 热力图 -->
-			<report-heat-map
-				:key="'heatMap'+index"
-				v-for="(item,index) in allHeatMap"
-				title='热力图'
-				:mapUrl="item.mapUrl"
-				:page='`${9+index}`'
-				:listTitle='item.title'
-				:dataList=item.data
-				:isRemark='false'
-				:chartHeight='600'
-			></report-heat-map>
+<!--			<report-heat-map-->
+<!--				:key="'heatMap'+index"-->
+<!--				v-for="(item,index) in allHeatMap"-->
+<!--				title='热力图'-->
+<!--				:mapUrl="item.mapUrl"-->
+<!--				:page='`${9+index}`'-->
+<!--				:listTitle='item.title'-->
+<!--				:dataList=item.data-->
+<!--				:isRemark='false'-->
+<!--				:chartHeight='600'-->
+<!--			></report-heat-map>-->
 			<!-- 店铺关联 有序-->
-			<report-table title='店铺关联' :listTitle='orderlyTitle' :tableData='orderlyData'
-										:page='`${9+allHeatMap.length}`'></report-table>
-			<!-- 店铺关联 无序-->
-			<report-table title='店铺关联' :listTitle='disorderTitle' :tableData='disorderData'
-										:page='`${10+allHeatMap.length}`'></report-table>
+<!--			<report-table title='店铺关联' :listTitle='orderlyTitle' :tableData='orderlyData'-->
+<!--										:page='`${9+allHeatMap.length}`'></report-table>-->
+<!--			&lt;!&ndash; 店铺关联 无序&ndash;&gt;-->
+<!--			<report-table title='店铺关联' :listTitle='disorderTitle' :tableData='disorderData'-->
+<!--										:page='`${10+allHeatMap.length}`'></report-table>-->
 			<!-- 停留时间 业态-->
 			<report-chart :chartHeight='600' :clickData='clickData' :isRemark='false' title='停留时间'
-										:page='`${11+allHeatMap.length}`' :listTitle='dwellTitle' :dataList='dwellChartData'
+										:page='`${9}`' :listTitle='dwellTitle' :dataList='dwellChartData'
 										chartType='dwell'></report-chart>
 			<!-- 停留时间 业态下的商铺-->
-			<report-chart-multi chartType='dwell' title='停留时间' :page='`${12+allHeatMap.length}`'
+			<report-chart-multi chartType='dwell' title='停留时间' :page='`${10}`'
 													:listTitle='formatDwellStoreTitle'
 													:dataList='allDwellFormatStore'></report-chart-multi>
 			<report-back-cover></report-back-cover>
@@ -129,54 +124,7 @@
           disabledDate (date) {
             return date && date.valueOf() > Date.now() - 86400000
           }
-        },
-
-        gateTableColumn: [
-          {
-            name: '星期一',
-            time1: '本期2021-04-06',
-            time2: '同期2020-04-08'
-          },
-          {
-            name: '星期一',
-            time1: '本期2021-04-06',
-            time2: '同期2020-04-08'
-          },
-          {
-            name: '星期一',
-            time1: '本期2021-04-06',
-            time2: '同期2020-04-08'
-          },
-          {
-            name: '星期一',
-            time1: '本期2021-04-06',
-            time2: '同期2020-04-08'
-          },
-          {
-            name: '星期一',
-            time1: '本期2021-04-06',
-            time2: '同期2020-04-08'
-          },
-          {
-            name: '星期一',
-            time1: '本期2021-04-06',
-            time2: '同期2020-04-08'
-          },
-          {
-            name: '星期一',
-            time1: '本期2021-04-06',
-            time2: '同期2020-04-08'
-          },
-        ],
-        gateTableData: [
-          {
-            name: 'gate1',
-            current: ['123', '123', '123', '123', '123', '123', '123'],
-            period: ['456', '456', '456', '456', '456', '456', '456'],
-            ratio: ['789', '789', '789', '789', '789', '789', '789']
-          }
-        ]
-
+        }
       }
     },
     computed: {
@@ -207,14 +155,14 @@
         }
         this.headerDate(this.selectDateTime)
         this.showPDF = false;
-        const heatmapReqArr = this.floorBzids.map(o => {
-          return getHeatMapDistribution({
-            begin_time: this.selectDateTime[0],
-            end_time: this.selectDateTime[1],
-            floor_bzid: o,
-            type: 'day'
-          })
-        })
+        // const heatmapReqArr = this.floorBzids.map(o => {
+        //   return getHeatMapDistribution({
+        //     begin_time: this.selectDateTime[0],
+        //     end_time: this.selectDateTime[1],
+        //     floor_bzid: o,
+        //     type: 'day'
+        //   })
+        // })
         Promise.all([
           newReportSuggest({ property_id: this.propertyId, date: this.callData }),
           // 总客流
@@ -244,34 +192,34 @@
           // 业态下的商铺
           newReportFormatStore({ time: this.callData, property_id: this.propertyId }),
           // 热力图
-          ...heatmapReqArr,
+          // ...heatmapReqArr,
           // getHeatMapDistribution({ begin_time:this.selectDateTime[0],end_time:this.selectDateTime[1],floor_bzid:this.floorIds.toString(),type:'day' }),
-          // 关联度 有序
-          newReportOrderly({
-            time: this.callData,
-            property_id: this.propertyId,
-            sort_parameter: 'rate',
-            report_type: 'week'
-          }),
-          newReportOrderly({
-            time: this.callData,
-            property_id: this.propertyId,
-            sort_parameter: 'value',
-            report_type: 'week'
-          }),
-          // 关联度 无序
-          newReportDisorder({
-            time: this.callData,
-            property_id: this.propertyId,
-            sort_parameter: 'rate',
-            report_type: 'week'
-          }),
-          newReportDisorder({
-            time: this.callData,
-            property_id: this.propertyId,
-            sort_parameter: 'value',
-            report_type: 'week'
-          }),
+          // // 关联度 有序
+          // newReportOrderly({
+          //   time: this.callData,
+          //   property_id: this.propertyId,
+          //   sort_parameter: 'rate',
+          //   report_type: 'week'
+          // }),
+          // newReportOrderly({
+          //   time: this.callData,
+          //   property_id: this.propertyId,
+          //   sort_parameter: 'value',
+          //   report_type: 'week'
+          // }),
+          // // 关联度 无序
+          // newReportDisorder({
+          //   time: this.callData,
+          //   property_id: this.propertyId,
+          //   sort_parameter: 'rate',
+          //   report_type: 'week'
+          // }),
+          // newReportDisorder({
+          //   time: this.callData,
+          //   property_id: this.propertyId,
+          //   sort_parameter: 'value',
+          //   report_type: 'week'
+          // }),
           // 停留时间 业态
           newReportDwellFormat({ time: this.callData, property_id: this.propertyId, }),
           // 停留时间 业态下的商铺
@@ -296,26 +244,26 @@
           // 业态下的商铺
           this.formatDataList(res[8].data.data)
           // 热力图
-          this.allHeatMap = [];
-          this.floorList.forEach((o, i) => {
-            const data = res[9 + i].data.data
-            this.allHeatMap.push({
-              mapUrl: o.map_url,
-              data,
-              title: {
-                name: '本期' + data.floor.name + '客流分析',
-                text: '客流周期:' + this.saveHeaderData.reportDate
-              }
-            })
-          })
-          //   关联度 有序
-          this.relevanceTableData(res[9 + this.allHeatMap.length].data.data.matrixList, res[10 + this.allHeatMap.length].data.data.matrixList, 'orderlyData')
-          // 关联度 无序
-          this.relevanceTableData(res[11 + this.allHeatMap.length].data.data, res[12 + this.allHeatMap.length].data.data, 'disorderData')
+          // this.allHeatMap = [];
+          // this.floorList.forEach((o, i) => {
+          //   const data = res[9 + i].data.data
+          //   this.allHeatMap.push({
+          //     mapUrl: o.map_url,
+          //     data,
+          //     title: {
+          //       name: '本期' + data.floor.name + '客流分析',
+          //       text: '客流周期:' + this.saveHeaderData.reportDate
+          //     }
+          //   })
+          // })
+          // //   关联度 有序
+          // this.relevanceTableData(res[9 + this.allHeatMap.length].data.data.matrixList, res[10 + this.allHeatMap.length].data.data.matrixList, 'orderlyData')
+          // // 关联度 无序
+          // this.relevanceTableData(res[11 + this.allHeatMap.length].data.data, res[12 + this.allHeatMap.length].data.data, 'disorderData')
           // 停留时间 业态
-          this.dwellFormatData(res[13 + this.allHeatMap.length].data.data)
+          this.dwellFormatData(res[9].data.data)
           // 停留时间 业态 商铺
-          this.dwellFormatStoreData(res[14 + this.allHeatMap.length].data.data)
+          this.dwellFormatStoreData(res[10].data.data)
         })
       }
 

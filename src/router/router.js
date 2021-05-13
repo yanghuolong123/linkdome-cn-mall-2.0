@@ -432,9 +432,9 @@ export default [
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
             { title: '报告详情' },
-            { title: '月报', active: true },
+            { title: '自定义报告', active: true },
           ],
-          pageTitle: '月报',
+          pageTitle: '自定义报告',
         }
       }
     ]
