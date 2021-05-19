@@ -1,5 +1,5 @@
 <template>
-	<div class="report-center">
+	<div class="report-center" style="min-width: 1200px;">
 		<div class="pdf-text-box">
 			<div id="pdfDom" v-if="showPDF" style="width: 1200px;">
 				<!-- 封面 -->

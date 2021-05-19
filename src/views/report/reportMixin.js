@@ -206,6 +206,7 @@ export default {
           this.$store.commit('reportHeaderType', 'month')
           break
         case 'CustomizeReport':
+        case 'downloadCustomizePdf':
           this.$store.commit('reportHeaderType', 'customize')
           break
 
@@ -231,6 +232,7 @@ export default {
         this.$store.commit('reportHeaderType', 'month')
         break;
       case 'CustomizeReport':
+      case 'downloadCustomizePdf':
         this.$store.commit('reportHeaderType', 'customize')
         break
     }
@@ -323,6 +325,7 @@ export default {
       let pdfUrl = window.location.href.split('/#/')[0]
       let token = getToken()
       let objName = (pdfUrl.split('://')[1]).split('.')[0]
+      // let objName ='test'
       let ht = pdfUrl.split('://')[0]
       let download
       let name
