@@ -82,15 +82,14 @@ export default {
           data: 0,
           date: '每天'
 
-        },
-        {
-          img: require('@/assets/images/fixation_img/logo/837398fc2219715c1fb81436befe6e7.webp'),
-          name: '集客量峰值',
-          data: 0,
-          date: '',
-          time: ''
-
         }
+        // {
+        //   img: require('@/assets/images/fixation_img/logo/837398fc2219715c1fb81436befe6e7.webp'),
+        //   name: '集客量峰值',
+        //   data: 0,
+        //   date: '',
+        //   time: ''
+        // }
       ],
       trendOption: {
 
@@ -99,16 +98,19 @@ export default {
         credits: { enabled: false },
         yAxis: {
           title: { text: '' }
-          /* plotLines:[{
-                            color:'red',            //线的颜色，定义为红色
-                            dashStyle:'solid',//标示线的样式，默认是solid（实线），这里定义为长虚线
-                            value:25681,                //定义在哪个值上显示标示线，这里是在x轴上刻度为3的值处垂直化一条线
-                            width:2,
-                            zIndex:10//标示线的宽度，2px
-                        }], */
         },
         xAxis: {
           categories: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+        },
+        plotOptions: {
+          column: {
+            dataLabels: {
+              enabled: true,
+              formatter: function () {
+                return this.y.toLocaleString()
+              }
+            }
+          }
         },
         tooltip: {
           formatter () {
@@ -149,6 +151,7 @@ export default {
   },
   methods: {
     occupancyList (data) {
+      if (!data) return false
       this.totalOccupancy[0].data = data.property[0].enter.total.number.toLocaleString()
       this.totalOccupancy[1].data = data.property[0].enter.highest.number.toLocaleString()
 
@@ -158,15 +161,15 @@ export default {
       this.totalOccupancy[1].date = moment(showTime).format('YYYY-MM-DD')
       this.totalOccupancy[2].data = data.property[0].enter.avg.number.toLocaleString()
 
-      this.totalOccupancy[3].data = data.property[0].occupancy.highest.number.toLocaleString()
-      var occupancyTime = data.property[0].occupancy.highest.timeRange.split('-')
-      var timeOne = occupancyTime[2].split(' ')[1]
-      var timeTwo = occupancyTime[5].split(' ')[1]
-      var timeThree = occupancyTime[2].split(' ')[0]
-      var occupancyShowTime = occupancyTime[0] + '-' + occupancyTime[1] + '-' + timeThree
+      // this.totalOccupancy[3].data = data.property[0].occupancy.highest.number.toLocaleString()
+      // var occupancyTime = data.property[0].occupancy.highest.timeRange.split('-')
+      // var timeOne = occupancyTime[2].split(' ')[1]
+      // var timeTwo = occupancyTime[5].split(' ')[1]
+      // var timeThree = occupancyTime[2].split(' ')[0]
+      // var occupancyShowTime = occupancyTime[0] + '-' + occupancyTime[1] + '-' + timeThree
 
-      this.totalOccupancy[3].date = moment(occupancyShowTime).format('YYYY-MM-DD')
-      this.totalOccupancy[3].time = timeOne + ' - ' + timeTwo
+      // this.totalOccupancy[3].date = moment(occupancyShowTime).format('YYYY-MM-DD')
+      // this.totalOccupancy[3].time = timeOne + ' - ' + timeTwo
     },
     dataList (data1, data2) {
       var that = this
@@ -178,6 +181,38 @@ export default {
         that.trendOption.series[1].data.push(data2[index].enter)
       })
 
+      this.trendOption.xAxis.categories = []
+      for (let i = 0; i < 7; i++) {
+        let name = ''
+        switch (i) {
+          case 0:
+            name = '周一'
+            break
+          case 1:
+            name = '周二'
+            break
+          case 2:
+            name = '周三'
+            break
+          case 3:
+            name = '周四'
+            break
+          case 4:
+            name = '周五'
+            break
+          case 5:
+            name = '周六'
+            break
+          case 6:
+            name = '周日'
+            break
+        }
+        let serData = this.trendOption.series
+        let number = serData[1].data[i] === 0 ? 0 : Math.round(((serData[0].data[i] - serData[1].data[i]) / serData[1].data[i]) * 10000) / 10000
+        let size = (number * 100).toFixed(2) + '%'
+        let xData = name + '(' + size + ')'
+        this.trendOption.xAxis.categories.push(xData)
+      }
       this.$nextTick(() => {
         that.ifOneCharts = true
       })
@@ -220,9 +255,9 @@ export default {
         }
         tml.push({
           time: weekD,
-          enter: `${e.enter.total.toLocaleString()}人`,
-          highest: `${e.occupancy.highest.number.toLocaleString()}人
-          ${moment(e.occupancy.highest.time).format('HH')}:00-${moment(e.occupancy.highest.time).format('HH')}:59`
+          enter: `${e.enter.total.toLocaleString()}人`
+          // highest: `${e.occupancy.highest.number.toLocaleString()}人
+          // ${moment(e.occupancy.highest.time).format('HH')}:00-${moment(e.occupancy.highest.time).format('HH')}:59`
         })
       })
       return tml
@@ -255,7 +290,7 @@ export default {
                 margin-top: 20px;
                 .one-occupancy-list{
                     height: 175px;
-                     width: 23%;
+                    width: 31.2%;
                     margin-top: 19px;
                     border:1px solid #cecece;
                     float: left;

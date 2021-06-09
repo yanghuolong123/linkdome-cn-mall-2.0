@@ -194,55 +194,55 @@ export default {
       var userId = that.$store.state.user.userId
       var allRead = true
       that.VIPNoRead = 0
-      getVipRecord(keyword, current, limit).then(function (res) {
-        if (res.data.code == 200) {
-          var count = 0
-          var data = res.data.data
-          that.total = Math.ceil((data.count) / 4)
-          that.allIds = data.strID
-          var ndata = _.cloneDeep(data.list)
-          ndata.forEach(function (m, index) {
-            m.photo = m.avatar
-            m.age = m.age ? m.age : ' '
-            m.precent = m.xianshidu ? Math.floor(m.xianshidu * 100) : 0
-            if (m.ismale != '' && m.ismale != ' ') {
-              m.gender = m.ismale == 1 ? '男' : '女'
-            } else {
-              m.gender = ' '
-            }
-            m.times = m.daodiancishu + '次'
-            m.imgNewFace = m.shishicaijitu ? m.shishicaijitu : that.imgNewFace
-            m.imgOldFace = m.avatar ? m.avatar : that.imgOldFace
-            m.lastTime = m.coming_time + ' '
-            let status = m.du.split(',').map(Number)
-            if (status.indexOf(userId) > -1) {
-              status = that.yidu
-            } else {
-              status = that.weidu
-              that.VIPNoRead++
-              allRead = false
-            }
-            m.status = status
-          })
-          that.allData = _.cloneDeep(ndata)
-          that.tableList = ndata.splice((that.currentx - 1) * 4, 4)
-          that.allRead = allRead
-          that.totalCount = data.count
-          that.VIPNoReadNumber = that.VIPNoRead
-          if (keyword == '') {
-            that.$store.commit('setVIPNoRead', that.VIPNoRead)
-          }
-        } else if (res.data.code = 308) {
-          if (keyword == '') {
-            that.$store.commit('setVIPNoRead', that.VIPNoRead)
-          }
-          that.tableList = []
-          that.totalCount = 0
-          that.total = 0
-          that.VIPNoReadNumber = 0
-          // that.$store.commit("setVIPNoRead","")
-        }
-      })
+      // getVipRecord(keyword, current, limit).then(function (res) {
+      //   if (res.data.code == 200) {
+      //     var count = 0
+      //     var data = res.data.data
+      //     that.total = Math.ceil((data.count) / 4)
+      //     that.allIds = data.strID
+      //     var ndata = _.cloneDeep(data.list)
+      //     ndata.forEach(function (m, index) {
+      //       m.photo = m.avatar
+      //       m.age = m.age ? m.age : ' '
+      //       m.precent = m.xianshidu ? Math.floor(m.xianshidu * 100) : 0
+      //       if (m.ismale != '' && m.ismale != ' ') {
+      //         m.gender = m.ismale == 1 ? '男' : '女'
+      //       } else {
+      //         m.gender = ' '
+      //       }
+      //       m.times = m.daodiancishu + '次'
+      //       m.imgNewFace = m.shishicaijitu ? m.shishicaijitu : that.imgNewFace
+      //       m.imgOldFace = m.avatar ? m.avatar : that.imgOldFace
+      //       m.lastTime = m.coming_time + ' '
+      //       let status = m.du.split(',').map(Number)
+      //       if (status.indexOf(userId) > -1) {
+      //         status = that.yidu
+      //       } else {
+      //         status = that.weidu
+      //         that.VIPNoRead++
+      //         allRead = false
+      //       }
+      //       m.status = status
+      //     })
+      //     that.allData = _.cloneDeep(ndata)
+      //     that.tableList = ndata.splice((that.currentx - 1) * 4, 4)
+      //     that.allRead = allRead
+      //     that.totalCount = data.count
+      //     that.VIPNoReadNumber = that.VIPNoRead
+      //     if (keyword == '') {
+      //       that.$store.commit('setVIPNoRead', that.VIPNoRead)
+      //     }
+      //   } else if (res.data.code = 308) {
+      //     if (keyword == '') {
+      //       that.$store.commit('setVIPNoRead', that.VIPNoRead)
+      //     }
+      //     that.tableList = []
+      //     that.totalCount = 0
+      //     that.total = 0
+      //     that.VIPNoReadNumber = 0
+      //     // that.$store.commit("setVIPNoRead","")
+      //   }
+      // })
     }
   }
 }

@@ -68,10 +68,6 @@ export default {
         alert('请选择实体')
         return
       }
-      // if (this.$store.state.home.loadingState == false) {
-      //   this.$store.commit('loadingState', true)
-      //   this.$vs.loading()
-      // }
       val.entitys = _.remove(val.entitys, function (n) { return n.id != 0 })
       this.$nextTick(() => { this.$refs.ranking.entitysCompareReq(val.date1Array, val.entitys) })
 

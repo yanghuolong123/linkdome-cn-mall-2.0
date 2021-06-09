@@ -173,7 +173,7 @@ export default {
         'chakan': '查看所有',
         'daoru': '下载'
       },
-      iconIndex: 0,
+      iconIndex: 1,
       iconColor: 'rgb(34, 128, 215)',
       goTitle: '',
       goName: [],
@@ -304,7 +304,7 @@ export default {
         text: '',
         bg: '',
         confirm: false
-      },
+      }
 
     }
   },
@@ -344,22 +344,25 @@ export default {
       getCascadeList({ property_id: propertyId }).then(res => {
         if (res.data.code == 200) {
           let data = res.data.data
-            this.activitiesType = []
-            let newData = Object.keys(data)
-            newData.forEach(list => {
-                let obj = {}
-                obj.value = list
-                obj.label = list
-                obj.children = []
-                data[list].forEach(shop => {
-                    let shopObj = {}
-                    shopObj.value = shop.id
-                    shopObj.label = shop.name
-                    shopObj.name = shop.name
-                    obj.children.push(shopObj)
-                })
-                this.activitiesType.push(obj)
+          this.activitiesType = []
+          this.activities = []
+          let newData = Object.keys(data)
+          newData.forEach(list => {
+            let obj = {}
+            obj.value = list
+            obj.label = list
+            obj.children = []
+            data[list].forEach(shop => {
+              let shopObj = {}
+              shopObj.value = shop.id
+              shopObj.label = shop.name
+              shopObj.name = shop.name
+              obj.children.push(shopObj)
+              this.activities.push([obj.value, shopObj.value])
             })
+            this.activitiesType.push(obj)
+          })
+          this.paramsPrepare()
         }
       }).catch(err => {
         console.log(err)
@@ -615,8 +618,8 @@ export default {
       date = date.setDate(date.getDate() - 1)
       var dateTime = [moment(date).format('YYYY-MM-DD'), moment(date).format('YYYY-MM-DD')]
       this.crossDate = dateTime
-      this.selectType = 0;
-      this.activities = [];
+      this.selectType = 0
+      this.activities = []
       try {
         window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', '进店率趋势重置', {})
       } catch (error) {
@@ -771,6 +774,10 @@ export default {
     z-index:90000
   }
 }
+.el-cascader__tags{
+  height: 30px;
+  overflow: hidden;
+}
 </style>
 <style lang="less" scoped>
 .go-shop{
@@ -843,7 +850,7 @@ export default {
           top: 20px;
           right: 0;
           overflow: hidden;
-          z-index: 10;
+          z-index: 1;
           span:nth-child(1){
             width: 10%;
             font-size:18px;

@@ -5,23 +5,24 @@
       <div>
         <slot name="title"></slot>
       </div>
-      <div class="flex">
-        <slot name="dateSelector"></slot>
+      <slot name="dateSelector"></slot>
+      <!-- <div class="flex">
+        <slot name="dateSelector"></slot> -->
           <!-- 添加 -->
-         <Dropdown @on-click="handleAddcards" transfer>
+         <!-- <Dropdown @on-click="handleAddcards" transfer>
           <icons type="htmal5icon18" :size="24" :color="addList.length?'#2BD9CF':'#ccc'"></icons>
           <DropdownMenu slot="list"  v-show="addList.length">
             <DropdownItem v-for="(item,index) in addList" :key="index" :name="item.id">{{item.name}}</DropdownItem>
           </DropdownMenu>
-        </Dropdown>
+        </Dropdown> -->
         <!-- 删除 -->
-        <Dropdown @on-click="handleDelcards" transfer>
+        <!-- <Dropdown @on-click="handleDelcards" transfer>
           <icons type="shanchu-tianchong" :size="24" :color="delList.length?'#FEB33D':'#ccc'" class="mr-1"></icons>
           <DropdownMenu slot="list" v-show="delList.length">
             <DropdownItem v-for="(item,index) in delList" :key="index" :name="item.id">{{item.name}}</DropdownItem>
           </DropdownMenu>
         </Dropdown>
-      </div>
+      </div> -->
     </div>
     <div class="infocard" ref="infocard">
       <span @click="scrollRight" v-show="indicatorList.length > defaultCountsOfCards">
@@ -114,6 +115,8 @@ export default {
     }
 
   },
+  mounted () {
+  },
   methods: {
     // 删除
     handleDelcards (type) {
@@ -188,11 +191,15 @@ export default {
           obj.company_history = data
           break
       }
-      postKpiList(obj).then(res => {
-        userKpiList().then(res => {
-          this.typeList(res.data.data)
-        })
-      })
+      this.typeList()
+      // postKpiList(obj).then(res => {
+      //   userKpiList().then(res => {
+      //     if (res.data.code == 200) {
+      //       let data = res.data.data
+      //       this.typeList(data)
+      //     }
+      //   })
+      // })
     },
     scrollLeft () {
       this.$nextTick(() => {
@@ -233,26 +240,33 @@ export default {
       }
     },
     // 请求数据
-    typeList (data) {
-      if (data) {
-        this.delList = []
-        this.addList = []
-        // 根据不同的位置传不同的参数
-        switch (this.textName) {
-          case 'shop-center-current': // 购物中心当前位置
-            if (data.property) this.listClassify(data.property[0].current)
-            break
-          case 'shop-center-histrry':// 购物中心历史位置
-            if (data.property) this.listClassify(data.property[0].history)
-            break
-          case 'group-current': // 集团当前位置
-            if (data.company) this.listClassify(data.company[0].current)
-            break
-          case 'group-histrry':// 集团历史位置
-            if (data.company) this.listClassify(data.company[0].history)
-            break
-        }
+    typeList () {
+      // if (data) {
+      this.delList = []
+      this.addList = []
+      // 根据不同的位置传不同的参数
+      switch (this.textName) {
+        case 'shop-center-current': // 购物中心当前位置
+          // if (data.property) this.listClassify(data.property[0].current)
+          // this.listClassify('平均客流量,集客量峰值,集客量,客流峰值')
+          this.listClassify('平均客流量,客流峰值')
+          break
+        case 'shop-center-histrry':// 购物中心历史位置
+          // if (data.property) this.listClassify(data.property[0].history)
+          this.listClassify('平均客流量,客流峰值,总客流,有效客流,成交率,坪效（元/平方米）,客单价（元）,销售额（元）')
+          break
+        case 'group-current': // 集团当前位置
+          // if (data.company) this.listClassify(data.company[0].current)
+          // this.listClassify('客流峰值,集客量峰值,集客量,平均客流量')
+          this.listClassify('客流峰值,平均客流量')
+          break
+        case 'group-histrry':// 集团历史位置
+          // if (data.company) this.listClassify(data.company[0].history)
+          // this.listClassify('平均客流量,客流峰值,总客流,集客量峰值,有效客流,成交率,坪效（元/平方米）,客单价（元）,销售额（元）')
+          this.listClassify('平均客流量,客流峰值,总客流,有效客流,成交率,坪效（元/平方米）,客单价（元）,销售额（元）')
+          break
       }
+      // }
     },
     // 处理数据
     listClassify (data) {

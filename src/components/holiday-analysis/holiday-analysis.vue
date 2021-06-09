@@ -3,27 +3,19 @@
     <div class="downloadList" v-on:click='changeExportData'>
       <icons
         type="daoru"
-        :size="20"
+        size="20"
         title="下载"
         color="rgb(157, 157, 157)"
       >
       </icons>
     </div>
     <i-tabs class="chartsTable" v-model="current">
-      <template  slot="select">
-      <div class="flex justify-between items-center mr-10">
-        <span class="whitespace-no-wrap mx-4 text-sm">数据指标:</span>
-        <vs-select class="selectExample selects" autocomplete v-model="curretIndicator" @change="indicatorChange" >
-          <vs-select-item  :value="item.value" :text="item.name" v-for="(item,index) in indicatorList" />
-        </vs-select>
-      </div>
-      </template>
-      <tab-item :icon="icon1" :titles="'节假日活动分析'" style="position:relative;left: -9px;">
-        <div id='idOne'>
-          <vue-apex-charts type="bar" :height="height" :options="options" :series="series"> </vue-apex-charts>
+      <tab-item :icon="icon1" :titles="title1" style="position:relative;left: -9px;">
+        <div :id='domId'>
+          <vue-apex-charts :type="type" :height="height" :options="options" :series="series"> </vue-apex-charts>
         </div>
       </tab-item>
-      <tab-item :icon="icon2" :titles="'详细数据'">
+      <tab-item :icon="icon2" :titles="title2">
         <TableMultipleSelected style="height:474px; overflow: auto;" :tableName="columns" :tableList="tableList"></TableMultipleSelected>
       </tab-item>
     </i-tabs>
@@ -36,7 +28,9 @@ import VueApexCharts from 'vue-apexcharts'
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import iTabs from '_c/I-Tabs/Itabs.vue'
 import moment from 'moment'
+import { changeExport, changeExportOne } from '@/api/operate.js'
 import { exportEx } from '@/api/home.js'
+import axios from 'axios'
 export default {
   components: {
     VueApexCharts,
@@ -62,9 +56,24 @@ export default {
       type: String,
       default: 'biaoge-copy'
     },
+    title1: {
+      type: String,
+      default: '趋势分析'
+    },
+    title2: {
+      type: String,
+      default: '详细数据'
+    },
+    type: {
+      type: String,
+      default: 'line'
+    },
     columns: {
       type: Array,
       default: () => []
+    },
+    dateTime: {
+      type: Number
     },
     tableList: {
       type: Array,
@@ -74,50 +83,40 @@ export default {
       type: Object,
       default: () => { }
     },
+    domId: {
+      type: String,
+      default: ''
+    },
     pdfName: {
       type: String,
       default: ''
     },
     selectHoliday: {
-      type: Number,
-      default: -1
+      type: String,
+      default: ''
     },
     ExcelData: {
       type: Object,
       default: () => { }
-    },
-    indicator: {
-      type: String,
-      default: 'enter'
-    },
-    indicatorList: {
-      type: Array,
-      default: () => []
-    },
+    }
   },
   data () {
     return {
       current: 0,
-      reportName: '',
-      curretIndicator:this.indicator,
-
+      reportName: ''
     }
   },
-  created(){
-    console.log('created')
+  mounted () {
   },
   methods: {
-    indicatorChange(e){
-      this.$emit('indicatorChange',e)
-    },
     changeExportData () {
       var data = []
       var columns
       if (this.ExcelData.type == 1) {
         let keys
-        if (this.selectHoliday == -1)keys = 'name'
+        if (this.selectHoliday == '')keys = 'name'
         else keys = 'begin'
-        columns = [{ title: this.columns[0], key: keys }, { title: this.columns[1], key: this.indicator }]
+        columns = [{ title: this.columns[0], key: keys }, { title: this.columns[1], key: 'enter' }]
       } else {
         columns = [{ title: this.columns[0], key: 'name' }, { title: this.columns[1], key: 'begin' }, { title: this.columns[2], key: 'end' }]
       }
@@ -160,7 +159,7 @@ export default {
   position: absolute;
   right: 20px;
   top: 34px;
-  z-index: 10;
+  z-index: 1;
   cursor: pointer;
   border-radius: 50%;
   color: #fff;

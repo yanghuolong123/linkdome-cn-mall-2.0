@@ -83,12 +83,12 @@
                    :indicatorData="trendIndicators">
       </group-trend>
       <!-- 排行占比 -->
-      <Ranking :time1="outRange"
+      <!-- <Ranking :time1="outRange"
                :propertyId="currentPropertyId"
                :indicatorData="rankingIndicators"
                :defaultBizIndicator='rankingDataShowType'
                :defaultShopIndicator='rankingDataShowType'>
-      </Ranking>
+      </Ranking> -->
       <!-- 顾客类型数据 -->
       <group-age-gender :outRange='outRange'></group-age-gender>
     </template>
@@ -174,7 +174,52 @@ export default {
       monthTargetVal: 0,
       todayEnter: 0,
       monthEnter: 0,
-      kpiData: [],
+      kpiData: [
+        {
+          data: 0,
+          id: 'enteravg',
+          name: '平均客流量',
+          type: {
+            icon: 'avg',
+            color: '#1dd9d1'
+          }
+        },
+        {
+          data: {
+            number: 0,
+            property: '007',
+            timeRange: '00:00-00:59'
+          },
+          id: 'enterhighest',
+          name: '客流峰值',
+          type: {
+            icon: 'highest',
+            color: '#e8585a'
+          }
+        },
+        {
+          data: {
+            number: 0,
+            property: '007',
+            timeRange: '00:00-00:59'
+          },
+          id: 'occupancyhighest',
+          name: '集客量峰值',
+          type: {
+            icon: 'occu_highest',
+            color: '#e8585a'
+          }
+        },
+        {
+          data: 0,
+          id: 'occupancytotal',
+          name: '集客量',
+          type: {
+            icon: 'liuliang',
+            color: '#857aef'
+          }
+        }
+      ],
       historyData: null,
       summarySalse: [],
       today: Moment().format('YYYY-MM-DD'),
@@ -376,14 +421,14 @@ export default {
   },
   mounted () {
     this.initRequest()
-    userKpiList().then(res => {
-      if (res.data.code === 200) {
-        this.$refs.currentKpi.alllistData = res.data.data
-        this.$refs.currentKpi.typeList(res.data.data)
-        this.$refs.historyKpi.alllistData = res.data.data
-        this.$refs.historyKpi.typeList(res.data.data)
-      }
-  	})
+    // userKpiList().then(res => {
+    //   if (res.data.code === 200) {
+    //     this.$refs.currentKpi.alllistData = res.data.data
+    //     this.$refs.currentKpi.typeList(res.data.data)
+    //     this.$refs.historyKpi.alllistData = res.data.data
+    //     this.$refs.historyKpi.typeList(res.data.data)
+    //   }
+  	// })
   },
   activated () {
     this.intervalClick('5分钟')
@@ -466,9 +511,9 @@ export default {
         groupData.achievingRate = [size]
 
         // 添加千分符
-        groupData.currentDay = groupData.currentDay
-        groupData.currentMonthly = groupData.currentMonthly
-        groupData.monthlyGoal = groupData.monthlyGoal
+        groupData.currentDay = groupData.currentDay.toLocaleString()
+        groupData.currentMonthly = groupData.currentMonthly.toLocaleString()
+        groupData.monthlyGoal = groupData.monthlyGoal.toLocaleString()
       }
       try {
         for (let index = 0; index < targetArr.length; index++) {
@@ -863,7 +908,5 @@ export default {
   margin-top 0!important
 </style>
 <style lang="less" scoped>
-.groupStyle /deep/ .infocard{
-  margin-top: 0!important;
-}
+
 </style>

@@ -62,12 +62,12 @@ export default {
   >div /deep/
     width 24%
     margin-bottom 1.5rem
-    @media (max-width 992px) {
-      width 48%
-    }
-    @media (max-width 576px) {
-      width 100%
-    }
+    // @media (max-width 992px) {
+    //   width 48%
+    // }
+    // @media (max-width 576px) {
+    //   width 100%
+    // }
     >div
       height 200px
       padding 20px!important

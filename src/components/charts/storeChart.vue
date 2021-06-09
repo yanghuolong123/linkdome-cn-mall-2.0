@@ -149,6 +149,7 @@ export default {
   .chartsTable {
     background-color: #fff;
     border-radius: 6px;
+    margin-bottom:20px;
   }
   .storedatass {
     position: relative;

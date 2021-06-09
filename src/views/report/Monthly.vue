@@ -16,7 +16,7 @@
                       </DatePicker>
                     </Col>
                 </Row>
-                <div class="report-query" v-on:click="reportQuery">提取</div>
+                <div class="report-query" v-on:click="reportQuery">查询</div>
                 <div class="icon-download" v-on:click="uploadReport" title="下载报告">
                     <icons type="daoru" color="#2a7dc1" :size = 20 ></icons>
                 </div>
@@ -30,7 +30,8 @@
           <div id="pdfDom" >
               <report-day-cover ref="coverData" :pageNumber="paginationNumber" :reportType="reportT" ></report-day-cover>
               <report-monthly-one  ref="cover_one_data"></report-monthly-one>
-              <report-monthly-two  ref="cover_two_data"></report-monthly-two>
+              <!-- <report-monthly-sequential ref = 'cover_sequential_data'></report-monthly-sequential> -->
+              <!-- <report-monthly-two  ref="cover_two_data"></report-monthly-two> -->
               <report-monthly-three
                 :key='index' v-for="(list,index) in floorListData"
                 :dataValue="list" :pageNumber='index'
@@ -67,12 +68,15 @@ import reportMonthlySeven from '@/components/monthly-report/report_monthly_seven
 import reportDayListFour from '@/components/report/report_day_list_four'
 import reportDayListFormat from '@/components/report/report_day_list_format'
 
+// import reportMonthlySequential from '@/components/monthly-report/report_monthly_sequential'
+
 /* api 接口 */
 import { getGroupOrganization, postHistorycompute, getanalysiseeo } from '@/api/home'
 import {
   monthlyCameraList,
   getReportArea,
   getReportFormat
+  // monthlySequential
 } from '@/api/report'
 
 import moment from 'moment'
@@ -92,6 +96,7 @@ export default {
     reportDayCoverBack,
     reportDayListFour,
     reportDayListFormat
+    // reportMonthlySequential
   },
   data () {
     return {
@@ -185,10 +190,13 @@ export default {
         getReportArea({ property_id: propertyId, time: that.newDate, type: 'Month' }),
         // 业态商铺接口
         getReportFormat({ property_id: propertyId, time: that.newDate, type: 'Month' })
+        // 同环比数据
+        // monthlySequential({ companyId: that.companyId, timeRange: that.newDate })
       ]).then(function (res) {
         /* 第一页 客流总览 */
         var dataOne = res[0].data.data
         that.$refs.cover_one_data.occupancyList(dataOne)
+
         /* 第一页 客流趋势 */
         var dataTwo = res[1].data.data
         that.$refs.cover_one_data.dataList(dataTwo)
@@ -198,20 +206,24 @@ export default {
 
         /* 第二页 出入口数据 */
         var sixData = res[2].data.data
-        that.$refs.cover_two_data.tableList(sixData)
+        // that.$refs.cover_two_data.tableList(sixData)
         that.floorListData = Object.values(sixData)
+        // 同环比数据
+        // that.$refs.cover_sequential_data.occupancyList(dataOne)
+        // that.$refs.cover_sequential_data.dataList(res[6].data.data)
 
         // 区域数据
         that.areaDataList(res[4].data.data)
         // 业态商铺数据
         that.formatData(res[5].data.data)
 
-        var size = that.holiyData.length + that.floorListData.length + 2
+        var size = that.holiyData.length + that.floorListData.length + 1
         that.paginationNumber = '共' + size + '页'
         that.showPDF = true
       })
     },
     uploadReport () {
+      console.log('下载最新代码')
       if (this.selectDateTime === '') { alert('请选择时间'); return false }
       let token = getToken()
       let pdfUrl = window.location.href.split('/#/')[0]
@@ -263,7 +275,7 @@ export default {
       data.forEach(val => {
         allData.push(this.fromatsDataDispose(val))
       })
-      let size = 4 + this.floorListData.length
+      let size = 3 + this.floorListData.length
       let DataName = {
         propertyName: this.property_name,
         titleType: '商铺区域分析',
@@ -310,7 +322,7 @@ export default {
             titleType: '商铺区域分析',
             tableTitle: ['区域名称', '客流量', '客流量峰值'],
             formatName: list.name,
-            pageNumber: 5 + this.floorListData.length + index
+            pageNumber: 4 + this.floorListData.length + index
           }
           this.$refs.formatList[index].dataList(DataName, list.toTen, list.afterTen)
         })
@@ -388,7 +400,7 @@ export default {
         text-align: center;
         line-height: 43px;
         float: left;
-        margin-left: 30px;
+        margin-left: 60px;
         box-shadow:0px 0px 9px 0px rgba(166, 168, 169, .4);
         cursor: pointer;
         &::before{
@@ -400,7 +412,6 @@ export default {
         margin: 0 auto;
         overflow: hidden;
         width: 80%;
-        min-width: 1200px;
         .reportOneText{
           float: left;
           width: 100%;

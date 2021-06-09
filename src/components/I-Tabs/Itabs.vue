@@ -4,13 +4,12 @@
       <div class="tab-bar-left">
         <span v-if="!isNowTime">
           {{titleList[value]}}
-          <Tooltip v-if="showTooltipList.includes(titleList[0])"
-                   :content="tootipText(titleList[0])"
+          <Tooltip v-if="titleList[0]=='新老顾客占比'"
+                   :content="tootipText"
                    placement="bottom"
                    theme="light"
                    transfer
-                   :style="{marginLeft:titleList[0].length>5?'0':'15px'}"
-                   :max-width="titleList[0].length>5?300:200">
+                   max-width="600">
             <icons type="wenhao" />
           </Tooltip>
         </span>
@@ -71,10 +70,10 @@ export default {
   },
   data () {
     return {
-      showTooltipList: ['新老顾客占比', '销售额', '坪效', '客单价', '成交率'],
+      tootipText: '新顾客：在所选时间段内仅来过1次的人数\n老顾客：在所选时间段内来过2次及以上的人数',
       navList: [],
       titleList: [],
-      currentIndex: 0,
+      currentIndex: 1,
       iconTitle: {
         'zhexiantu': '折线图',
         '62': '柱状图',
@@ -96,22 +95,6 @@ export default {
     }
   },
   computed: {
-    tootipText () {
-      return (title) => {
-        switch (title) {
-          case '新老顾客占比':
-            return '新顾客：在所选时间段内仅来过1次的人数\n老顾客：在所选时间段内来过2次及以上的人数'
-          case '销售额':
-            return title + '：所选实体所选时间内的销售金额'
-          case '坪效':
-            return title + '：所选实体所选时间内的销售额除以所选实体面积'
-          case '客单价':
-            return title + '：所选实体所选时间内销售金额除以所选实体所选时间内的订单数量'
-          case '成交率':
-            return title + '：所选实体所选时间内的客流量除以所选实体所选时间内的订单数量'
-        }
-      }
-    },
     contentStyle () {
       let style = {}
       style = { transform: `translateX(-${this.value}00%)` }
@@ -149,7 +132,8 @@ export default {
             name: index
           })
           this.titleList.push(tabitem.data.attrs.titles || '')
-          this.handleClick(0)// 图标不选中的bug
+          let size = this.$route.name === 'Effective' ? 1 : 0
+          this.handleClick(size)// 图标不选中的bug
         }
       })
     },

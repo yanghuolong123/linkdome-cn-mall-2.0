@@ -1105,11 +1105,12 @@ export default {
     },
     animation: false,
     grid: {
-      height: '90%',
-      width: '96%',
-      top: '5%',
-      right: '2%',
-      left: '2%',
+      height: '100%',
+      width: '100%',
+      top: 0,
+      right: 0,
+      left: 0,
+      bottom:0
     },
     xAxis: {
       type: 'category',
@@ -1124,7 +1125,7 @@ export default {
         show: false,
         onZero: true,
         lineStyle: {
-          color: '#FFF',
+          color: 'transparent',
           width: 0,
           type: 'solid'
         }
@@ -1144,7 +1145,7 @@ export default {
         show: false,
         onZero: true,
         lineStyle: {
-          color: '#FFF',
+          color: 'transparent',
           width: 0,
           type: 'solid'
         }

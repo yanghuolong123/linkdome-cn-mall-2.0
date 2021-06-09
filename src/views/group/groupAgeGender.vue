@@ -65,7 +65,7 @@
                        :tableList='genderTableList'></table-default>
       </div>
     </div>
-    <div class=" group-age-gender">
+    <!-- <div class=" group-age-gender">
       <div class=" box-card left">
         <div class="title">
           <p>新老顾客占比
@@ -131,7 +131,7 @@
                       :tableName='frequencyName'
                       :tableList='frequencyTableList'></table-default>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -525,7 +525,7 @@ export default {
             let obj = {}
             obj.name = list
             obj.percentList = []
-            that.genderSeries.map(val => { obj.percentList.push(Number(val.data[index]).toLocaleString() + '人') })
+            that.genderSeries.map(val => { obj.percentList.push(Number(val.data[index]).toLocaleString()) })
             that.genderTableList.push(obj)
           })
         }
@@ -591,7 +591,7 @@ export default {
         let obj = {}
         obj.name = list
         obj.percentList = []
-        dataNumber.series.map(val => { obj.percentList.push(Number(val.data[index]).toLocaleString() + '人') })
+        dataNumber.series.map(val => { obj.percentList.push(Number(val.data[index]).toLocaleString()) })
         type == 'age' ? that.ageTableList.push(obj) : that.frequencyTableList.push(obj)
       })
       return dataNumber
@@ -626,7 +626,7 @@ export default {
         obj.name = list
         obj.percentList = []
         dataNumber.series.map(val => {
-          obj.percentList.push(Number(val.data[index]).toLocaleString() + '人')
+          obj.percentList.push(Number(val.data[index]).toLocaleString())
         })
         type == 'client' ? that.clientTableList.push(obj) : that.vipTableList.push(obj)
       })

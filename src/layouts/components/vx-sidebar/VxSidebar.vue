@@ -22,11 +22,11 @@
       :click-not-close="clickNotClose"
       :reduce-not-rebound="reduceNotRebound"
     >
+      <!-- {{isSidebarActive}} -->
       <div @mouseenter="sidebarMouseEntered" @mouseleave="sidebarMouseLeave">
         <div class="header-sidebar-main flex items-center justify-between" slot="header">
           <div class="logo" :style="{backgroundImage:`url(${logoImg?logoImg:logo})`}"></div>
           <div>
-
             <template v-if="showCloseButton">
               <feather-icon
                 icon="XIcon"
@@ -34,7 +34,6 @@
                 @click="$store.commit('TOGGLE_IS_SIDEBAR_ACTIVE', false)"
               ></feather-icon>
             </template>
-
             <template v-else-if="!showCloseButton && !sidebarItemsMin">
               <!-- <feather-icon
                 icon="ArrowLeftIcon"
@@ -44,7 +43,6 @@
                 @click="toggleReduce(true)"
               ></feather-icon> -->
               <span
-                icon="ArrowLeftIcon"
                 class="mr-0 cursor-pointer"
                 svg-classes="stroke-current"
                 v-show="!reduce"
@@ -52,15 +50,13 @@
               >
                 <icons type="icon_huabanfuben" style="color:#37b5ed;font-size:24px;"></icons>
               </span>
-
               <span
-                icon="CircleIcon"
                 class="mr-0 cursor-pointer"
                 svg-classes="stroke-current"
                 v-show="reduce"
                 @click="toggleReduce(false)"
               >
-                <icons type="icon_fuben" style="color:#37b5ed;font-size:24px;"></icons>
+                  <icons type="icon_fuben" style="color:#37b5ed;font-size:24px;"></icons>
               </span>
               <!-- <feather-icon
                 icon="CircleIcon"
@@ -89,6 +85,7 @@
             >{{ $t(sidebarItem.i18n) || sidebarItem.header }}</span>
             <template v-else-if="!sidebarItem.header">
               <!-- IF IT'S SINGLE ITEM -->
+
               <vx-sidebar-item
                 ref="sidebarLink"
                 :key="`sidebarItem-${index}`"
@@ -116,10 +113,8 @@
               <template v-else>
                 <vx-sidebar-group
                   ref="sidebarGrp"
-                  @closeOthers="closeOthers"
-                  :keyId="`group-${index}`"
+                  :key="`group-${index}`"
                   :openHover="openGroupHover"
-                  :activeKey="activeKey"
                   :group="sidebarItem"
                   :shopingList="shopingList"
                   :groupIndex="index"
@@ -175,8 +170,7 @@ export default {
       swipeEasing: true
     },
     windowWidth: window.innerWidth, // width of windows
-    showShadowBottom: false,
-    activeKey: ''
+    showShadowBottom: false
   }),
   computed: {
     isSidebarActive: {
@@ -238,9 +232,6 @@ export default {
     }
   },
   methods: {
-    closeOthers (key) {
-      this.activeKey = key
-    },
     sidebarMouseEntered () {
       if (this.reduce) this.$store.commit('UPDATE_SIDEBAR_ITEMS_MIN', false)
       this.isMouseEnter = true

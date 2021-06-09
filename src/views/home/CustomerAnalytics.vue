@@ -30,21 +30,21 @@ son-row-flex(direction)
                         'age age age gender gender gender '
     grid-auto-rows auto
     grid-gap 20px
-    @media (max-width: 992px)
-      grid-template-columns repeat(2,minmax(10px,1fr))
-      grid-template-areas 'age gender'\
-                          'new-old new-old'\
-                          //  'vip visit'
-                          'visit visit'
-      >div:nth-child(4),div:nth-child(5)
-        son-row-flex(column!important)
-    @media (max-width: 768px)
-      grid-template-columns minmax(10px,1fr)
-      grid-template-areas 'age'\
-                          'gender'\
-                          'new-old'\
-                          // 'vip'\
-                          'visit'
+    // @media (max-width: 992px)
+    //   grid-template-columns repeat(2,minmax(10px,1fr))
+    //   grid-template-areas 'age gender'\
+    //                       'new-old new-old'\
+    //                       //  'vip visit'
+    //                       'visit visit'
+    //   >div:nth-child(4),div:nth-child(5)
+    //     son-row-flex(column!important)
+    // @media (max-width: 768px)
+    //   grid-template-columns minmax(10px,1fr)
+    //   grid-template-areas 'age'\
+    //                       'gender'\
+    //                       'new-old'\
+    //                       // 'vip'\
+    //                       'visit'
     >div:nth-child(1)
         grid-area age
     >div:nth-child(2)

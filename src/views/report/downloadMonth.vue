@@ -4,7 +4,8 @@
           <div id="pdfDom" >
               <report-day-cover ref="coverData" :pageNumber="paginationNumber" :reportType="reportT" ></report-day-cover>
               <report-monthly-one  ref="cover_one_data"></report-monthly-one>
-              <report-monthly-two  ref="cover_two_data"></report-monthly-two>
+              <!-- <report-monthly-sequential ref = 'cover_sequential_data'></report-monthly-sequential> -->
+              <!-- <report-monthly-two  ref="cover_two_data"></report-monthly-two> -->
               <report-monthly-three
               :key='index' v-for="(list,index) in floorListData"
               :dataValue="list" :pageNumber='index'
@@ -13,7 +14,7 @@
               <report-monthly-seven
               v-for="(item,index) in holiyData" :key="index"
               :res ="item" :holiyDayInfo="allholidays[index]"
-              :pageNumber='floorListData.length+index+3'
+              :pageNumber='floorListData.length+index+4'
               ></report-monthly-seven>
               <div v-if="isShopArea" id="pdfArea">
                 <report-day-list-four ref="areaList" ></report-day-list-four>
@@ -38,12 +39,15 @@ import reportMonthlySeven from '@/components/monthly-report/report_monthly_seven
 import reportDayListFour from '@/components/report/report_day_list_four'
 import reportDayListFormat from '@/components/report/report_day_list_format'
 
+import reportMonthlySequential from '@/components/monthly-report/report_monthly_sequential'
+
 /* api 接口 */
 import { getGroupOrganization, postHistorycompute, getanalysiseeo } from '@/api/home'
 import {
   monthlyCameraList,
   getReportArea,
   getReportFormat
+  // monthlySequential
 } from '@/api/report'
 import reportMixins from '@/components/monthly-report/reportMixin'
 import { setToken } from '@/libs/util'
@@ -61,7 +65,8 @@ export default {
     reportMonthlySeven,
     reportDayCoverBack,
     reportDayListFour,
-    reportDayListFormat
+    reportDayListFormat,
+    reportMonthlySequential
   },
   data () {
     return {
@@ -126,10 +131,13 @@ export default {
         getReportArea({ property_id: propertyId, time: that.newDate, type: 'Month' }),
         // 业态商铺接口
         getReportFormat({ property_id: propertyId, time: that.newDate, type: 'Month' })
+        // 同环比数据
+        // monthlySequential({ companyId: that.companyId, timeRange: that.newDate })
       ]).then(function (res) {
         /* 第一页 客流总览 */
         var dataOne = res[0].data.data
         that.$refs.cover_one_data.occupancyList(dataOne)
+
         /* 第一页 客流趋势 */
         var dataTwo = res[1].data.data
         that.$refs.cover_one_data.dataList(dataTwo)
@@ -139,7 +147,7 @@ export default {
 
         /* 第二页 出入口数据 */
         var sixData = res[2].data.data
-        that.$refs.cover_two_data.tableList(sixData)
+        // that.$refs.cover_two_data.tableList(sixData)
         that.floorListData = Object.values(sixData)
 
         // 区域数据
@@ -147,7 +155,11 @@ export default {
         // 业态商铺数据
         that.formatData(res[5].data.data)
 
-        var size = that.holiyData.length + that.floorListData.length + 2
+        // 同环比数据
+        // that.$refs.cover_sequential_data.occupancyList(dataOne)
+        // that.$refs.cover_sequential_data.dataList(res[6].data.data)
+
+        var size = that.holiyData.length + that.floorListData.length + 1
         that.paginationNumber = '共' + size + '页'
         let ht = window.location.href.split('://')[0]
         setTimeout(() => {
@@ -257,7 +269,7 @@ export default {
 <style lang="less" scoped>
     #pdfDom{
         background-color: #fff;
-        margin: 0 auto;
+        // margin: 0 auto;
         width: 1200px;
         overflow: hidden;
         .reportOneText{

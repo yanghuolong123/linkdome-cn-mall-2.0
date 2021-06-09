@@ -21,18 +21,6 @@ export const dateCompare = params => {
     method: 'post'
   })
 }
-export const getHeatMapFloorEnter = params => {
-  const { bzid, type, time } = params
-  return naxios.request({
-    url: 'judge/getIsFloat',
-    params: {
-      bzid,
-      type,
-      time
-    },
-    method: 'get'
-  })
-}
 export const dwellTime = params => {
   const { time1, time2, bzid } = params
   return naxios.request({
@@ -224,17 +212,7 @@ export const getHeatMapData = params => {
     method: 'post'
   })
 }
-export const getHeatMapFloorData = params => {
-  const { property_id, type } = params
-  return naxios.request({
-    url: 'judge/getHKBzids',
-    params: {
-      property_id,
-      type
-    },
-    method: 'get'
-  })
-}
+
 export const getEntityDrainage = params => {
   const { time1, range, from_bzids, to_bzids } = params
   return naxios.request({
@@ -248,7 +226,7 @@ export const getEntityDrainage = params => {
     method: 'get'
   })
 }
-//时段客流分布热力
+// 时段客流分布热力
 export const getTimePassengerFlowDistribution = params => {
   const { bzIds, begin_time, end_time } = params
   return naxios.request({
@@ -256,20 +234,21 @@ export const getTimePassengerFlowDistribution = params => {
     params: {
       bzIds,
       begin_time,
-      end_time,
-    },
+      end_time
+    }
   })
 }
-//热力地图分布
+// 热力地图分布
 export const getHeatMapDistribution = params => {
-  const { floor_bzid,bzIds, begin_time, end_time,type } = params
   return naxios.request({
     url: 'judge/heatMap',
-    params: {
-      floor_bzid,
-      begin_time,
-      end_time,
-      type
-    },
+    params
+  })
+}
+
+export const getHwellTimeData = params => {
+  return naxios.request({
+    url: 'judge/dwellHeatMap',
+    params
   })
 }

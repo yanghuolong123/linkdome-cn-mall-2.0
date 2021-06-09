@@ -227,7 +227,7 @@ export default {
           that.imageOnload++
           if (isOnloadFirst == 0) {
             that.scale = images.width / images.height
-            that.imgWidth = (document.getElementById('pathContent').clientWidth) - 40
+            that.imgWidth = (document.getElementById('pathContent').clientWidth) - 20
           }
           isOnloadFirst++
           m.isShow = true
@@ -720,12 +720,10 @@ export default {
       background-color: #fff;
   }
   .pathContent{
-    width: 75%;
+    width: 80%;
     position: relative;
     margin-top: 80px;
     overflow: hidden;
-    padding: 20px;
-    box-sizing: content-box;
     img{
       display: block;
     }

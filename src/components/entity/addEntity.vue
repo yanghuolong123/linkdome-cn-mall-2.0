@@ -3,7 +3,7 @@
         <div class="dialogs-edit">
             <div class="dialogs-edit-bg"></div>
             <div class="dialogs-edit-text"
-                 :style="{marginLeft:marginLeft,marginTop:marginTop,width:mWidth,height:mHeight}"
+                 :style="{width:mWidth,overflowY:formValidate.spc===1?'scroll':'hidden'}"
                  id="addEntity">
                 <div class="edit-title">{{editTitle}}</div>
                 <div class="edit-close" v-on:click="closeEdit">
@@ -259,10 +259,10 @@ import {
   updateAreas,
   addmall,
   updateMallrData,
-  zones,
+  zones
 } from '@/api/manager.js'
 import { getFormateData } from '@/api/formats.js'
-import {getGroupOrganization} from '@/api/home.js'
+import { getGroupOrganization } from '@/api/home.js'
 
 export default {
   name: 'addEntity',
@@ -323,7 +323,7 @@ export default {
       controlLeft: '57%!important',
       controlBottom: '3%!important',
       mWidth: '1286px',
-      mHeight: '686px',
+      mHeight: '',
       marginLeft: '-643px',
       marginTop: '-414px',
       formValidate: {
@@ -887,6 +887,8 @@ export default {
         var years = that.currentYear
         getGroupOrganization().then(function (res) {
           if (res.data.code == 200) {
+            let data = res.data.data
+            that.$store.commit('saveOrganizationData', data)
             that.company_id = res.data.data.company_id
             var daily_start = that.formValidate.timerange[0]
             var daily_end = that.formValidate.timerange[1]
@@ -918,6 +920,12 @@ export default {
                 that.formValidate.address, that.formValidate.description, flowType, sumFlow, saleType, sumSale, that.zone_id,
                 daily_start, daily_end, that.flow_month, that.sale_month, Number(that.formValidate.area), years, that.formValidate.bzid, that.formValidate.property_id).then(function (res) {
                 if (res.data.code == 200) {
+                  getGroupOrganization().then(res => {
+                    if (res.data.code == 200) {
+                      let data = res.data.data
+                      that.$store.commit('saveOrganizationData', data)
+                    }
+                  })
                   that.closeEdit()
                   var alertText = {}
                   alertText.bg = '#00A0E9'
@@ -1146,10 +1154,9 @@ export default {
     }
 
     .control {
-        position: absolute;
-        right: 20px;
-        bottom: 20px;
-
+        /*position: absolute;*/
+        text-align: right;
+        margin:0 20px 20px 0;
         .ivu-btn {
             width: 90px;
             color: #fff;
@@ -1193,14 +1200,14 @@ export default {
         width: 100%;
     }
 
-    @media screen and (min-width: 769px), print {
-        .modal-content,
-        .modal-card {
-            margin: 0 auto;
-            max-height: 90vh;
-            width: 40%;
-        }
-    }
+    // @media screen and (min-width: 769px), print {
+    //     .modal-content,
+    //     .modal-card {
+    //         margin: 0 auto;
+    //         max-height: 90vh;
+    //         width: 40%;
+    //     }
+    // }
 
     .modal-card-title {
         color: #363636;
@@ -1218,7 +1225,6 @@ export default {
         color: @color;
         position: relative
     }
-
     .formmail {
         padding: 20px;
         display: flex;
@@ -1239,6 +1245,16 @@ export default {
             }
         }
     }
+    // @media (max-height:840px) {
+    //     .dialogs-edit-text{
+    //         max-height: 700px;
+    //         overflow-x: hidden;
+    //     }
+    //     .formmail{
+    //         margin-top: 0;
+
+    //     }
+    // }
 
     label {
         font-size: 18px;
@@ -1347,6 +1363,7 @@ export default {
                 position: absolute;
                 left: 50%;
                 top: 50%;
+                transform: translate(-50%,-50%);
                 // margin-left: -414px;
                 // margin-top: -343px;
                 // width: 828px;

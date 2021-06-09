@@ -2,6 +2,7 @@
   <div class="relative">
     <div class="vx-navbar-wrapper">
       <vs-navbar class="vx-navbar navbar-custom" :color="navbarColor" :class="classObj">
+        <h1 style="font-size:18px">太平鸟集团</h1>
         <feather-icon
           class="sm:inline-flex xl:hidden cursor-pointer mr-1"
           icon="MenuIcon"
@@ -16,6 +17,7 @@
           v-show="showCompany&&isnotBgmange"
           @change="comprotChange"
         >
+
         <vs-select-item
         class="headeSele"
           :key="index"
@@ -181,7 +183,7 @@ export default {
           let obj = {
             text: data.name,
             value: 0,
-            img: data.map_url
+            img: data.map_url ? data.map_url : ''
           }
           this.comprotList.push(obj)
           if (data.property.length != 0) {
@@ -196,7 +198,8 @@ export default {
               }
             })
           }
-          this.comprotModel = this.$store.state.home.headerAction
+          let modal = _.filter(data.property, (o) => { return o.property_id === this.$store.state.home.headerAction })
+          this.comprotModel = modal.length === 0 ? 0 : this.$store.state.home.headerAction
           var that = this
           var img = _.find(this.comprotList, function (list) { return list.value == that.actionIndex }).img
           this.$store.commit('headerImg', img)
@@ -364,6 +367,7 @@ export default {
       let companyLogo = _.find(this.comprotList, function (e) {
         return e.value == that.comprotModel
       })
+      if (!companyLogo) return false
       this.actionIndex = companyLogo.value
       this.$store.commit('headerAction', this.comprotModel)
       this.$store.commit('headerImg', companyLogo.img)
@@ -421,7 +425,7 @@ export default {
 }
 .vs-sidebar--background,
 .vs-sidebar {
-  z-index: 66666;
+  z-index: 201;
 }
 .vs-avatar--con-img img {
   width: 100%;
@@ -479,7 +483,7 @@ export default {
       top: 5px;
       left: -20px;
       position: relative;
-      z-index: 99999;
+      z-index: 3;
       cursor: pointer;
       img{
         width: 31px;

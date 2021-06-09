@@ -2,18 +2,19 @@
 <div class="genderChart">
     <div class="chartss middle">
         <i-tabs  class="chartsTable" v-model="current">
+             <h1 class="chart-title">性别分布</h1>
             <tab-item :icon="icon1" :title="title1" :style="{height: height0}">
-                <vue-apex-charts type=radialBar :height="height" :options="apexOptions" :series="series" />
+                <vue-apex-charts type=radialBar :height="height" :options="apexOptions" :series="seriesData" />
                 <div class="datass">
                     <div class="datas">
                         <icons class="icons" :size="20" :type="icon3" :color="color1"></icons>
-                        <span class="names" >&nbsp;{{labels[1]}}&nbsp;</span>
-                        <span class="number">{{series[1]}}</span>
+                        <span class="names" >&nbsp;{{labels[0]}}&nbsp;</span>
+                        <span class="number">{{series[0]}}</span>
                     </div>
                     <div class="datas">
                         <icons  class="icons" :style="{margin:margins2}":size="20" :type="icon4" :color="color2"></icons>
-                        <span class="names">&nbsp;{{labels[0]}}&nbsp;</span>
-                        <span class="number">{{series[0]}}</span>
+                        <span class="names">&nbsp;{{labels[1]}}&nbsp;</span>
+                        <span class="number">{{series[1]}}</span>
                     </div>
                 </div>
             </tab-item>
@@ -34,6 +35,7 @@ import tabItem from '_c/I-Tabs/TabItem.vue'
 import VueApexCharts from 'vue-apexcharts'
 // import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import iTabs from '_c/I-Tabs/Itabs.vue'
+import _ from 'lodash'
 export default {
   components: {
     VueApexCharts,
@@ -49,7 +51,7 @@ export default {
     },
     labels: {
       type: Array,
-      default: () => []
+      default: () => ['男性', '女性']
     },
     height0: {
       type: String,
@@ -102,36 +104,25 @@ export default {
     //   return this.chartOptions
       return { ...this.chartOptions, ...{ labels: this.labels } }
     },
+    seriesData () {
+      if (this.series.length) {
+        const sumSeries = _.sum(this.series)
+        return this.series.map(e => sumSeries ? _.round((e / sumSeries) * 100, 1) : 0)
+      } else return []
+    },
     tableList () {
-    //   var data = this.series
-    //   var sum = _.sum(data)
-    //   var columns = ['性别', '客流量', '百分比']
-    //   var labels = this.labels
-    //   var tableLists = []
-    //   var nan = {}
-    //   nan.name = labels[0]
-    //   nan.begin = data[0]
-    //   nan.end = Math.round(data[0] / sum * 100) + '%'
-    //   tableLists.push(nan)
-    //   var nv = {}
-    //   nv.name = labels[1]
-    //   nv.begin = data[1]
-    //   nv.end = (100 - Math.round(data[0] / sum * 100)) + '%'
-    //   tableLists.push(nv)
-    //   this.columns = columns
-    //   return tableLists
       const [maleEnter, femaleEnter] = this.series
       const sumEnter = this.series.reduce((accumulator, currentValue) => accumulator + currentValue)
       let result = [
         {
           gender: '男',
           enter: maleEnter,
-          rate: sumEnter ? `${Math.round(maleEnter / sumEnter)}%` : '0%'
+          rate: sumEnter ? `${_.round((maleEnter / sumEnter) * 100, 1)}%` : '0%'
         },
         {
           gender: '女',
           enter: femaleEnter,
-          rate: sumEnter ? `${Math.round(femaleEnter / sumEnter)}%` : '0%'
+          rate: sumEnter ? `${_.round((femaleEnter / sumEnter) * 100, 1)}%` : '0%'
         }
       ]
       return result
@@ -216,7 +207,7 @@ export default {
             shade: 'dark',
             type: 'vertical',
             shadeIntensity: 0.5,
-            gradientToColors: [ '#FCAC3F', '#01A1E9' ],
+            gradientToColors: ['#FCAC3F', '#01A1E9'],
             inverseColors: false,
             opacityFrom: 1,
             opacityTo: 1,
@@ -246,8 +237,15 @@ export default {
 .genderChart{
     .chartsTable{
         background-color: #fff;
-        margin-top: 20px;
         border-radius: 6px;
+    }
+    .chart-title{
+      position: absolute;
+      width: 100%;
+      height: auto;
+      font-size: 18px;
+      top: -50px;
+      padding-left: 20px;
     }
     .middle{
         margin:  0% 0.95%;

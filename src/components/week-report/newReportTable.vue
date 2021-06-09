@@ -25,11 +25,11 @@ export default {
         {
           name: '客流量',
           key: 'enter'
-        },
-        {
-          name: '集客量峰值',
-          key: 'highest'
         }
+        // {
+        //   name: '集客量峰值',
+        //   key: 'highest'
+        // }
       ]
     },
     data: {

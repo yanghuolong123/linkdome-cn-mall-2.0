@@ -61,20 +61,24 @@ import iview from 'iview'
 import htmlToPdf from '@/router/htmlToPdf'
 
 import 'element-ui/lib/theme-chalk/index.css'
-import elementUi from 'element-ui'
-import vuescroll from 'vuescroll';
-Vue.use(vuescroll);
+import { Cascader, Select, DatePicker, Option } from 'element-ui'
+import './my-theme/index.less'
+// 连接线插件
+import jsPlumb from 'jsplumb'
+// 控制是否显示遮罩层
+import heatmapjsVue from 'heatmapjs-vue'
 Vue.use(iview)
-Vue.use(elementUi)
-
-
+Vue.use(Cascader)
+Vue.use(Option)
+Vue.use(Select)
+Vue.use(DatePicker)
 
 Vue.component('icons', icons)
 Vue.use(Vuesax)
 Object.keys(custom).forEach(key => {
   Vue.filter(key, custom[key])
 })
-
+Vue.prototype.$jsPlumb = jsPlumb.jsPlumb
 Vue.use(htmlToPdf)
 // 高德地图
 Vue.use(VueAMap)
@@ -105,7 +109,8 @@ const config = {
   fieldsBagName: 'fieldBags'
 }
 Vue.use(VeeValidate, config)
-// 控制是否显示遮罩层
+Vue.use(heatmapjsVue)
+
 Vue.prototype.hasCover = process.env.NODE_ENV === 'development' ? '' : ''
 require('./assets/css/config.css')
 new Vue({

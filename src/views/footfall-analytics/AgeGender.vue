@@ -81,9 +81,6 @@ export default {
       },
       chartData: { age: {}, gender: {} },
       extraOptions: {
-        tooltip: {
-          y: {}
-        },
         chart: {
           stacked: true
         },
@@ -163,11 +160,17 @@ export default {
       let ageXaxis = []
       let ageSeries
       let genderChartData
-      // this.$vs.loading.close()
-      // this.$store.commit('loadingState', false)
+
       data.forEach(e => {
         Object.keys(e.stat).forEach(i => {
           let eleOfTimes = e.stat[i]
+          // let newObj = {}
+          // newObj.less_30 = eleOfTimes.age_distribution.less_30
+          // newObj['30_60'] = {
+          //   male: eleOfTimes.age_distribution['30_45'].male + eleOfTimes.age_distribution['45_60'].male,
+          //   female: eleOfTimes.age_distribution['30_45'].female + eleOfTimes.age_distribution['45_60'].female
+          // }
+          // newObj.more_60 = eleOfTimes.age_distribution.more_60
           ageCollection.push({
             id: e.bzid,
             time: i,
@@ -185,7 +188,7 @@ export default {
       ageLabels = {
         name: '年龄',
         key: 'age',
-        data: Object.keys(ageCollection[0].data).map(e => { return e.replace('_', '-').replace('less-', '小于').replace(/more-/, '大于') })
+        data: Object.keys(ageCollection[0].data).map(e => { return e.replace('_', '-').replace('less-30', '青年').replace('30-60', '中年').replace(/more-60/, '老年') })
       }
       if (singleTime) { // 多个实体单个时间，柱状图，xAxis,分类为实体
         const { labels, ...rest } = this.getGenderChartData(genderCollection, ['id'])
@@ -232,6 +235,7 @@ export default {
             series: Object.values(genderCollection[0].data),
             type: ['radialBar']
           }
+
           ageSeries = Object.keys(this.genderDict).map(g => ({ name: this.genderDict[g], key: g, data: Object.values(ageCollection[0].data).map(e => e[g]) }))
         } else { // 单个实体多个时间,柱状图，xAxis,series,横轴分类为时间
           const { labels, ...rest } = this.getGenderChartData(genderCollection, ['time'])
@@ -329,7 +333,7 @@ export default {
       Object.keys(data[0].data).forEach(e => {
         let tml = {}
         let eachSeriesData = []
-        tml.name = e.replace('_', '-').replace('less-', '小于').replace(/more-/, '大于')
+        tml.name = e.replace('_', '-').replace('less-30', '青年').replace('30-60', '中年').replace(/more-60/, '老年')
         tml.key = e
         data.forEach(c => {
           Object.keys(this.genderDict).forEach(gender => {
@@ -427,10 +431,10 @@ export default {
   display grid
   grid-template-columns repeat(2, minmax(10px, 1fr))
   grid-template-areas 'age gender'
-  @media (max-width: 768px)
-    grid-template-columns minmax(10px, 1fr)
-    grid-template-areas 'age' 'gender'
-  grid-gap 20px
+  // @media (max-width: 768px)
+  //   grid-template-columns minmax(10px, 1fr)
+  //   grid-template-areas 'age' 'gender'
+  //   grid-gap 20px
   >div
     &:nth-child(1)
       grid-area age

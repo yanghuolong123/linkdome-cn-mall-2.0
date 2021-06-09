@@ -19,13 +19,14 @@ footFall:客流
       </vs-select>
     </div>
     <div class="ranking-box mt-3" v-if="isText"  >
+
       <div v-if="bizChartData!=false">
         <chart-tabs
           v-model="exportType"
           :xAxis="bizChartData.xAxis"
           :series="bizChartData.series"
-          :type="chartTypes"
           :tooltipUnit="tooltipUnit(bizIndicator)"
+          :type="chartTypes"
           :extraOptions="bizExtraOptions"
           :istotal='istotal'
           :title="titleText.left"
@@ -53,14 +54,15 @@ footFall:客流
           v-model="exportType"
           :xAxis="topShopData.xAxis"
           :series="topShopData.series"
-          :type="chartTypes"
           :tooltipUnit="tooltipUnit(shopIndicator)"
+          :type="chartTypes"
           :extraOptions="extraOptions"
           :title="titleText.right"
           :isHome='true'
           :istotal='istotal'
           @getShopTableCoumn="getShopTableCoumn"
           @getShopTableData="getShopTableData"
+
           key="shopTop"
         >
           <export-menu slot="export" @onchange="exportShoptop"></export-menu>
@@ -340,7 +342,7 @@ export default {
           if (index < 10) {
             let obj = {
               name: `${that.indicatorData[that.bizIndicator].name} ${e.split(',').join(' - ')}`,
-              key: `data_${e}_enter`,
+              key: `data_${e}`,
               data: Object.values(tml[e]).map(o => o.data)
             }
             return obj
@@ -357,10 +359,10 @@ export default {
       let bizIndex = this.currentBizIdx
       if (bizIndex < 0) {
         // 全部业态
-        if (!this.allBizTopData.length) return false
+        if (this.allBizTopData.length == 0) return false
         source = this.allBizTopData[0].data.data
       } else {
-        if (!this.shopTopData.length) return false
+        if (this.shopTopData.length == 0) return false
         if (this.shopTopData[0]) source = this.shopTopData[0].data.data
         else return false
       }
@@ -385,7 +387,7 @@ export default {
         },
         series: Object.keys(sortedObj).map(e => ({
           name: `${this.indicatorData[this.shopIndicator].name} ${e.split(',').join(' - ')}`,
-          key: `data_${e}_enter`,
+          key: `data_${e}`,
           data: Object.values(sortedObj[e]).map(e => { return e.data })// 因为排序后的数据是数组，所以需要判断
         }))
       }
@@ -418,11 +420,12 @@ export default {
           return '人次'
         case 'SquaerMetre':
           return '元/m²'
-        case 'UnitPrice':
         case 'SaleAmount':
           return '元'
         case 'CloseRate':
           return '%'
+        case 'UnitPrice':
+          return '元'
       }
     },
     // 业态数据
@@ -443,7 +446,6 @@ export default {
       }
       this.bizIndicator == 'enter' ? bizTypesTopReqs = getBizTopFootFall(bizParams, this) : bizTypesTopReqs = getTopBussinessType(bizParams)
       bizTypesTopReqs.then(res => {
-        this.cancelGetBizTopFootFallAjax = null
         this.bizTopData = res
       })
     },
@@ -476,7 +478,6 @@ export default {
         let url = this.shopIndicator == 'enter' ? getShopTopFootFall(topShopParam, this) : getTopShop(topShopParam, this)
         topShopOfBizType.push(url)
       }
-
       if (typeof this.cancelGetTopShopAjax === 'function') {
         this.cancelGetTopShopAjax()
       }
@@ -494,7 +495,6 @@ export default {
       Promise.all([topShopOfAllBizType, topShopOfBizType].map(innerPromises => {
         return Promise.all(innerPromises)
       })).then(res => {
-        this.cancelGetTopShopAjax = null;
         [this.allBizTopData, this.shopTopData] = res
       }).catch(err => {
         console.log(err)
@@ -649,7 +649,6 @@ export default {
       propertyId = propertyId == 0 ? '' : propertyId
       getBussinessDict({ property_id: propertyId }).then(res => {
         this.bussinessDictList = res.data.data
-        this.$store.commit('saveBussinessType', res.data.data)
         this.$store.commit('isGetDict', false)
         this.getTopData()
       }).catch(err => {
@@ -682,12 +681,12 @@ box-border(w,r)
     width 50%
     &:nth-child(1)
         border-right 1px solid border-color
-  @media (max-width:768px)
-    flex-wrap wrap
-    border none
-    >div
-      width 100%
-      box-border 1px,8px
-      &:nth-child(1)
-        margin-bottom 1.25rem
+  // @media (max-width:768px)
+  //   flex-wrap wrap
+  //   border none
+  //   >div
+  //     width 100%
+  //     box-border 1px,8px
+  //     &:nth-child(1)
+  //       margin-bottom 1.25rem
 </style>

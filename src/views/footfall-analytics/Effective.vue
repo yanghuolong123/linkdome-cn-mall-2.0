@@ -3,7 +3,7 @@
     <div class="time-selector bg-white box-card px-4 pb-6">
       <flow-selector style="background-color:#fff;border-radius: 6px;" @on-change="paramsPrepare" :isShop='true'
         :isFloor='true' :isStore='true' :isArea='true' :multiple='false' :isNeedEntity='false' :footFall='false'
-        :typeText='dwellText' isReset ref="flowSelector" :initDate="defalutDate"></flow-selector>
+        :typeText='dwellText' isReset ref="flowSelector"></flow-selector>
     </div>
     <div class="chartContent">
       <goalCharts v-if="isEffectiveChart" class="charts" id='tendencyLine' height1="455px" height3="455px" title1="有效客流趋势"
@@ -13,18 +13,18 @@
       <div class="cardContent">
         <Cards :isTime="isTime" :isUp="isUp1" :item="effective"></Cards>
         <Cards :isTime="isTime" :isUp="isUp2" :item="repeat" margin="20px 0px"></Cards>
-        <Cards :isTime="isTime" :isUp="isUp3" :item="avgTimes"></Cards>
+        <!-- <Cards :isTime="isTime" :isUp="isUp3" :item="avgTimes"></Cards> -->
       </div>
-      <div class="circles">
-        <storeChart class="cir" title1="到店次数" allHeight='395' :columns="chartColumns" :tableList="chartTable" :showCharts="showCharts"
+      <!-- <div class="circles">
+        <storeChart class="cir" title1="到店次数" :columns="chartColumns" :tableList="chartTable" :showCharts="showCharts"
           :isTime="isTime" :pieType="pieType" :chartOptions="chartOptions" :series="circleSeries"></storeChart>
       </div>
-      <div style="width:54%;height:423px">
-        <goalCharts height1="344px" height3="344px" title1="平均到访频次趋势" id='tendencyLine2'
+      <div style="width:54%;height:383px">
+        <goalCharts height1="309px" height3="309px" title1="平均到访频次趋势" id='tendencyLine2'
           :options1="trendAndAvg.avgLineOption" :series1="trendAndAvg.avgLineSeries"
           :options2="trendAndAvg.avgBarOption" :series2="trendAndAvg.avgBarSeries" :columns="trendAndAvg.avgColumn"
           :tableList="trendAndAvg.avgTable"></goalCharts>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -120,8 +120,7 @@ export default {
       circleSeries: [],
       chartColumns: [],
       chartTable: [],
-      isNumber: 0,
-      defalutDate: [moment().add(-7, 'day').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]
+      isNumber: 0
 
     }
   },
@@ -203,8 +202,8 @@ export default {
         trendAndAvg.trendTable = res.data.data.map(function (m) {
           let obj = {}
           obj.name = moment(m.date_time).format('YYYY-MM-DD')
-          obj.begin = m.visits ? m.visits.toLocaleString() + '人次' : ' '
-          obj.end = m.unique_visits ? m.unique_visits.toLocaleString() + '人' : ' '
+          obj.begin = m.visits ? m.visits.toLocaleString() : ' '
+          obj.end = m.unique_visits ? m.unique_visits.toLocaleString() : ' '
           return obj
         })
         trendAndAvg.trendColumn = ['日期', '全部客流量', '有效客流量']
@@ -240,7 +239,7 @@ export default {
         trendAndAvg.avgTable = res.data.data.map(function (m) {
           let obj = {}
           obj.begin = moment(m.date_time).format('YYYY-MM-DD')
-          obj.end = m.avgFrequencyVisits ? m.avgFrequencyVisits + '次' : ' '
+          obj.end = m.avgFrequencyVisits ? m.avgFrequencyVisits : ' '
           return obj
         })
         trendAndAvg.avgColumn = ['日期', '平均到访频次']
@@ -268,7 +267,7 @@ export default {
           } else {
             obj.name = j + '次'
           }
-          obj.enter = resCircleData[j] + '人次'
+          obj.enter = resCircleData[j]
           chartTable.push(obj)
           circleSeries.push(resCircleData[j])
         }
@@ -288,7 +287,9 @@ export default {
         return false
       }
       this.isNumber = this.isNumber + 1
-      if (!value.entitys.length) return
+      if (!value.entitys[0]) {
+        return false
+      }
       var bzid = value.entitys[0].id
       if (value.compareType == 'not') { // 无对比
         that.$store.commit('setRequestNumber', 2)
@@ -572,14 +573,18 @@ export default {
     display: flex;
     flex-wrap: wrap;
     margin-top:20px;
+    position: relative;
     .charts {
-      width: 77.5%;
+      width: 75.5%;
       height: 534px;
       margin-bottom: 20px;
       margin-right: 20px;
     }
     .cardContent {
       width: 21%;
+      position: absolute;
+      right: 0;
+      top: 0;
       .cards{
         box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
         border-radius: 6px;

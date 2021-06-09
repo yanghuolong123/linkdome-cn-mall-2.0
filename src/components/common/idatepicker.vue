@@ -18,12 +18,13 @@
 <script>
 import Moment from 'moment'
 import _ from 'lodash'
+let that = this
 export default {
   name: 'idatePicker',
   props: {
-    disabled:{
-      type:Boolean,
-      default:false
+    disabled: {
+      type: Boolean,
+      default: false
     },
     value: {
       type: Array,
@@ -35,6 +36,7 @@ export default {
     }
   },
   data () {
+    let that = this
     return {
       clickTimeName: 'l',
       options: {
@@ -130,7 +132,11 @@ export default {
           }
         ],
         disabledDate (date) {
-          return Moment(date).isAfter(Moment())
+          if (that.$route.name === 'DwellTime') {
+            return Moment(date).isAfter(Moment().add(-1, 'd'))
+          } else {
+            return Moment(date).isAfter(Moment())
+          }
         }
       }
     }

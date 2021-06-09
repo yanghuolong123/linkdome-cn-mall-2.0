@@ -276,40 +276,28 @@ export default {
         })
       }
       let that = this
-      if (tml.length > 0) {
-        return {
-          xAxis: {
-            name: '名称',
-            key: 'bussiness',
-            data: Object.values(Object.values(tml)[0]).map(e => e.name)
-          },
-          // series: Object.keys(tml).map(e => ({
-          //   name: `${this.indicatorData[this.bizIndicator].name} ${e.split(',').join(' - ')}`,
-          //   key: `data_${e}`,
-          //   data: Object.values(tml[e]).map(o => o.data)
-          // })),
-          series: Object.keys(tml).map(function (e, index) {
-            if (index < 10) {
-              let obj = {
-                name: `${that.indicatorData[that.bizIndicator].name} ${e.split(',').join(' - ')}`,
-                key: `data_${e}`,
-                data: Object.values(tml[e]).map(o => o.data)
-              }
-              return obj
+      return {
+        xAxis: {
+          name: '名称',
+          key: 'bussiness',
+          data: Object.values(Object.values(tml)[0]).map(e => e.name)
+        },
+        // series: Object.keys(tml).map(e => ({
+        //   name: `${this.indicatorData[this.bizIndicator].name} ${e.split(',').join(' - ')}`,
+        //   key: `data_${e}`,
+        //   data: Object.values(tml[e]).map(o => o.data)
+        // })),
+        series: Object.keys(tml).map(function (e, index) {
+          if (index < 10) {
+            let obj = {
+              name: `${that.indicatorData[that.bizIndicator].name} ${e.split(',').join(' - ')}`,
+              key: `data_${e}`,
+              data: Object.values(tml[e]).map(o => o.data)
             }
-          }),
-          source: Object.values(Object.values(tml)[0]).map(e => e.id)
-        }
-      } else {
-        return {
-          xAxis: {
-            name: '名称',
-            key: 'bussiness',
-            data: []
-          },
-          series: [],
-          source: []
-        }
+            return obj
+          }
+        }),
+        source: Object.values(Object.values(tml)[0]).map(e => e.id)
       }
     },
     topShopData () {
@@ -602,8 +590,7 @@ export default {
     },
     // 请求业态数据传入store
     getDict () {
-      let propertyId = this.$store.state.home.headerAction
-      getBussinessDict({ property_id: propertyId }).then(res => {
+      getBussinessDict().then(res => {
         this.$store.commit('saveBussinessType', res.data.data)
         this.$store.commit('isGetDict', false)
       }).catch(err => {
@@ -626,12 +613,12 @@ box-border(w,r)
     width 50%
     &:nth-child(1)
         border-right 1px solid border-color
-  @media (max-width:768px)
-    flex-wrap wrap
-    border none
-    >div
-      width 100%
-      box-border 1px,8px
-      &:nth-child(1)
-        margin-bottom 1.25rem
+  // @media (max-width:768px)
+  //   flex-wrap wrap
+  //   border none
+  //   >div
+  //     width 100%
+  //     box-border 1px,8px
+  //     &:nth-child(1)
+  //       margin-bottom 1.25rem
 </style>

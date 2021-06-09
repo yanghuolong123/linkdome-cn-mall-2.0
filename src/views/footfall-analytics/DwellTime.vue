@@ -241,7 +241,7 @@ export default {
       },
       chartTableName: ['实体名称', '停留时间'],
       chartTableListL: [],
-      tableName: ['实体名称', '实体类型', '平均停留时间'],
+      tableName: ['实体名称', '平均停留时间'],
       tableList: [],
       chartTableList: [],
       columnsList: [],
@@ -276,7 +276,7 @@ export default {
         } else if (value.compareType == 'entity') {
           compare = '实体对比'
           times = value.date1Array.join(',')
-        } else if (['time','onYear','onMonth'].includes(value.compareType)) {
+        } else if (['time', 'onYear', 'onMonth'].includes(value.compareType)) {
           compare = '时间对比'
           times = [value.date1Array.join(','), value.date2Array.join(',')]
         }
@@ -289,7 +289,7 @@ export default {
       this.prepareValue = value
       var charType = false
       this.compareData = value
-      if (['time','onYear','onMonth'].includes(value.compareType)) {
+      if (['time', 'onYear', 'onMonth'].includes(value.compareType)) {
         this.isTableDate = true
         time2 = value.date2Array[0] + ',' + value.date2Array[1]
         if (value.date1Array[0] === value.date1Array[1]) {
@@ -379,7 +379,7 @@ export default {
         if (that.$refs.graphBar) {
           that.$refs.graphBar.updateOptions({ xaxis: that.graphData.chartOptions.xaxis })
           if (that.graphData.chartOptions.xaxis.categories.length < 2) {
-            that.graphData.chartOptions.plotOptions.bar.columnWidth = '5%'
+            that.graphData.chartOptions.plotOptions.bar.columnWidth = '10%'
             that.$refs.graphBar.updateOptions({ plotOptions: that.graphData.chartOptions.plotOptions })
           } else if (that.graphData.chartOptions.xaxis.categories.length < 5) {
             that.graphData.chartOptions.plotOptions.bar.columnWidth = '20%'
@@ -400,7 +400,7 @@ export default {
         res.data.data.zones.map(function (d) {
           var obj = {}
           obj.name = d.name
-          obj.type = d.type == null ? '出入口' : d.type
+          // obj.type = d.type == null ? '出入口' : d.type
           if (that.isTableDate === false) obj.time = ''
           else obj.time = d.date ? d.date : obj.time = ' '
           obj.avg = that.dateTiem(d.avg)
@@ -419,13 +419,13 @@ export default {
       if (value === '') {
         this.tableName = [
           '实体名称',
-          '实体类型',
+          // '实体类型',
           '平均停留时间'
         ]
       } else {
         this.tableName = [
           '实体名称',
-          '实体类型',
+          // '实体类型',
           '时间点',
           '平均停留时间'
         ]
@@ -450,7 +450,7 @@ export default {
         var timeType = that.compareData.compareType
         series.map(function (list, index) {
           var obj = {}
-          if (['time','onYear','onMonth'].includes(timeType)) {
+          if (['time', 'onYear', 'onMonth'].includes(timeType)) {
             var num = Number(index) + 1
             obj.time = '第' + num + '天'
           } else {

@@ -8,6 +8,7 @@
             :tableList='floorTable'
             :titleName='floorTitle'
             :userLvl="userLvl"
+            @imgConfig="imgConfig"
             @tableData='editFloor'
             @removeData='delFloor'
         >
@@ -21,7 +22,7 @@
           </div>
           <div class="left-floor">
             <table-multiple-selected
-                :tableName='tableName'
+                :tableName='tableNameCommon'
                 :tableList='areaTable'
                 :titleName='areaTitle'
                 :userLvl="userLvl"
@@ -50,7 +51,7 @@
         </div>
       <!-- 出入口 -->
         <table-multiple-selected
-            :tableName='tableName'
+            :tableName='tableNameCommon'
             :tableList='inletTable'
             :titleName='inletTitle'
             :userLvl="userLvl"
@@ -123,7 +124,6 @@ export default {
       },
       editDoorWayTitle: '添加出入口',
       editAreaTitle: '添加区域',
-      tableName: ['名称', '描述', '操作'],
       floorTitle: '基本信息',
       areaTitle: '区域信息',
       lineUpTitle: '排队信息',
@@ -143,7 +143,8 @@ export default {
         bzid: '',
         type: ''
       },
-      gateList: []
+      gateList: [],
+        tableNameCommon:['名称', '描述', '操作']
     }
   },
   props: {
@@ -161,6 +162,13 @@ export default {
     }
   },
   computed: {
+      tableName(){
+          if(this.userLvl === 'admin'){
+              return ['名称', '描述','图片配置', '操作']
+          }else {
+              return ['名称', '描述', '操作']
+          }
+      },
     inletTable: {
       get () {
         var arr = []
@@ -212,6 +220,7 @@ export default {
         obj.zone_index = this.floorInfo[1].zone_index
         obj.describe = this.floorInfo[1].description ? this.floorInfo[1].description : ' '
         obj.operation = true
+        obj.imgConfig = this.userLvl === 'admin'
         arr.push(obj)
       }
       return arr
@@ -246,6 +255,9 @@ export default {
         if (that.$refs.addArea) that.$refs.addArea.isModify = false
       }, 200)
     },
+      imgConfig(){
+          this.$emit('imgConfig')
+      },
     closeEdit () {
       this.showDoorway = false
       this.showArea = false
@@ -369,6 +381,7 @@ export default {
       alertText.text = '确认删除此楼层信息？'
       alertText.bg = '#00A0E9'
       alertText.confirm = true
+      console.log(value)
       this.$emit('delFloor', true, alertText, value.data)
     },
     closeAlert () {
@@ -454,7 +467,7 @@ export default {
     position: absolute;
     top: 14px;
     right: 20px;
-    z-index: 999;
+    z-index: 1;
     margin-top: 3.5px;
         span{
             display: inline-block;

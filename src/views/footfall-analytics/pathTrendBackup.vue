@@ -18,6 +18,7 @@
       </div>
 
 <!-- 中间内容 -->
+
       <div class="flexs">
           <new-path ref="newPath" v-if="isNewPath"></new-path>
           <div class="paths"  v-else >
@@ -46,17 +47,7 @@
                 <p class="minNumber">{{minNumber}}</p>
                 <img :src="colorBar" width="20">
               </div>
-
-                <div  class="titleList" v-for="item in titleLists" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}">
-                    <Tooltip theme="light">
-                        <div style="color: transparent">{{item.name}}</div>
-                        <div slot="content">
-                            <p>店铺：{{item.name}}</p>
-                            <p>客流量：{{item.enter}}人</p>
-                            <p>销售额：{{item.sale_amount}}元</p>
-                       </div>
-                    </Tooltip>
-                </div>
+              <div  v-for="item in titleLists" class="titleList" :title="item.name" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}"></div>
             </div>
           </div>
 
@@ -68,16 +59,16 @@
 
         <div>
     <!-- 排行占比分析 -->
-<!--    <Ranking-->
-<!--    v-if="false"-->
-<!--      class="mx-3"-->
-<!--      :selectTitle="selectTitle"-->
-<!--      :time1="topRange"-->
-<!--      :defaultBizIndicator="bizSalesType"-->
-<!--      :defaultShopIndicator="shopSalesType"-->
-<!--      :indicatorSelector="showList"-->
-<!--      :propertyId="currentPropertyId"-->
-<!--      :indicatorData="enterIndicator"/>-->
+    <Ranking
+    v-if="false"
+      class="mx-3"
+      :selectTitle="selectTitle"
+      :time1="topRange"
+      :defaultBizIndicator="bizSalesType"
+      :defaultShopIndicator="shopSalesType"
+      :indicatorSelector="showList"
+      :propertyId="currentPropertyId"
+      :indicatorData="enterIndicator"/>
         </div>
   </div>
 </template>
@@ -256,8 +247,7 @@ export default {
             obj.x = Math.floor(e.x * that.canvasWidth)
             obj.y = Math.floor(e.y * that.canvasHeight)
             obj.enter = m.enter
-            obj.name = e.name;
-            obj.sale_amount = m.sale_amount;
+            obj.name = e.name
             clickNodes.push(obj)
             titleList.push(obj)
             if (!e.x && !e.y) {
@@ -270,8 +260,7 @@ export default {
             if (controlNode.x < 0 || controlNode.y < 0) {
               return false
             }
-              console.log(clickNodes);
-              that.positions.push(clickNodes)
+            that.positions.push(clickNodes)
           }
         }
       })
@@ -645,7 +634,6 @@ export default {
       right: 20px;
       width: 18%;
       height: auto;
-      z-index: 999;
       }
     }
 
@@ -686,9 +674,6 @@ export default {
     z-index: 99999;
 }
 }
-    .ivu-tooltip-rel{
-        height: 15px;
-    }
 </style>
 
     <style>

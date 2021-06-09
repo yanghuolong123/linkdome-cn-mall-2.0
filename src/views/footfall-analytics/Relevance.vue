@@ -226,9 +226,7 @@ export default {
     }
   },
   watch: {
-    'relevanceList'(newval,old){
-      console.log(newval);
-      console.log(old);
+    'relevanceList' (newval, old) {
     },
     '$store.state.home.headerAction' () {
       this.resetData()
@@ -328,8 +326,6 @@ export default {
 
       try {
         let arr = []
-        console.log(this.relevanceValue);
-        console.log(this.relevanceList);
         this.relevanceValue.map(item => {
           this.relevanceList.map(list => {
             if (list.id == item[0]) {
@@ -341,7 +337,6 @@ export default {
             }
           })
         })
-        console.log(this.relevanceList);
         window.TDAPP.onEvent('店铺关联页面', '数据查询', { '时间段': time, '实体选择': arr.join(',') })
       } catch (error) {
         console.log('店铺关联页面-' + '数据查询' + '埋点error:' + error)

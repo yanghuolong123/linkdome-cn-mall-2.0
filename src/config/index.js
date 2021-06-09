@@ -19,20 +19,5 @@ export default {
   /**
    * @description 默认打开的首页的路由name值，默认为home
    */
-  homeName: 'home',
-  /**
-   * @description vueScroll配置
-   */
-  vueScrollOps: {
-    vuescroll: {},
-    scrollPanel: {},
-    rail: {
-      keepShow: true,
-    },
-    bar: {
-      hoverStyle: true,
-      onlyShowBarOnScroll: true, //是否只有滚动的时候才显示滚动条
-      background: '#e5e5e5',
-    }
-  },
+  homeName: 'home'
 }

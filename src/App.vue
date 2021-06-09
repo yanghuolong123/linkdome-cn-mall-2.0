@@ -52,10 +52,10 @@ export default {
 }
 </script>
 <style>
-/* body{
+body{
   min-width: 1400px;
   overflow-x: auto!important;
-} */
+}
 path{
   cursor: pointer;
 }
@@ -87,14 +87,14 @@ path{
   white-space: normal; */
   /* word-break: break-all; */
 }
-.static-box:hover,.mapCarousel:hover,.dashboard-box .chart-box:hover,.group-age-gender .left:hover,.group-age-gender .right:hover,
+.dashboard-box:hover,.group-age-gender .left:hover,.group-age-gender .right:hover,
 .group-client .left:hover,.group-client .center:hover,.account-center .account-text .account-text-right .account-seach .data-picker:hover,
 .bg-white.box-card.px-4.pb-6:hover,.item.box-card.bg-white:hover,.bg-white.box-card:hover,
 .bg-white.box-card.mt-6:hover,.selectorbox.ivu-card.ivu-card-bordered:hover,
 .go-shop .go-time-selector:hover,.go-shop .go-shop-chart-list:hover,
-.heatMaps .path-picker:hover,.heatMaps .content:hover,
+.heatMaps .path-picker:hover,.heatMaps .heatMap:hover,.heatMaps .heatMapGrid:hover,
 .effective .chartContent .cardContent .cards:hover,.effective .chartContent .circles:hover,
-/*.relevance .relevance-picker:hover,.tab-container:hover,*/
+.relevance .relevance-picker:hover,.tab-container:hover,
 .relevance .relevanceTOP3 h4 ul li:hover,.relevance .relevance-graph:hover,.relevance-table:hover,
 .cross_analysis_time >div:hover,.cross_analysis:hover,.cross_analysis:hover,
 .pathTrend .path-picker:hover,.pathTrend .path-title:hover,
@@ -106,11 +106,9 @@ path{
 .day-report-date:hover,.month-report-date:hover,#pdfDom:hover,
 .topArea:hover,.vx-card.formatsList:hover,
 .holiday .holidayTable:hover,
-.shop-portrait .selected-table:hover,
-.shop-portrait .box-card:hover,
 .account-center .account-text .account-text-right .account-table:hover,
 .roles .left:hover,.CheckboxGroups:hover,
-.left-floor .vx-card:hover,.stall-header-right .vx-card:hover,.area-list-right .vx-card:hover,#pathContent:hover {
+.left-floor .vx-card:hover,.stall-header-right .vx-card:hover,.area-list-right .vx-card:hover,#pathContent:hover,.synthesize-selector:hover {
  border:1px solid #23aeee!important;
  border-radius: 6px;
  box-shadow: 0px 0px 18px 0px rgba(160, 163, 164, .5)!important;

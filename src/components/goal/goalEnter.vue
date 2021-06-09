@@ -32,7 +32,7 @@
             <div class="left-title">
               <p class="title">{{titleText}}</p>
             </div>
-            <gola-enter-analysis :xAxis='options2.xaxis.categories' :series='series2'></gola-enter-analysis>
+            <gola-enter-analysis :xAxis='options2.xaxis.categories' :options="options2" :series='series2'></gola-enter-analysis>
         </tab-item>
         <tab-item  class="chart-div">
             <div class="left-title">
@@ -212,7 +212,7 @@ export default {
     right: 0px;
     top: 69px;
     height: auto;
-    z-index: 60;
+    z-index: 1;
     padding: 0 10px;
     box-shadow:0px 3px 2px 0px rgba(166, 168, 169, .3);
     // .lineBox{
@@ -253,7 +253,6 @@ export default {
     position: absolute;
     right: 50px;
     top: 69px;
-    z-index: 60;
     li{
         float:left;
         &:nth-child(1){

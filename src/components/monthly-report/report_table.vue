@@ -7,7 +7,7 @@
             <p>客流量峰值</p>
             <p>平均客流量</p>
         </li>
-        <li v-for="item in list">
+        <li v-for="(item,index) in list" :key="index">
             <p>{{item.name}}</p>
             <p>{{item.enter}}</p>
             <p>{{item.peak}} 人 {{item.time}}</p>

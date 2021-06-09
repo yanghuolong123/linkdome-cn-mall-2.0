@@ -1,188 +1,102 @@
 <template>
-    <div>
-        <div class="bg-white box-card px-4 pb-6">
-            <flow-selector :footFall="true"
-                           :isNeedEntity='userType'
-                           @on-change="paramsPrepare"
-                           routName='entity'
-                           :isGate='true'
-                           :isShop='false'
-                           :isArea='true'
-                           :isFloor='true'
-                           :isStore='true'
-                           :isReset='true'></flow-selector>
-        </div>
-        <div class="px-3 -mx-3 overflow-hidden" style="padding-bottom:20px" v-show="!showSaleChart">
-            <!-- 销售列表 -->
-            <indicator-cards
-                    :operate="false"
-                    :indicatorList="salesIndicatorData"
-                    :defaultCountsOfCards="5"
-                    scaleCards
-            >
-                <template slot-scope="{item}">
-                    <singleCard :item="item" :isLiveData="false"></singleCard>
-                </template>
-            </indicator-cards>
-        </div>
-        <sales-charts-list :data="salesChartData" v-show="showSaleChart" style="margin:20px 0">
-            <template slot-scope="{item}">
-                <chart-tabs :xAxis="item.xAxis"
-                            :tooltipUnit="tooltipUnit(item.name)"
-                            :labels="item.labels"
-                            :series="item.series"
-                            :type="item.type"
-                            :height="item.height"
-                            :title="item.title"
-                            :extraOptions="item.extraOptions"
-                            :istotal='!item.title?true:false'
-                            @tableChage='enterTableChage'
-                            >
-                    <!--下载-->
-                    <export-menu slot="export"
-                                 @onchange="enterExportBiztop(item)"></export-menu>
-                </chart-tabs>
-            </template>
-        </sales-charts-list>
-        <!-- enter -->
-        <div class="z-50">
-            <charts-list :data="computeChartData">
-                <template slot-scope="{item}">
-                    <chart-tabs :xAxis="item.xAxis"
-                                :labels="item.labels"
-                                :tooltipUnit="tooltipUnit(item.name)"
-                                :series="item.series"
-                                :type="item.type"
-                                :height="item.height"
-                                :title="item.title"
-                                :extraOptions="item.extraOptions"
-                                :istotal='!item.title?true:false'
-                                @tableChage='enterTableChage'
-                               >
-                        <template v-if="item.footfallSelect">
-                            <div class="flex justify-between items-center mr-10">
-                                <span class="whitespace-no-wrap mx-4 text-sm">数据指标:</span>
-                                <vs-select autocomplete
-                                           multiple
-                                           v-model="footfallType"
-                                           id="chartSelect"
-                                >
-                                    <vs-select-item v-for="(item,index) in selectList "
-                                                    :text="item.name"
-                                                    :key="index"
-                                                    :value="item.value"/>
-                                </vs-select>
-                            </div>
-                        </template>
-                        <!--下载-->
-                        <export-menu slot="export"
-                                     @onchange="enterExportBiztop(item)"></export-menu>
-                    </chart-tabs>
-                </template>
-            </charts-list>
-            <div v-if="footfallType.length !== 2"
-                 class="bg-white box-card" style="padding:25px;margin-top:20px">
-                <!-- 详细数据 -->
-                <i-table :columns="eoData.detail.columns"
-                         :data="eoData.detail.data">
-                    <template slot="head">
-                        <span class="text-xl table-header pb-3">客流量详细数据信息</span>
-                    </template>
-                </i-table>
-            </div>
-        </div>
-        <!-- 集客量 -->
-        <div v-if="occuCanshow">
-            <div class="bg-white box-card  mt-6">
-                <chart-tabs :xAxis="occuData.xAxis"
-                            :extraOptions="occpuancyOptions"
-                            :series="occuData.series"
-                            title="集客量趋势"
-                            tooltipUnit="人次"
-                            :istotal='false'
-                            @tableChage='occupancyTableChage'>
-                    <export-menu slot="export"
-                                 @onchange="occupancyExportBiztop"></export-menu>
-                </chart-tabs>
-
-            </div>
-            <div class="bg-white box-card" style="padding:25px;margin-top:20px">
-                <!-- 详细数据 -->
-                <i-table :columns="occuData.detail.columns"
-                         :data="occuData.detail.data">
-                    <template slot="head">
-                        <span class="text-xl table-header pb-3">集客量详细数据信息</span>
-                    </template>
-                </i-table>
-            </div>
-        </div>
+  <div>
+    <div class="bg-white box-card px-4 pb-6">
+      <flow-selector :footFall="footFall"
+                     :isNeedEntity='userType'
+                     @on-change="paramsPrepare"
+                     routName='entity'
+                     :isGate='true'
+                     :isShop='false'
+                     :isArea='true'
+                     :isFloor='true'
+                     :isStore='true'
+                     :isReset='true'></flow-selector>
     </div>
+    <!-- enter -->
+    <div class="mt-6 z-50">
+      <charts-list :data="computeChartData">
+        <template slot-scope="{item}">
+          <chart-tabs :xAxis="item.xAxis"
+                      :labels="item.labels"
+                      :series="item.series"
+                      :type="item.type"
+                      :tooltipUnit="tooltipUnit(item.name)"
+                      :height="item.height"
+                      :title="item.title"
+                      :extraOptions="item.extraOptions"
+                      :istotal='!item.title?true:false'
+                      @tableChage='enterTableChage'
+                      :chartWidth='entityChartWidth(item)'>
+            <template v-if="item.footfallSelect">
+              <div class="flex justify-between items-center mr-10">
+                <span class="whitespace-no-wrap mx-4 text-sm">数据指标:</span>
+                <vs-select autocomplete
+                           multiple
+                           v-model="footfallType"
+                           id="chartSelect"
+                           >
+                  <vs-select-item v-for="(item,index) in selectList "
+                                  :text="item.name"
+                                  :key="index"
+                                  :value="item.value" />
+                </vs-select>
+              </div>
+            </template>
+            <export-menu slot="export"
+                         @onchange="enterExportBiztop(item)"></export-menu>
+          </chart-tabs>
+        </template>
+      </charts-list>
+      <div v-if="this.footfallType.length !== 2"
+           class="bg-white box-card"  style="padding:25px;margin-top:20px">
+        <!-- 详细数据 -->
+        <i-table :columns="eoData.detail.columns"
+                 :data="eoData.detail.data">
+          <template slot="head">
+            <span class="text-xl table-header pb-3">客流量详细数据信息</span>
+          </template>
+        </i-table>
+      </div>
+    </div>
+    <!-- ocucpancy -->
+    <!-- <div v-if="occuCanshow">
+      <div class="bg-white box-card  mt-6">
+        <chart-tabs :xAxis="occuData.xAxis"
+                    :extraOptions="occpuancyOptions"
+                    :series="occuData.series"
+                    title="集客量趋势"
+                    tooltipUnit="人次"
+                    :istotal='false'
+                    @tableChage='occupancyTableChage'>
+          <export-menu slot="export"
+                       @onchange="occupancyExportBiztop"></export-menu>
+        </chart-tabs>
+
+      </div>
+      <div class="bg-white box-card" style="padding:25px;margin-top:20px">
+         详细数据
+        <i-table :columns="occuData.detail.columns"
+                 :data="occuData.detail.data">
+          <template slot="head">
+            <span class="text-xl table-header pb-3">集客量详细数据信息</span>
+          </template>
+        </i-table>
+      </div>
+    </div> -->
+  </div>
 </template>
 <script>
 import { postEntitysCompare, exportEx } from '@/api/home.js'
 import seriesDict from '@/views/home/seriesDict.js'
 import { dateCompare, getEntityFlowBatch } from '@/api/analysis'
-import { entitySaleBatch } from '@/api/sale'
 import _ from 'lodash'
 import { gotInnerRange, formatXaxis } from '@/libs/util'
 import ChartsList from './components/ChartsList.vue'
-import SalesChartsList from './components/SalesChartsList.vue'
 import moment from 'moment'
 import chartTabs from '_c/common/CopyChartsTabs.vue'
 import flowSelector from '@/components/Passenger-analysis/flowSelector.vue'
 import iTable from './components/iTable.vue'
 import exportMenu from '@/views/operation/components/ExportMenu.vue'
-import indicatorCards from '@/views/home/components/IndicatorCards.vue'
-import singleCard from '@/views/home/components/singleCard.vue'
-
-const enterSourceData = [
-  {
-    type: ['donut'],
-    name: 'new_old_proportion',
-    title: '新老顾客占比'
-  },
-  {
-    type: ['radialBar'],
-    name: 'vip_proportion',
-    title: 'VIP顾客占比'
-
-  },
-  {
-    type: ['pie'],
-    name: 'arrival_distribution',
-    title: '到店次数'
-  },
-  {
-    type: ['radialBar'],
-    name: 'clerk_proportion',
-    title: '工作人员占比'
-  }
-]
-let saleBarChartExtraOptions = {
-  'chart': {
-    'stacked': true
-  },
-  'plotOptions': {
-    'bar': {
-      'endingShape': 'flat',
-      'columnWidth': '70%',
-      'dataLabels': {
-        'position': 'center',
-        'maxItems': 100,
-        'hideOverflowingLabels': true
-      }
-    }
-  },
-  'legend': {
-    'show': true
-  },
-  'yaxis': {
-    'labels': {
-      'offsetY': 0
-    },
-    'tickAmount': 2
-  }
-}
 export default {
   name: 'footfallAnalytics',
   components: {
@@ -190,16 +104,12 @@ export default {
     ChartsList,
     chartTabs,
     iTable,
-    exportMenu,
-    indicatorCards,
-    singleCard,
-    SalesChartsList
+    exportMenu
   },
   data () {
     return {
-      isHtml: true,
-      showSaleChart: false,
       dateType: '',
+      footFall: true,
       typeOfCustom: 0,
       isShowExit: true,
       selectType: '',
@@ -207,13 +117,14 @@ export default {
       bzids: [],
       occupancyId: [],
       innerRange: '',
+      innerRange2: '',
       isDurationOneDay: false,
       range: '',
       range2: '',
       isDateCompare: false,
       occuCanshow: true,
       entitysType: {
-        floor: '楼层',
+        floor: '省份 ',
         gate: '出入口',
         area: '区域',
         shop: '购物中心',
@@ -240,7 +151,29 @@ export default {
         }
       },
       chartsListData: [],
+      sourceData: [
+        {
+          type: ['donut'],
+          name: 'new_old_proportion',
+          title: '新老顾客占比'
+        },
+        {
+          type: ['radialBar'],
+          name: 'vip_proportion',
+          title: 'VIP顾客占比'
 
+        },
+        {
+          type: ['pie'],
+          name: 'arrival_distribution',
+          title: '到店次数'
+        },
+        {
+          type: ['radialBar'],
+          name: 'clerk_proportion',
+          title: '工作人员占比'
+        }
+      ],
       selectList: [
         {
           value: 'enter',
@@ -258,66 +191,7 @@ export default {
       enterTableList: [],
       occupancyTableList: [],
       clientTabList: [],
-      saleAmountTabList: [],
-      squaerMetreTabList: [],
-      closeRateTabList: [],
-      unitPriceTabList: [],
-      frequencyTabList: [],
-      salesChartData: [
-        {
-          xAxis: {}
-        }, {
-          xAxis: {}
-        }, {
-          xAxis: {}
-        }, {
-          xAxis: {}
-        }
-      ],
-      saleCategroy: {
-        name: '名称',
-        key: 'time',
-        data: []
-      },
-      saleSeriesData: [],
-      salesIndicatorData: [
-        {
-          id: 'SaleAmount',
-          name: '销售额',
-          type: {
-            icon: 'dangrixiaoshoue',
-            color: '#F64F61'
-          },
-          data: 0
-        },
-        {
-          id: 'SquaerMetre',
-          name: '坪效',
-          type: {
-            icon: 'xingxiaoxiaoguo',
-            color: '#1DD9D1'
-          },
-          data: 0
-        },
-        {
-          id: 'CloseRate',
-          name: '成交率',
-          type: {
-            icon: 'chengjiaohuafen',
-            color: '#857AEF'
-          },
-          data: 0
-        },
-        {
-          id: 'UnitPrice',
-          name: '客单价',
-          type: {
-            icon: 'jiage',
-            color: '#33B3ED'
-          },
-          data: 0
-        }
-      ]
+      frequencyTabList: []
     }
   },
   watch: {
@@ -328,7 +202,7 @@ export default {
         if (this.footfallType.length == 0) {
           type = '出客流'
         } else if (this.footfallType.length == 1) {
-          if (this.footfallType[0] == 'enter') type = '入客流'
+          if (this.footfallType[0] == 'enter')type = '入客流'
           else type = '出客流'
         } else {
           type = ['入客流', '出客流']
@@ -341,8 +215,9 @@ export default {
   },
   computed: {
     userType () {
-      const accountLvl = this.$store.state.user.accountLvl
-      return !['store', 'floor'].includes(accountLvl)
+      let accountLvl = this.$store.state.user.accountLvl
+      if (accountLvl == 'store' || accountLvl == 'floor') return false
+      else return true
     },
     eoData () {
       if (!Object.keys(this.footfallData).length) return this.defaultData
@@ -353,9 +228,7 @@ export default {
         let newData = _.cloneDeep(this.footfallData.enter)
         newData.xAxis.data = []
         newData.sumArr = []
-        newData.series.map(val => {
-          val.data = []
-        })
+        newData.series.map(val => { val.data = [] })
         newData.detail = {
           data: [],
           columns: [
@@ -363,10 +236,10 @@ export default {
               key: 'name',
               title: '实体名称'
             },
-            {
-              key: 'type',
-              title: '实体类别'
-            },
+            // {
+            //   key: 'type',
+            //   title: '实体类别'
+            // },
             {
               key: 'sum',
               title: '累计入客流量'
@@ -378,6 +251,7 @@ export default {
             }
           ]
         }
+        console.log(this.footfallData.enter)
         return this.footfallData.enter
       }
     },
@@ -405,7 +279,7 @@ export default {
             }
           }
         }
-        if (occupancyTotal !== 0) yObj.min = 0
+        if (occupancyTotal != 0) yObj.min = 0
         this.occpuancyOptions.yaxis = []
         this.occpuancyOptions.yaxis.push(yObj)
         return this.footfallData.occupancy
@@ -449,20 +323,13 @@ export default {
           }
         }
       }
-      if (enterTotal != 0) yObj.min = 0
+      if (enterTotal !== 0) yObj.min = 0
       extraOptions.yaxis.push(yObj)
       let userType = this.$store.state.user.accountLvl
-      let dataList
-      if (userType == 'store') dataList = [...[eoChartData]]
-      else dataList = [...this.chartsListData, ...[eoChartData]]
-      return dataList
+      if (userType === 'store') return [...[eoChartData]]
+      return [...[eoChartData]]
+      // else return [...this.chartsListData, ...[eoChartData]]
     }
-  },
-  activated () {
-    this.isHtml = false
-    setTimeout(() => {
-      this.isHtml = true
-    })
   },
   methods: {
     tooltipUnit (name) {
@@ -477,24 +344,26 @@ export default {
         case 'new_old_proportion':
         case 'arrival_distribution':
           return '人'
-				  default:
-				    return '人次'
+        default:
+          return '人次'
       }
     },
     paramsPrepare (pparams) {
       /**
-                 * 构造{ bzid, type, range, innerRange }
-                 * type: enter/exit/occupancy(只有当 innerRange 为 1h 才会有)
-                 * 根据 params 调用请求
-                 */
+       * 构造{ bzid, type, range, innerRange }
+       * type: enter/exit/occupancy(只有当 innerRange 为 1h 才会有)
+       * 根据 params 调用请求
+       */
+
       if (this.$store.state.home.headerAction != 0) {
-        if (!pparams.entitys.length) {
+        if (pparams.entitys.length == 0) {
           alert('请选择实体')
           return false
         }
       } else return false
 
       this.innerRange = gotInnerRange(pparams.date1Array)
+      this.innerRange2 = gotInnerRange(pparams.date2Array)
       this.isShowExit = pparams.enterType === '0'
       this.typeOfCustom = pparams.enterType
       // 2019-03-18时间对比数据处理时候，需要用到当前的请求起始时间，因此存为全局
@@ -504,60 +373,26 @@ export default {
       this.range = this.formatDay(pparams.date1Array[0]) + ',' + this.formatDay(pparams.date1Array[1])
       let paramsArr = null
       let reqPromises = null
-      this.bzids = _.remove(this.bzids, (n) => {
-        return n != 0
-      })
+      this.bzids = _.remove(this.bzids, function (n) { return n != 0 })
       this.selectType = pparams.compareType
-
-      let saleParams = {// 销售数据接口参数
-        bzid: this.bzids.toString(),
-        time1: this.range
-      }
       if (['time', 'onYear', 'onMonth'].includes(pparams.compareType)) { // 时间对比
-        const dateTypeOne = gotInnerRange(pparams.date1Array)
-        const dateTypeTwo = gotInnerRange(pparams.date2Array)
-        this.isDurationOneDay = dateTypeOne === '1h' && dateTypeTwo === '1h'
+        let dateTypeOne = gotInnerRange(pparams.date1Array)
+        let dateTypeTwo = gotInnerRange(pparams.date2Array)
+        this.isDurationOneDay = this.innerRange === '1h' && this.innerRange2 === '1h'
         this.isDateCompare = true
         this.range2 = this.formatDay(pparams.date2Array[0]) + ',' + this.formatDay(pparams.date2Array[1])
         paramsArr = this.getDateCompareParams()
         reqPromises = paramsArr.map(e => dateCompare(e))
         if (dateTypeOne == '1month' || dateTypeTwo == '1month') this.dateType = '月'
         else this.dateType = '天'
-        const data = {
-          range1: this.range,
-          range2: this.range2,
-          bzid: this.bzids.toString()
-        }
-        getEntityFlowBatch(data).then(res => {
-          this.handleTypeData(res)
-        })
-        // 构造 销售 接口
-        saleParams.time2 = this.range2
+        getEntityFlowBatch({ range1: this.range, range2: this.range2, bzid: this.bzids.toString() }).then(res => { this.handleTypeData(res) })
       } else {
         this.isDurationOneDay = this.innerRange === '1h'
         this.isDateCompare = false
         paramsArr = this.getCompareParams()
         reqPromises = paramsArr.map(e => postEntitysCompare(e))
-        const data = {
-          range1: this.range,
-          bzid: this.bzids.toString()
-        }
-        getEntityFlowBatch(data).then(res => {
-          this.handleTypeData(res)
-        })
+        getEntityFlowBatch({ range1: this.range, bzid: this.bzids.toString() }).then(res => { this.handleTypeData(res) })
       }
-      // 构造 销售 接口
-      let saleReqs = []
-      this.salesIndicatorData.forEach(sale => {
-        let params = {}
-        Object.assign(params, saleParams, { type: sale.id })
-        saleReqs.push(entitySaleBatch(params))
-      })
-      Promise.all(saleReqs).then(res => {
-        this.showSaleChart = this.bzids.length > 1 || pparams.compareType !== 'not'
-        this.formatSaleData(res, pparams)
-      })
-
       // 根据是否是一天并且实体类型过滤掉出入口后的数组有长度(出入口没有集客量)显示集客量
       Promise.all(reqPromises).then(res => {
         if (['time', 'onYear', 'onMonth'].includes(pparams.compareType)) this.handleDateCompareRes(res)
@@ -580,65 +415,9 @@ export default {
           type = '时间对比'
           date = [pparams.date1Array.join(','), pparams.date2Array.join(',')]
         }
-        window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', '实体客流数据查询', {
-          '对比方式': type,
-          '时间段': date,
-          '实体选择': value
-        })
+        window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', '实体客流数据查询', { '对比方式': type, '时间段': date, '实体选择': value })
       } catch (error) {
         console.log(this.$route.meta.pageTitle + '页面-' + '实体客流数据查询' + '埋点error:' + error)
-      }
-    },
-    // 处理销售数据
-    formatSaleData (data, pparams) {
-      if (!this.showSaleChart) { // 单个实体 且 无对比
-        this.salesIndicatorData.forEach((o, index) => {
-          o.data = data[index].data.data[0].stat[this.range]
-          if (o.id === 'CloseRate') {
-            o.data = String(o.data).indexOf('.') > -1 ? o.data.toFixed(2) + '%' : o.data + '%'
-          }
-        })
-      } else {
-        let saleCharts = this.salesIndicatorData.map(o => {
-          return {
-            type: ['bar'],
-            name: o.id,
-            title: o.name,
-            extraOptions: saleBarChartExtraOptions
-          }
-        })
-        data.forEach((o, i) => {
-          const res = data[i].data.data
-          let seriesData = []
-          let categoryData = []
-          res.forEach(o => {
-            if (this.bzids.length > 1 && this.isDateCompare) {
-              seriesData = seriesData.concat(Object.values(o.stat))
-              categoryData = categoryData.concat(Object.keys(o.stat).map(s => {
-                return `${o.name} ${s}`
-              }))
-            }
-            if (this.bzids.length > 1 && !this.isDateCompare) {
-              seriesData.push(o.stat[this.range])
-              categoryData.push(o.name)
-            }
-            if (this.bzids.length === 1 && this.isDateCompare) {
-              seriesData = Object.values(o.stat)
-              categoryData = Object.keys(o.stat)
-            }
-          })
-          saleCharts[i].series = [{
-            name: saleCharts[i].title,
-            key: saleCharts[i].name,
-            data: seriesData
-          }]
-          saleCharts[i].xAxis = {
-            name: '实体',
-            key: 'category',
-            data: categoryData
-          }
-        })
-        this.salesChartData = saleCharts
       }
     },
     // 格式化天
@@ -656,12 +435,7 @@ export default {
       if (this.isDurationOneDay) {
         paramsArr.push(this.initdateReqParams({ innerRange: '1h' }))
         if (this.isShowExit) paramsArr.push(this.initdateReqParams({ type: 'exit', innerRange: '1h' }))
-        if (this.occupancyId.length) {
-          paramsArr.push(this.initdateReqParams({
-            type: 'occupancy',
-            innerRange: '1h'
-          }))
-        }
+        if (this.occupancyId.length) paramsArr.push(this.initdateReqParams({ type: 'occupancy', innerRange: '1h' }))
       } else {
         paramsArr.push(this.initdateReqParams({}))
         if (this.isShowExit) paramsArr.push(this.initdateReqParams({ type: 'exit' }))
@@ -705,19 +479,15 @@ export default {
           : this.generateChartData(collection, ['time'], 'bar')
         : isSingleTime ? this.generateChartData(collection, ['id'], 'bar')
           : this.generateChartData(collection, ['id', 'time'], 'bar')
-      this.chartsListData = _.remove(this.chartsListData, (val) => {
-        return val.name !== 'vip_proportion'
-      })
-      this.chartsListData = _.remove(this.chartsListData, (val) => {
-        return val.name !== 'clerk_proportion'
-      })
+      this.chartsListData = _.remove(this.chartsListData, (val) => { return val.name !== 'vip_proportion' })
+      this.chartsListData = _.remove(this.chartsListData, (val) => { return val.name !== 'clerk_proportion' })
     },
     generateChartData (data, categories, chartType) {
       /**
-                 * @param {Arrya} data 由每各个Id和该Id不同时间段内的组成的集合
-                 * @param {Array} categories 横轴分类键值组合，当有两个时间多个实体时候需要用到
-                 * @param {String} chartType 是否为柱图
-                 */
+       * @param {Arrya} data 由每各个Id和该Id不同时间段内的组成的集合
+       * @param {Array} categories 横轴分类键值组合，当有两个时间多个实体时候需要用到
+       * @param {String} chartType 是否为柱图
+       */
       let tmlChartData = _.cloneDeep(this.filterInitChartData())// 根据当前选择的顾客类型过滤出图表的初始化数据
       let groupedObj = _.groupBy(data, 'name')
       let categoriesName = categories
@@ -774,11 +544,11 @@ export default {
     },
     filterInitChartData () {
       let result
-      if (this.typeOfCustom === '0') result = enterSourceData.map(e => e)
-      if (this.typeOfCustom === '1') result = enterSourceData.filter(e => e.name !== 'clerk_proportion')
-      if (this.typeOfCustom === '2') result = enterSourceData.filter(e => e.name === 'enter')
-      if (this.typeOfCustom === '3') result = enterSourceData.filter(e => ['vip_proportion', 'arrival_distribution', 'enter'].includes(e.name))
-      if (this.typeOfCustom === '4') result = enterSourceData.filter(e => ['arrival_distribution', 'enter'].includes(e.name))
+      if (this.typeOfCustom === '0') result = this.sourceData.map(e => e)
+      if (this.typeOfCustom === '1') result = this.sourceData.filter(e => e.name !== 'clerk_proportion')
+      if (this.typeOfCustom === '2') result = this.sourceData.filter(e => e.name === 'enter')
+      if (this.typeOfCustom === '3') result = this.sourceData.filter(e => ['vip_proportion', 'arrival_distribution', 'enter'].includes(e.name))
+      if (this.typeOfCustom === '4') result = this.sourceData.filter(e => ['arrival_distribution', 'enter'].includes(e.name))
       return result
     },
     getSeries (arr) {
@@ -795,9 +565,7 @@ export default {
       if (oneDate == '1month' || twoDate == '1month') innerRange = '1month'
       else if (oneDate === '1h' && twoDate === '1h') {
         innerRange = '1h'
-      } else {
-        innerRange = '1day'
-      }
+      } else { innerRange = '1day' }
       let dateOne = {
         begin: moment(range1[0]).format('YYYY-MM-DD'),
         end: moment(range1[1]).format('YYYY-MM-DD')
@@ -817,9 +585,7 @@ export default {
     },
     handleRes (data) {
       let chartObj = {}
-      this.reqTypes.forEach((e, index) => {
-        chartObj[e] = this.processData(data[index].data.data, e)
-      })
+      this.reqTypes.forEach((e, index) => { chartObj[e] = this.processData(data[index].data.data, e) })
       if (this.isShowExit) {
         let eoSeies = []
         let eoXaxis = []
@@ -868,25 +634,15 @@ export default {
         xAxis.push(formatedDate)
         if (this.isDurationOneDay && e) {
           // 2019-03-11新增需求，今日当前时间点以后的数据为null
-          if (moment(e.end).isAfter(moment(), 'h')) {
-            e.compares.forEach(i => {
-              i.number = null
-            })
-          }// 各时间段内所有zid的enter同期数据
+          if (moment(e.end).isAfter(moment(), 'h')) e.compares.forEach(i => { i.number = null })// 各时间段内所有zid的enter同期数据
           compares.push(e.compares)
         } else compares.push(e.compares)
       })
       let zipcompares = _.zip(...compares)// 各zid内不同时间段内的enter数据
       zipcompares.forEach(e => {
-        sumArr.push(_.sumBy(e, (o) => {
-          return o ? o.number : 0
-        }))
-        let maxValue = _.maxBy(e, (o) => {
-          return o.number
-        }).number
-        let maxindex = _.findIndex(e, (o) => {
-          return o.number === maxValue
-        })
+        sumArr.push(_.sumBy(e, (o) => { return o ? o.number : 0 }))
+        let maxValue = _.maxBy(e, (o) => { return o.number }).number
+        let maxindex = _.findIndex(e, (o) => { return o.number === maxValue })
         let maxvalueDate = `${data[maxindex].begin},${data[maxindex].end}`
         highestArr.push({
           number: maxValue,
@@ -894,20 +650,18 @@ export default {
         })
       })
       data[0] && data[0].compares.forEach((c, index) => {
-        let entityType = _.find(this.entitys, o => o.id === c.bzid).itype
+        // let entityType = _.find(this.entitys, o => o.id === c.bzid).itype
         series.push({// 各zid 以name data(其各时间段的数据) 组成的数组
           name: `${c.name} ${footFallTypeName}`,
           key: `${c.bzid}_${type}`,
-          data: zipcompares[index].map(z => {
-            return z.number
-          })// 当日期为今日时候数据显示到当前时间上个小时
+          data: zipcompares[index].map(z => { return z.number })// 当日期为今日时候数据显示到当前时间上个小时
         })
         eoXaxis.push(c.name)
         let size = highestArr[index].number > 0 ? highestArr[index].number : 0
         detaiData.push({
           name: c.name,
           sum: `${sumArr[index].toLocaleString()}人次`,
-          type: this.entitysType[entityType] || '购物中心', // 实体类别
+          // type: this.entitysType[entityType] || '购物中心', // 实体类别
           highest: `${size.toLocaleString()}人次   ${this.highestDateFormat(highestArr[index].date)}`
         })
 
@@ -929,22 +683,19 @@ export default {
     handleDateCompareRes (data) {
       let chartObj = {}
 
-      this.reqTypes.forEach((e, index) => {
-        chartObj[e] = this.datesEntityFind(data[index].data.data, e)
-      })
+      this.reqTypes.forEach((e, index) => { chartObj[e] = this.datesEntityFind(data[index].data.data, e) })
       if (this.isShowExit) {
         let enterObj = _.cloneDeep(chartObj.enter)
         let exitObj = _.cloneDeep(chartObj.exit)
         let enterSeries = enterObj.series
         let exitSeries = exitObj.series
-        enterSeries.forEach((e, index) => {
-          enterSeries.splice((index) * 2 + 1, 0, exitSeries[index])
-        })
+        enterSeries.forEach((e, index) => { enterSeries.splice((index) * 2 + 1, 0, exitSeries[index]) })
         chartObj.all = {
           xAxis: enterObj.xAxis,
           series: enterSeries
         }
       }
+
       this.footfallData = chartObj
     },
     datesEntityFind (resData, type, dateTyoe) {
@@ -980,12 +731,8 @@ export default {
       _.forEach(resData, (element, i) => {
         let resultOfDate1 = this.createPointsData(element.date1, this.range, type, isShortDurtion)// 每个时间段内各zid组成的数组
         let resultOfDate2 = this.createPointsData(element.date2, this.range2, type, isShortDurtion)
-        _.forEach(element.date1, (ele1, index) => {
-          deArray[index * 2].data.push(resultOfDate1[index])
-        })// 时间1
-        _.forEach(element.date2, (ele2, index) => {
-          deArray[index * 2 + 1].data.push(resultOfDate2[index])
-        })// 时间2
+        _.forEach(element.date1, (ele1, index) => { deArray[index * 2].data.push(resultOfDate1[index]) })// 时间1
+        _.forEach(element.date2, (ele2, index) => { deArray[index * 2 + 1].data.push(resultOfDate2[index]) })// 时间2
         if (isAllDateOneDay) {
           let hour = resData[i].date1[0].belong.split(' ')[1]
           xAxisData.push(hour)
@@ -996,14 +743,12 @@ export default {
       deArray.forEach((d, index) => {
         let sum = _.sum(d.data)
         let maxValue = _.max(d.data) ? _.max(d.data) : 0
-        let maxValueIndex = _.findIndex(d.data, (e) => {
-          return maxValue === e
-        })
-        let entityType = this.entitysType[bzids[Math.floor(index / 2)].itype]
-        entityType = entityType || '购物中心'
+        let maxValueIndex = _.findIndex(d.data, (e) => { return maxValue === e })
+        // let entityType = this.entitysType[bzids[Math.floor(index / 2)].itype]
+        // entityType = entityType || '购物中心'
         detailTableData.push({
           name: d.name.split('|')[0],
-          type: entityType,
+          // type: entityType,
           // time: isAllDateOneDay ? d.name.split('|')[1] : `${d.name.split('|')[1]} - ${d.name.split('|')[3]}`,
           time: d.name.split('|')[1],
           sum: `${sum.toLocaleString()} 人次`,
@@ -1057,10 +802,10 @@ export default {
           title: '实体名称',
           key: 'name'
         },
-        {
-          title: '实体类别',
-          key: 'type'
-        },
+        // {
+        //   title: '实体类别',
+        //   key: 'type'
+        // },
         {
           title: `累计${typeStr}客流量`,
           key: 'sum'
@@ -1076,32 +821,31 @@ export default {
     },
     createPointsData (data, range, type, isShort) {
       /**
-                 * @data:{Array}
-                 * @isShort：当前range 是否是时间差小的那个时间
-                 * @type:enter,exit
-                 */
+       * @data:{Array}
+       * @isShort：当前range 是否是时间差小的那个时间
+       * @type:enter,exit
+       */
       let result = []
       if (this.isDurationOneDay) { // 两个单天
         if (moment(range.split(',')[1]).isSame(moment(), 'd')) {
           // 其中至少一个是今天
-          data.forEach(e => {
-            result.push(moment(e.belong).isAfter(moment()) ? 0 : e[type])
-          })
-        } else {
-          data.forEach(e => {
-            result.push(e[type])
-          })
-        }
+          data.forEach(e => { result.push(moment(e.belong).isAfter(moment()) ? 0 : e[type]) })
+        } else data.forEach(e => { result.push(e[type]) })
       } else { // 至少一个多天，判断该 range 的时间差是较少的那个还是相等或者较多不做判断，少的需要判断push到该range end 为止
         if (isShort) {
           data.forEach((e, index) => {
-            result.push(e[type])
-            if (moment(e.belong).isAfter(moment(range.split(',')[1]))) result[index] = 0
+            if (e[type]) {
+              result.push(e[type])
+            } else {
+              result[index] = 0
+            }
+            // result.push(e[type])
+            // if (moment(e.belong).isAfter(moment(range.split(',')[1]))) {
+            //   result[index] = 0
+            // }
           })
         } else {
-          data.forEach(e => {
-            result.push(e[type])
-          })
+          data.forEach(e => { result.push(e[type]) })
         }
       }
       return result
@@ -1146,31 +890,15 @@ export default {
       return this.frequencyTabList
     },
     enterTableChage (value) {
-      switch (value.type) {
-        case '客流量趋势':
-          this.enterTableList = value.data
-          break
-        case '新老顾客占比':
-          this.clientTabList = value.data
-          break
-        case '销售额':
-          this.saleAmountTabList = value.data
-          break
-        case '坪效':
-          this.squaerMetreTabList = value.data
-          break
-        case '成交率':
-          this.closeRateTabList = value.data
-          break
-        case '客单价':
-          this.unitPriceTabList = value.data
-          break
+      if (value.type === '客流量趋势') {
+        this.enterTableList = value.data
+      } else if (value.type === '新老顾客占比') {
+        this.clientTabList = value.data
       }
     },
     occupancyTableChage (value) {
       this.occupancyTableList = value.data
     },
-    // 点击下载
     enterExportBiztop (type) {
       let value
       if (type.footfallSelect) {
@@ -1179,28 +907,24 @@ export default {
         value = type.title
       }
       try {
-        window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', value + '下载', {})
+        window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', value + '下载', { })
       } catch (error) {
         console.log(this.$route.meta.pageTitle + '页面-' + value + '下载-埋点error:' + error)
       }
 
-      if (type.title === '销售额') this.uploadList(this.saleAmountTabList, 'sale')
-      if (type.title === '坪效') this.uploadList(this.squaerMetreTabList, 'sale')
-      if (type.title === '成交率') this.uploadList(this.closeRateTabList, 'sale')
-      if (type.title === '客单价') this.uploadList(this.unitPriceTabList, 'sale')
       if (type.title === '新老顾客占比') this.uploadList(this.clientTabList)
       if (type.title === '到店次数') this.uploadList(this.getFrequencyData())
       if (type.footfallSelect) this.uploadList(this.enterTableList)
     },
     occupancyExportBiztop (type) {
       try {
-        window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', '集客量趋势' + '下载', {})
+        window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', '集客量趋势' + '下载', { })
       } catch (error) {
         console.log(this.$route.meta.pageTitle + '页面-' + '集客量趋势' + '下载-埋点error:' + error)
       }
       this.uploadList(this.occupancyTableList)
     },
-    uploadList (value, type) {
+    uploadList (value) {
       if (this.selectType != 'time') {
         let time = this.range.split(',')
         if (time[0] == time[1]) {
@@ -1212,7 +936,7 @@ export default {
       exportEx(value).then(res => {
         let date = new Date()
         const blob = new Blob([res.data])
-        let name = type === 'sale' ? '实体客流销售数据分析' : '实体客流分析客流量趋势'
+        let name = '实体客流分析客流量趋势'
         let fileName = name + moment(date).format('YYYYMMDDHHmmss') + '.xls'
         const elink = document.createElement('a')
         elink.download = fileName
@@ -1223,20 +947,20 @@ export default {
         URL.revokeObjectURL(elink.href)// 释放URL 对象
         document.body.removeChild(elink)
       })
+    },
+    entityChartWidth (item) {
+      let width = '100%'
+      if (item.xAxis && !item.footfallSelect) {
+        let xSize = item.xAxis.data.length
+        xSize <= 12 ? width = '100%' : width = xSize * 60
+      }
+      return width
     }
-    // entityChartWidth(item) {
-    //     let width = '100%'
-    //     if (item.xAxis && !item.footfallSelect) {
-    //         let xSize = item.xAxis.data.length
-    //         xSize < 10 ? width = '100%' : width = xSize * 60
-    //     }
-    //     return width
-    // }
   }
 }
 </script>
 <style lang="less" scoped>
-    .text-xl {
-        font-size: 18px !important;
-    }
+.text-xl {
+    font-size: 18px !important;
+}
 </style>

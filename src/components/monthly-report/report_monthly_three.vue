@@ -147,6 +147,7 @@ export default {
                 width: auto;
                 height: auto;
                 color: #fff;
+                //  background-color: #4472c4;
                 padding: 10px;
                 font-size: 16px;
                 border-radius: 8px;
