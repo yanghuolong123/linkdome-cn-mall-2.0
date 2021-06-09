@@ -207,7 +207,7 @@ export default{
         time: `${moment(value[0]).format('MM.DD')}-${moment(value[1]).format('MM.DD')}`,
         week: '',
         type: 'customize',
-        yester: `${getCompareDate(value[0], 'onChain').replace(/-/g, '.')}-${getCompareDate(value[1], 'onChain').replace(/-/g, '.')}`,//上期
+        yester: `${getCompareDate(value, 'onChain')[0].replace(/-/g, '.')}-${getCompareDate(value, 'onChain')[1].replace(/-/g, '.')}`,//上期
         reportDate: `${value[0].replace(/-/g, '.')}-${value[1].replace(/-/g, '.')}`
       }
       this.saveHeaderData = headerDate

@@ -141,7 +141,7 @@
           newReportEnter({
             property_id: this.propertyId,
             timeRange: this.callData,
-            report_type: 'week'
+            report_type: 'customize'
           }),
           // 本周客流
           getanalysiseeo({
