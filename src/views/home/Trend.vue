@@ -10,7 +10,7 @@
                 @tableChage='TableChageList'
                 class="bg-white box-card"
                 id='trendLine'
-                title="趋势分析"
+                title="购物中心趋势分析"
     >
       <export-menu  slot="export" @onchange="enterExportBiztop"></export-menu>
       <template>
@@ -41,7 +41,6 @@ import NP from 'number-precision'
 import exportMenu from '@/views/operation/components/ExportMenu.vue'
 import { exportEx } from '@/api/home.js'
 import moment from 'moment'
-import Bus from '@/libs/bus.js'
 export default {
   name: 'Trend',
   props: {
@@ -54,6 +53,8 @@ export default {
       default: null
     },
     bzids: {
+      type: Array,
+      default: () => []
     },
     time1: {
       type: String,
@@ -95,9 +96,7 @@ export default {
     time1: {
       immediate: true,
       handler: function (val, oldVal) {
-        if (this.$route.name !== 'Synthesize') {
-          this.getTrendData()
-        }
+        this.getTrendData()
       }
     },
     time2: {
@@ -133,11 +132,6 @@ export default {
       this.canshow = true
     })
   },
-  created () {
-    Bus.$on('trendData', () => {
-      this.getTrendData()
-    })
-  },
   computed: {
     totalData () { // 合计数据
       let obj = { time: '合计' }
@@ -156,18 +150,16 @@ export default {
     },
     filteredSelectList () {
       // 当 innerange 不为1h,过滤掉 occupancy
-
       let sourceData = Object.keys(this.indicatorData).map(e => ({
         value: e, name: this.indicatorData[e].name
       }))
-      this.curretIndicator = _.remove(this.curretIndicator, (val) => { return val != 'occupancy' })
-      return sourceData.filter(e => e.value !== 'occupancy')
-      // if (this.innerRange === '1h') {
-      //   return sourceData
-      // } else {
-      //   this.curretIndicator = _.remove(this.curretIndicator, (val) => { return val != 'occupancy' })
-      //   return sourceData.filter(e => e.value !== 'occupancy')
-      // }
+
+      if (this.innerRange === '1h') {
+        return sourceData
+      } else {
+        this.curretIndicator = _.remove(this.curretIndicator, (val) => { return val != 'occupancy' })
+        return sourceData.filter(e => e.value !== 'occupancy')
+      }
     },
     filterSeries () {
       // 更据当前选择的指表获得图表需要的数据
@@ -321,8 +313,7 @@ export default {
           type: e,
           property_id: propertyId,
           range: this.convertInnerRange,
-          bzid: bzids
-        }
+          bzid: bzids }
         if (['enter', 'occupancy'].includes(e)) {
           return getFootfallTrend(params)
         } else {
@@ -386,9 +377,7 @@ export default {
           val.total = {}
           const unit = this.tooltipUnit(key).name
           let series = val.series[0]
-          if (series) {
-            val.total[`${series.key}`] = _.sum(series.data).toLocaleString() + unit
-          }
+          val.total[`${series.key}`] = _.sum(series.data).toLocaleString() + unit
         })
         this.chartData = tml
         this.canshow = true

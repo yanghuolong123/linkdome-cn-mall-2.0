@@ -10,9 +10,9 @@
         :on-format-error="formatType"
         :show-upload-list="false"
         name="file">
-            <Button v-show ="showUpload" type="primary" :disabled="disabled" class="buttons">
+            <Button v-show ="showUpload" class="buttons">
              <Icon type="md-cloud-upload" size='22' />
-             <slot>上传头像</slot>
+             <p>上传头像</p>
             </Button>
       </Upload>
       <!-- <div style="text-align:center;">
@@ -38,12 +38,6 @@ export default {
 
     }
   },
-    props:{
-        disabled:{
-            type:Boolean,
-            default:false
-        }
-    },
   computed: {
 
   },
@@ -101,12 +95,13 @@ export default {
 .ivu-upload-select {
     display: flex;
     flex-flow: column;
+    width: 37%;
     text-align: center;
     margin: auto;
 }
 .buttons{
-  /*background-color: #4096E5!important;*/
-  /*color: #fff!important;*/
+  background-color: #4096E5!important;
+  color: #fff!important;
   span{
     display: inline-block;
     width: 83px;

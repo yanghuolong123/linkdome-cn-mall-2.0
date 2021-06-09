@@ -36,7 +36,7 @@
             ></DatePicker>
           </div>
           <div class="go-shop-activities">
-              <!-- <vs-select
+              <vs-select
                 class="shopSelect"
                 autocomplete
                 v-model="activities"
@@ -49,7 +49,7 @@
                   :key="index"
                   v-for="(item,index) in activitiesType"
                 />
-              </vs-select> -->
+              </vs-select>
               <div class="cross-submit" v-on:click="paramsPrepare">查询</div>
               <div class="cross-reset" v-on:click="resetData">重置</div>
           </div>
@@ -528,7 +528,7 @@ export default {
           top: 20px;
           right: 0;
           overflow: hidden;
-          z-index: 1;
+          z-index: 10;
           p{
             margin-top: 20px;
             float: right;

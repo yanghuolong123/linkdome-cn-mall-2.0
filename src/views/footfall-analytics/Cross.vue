@@ -292,15 +292,15 @@ export default {
           contrast: '',
           isActive: true,
           tootipText: '所有从起点实体到终点实体的客流总和'
+        },
+        {
+          icon: require('@/assets/images/fixation_img/rest/cross-enter3.webp'),
+          name: '平均客流转化时长',
+          data: '',
+          contrast: '',
+          isActive: true,
+          tootipText: '顾客从起点到终点的滞留时长'
         }
-        // {
-        //   icon: require('@/assets/images/fixation_img/rest/cross-enter3.webp'),
-        //   name: '平均客流转化时长',
-        //   data: '',
-        //   contrast: '',
-        //   isActive: true,
-        //   tootipText: '顾客从起点到终点的滞留时长'
-        // }
       ],
       polar: {
         title: {},
@@ -670,10 +670,10 @@ export default {
       cpf >= 0 ? that.timeList[2].isActive = true : that.timeList[2].isActive = false
 
       // 平均时长转换率
-      // that.timeList[3].data = that.dateTiem(data.avgTranTime)
-      // var att = data.compareRateATT ? data.compareRateATT : 0
-      // that.timeList[3].contrast = NP.times(Number(att), 100)
-      // att >= 0 ? that.timeList[3].isActive = true : that.timeList[3].isActive = false
+      that.timeList[3].data = that.dateTiem(data.avgTranTime)
+      var att = data.compareRateATT ? data.compareRateATT : 0
+      that.timeList[3].contrast = NP.times(Number(att), 100)
+      att >= 0 ? that.timeList[3].isActive = true : that.timeList[3].isActive = false
     },
     crossGraphData (data) { // 交叉客流
       var that = this
@@ -1100,7 +1100,7 @@ export default {
 
     }
     div{
-      width:31.9%;
+      width:23.9%;
       float: left;
       background:rgba(255,255,255,1);
       box-shadow:0px 0px 9px 0px rgba(166,168,169,0.4);
@@ -1168,7 +1168,7 @@ export default {
     position: absolute;
     left: 50%;
     top: 50%;
-    z-index: 1;
+    z-index: 10;
     font-size: 24px;
   }
   .cross_analysis_title{

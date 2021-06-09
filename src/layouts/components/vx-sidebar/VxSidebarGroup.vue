@@ -55,7 +55,6 @@
           :target="groupItem.target"
           v-else
           >
-          <!-- <pre>{{groupItem.url}}</pre> -->
           <span class="truncate">{{ $t(groupItem.i18n) || groupItem.name }}</span>
           <vs-chip
             class="ml-auto"
@@ -95,6 +94,10 @@ import VxSidebarItem from './VxSidebarItem.vue'
 export default {
   name: 'vx-sidebar-group',
   props: {
+    keyId:{
+      type:String,
+      default:''
+    },
     openHover: {
       default: false,
       type: Boolean
@@ -109,9 +112,13 @@ export default {
     groupIndex: {
       type: Number
     },
-    shopingList: {
-      type: Array,
-      default: []
+    shopingList:{
+      type:Array,
+      default:[]
+    },
+    activeKey:{
+      type:String,
+      default:''
     }
   },
   data: () => ({
@@ -123,12 +130,12 @@ export default {
     shopingModel: ''
   }),
   computed: {
-    routerFilter (url) {
+    routerFilter(url){
       return function (url) {
-        if (!this.headerType) {
-          const adminUrlList = [ 'EntityManage', 'HolidayManage', 'VipCustom', 'Account', 'Role']
-          return adminUrlList.includes(url) ? url : ''
-        } else {
+        if(!this.headerType){
+          const adminUrlList = [ 'EntityManage','HolidayManage','VipCustom','Account','Role']
+          return adminUrlList.includes(url)?url:''
+        }else {
           return url
         }
       }
@@ -171,6 +178,13 @@ export default {
     }
   },
   watch: {
+    activeKey(newval){
+      if(this.keyId === newval){
+        this.maxHeight = 'none'
+      }else {
+        this.maxHeight = '0px'
+      }
+    },
     maxHeight () {
       this.openItems = this.maxHeight != '0px'
     },
@@ -195,9 +209,9 @@ export default {
         }, 250)
       }
     },
-    shopingList: {
-      handler (newval) {
-        if (newval && newval.length) {
+    shopingList:{
+      handler(newval){
+        if(newval && newval.length){
           this.shopingModel = newval[0].value
         }
       }
@@ -208,7 +222,8 @@ export default {
       if (!this.openHover) {
         let thisScrollHeight = this.$refs.items.scrollHeight
         if (this.maxHeight == '0px') {
-          this.maxHeight = `${thisScrollHeight}px`
+          this.maxHeight = `${thisScrollHeight}px`;
+          this.$emit('closeOthers',this.keyId)
           setTimeout(() => {
             this.maxHeight = 'none'
           }, 300)
@@ -235,7 +250,7 @@ export default {
     openNew (index) {
       let name = this.group.submenu[index].name
       if (name == 'EntityManage' || name == 'HolidayManage' || name == 'VipCustom' || name == 'Account' || name == 'Role') {
-        // this.$router.push({ name: name })
+        this.$router.push({ name: name })
       } else {
         if (this.headerType == false) {
           this.isSelect = true
@@ -264,7 +279,10 @@ export default {
   },
   mounted () {
     this.openItems = this.open
-    this.$nextTick(() => { this.clickGroup() })
+    this.maxHeight = this.open?'':'0px'
+    //控制菜单默认展开折叠
+    // this.$nextTick(() => { this.clickGroup() })
+
   }
 }
 </script>

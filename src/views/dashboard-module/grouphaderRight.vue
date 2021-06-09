@@ -20,8 +20,8 @@
             :series="rightShoppingList.achievingRate"
             />
             <div class="month-values">
-              <p class="text-base text-grey font-normal">月达标值（人次）</p>
-              <p class="text-lg text-grey font-number font-normal">{{ rightShoppingList.monthlyGoal}}</p>
+              <p class="text-base text-grey font-normal">月达标值(人次)</p>
+              <p class="text-lg text-grey font-number font-normal">{{ rightShoppingList.monthlyGoal|tenthousandFormat}}</p>
             </div>
           </vs-col>
         </vs-row>
@@ -71,7 +71,6 @@ export default {
               size: '65%'
             },
             track: {
-              background: '#fff',
               strokeWidth: '100%'
             },
             dataLabels: {

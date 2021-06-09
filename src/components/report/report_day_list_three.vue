@@ -26,7 +26,7 @@
         <div class="one-trend-total">
             <div class="one-trend-total-title">
                 <div class="one-trend-total-title">
-                    <span>客流趋势</span>
+                    <span>客流和集客量趋势</span>
                 </div>
             </div>
             <vue-highcharts v-if="ifShowList" style="width: 100%;height: 700px;margin-top: 50px" :options="trendOption" ></vue-highcharts>
@@ -77,13 +77,13 @@ export default {
           time: '15:00 - 16:00'
 
         },
-        // {
-        //   img: require('@/assets/images/fixation_img/logo/837398fc2219715c1fb81436befe6e7.webp'),
-        //   name: '集客量峰值',
-        //   data: 0,
-        //   time: '00:00 - 01:00'
+        {
+          img: require('@/assets/images/fixation_img/logo/837398fc2219715c1fb81436befe6e7.webp'),
+          name: '集客量峰值',
+          data: 0,
+          time: '00:00 - 01:00'
 
-        // },
+        },
         {
           img: require('@/assets/images/fixation_img/logo/icon_report_menu4.webp'),
           name: '平均客流量',
@@ -106,12 +106,23 @@ export default {
           enabled: false
         },
         yAxis: {
+          min: 0,
           title: {
             text: ''
           },
-          allowDecimals: false,
-          min: 0
-
+          allowDecimals: false
+        },
+        lang: {
+          noData: '暂无数据',
+          thousandsSep: ','
+        },
+        noData: {
+          style: {
+            fontSize: '12px',
+            fontWeight: 'normal',
+            fontFamily: 'Microsoft YaHei',
+            color: '#515a6e'
+          }
         },
         legend: {
           layout: 'vertical',
@@ -158,7 +169,7 @@ export default {
           crosshair: true
         },
         yAxis: {
-          min: 0,
+          // min: 0,
           title: {
             text: ''
           }
@@ -199,13 +210,14 @@ export default {
       that.trendOption.xAxis.categories = lineTime
       that.trendOption.series = []
       that.trendOption.series = lineData
-      let totalOne = _.sum(lineData[0].data)
-      // let totalTwo = _.sum(lineData[1].data)
-      if (totalOne === 0) {
+      let oneTotal1 = _.sum(lineData[0].data)
+      let twoTotal2 = _.sum(lineData[1].data)
+      if (oneTotal1 === 0 && twoTotal2 === 0) {
         that.trendOption.yAxis.max = 5
       } else {
         that.trendOption.yAxis.max = null
       }
+
       that.ifShowRanking = false
       that.rankingOption.xAxis.categories = []
       that.rankingOption.xAxis.categories = rankingTime
@@ -293,7 +305,7 @@ export default {
             border-bottom: 10px solid #00a0e9;
             .one-occupancy-list{
                 height: 175px;
-                width: 31.2%;
+                width: 23%;
                 margin-top: 19px;
                 border:1px solid #cecece;
                 float: left;

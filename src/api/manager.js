@@ -465,25 +465,3 @@ export const holidayAnalysis = (type, bzid, year) => {
     }
   })
 }
-//图片配置中用到的组织结构
-export const getConfigStructure = async () => {
-  return await axios.request({
-    url: '/config/structure',
-  })
-}
-//后台管理->配置图片，点位
-export const configEntity =  (data) => {
-  return  axios.request({
-    url: '/config/entity',
-    method:'post',
-    data
-  })
-}
-
-//摄像头图片查询
-export const getCameraImageUrl =  (params) => {
-  return  axios.request({
-    url: '/config/camera',
-    params
-  })
-}

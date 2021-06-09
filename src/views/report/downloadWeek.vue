@@ -4,8 +4,8 @@
     <div id="pdfDom">
       <report-day-cover ref="coverData" :pageNumber="paginationNumber" :reportType="reportT"  key="surface " ></report-day-cover>
       <report-week-one  ref="cover_one_data" key="first" :computedData="eeoComputedRes"></report-week-one>
-      <!-- <report-week-two  ref="cover_two_data" key="second"></report-week-two>
-      <report-week-six  ref="cover_six_data" key="third"></report-week-six> -->
+      <report-week-two  ref="cover_two_data" key="second"></report-week-two>
+      <report-week-six  ref="cover_six_data" key="third"></report-week-six>
       <report-week-three
       :key='index' v-for="(list,index) in floorListData"
       :dataValue="list"
@@ -133,8 +133,8 @@ export default {
         let gateData = Object.values(sixData)
         that.floorListData = gateData
         let lastWeekData = res[5].data.data// 传递上周数据
-        // that.$refs.cover_two_data.tableList(gateData, Object.values(lastWeekData))
-        // that.$refs.cover_six_data.dataList(gateData)
+        that.$refs.cover_two_data.tableList(gateData, Object.values(lastWeekData))
+        that.$refs.cover_six_data.dataList(gateData)
         // 区域数据
         that.areaDataList(res[6].data.data)
         // 业态 商铺 数据
@@ -146,7 +146,7 @@ export default {
         } else {
           size = that.floorListData.length + 3
         }
-        that.paginationNumber = '共' + 1 + '页'
+        that.paginationNumber = '共' + size + '页'
         let ht = window.location.href.split('://')[0]
         setTimeout(() => {
           axios.get(ht + '://pdfcenter.linkdome.cn/pdf/finish', {
@@ -268,7 +268,7 @@ export default {
 <style lang="less" scoped>
     #pdfDom{
         background-color: #fff;
-        // margin: 0 auto;
+        margin: 0 auto;
         overflow: hidden;
         width: 1200px;
          .reportOneText{

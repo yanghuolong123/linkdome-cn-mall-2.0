@@ -116,9 +116,18 @@ export default {
   },
   data () {
     return {
-      current: 2,
+      current: 0,
       isChart: false,
-      lineSeries: [],
+      lineSeries: [
+        {
+          'name': '第一购物中心 2019-12-01 - 2019-12-10有效客流',
+          'data': [ 11965, 17167, 18516, 18896, 18572, 21328, 33557, 8562, 0, 0 ]
+        },
+        {
+          'name': '第一购物中心 2019-12-03 - 2019-12-12有效客流',
+          'data': [18516, 18896, 18572, 21328, 33557, 8562, 0, 0, 0, 0]
+        }
+      ],
       chartOptions: {
         chart: {
           height: 350,
@@ -143,7 +152,7 @@ export default {
           }
         },
         xaxis: {
-          categories: []
+          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
         }
       }
     }

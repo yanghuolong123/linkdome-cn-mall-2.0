@@ -3,12 +3,12 @@ import axios from 'axios'
 
 import qs from 'qs'
 // 获取集团组织架构
-export const getGroupOrganization = (_this = {}) => {
-  const CancelToken = axios.CancelToken
+export const getGroupOrganization = (_this={}) => {
+  const CancelToken= axios.CancelToken
   return naxios.request({
     url: '/mananger/organization',
     method: 'get',
-    cancelToken: new CancelToken(function executor (c) {
+    cancelToken: new CancelToken(function executor(c) {
       _this.cancelGetGroupOrganizationAjax = c
     })
   })
@@ -93,10 +93,10 @@ export const postAgender = params => {
     method: 'post'
   })
 }
-export const getCurrent = (params, _this = {}) => {
-  let { time, companyId, offset } = params
-  const CancelToken = axios.CancelToken
-  return naxios.request({
+export const getCurrent = (params,_this={}) => {
+  let { time, companyId, offset } = params;
+    const CancelToken= axios.CancelToken;
+    return naxios.request({
     url: '/data/current',
     data: qs.stringify({
       time,
@@ -104,9 +104,9 @@ export const getCurrent = (params, _this = {}) => {
       offset
     }),
     method: 'post',
-    cancelToken: new CancelToken(function executor (c) {
-      _this.cancelGetCurrentAjax = c
-    })
+      cancelToken: new CancelToken(function executor(c) {
+          _this.cancelGetCurrentAjax = c
+      })
   })
 }
 export const postEntitysCompare = params => {
@@ -117,13 +117,13 @@ export const postEntitysCompare = params => {
     method: 'post'
   })
 }
-export const postHistorycompute = (params, _this = {}) => {
-  const CancelToken = axios.CancelToken
+export const postHistorycompute = (params,_this={}) => {
+  const CancelToken= axios.CancelToken;
   return naxios.request({
     url: 'analysis/historycompute',
     data: qs.stringify(params),
     method: 'post',
-    cancelToken: new CancelToken(function executor (c) {
+    cancelToken: new CancelToken(function executor(c) {
       _this.cancelPostHistorycomputeAjax = c
     })
   })
@@ -192,12 +192,12 @@ export const getEntityFlow = params => {
   })
 }
 // 获取销售指标数据
-export const getSaleIndicators = (params, _this = {}) => {
-  const CancelToken = axios.CancelToken
+export const getSaleIndicators = (params,_this={}) => {
+  const CancelToken= axios.CancelToken;
   return naxios.request({
     url: 'sale/summary',
     params,
-    cancelToken: new CancelToken(function executor (c) {
+    cancelToken: new CancelToken(function executor(c) {
       _this.cancelGetSaleIndicatorsAjax = c
     })
   })
@@ -219,12 +219,12 @@ export const getTopBussinessType = params => {
   })
 }
 // 店铺排行
-export const getTopShop = (params, _this = {}) => {
-  const CancelToken = axios.CancelToken
+export const getTopShop = (params,_this={}) => {
+  const CancelToken= axios.CancelToken
   return naxios.request({
     url: 'sale/topShop',
     params,
-    cancelToken: new CancelToken(function executor (c) {
+    cancelToken: new CancelToken(function executor(c) {
       _this.cancelGetTopShopAjax = c
     })
   })
@@ -255,34 +255,34 @@ export const getShopTopDrainage = params => {
   })
 }
 // 客流商铺排行
-export const getShopTopFootFall = (params, _this = {}) => {
+export const getShopTopFootFall = (params,_this={}) => {
   /**
                       time1	string	Y		time1
                       property_id	string	N		购物中心id, 不传为全部购物中心
                       type	string	N		入客流：enter, 集客量:occupancy, 不传默认为 enter
                       industry_id	int	N		业态id,不传为全部业态
                      */
-  const CancelToken = axios.CancelToken
+  const CancelToken= axios.CancelToken
   return naxios.request({
     url: 'flow/topShop',
     params,
-    cancelToken: new CancelToken(function executor (c) {
+    cancelToken: new CancelToken(function executor(c) {
       _this.cancelGetShopTopFootFallAjax = c
     })
   })
 }
 // 客流业态排行
-export const getBizTopFootFall = (params, _this = {}) => {
+export const getBizTopFootFall = (params,_this={}) => {
   /**
                       time1	string	Y		2019-05-19,2019-05-22
                       property_id	string	N		购物中心id, 不传为全部购物中心
                       type	string	N		入客流：enter, 集客量:occupancy, 不传默认为 enter
                      */
-  const CancelToken = axios.CancelToken
+  const CancelToken= axios.CancelToken
   return naxios.request({
     url: 'flow/topIndustry',
     params,
-    cancelToken: new CancelToken(function executor (c) {
+    cancelToken: new CancelToken(function executor(c) {
       _this.cancelGetBizTopFootFallAjax = c
     })
   })
@@ -429,10 +429,10 @@ export const getUrl = () => {
     method: 'get'
   })
 }
-export const synthesizeRight = params => {
+//首页当日销售&本月销售
+export const getSaleReach = (params) => {
   return naxios.request({
-    url: 'analysis/storecompute',
-    data: qs.stringify(params),
-    method: 'post'
+    url: 'sale/saleReach',
+    params
   })
 }

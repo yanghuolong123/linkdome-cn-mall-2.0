@@ -67,7 +67,7 @@ import flowSelector from '_c/Passenger-analysis/flowSelector'
 import moment from 'moment'
 import goalCharts from '@/components/goal/goalCharts.vue'
 import goalEnter from '@/components/goal/goalEnter.vue'
-import { postEntitysCompare, getSalesTrend, getGroupOrganization } from '@/api/home.js'
+import { postEntitysCompare, getSalesTrend,getGroupOrganization } from '@/api/home.js'
 import { activityDataList } from '@/api/analysis.js'
 import _ from 'lodash'
 
@@ -128,26 +128,8 @@ export default {
     this.checkTargetData()
     this.options1 = _.cloneDeep(options0)
     this.marketOptions1 = _.cloneDeep(options0)
-    this.marketOptions1.tooltip.y = {
-      formatter: function (val) {
-        if (val == undefined || val == null || val == '') {
-          return ''
-        } else {
-          return val.toLocaleString() + '元'
-        }
-      }
-    }
     this.options2 = _.cloneDeep(options2)
     this.marketOptions2 = _.cloneDeep(options2)
-    this.marketOptions2.tooltip.y = {
-      formatter: function (val) {
-        if (val == undefined || val == null || val == '') {
-          return ''
-        } else {
-          return val.toLocaleString() + '元'
-        }
-      }
-    }
   },
   watch: {
     // selectEntity () {
@@ -214,36 +196,37 @@ export default {
       })
       this.shoppingInfoData()
     },
-    handleShoppingInfoData (data) {
-      let bzid = this.entities[0].value
-      const property = data.find(a => {
-        return a.property_id === this.$store.state.home.headerAction
-      })
-      this.years = property.goal_sale.map(a => {
-        return a.year
-      })
-      data.map(list => {
-        if (list.bzid == bzid) this.flow_year_data = list
-      })
-      this.activityData()
-    },
+      handleShoppingInfoData(data){
+          let bzid = this.entities[0].value
+          const property = data.find(a => {
+              return a.property_id === this.$store.state.home.headerAction
+          })
+          this.years = property.goal_sale.map(a => {
+              return a.year
+          })
+          data.map(list => {
+              if (list.bzid == bzid) this.flow_year_data = list
+          })
+          this.activityData()
+      },
     shoppingInfoData () {
-      const organizationData = this.$store.state.home.organizationData
-      if (organizationData && organizationData.property) {
-        this.handleShoppingInfoData(organizationData.property)
-      } else {
-        getGroupOrganization().then(res => {
-          if (res.data.code == 200) {
-            const data = res.data.data
-            this.$store.commit('saveOrganizationData', data)
-            this.handleShoppingInfoData(data.property)
-          } else {
-            this.years = []
-          }
-        }).catch(err => {
-          this.years = []
-        })
-      }
+        const organizationData = this.$store.state.home.organizationData;
+        if(organizationData && organizationData.property){
+            this.handleShoppingInfoData(organizationData.property)
+        }else {
+            getGroupOrganization().then(res => {
+                if (res.data.code == 200) {
+                    const data = res.data.data;
+                    this.$store.commit('saveOrganizationData', data);
+                    this.handleShoppingInfoData(data.property)
+                } else {
+                    this.years = []
+                }
+            }).catch(err => {
+                this.years = []
+            })
+        }
+
     },
     activityData () { // 选择列表
       var that = this
@@ -407,7 +390,7 @@ export default {
           let obj = {}
           obj.name = xAxis[index]
           barData1.push(reallyValue[index])
-          let begin = reallyValue[index] ? (reallyValue[index].toLocaleString() + ' 人') : ' '
+          let begin = reallyValue[index] ? (reallyValue[index].toLocaleString() + ' 人次') : ' '
           obj.begin = begin
           var num
 
@@ -419,7 +402,7 @@ export default {
             })
           }
           num == null ? barData2.push(0) : barData2.push(num)
-          var end = Number(num).toLocaleString() + ' 人'
+          var end = Number(num).toLocaleString() + ' 人次'
           obj.end = end
           tableData.push(obj)
         })
@@ -428,11 +411,11 @@ export default {
           let obj = {}
           obj.name = xAxis[index]
           barData1.push(reallyValue[index])
-          let begin = reallyValue[index] ? (reallyValue[index].toLocaleString() + ' 人') : ' '
+          let begin = reallyValue[index] ? (reallyValue[index].toLocaleString() + ' 人次') : ' '
           obj.begin = begin
           var num = (sele.enter / data.length).toFixed(0)
           barData2.push(num)
-          var end = Number(num).toLocaleString() + ' 人'
+          var end = Number(num).toLocaleString() + ' 人次'
           obj.end = end
           tableData.push(obj)
         })
@@ -497,7 +480,7 @@ export default {
       let zipCompares = _.zip(...compares)
       let reallyValue = zipCompares[0].map(e => e.number)
       let xAxis = []
-      while (reallyValue.length !== 12) { reallyValue.push(null) }
+      while (reallyValue.length < 12) { reallyValue.push(null) }
       let tableData = []
       var goalNumber
       if (dataList.is_year == 'year') {
@@ -533,15 +516,6 @@ export default {
         ]
         this.marketOptions1 = _.cloneDeep(options0)
         this.marketOptions1.xaxis.categories = xAxis
-        this.marketOptions1.tooltip.y = {
-          formatter: function (val) {
-            if (val == undefined || val == null || val == '') {
-              return ''
-            } else {
-              return val.toLocaleString() + '元'
-            }
-          }
-        }
         var barData1 = []
         var barData2 = []
         dataList.detail.months.map(function (list, index) {
@@ -570,15 +544,6 @@ export default {
         ]
         this.marketOptions2 = _.cloneDeep(options2)
         this.marketOptions2.xaxis.categories = xAxis
-        this.marketOptions2.tooltip.y = {
-          formatter: function (val) {
-            if (val == undefined || val == null || val == '') {
-              return ''
-            } else {
-              return val.toLocaleString() + '元'
-            }
-          }
-        }
         this.marketTableData = tableData
       }
     }

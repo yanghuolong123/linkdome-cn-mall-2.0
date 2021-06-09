@@ -119,12 +119,12 @@ export default {
 <style scoped lang="less">
     .reportOneText {
       display: inline-block;
-      width: 1200px;
-      height: 1682px;
-      overflow: hidden;
-      padding: 100px 50px;
-      background-color: #fff;
-      position: relative;
+         width: 1200px;
+        height: 1682px;
+        overflow: hidden;
+        padding: 100px 50px;
+        background-color: #fff;
+        position: relative;
         .cameraList{
             width: 100%;
             height: auto;
@@ -139,7 +139,7 @@ export default {
                 position: absolute;
                 width: auto;
                 height: auto;
-                // background-color: #4472c4;
+                background-color: #4472c4;
                 color: #fff;
                 padding: 10px;
                 font-size: 16px;

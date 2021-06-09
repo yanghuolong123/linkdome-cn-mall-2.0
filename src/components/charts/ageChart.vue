@@ -3,13 +3,12 @@
         <!-- <div class="hasCover" v-if="hasCover == 1"></div> -->
         <div class="chartss">
             <i-tabs  class="chartsTable" v-model="current">
-                <h1 class="chart-title">年龄分布</h1>
                 <tab-item :icon="icon1" :title="title1">
                     <div class="flexs">
                         <div class="circle" :style="{backgroundColor:apexOptions.colors[0]}"></div> {{series[0].name}}
                         <div class="circle" :style="{backgroundColor:apexOptions.colors[1]}"></div> {{series[1].name}}
                     </div>
-                    <vue-apex-charts type=bar :height="height" :options="apexOptions" :series="series" />
+                    <vue-apex-charts type=radar :height="height" :options="apexOptions" :series="series" />
                 </tab-item>
                 <tab-item :icon="icon2" :title="title2" >
                     <!-- <div style="max-height:350px;">
@@ -51,7 +50,7 @@ export default {
     },
     labels: {
       type: Array,
-      default: () => ['<20', '20-30', '30-40', '40-50', '>50']
+      default: () => []
     },
     height: {
       type: String,
@@ -151,19 +150,19 @@ export default {
           width: 0
         },
         colors: ['#00A0E9', '#E7585B'],
-        // plotOptions: {
-        //   radar: {
-        //     polygons: {
-        //       strokeColors: ['#e8e8e8', 'transparent', 'transparent', 'transparent', 'transparent', 'transparent'],
-        //       connectorColors: 'transparent'
-        //     }
-        //   }
-        // },
+        plotOptions: {
+          radar: {
+            polygons: {
+              strokeColors: ['#e8e8e8', 'transparent', 'transparent', 'transparent', 'transparent', 'transparent'],
+              connectorColors: 'transparent'
+            }
+          }
+        },
         fill: {
           type: 'gradient',
           gradient: {
             shade: 'dark',
-            gradientToColors: ['#00A0E9', '#E7585B'],
+            gradientToColors: ['#52BEF0', '#FEB33D'],
             shadeIntensity: 1,
             type: 'horizontal',
             opacityFrom: 1,
@@ -186,15 +185,8 @@ export default {
     // position: relative;
     .chartsTable{
         background-color: #fff;
+        margin-top: 20px;
         border-radius: 6px;
-    }
-    .chart-title{
-      position: absolute;
-      width: 100%;
-      height: auto;
-      font-size: 18px;
-      top: -50px;
-      padding-left: 20px;
     }
     .circle{
         width: 8px;

@@ -282,7 +282,7 @@ export default {
       curve: 'straight',
       width: 2
     },
-    colors: ['#00A0E9', 'rgb(231, 88, 91)', '#94e2ff', '#fbab40', '#e8585a', '#8d82f0'],
+    colors: ['#00A0E9', 'rgb(231, 88, 91)', '#94e2ff', '#fbab40', '#8d82f0'],
     dataLabels: {
       enabled: false
     }
@@ -357,6 +357,57 @@ export default {
     },
     markers: {
       size: 0
+    }
+  },
+  salesPie: {
+    labels: [],
+    colors: ['#eb6162', '#7c64f6', '#26dad0', '#00a2ea', '#fea756'],
+    legend: {
+      show: false
+    },
+    chart: {
+      type: 'pie',
+      dropShadow: {
+        enabled: false,
+        blur: 5,
+        left: 1,
+        top: 1,
+        opacity: 0.2
+      },
+      toolbar: {
+        show: false
+      }
+    },
+    stroke: {
+      width: 2
+    },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        gradientToColors: ['#f08e8f', '#9a89f9', '#79ece5', '#60c2ee', '#fec087']
+      }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    noData: {
+      text: '暂无数据',
+      align: 'center',
+      verticalAlign: 'middle',
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        color: undefined,
+        fontSize: '14px',
+        fontFamily: undefined
+      }
+    },
+    tooltip: {
+      y:{},
+      enabled: true,
+      custom: ({ series, seriesIndex, dataPointIndex, w }) => {
+        return `<p style=background-color:${w.config.colors[seriesIndex]} class='p-2'><span class='pr-4'>${w.config.labels[seriesIndex]}:</span>${series[seriesIndex]}元</p>`
+      }
     }
   }
 }

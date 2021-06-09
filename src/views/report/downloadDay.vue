@@ -9,7 +9,7 @@
         <!-- 第二页 -->
         <report-day-list-four :key="index" v-for="(item,index) in fourListData" ref="coverFourData"></report-day-list-four>
         <!-- 出入口数据 -->
-        <!-- <report-day-list-six  ref="coverSixData"></report-day-list-six> -->
+        <report-day-list-six  ref="coverSixData"></report-day-list-six>
         <!-- 区域 商铺 -->
         <div v-if="isShopArea">
           <report-day-list-four  ref="areaList" ></report-day-list-four>
@@ -120,7 +120,7 @@ export default {
     this.parameterData()
   },
   methods: {
-    handleParameterData (data) {
+    handleParameterData(data){
       this.bzId = []
       this.companyId = data.company_id
       data.property.forEach((e) => {
@@ -128,21 +128,21 @@ export default {
           this.$store.commit('companyName', e.name)
           this.$store.commit('headerData', { text: e.name, value: e.property_id, img: e.map_url })
           this.bzId.push({
-            bzid: e.bzid,
-            property_id: e.property_id,
-            name: e.name
+            bzid:e.bzid,
+            property_id:e.property_id,
+            name:e.name
           })
         }
       })
       this.reportQuery()
     },
     parameterData () { // 查找对应的 购物中心 id
-      const organizationData = this.$store.state.home.organizationData
-      if (organizationData && organizationData.property) {
+      const organizationData = this.$store.state.home.organizationData;
+      if(organizationData && organizationData.property){
         this.handleParameterData(organizationData)
-      } else {
+      }else {
         getGroupOrganization().then(res => {
-          this.$store.commit('saveOrganizationData', res.data.data)
+          this.$store.commit('saveOrganizationData', res.data.data);
           this.handleParameterData(res.data.data)
         })
       }
@@ -181,7 +181,7 @@ export default {
         /* 第四页数据 */
         that.fourReportData(res[4].data.data)
         /* 第六页数据 */
-        // that.sixReportData(res[5].data.data)
+        that.sixReportData(res[5].data.data)
         if (that.isShopArea) {
           // 区域数据
           that.areaDataList(res[6].data.data)
@@ -189,7 +189,7 @@ export default {
           that.formatData(res[7].data.data)
         }
         let ht = window.location.href.split('://')[0]
-        let size = 1 + that.fourListData.length
+        let size = 2 + that.fourListData.length
         that.paginationNumber = '共' + size + '页'
         setTimeout(() => {
           axios.get(ht + '://pdfcenter.linkdome.cn/pdf/finish', {
@@ -223,12 +223,12 @@ export default {
           data: 0,
           time: ''
         },
-        // {
-        //   img: require('@/assets/images/fixation_img/logo/837398fc2219715c1fb81436befe6e7.webp'),
-        //   name: '集客量峰值',
-        //   data: 0,
-        //   time: ''
-        // },
+        {
+          img: require('@/assets/images/fixation_img/logo/837398fc2219715c1fb81436befe6e7.webp'),
+          name: '集客量峰值',
+          data: 0,
+          time: ''
+        },
         {
           img: require('@/assets/images/fixation_img/logo/icon_report_menu4.webp'),
           name: '平均客流量',
@@ -246,17 +246,17 @@ export default {
         enterList.data.push(e.compares[0].number)
       })
       lineData.push(enterList)
-      // var oneOccupancyData = data2
-      // var occupancyList = {}
-      // occupancyList.name = '集客量'
-      // occupancyList.data = []
-      // occupancyList.color = '#1aaaeb'
-      // oneOccupancyData.forEach(function (e) {
-      //   var size = e.occupancy
-      //   Number(size) < 0 ? size = 0 : size = Number(size)
-      //   occupancyList.data.push(size)
-      // })
-      // lineData.push(occupancyList)
+      var oneOccupancyData = data2
+      var occupancyList = {}
+      occupancyList.name = '集客量'
+      occupancyList.data = []
+      occupancyList.color = '#1aaaeb'
+      oneOccupancyData.forEach(function (e) {
+        var size = e.occupancy
+        Number(size) < 0 ? size = 0 : size = Number(size)
+        occupancyList.data.push(size)
+      })
+      lineData.push(occupancyList)
 
       var name = this.property_name
       var allEnterData = _.find(that.enterListData, function (o) { return o.property_id == that.propertyId })
@@ -293,12 +293,12 @@ export default {
         var date2 = time[5].split(' ')[1]
         titleData[1].time = date1 + ' - ' + date2
       }
-      // titleData[2].data = allEnterData.occupancy.highest.number.toLocaleString()
-      // var occupancyTime = allEnterData.occupancy.highest.timeRange.split('-')
-      // var occupancyDate1 = occupancyTime[2].split(' ')[1]
-      // var occupancyData2 = occupancyTime[5].split(' ')[1]
-      // titleData[2].time = occupancyDate1 + ' - ' + occupancyData2
-      titleData[2].data = allEnterData.enter.avg.number
+      titleData[2].data = allEnterData.occupancy.highest.number.toLocaleString()
+      var occupancyTime = allEnterData.occupancy.highest.timeRange.split('-')
+      var occupancyDate1 = occupancyTime[2].split(' ')[1]
+      var occupancyData2 = occupancyTime[5].split(' ')[1]
+      titleData[2].time = occupancyDate1 + ' - ' + occupancyData2
+      titleData[3].data = allEnterData.enter.avg.number
       var xAxisData = []
       var seriesData = []
       var seriesList = {}
@@ -325,7 +325,7 @@ export default {
         obj.age = e.enter.toLocaleString() + '人'
         var size = Number(e.occupancy)
         size < 0 ? size = 0 : size = e.occupancy.toLocaleString()
-        // obj.address = size + '人'
+        obj.address = size + '人'
         if (allData.length < 20) allData.push(obj)
         else allDataTwo.push(obj)
       })
@@ -335,7 +335,7 @@ export default {
         propertyName: this.property_name,
         titleType: '客流总览',
         tableName: '详细客流数据',
-        tableTitle: ['时间', '客流量'],
+        tableTitle: ['时间', '客流量', '集客量'],
         pageNumber: 0
       }
       setTimeout(() => {
@@ -475,7 +475,7 @@ export default {
 <style lang="less" scoped>
 #pdfDom{
     background-color: #fff;
-    // margin: 0 auto;
+    margin: 0 auto;
     overflow: hidden;
     width: 1200px;
     .reportOneText{

@@ -8,7 +8,7 @@
 	Author URL: hhttp://www.themeforest.net/user/pixinvent
 ========================================================================================== -->
 <template>
-  <vx-card :title="tableTitle" class="headline">
+  <vx-card stripe :title="tableTitle" class="headline">
 
     <vs-table :data="tableList"
               :noDataText="name">

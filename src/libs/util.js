@@ -606,7 +606,6 @@ export const formatEntityData = (data, role_id, checklist) => {
   let organization = data.map(function (m, index) {
     m.value = m.id
     m.label = m.name
-    m.itype = m.itype
     m.disabled = false
     m.cascadeValue = [m.id]
     if (m.children) {
@@ -685,38 +684,7 @@ export const formatEntityData = (data, role_id, checklist) => {
     }
   }
 }
-export const deepFind = (arr, condition, children) => {
-  let result = null
-  // 用try方案方便直接中止所有递归的程序
-  try {
-    (function poll(arr, level) {
-      if (!Array.isArray(arr)) return
-      // 遍历数组
-      for (let i = 0; i < arr.length; i++) {
-        const item = arr[i]
-        result = item
-        const isFind = condition && condition(item, i, level) || false
 
-        // 如果已经找到了
-        if (isFind) {
-          // 直接抛出错误中断所有轮询
-          throw Error
-
-          // 如果存在children，那么深入递归
-        } else if (children && item[children] && item[children].length) {
-          poll(item[children], level + 1)
-
-          // 如果是最后一个且没有找到值，那么通过修改数组长度来删除当前项
-        } else if (i === arr.length - 1) {
-          // 删除占位预设值
-          result = null
-        }
-      }
-    })(arr, 0)
-    // 使用try/catch是为了中止所有轮询中的任务
-  } catch (err) {}
-  return result
-}
 export const deepTraversal = (arr, child, callback) => {
   function traversal (a) {
     a.forEach(o => {
@@ -807,33 +775,4 @@ export const hasHeatMapData = (targetArr, x, y) => {
     };
   }
   return result
-}
-//级联数据 获取第一个叶子节点
-export const getCascadeFstLeaf = (arr,child,id='id') =>{
-  let result = [];
-  function traversal (a) {
-    result.push(a[0][id]);
-    if(a[0][child] && a[0][child].length){
-      traversal(a[0][child])
-    }
-  }
-  traversal(arr)
-  return result
-}
-export const isEmpty = (value) => {
-  let type;
-  if (value == null) {
-    return true
-  }
-  type = Object.prototype.toString.call(value).slice(8, -1)
-  switch (type) {
-    case 'String':
-      return value.length === 0
-    case 'Array':
-      return !value.length
-    case 'Object':
-      return Object.keys(value).length === 0 && value.constructor === Object
-    default:
-      return false
-  }
 }

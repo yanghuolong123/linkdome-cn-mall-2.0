@@ -16,7 +16,7 @@
             </DatePicker>
           </Col>
         </Row>
-        <div class="report-query" v-on:click="reportQuery">查询</div>
+        <div class="report-query" v-on:click="reportQuery">提取</div>
         <div class="icon-download" v-on:click="uploadReport" title="下载报告">
 			    <icons type="daoru" color="#2a7dc1" :size = 20 ></icons>
         </div>
@@ -32,11 +32,11 @@
         <!-- 第二页 -->
         <report-day-list-four :key="index" v-for="(item,index) in fourListData" ref="coverFourData"></report-day-list-four>
         <!-- 出入口数据 -->
-        <!-- <report-day-list-six  ref="coverSixData"></report-day-list-six> -->
+        <report-day-list-six  ref="coverSixData"></report-day-list-six>
         <!-- 区域 商铺 -->
         <div v-if="isShopArea">
           <report-day-list-four  ref="areaList" ></report-day-list-four>
-          <!-- <report-day-list-format   ref='formatList' :key="FIndex" v-for="(format,FIndex) in formatList" ></report-day-list-format> -->
+          <report-day-list-format   ref='formatList' :key="FIndex" v-for="(format,FIndex) in formatList" ></report-day-list-format>
         </div>
         <report-day-cover-back></report-day-cover-back>
       </div>
@@ -189,7 +189,7 @@ export default {
         that.fourReportData(res[4].data.data)
 
         /* 第六页数据 */
-        // that.sixReportData(res[5].data.data)
+        that.sixReportData(res[5].data.data)
         if (that.isShopArea) {
           // 区域数据
           that.areaDataList(res[6].data.data)
@@ -197,7 +197,7 @@ export default {
           that.formatData(res[7].data.data)
         }
 
-        let size = 1 + that.fourListData.length
+        let size = 2 + that.fourListData.length
         that.paginationNumber = '共' + size + '页'
       })
     },
@@ -223,6 +223,10 @@ export default {
           downloadElement.click() // 点击下载
           document.body.removeChild(downloadElement) // 下载完成移除元素
           window.URL.revokeObjectURL(href) // 释放掉blob对象
+          // axios.get(ht + '://pdfcenter.linkdome.cn/pdf/delete')
+          //   .then(res => {
+          //     console.log('删除成功')
+          //   })
         })
         .catch(function (error) {
           console.log(error)
@@ -291,12 +295,12 @@ export default {
           data: 0,
           time: ''
         },
-        // {
-        //   img: require('@/assets/images/fixation_img/logo/837398fc2219715c1fb81436befe6e7.webp'),
-        //   name: '集客量峰值',
-        //   data: 0,
-        //   time: ''
-        // },
+        {
+          img: require('@/assets/images/fixation_img/logo/837398fc2219715c1fb81436befe6e7.webp'),
+          name: '集客量峰值',
+          data: 0,
+          time: ''
+        },
         {
           img: require('@/assets/images/fixation_img/logo/icon_report_menu4.webp'),
           name: '平均客流量',
@@ -314,17 +318,17 @@ export default {
         enterList.data.push(e.compares[0].number)
       })
       lineData.push(enterList)
-      // var oneOccupancyData = data2
-      // var occupancyList = {}
-      // occupancyList.name = '集客量'
-      // occupancyList.data = []
-      // occupancyList.color = '#1aaaeb'
-      // oneOccupancyData.forEach(function (e) {
-      //   var size = e.occupancy
-      //   Number(size) < 0 ? size = 0 : size = Number(size)
-      //   occupancyList.data.push(size)
-      // })
-      // lineData.push(occupancyList)
+      var oneOccupancyData = data2
+      var occupancyList = {}
+      occupancyList.name = '集客量'
+      occupancyList.data = []
+      occupancyList.color = '#1aaaeb'
+      oneOccupancyData.forEach(function (e) {
+        var size = e.occupancy
+        Number(size) < 0 ? size = 0 : size = Number(size)
+        occupancyList.data.push(size)
+      })
+      lineData.push(occupancyList)
 
       var name = this.property_name
       var allEnterData = _.find(that.enterListData, function (o) { return o.property_id == that.propertyId })
@@ -360,13 +364,12 @@ export default {
         var date2 = time[5].split(' ')[1]
         titleData[1].time = date1 + ' - ' + date2
       }
-
-      // titleData[2].data = allEnterData.occupancy.highest.number.toLocaleString()
-      // var occupancyTime = allEnterData.occupancy.highest.timeRange.split('-')
-      // var occupancyDate1 = occupancyTime[2].split(' ')[1]
-      // var occupancyData2 = occupancyTime[5].split(' ')[1]
-      // titleData[2].time = occupancyDate1 + ' - ' + occupancyData2
-      titleData[2].data = allEnterData.enter.avg.number
+      titleData[2].data = allEnterData.occupancy.highest.number.toLocaleString()
+      var occupancyTime = allEnterData.occupancy.highest.timeRange.split('-')
+      var occupancyDate1 = occupancyTime[2].split(' ')[1]
+      var occupancyData2 = occupancyTime[5].split(' ')[1]
+      titleData[2].time = occupancyDate1 + ' - ' + occupancyData2
+      titleData[3].data = allEnterData.enter.avg.number
       var xAxisData = []
       var seriesData = []
       var seriesList = {}
@@ -393,7 +396,7 @@ export default {
         obj.age = e.enter.toLocaleString() + '人'
         var size = Number(e.occupancy)
         size < 0 ? size = 0 : size = e.occupancy.toLocaleString()
-        // obj.address = size + '人'
+        obj.address = size + '人'
         if (allData.length < 20) allData.push(obj)
         else allDataTwo.push(obj)
       })
@@ -403,7 +406,7 @@ export default {
         propertyName: this.property_name,
         titleType: '客流总览',
         tableName: '详细客流数据',
-        tableTitle: ['时间', '客流量'],
+        tableTitle: ['时间', '客流量', '集客量'],
         pageNumber: 0
       }
       setTimeout(() => {
@@ -467,7 +470,6 @@ export default {
         tableTitle: ['区域名称', '客流量', '客流量峰值'],
         pageNumber: 4
       }
-      console.log(data)
       if (this.isShopArea) this.$refs.areaList.dataList(DataName, allData)
     },
     // 业态数据
@@ -665,7 +667,7 @@ export default {
       text-align: center;
       line-height: 43px;
       float: left;
-      margin-left: 60px;
+      margin-left: 30px;
       box-shadow:0px 0px 9px 0px rgba(166, 168, 169, .4);
       cursor: pointer;
       &:before{
@@ -677,6 +679,7 @@ export default {
         margin: 0 auto;
         overflow: hidden;
         width: 80%;
+        min-width: 1200px;
         .reportOneText{
           float: left;
           width: 100%;

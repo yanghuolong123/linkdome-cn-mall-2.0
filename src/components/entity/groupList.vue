@@ -7,7 +7,6 @@
             :tableList='tableList'
             :titleName='titleName'
             :userLvl="userLvl"
-            @imgConfig="imgConfig"
             @tableData='editStore'
             @removeData='delStore'
         >
@@ -39,6 +38,7 @@ export default {
       zonelist: [],
       tem: {},
       dataIndex: 0,
+      tableName: [ '名称', '描述', '操作'],
       titleName: '基本信息'
     }
   },
@@ -53,15 +53,6 @@ export default {
     }
   },
   computed: {
-    tableName(){
-      if(this.userLvl === 'admin'){
-        return [
-          '名称', '描述',  '图片配置','操作'
-        ]
-      }else {
-        return [ '名称', '描述', '操作']
-      }
-    },
     tableList () {
       var arr = []
       if (this.storeInfo[2]) {
@@ -78,7 +69,6 @@ export default {
         obj.area = element.area_size
         obj.modal5 = element.business_type_id
         obj.operation = true
-        obj.imgConfig = this.userLvl === 'admin'
         arr.push(obj)
       } else {
         arr = []
@@ -87,9 +77,6 @@ export default {
     }
   },
   methods: {
-    imgConfig(){
-      this.$emit('imgConfig')
-    },
     editStore (value) {
       this.$emit('editStore', value.data)
     },

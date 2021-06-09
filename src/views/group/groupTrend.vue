@@ -4,8 +4,9 @@
       :xAxis="xAxisObj"
       :series="finnalSeries"
       :extraOptions="extraOptWithYaxis"
-      :type="chartTypeList"
       :istotal='true'
+      :tooltipUnit="tooltipUnit(curretIndicator)"
+      :totalData="totalData"
       @tableChage='enterTableChage'
       class="bg-white box-card"
       id='trendLine'
@@ -132,6 +133,15 @@ export default {
     setTimeout(() => { this.canshow = true })
   },
   computed: {
+    totalData () { // 合计数据
+      let obj = { time: '合计' }
+      _.forIn(this.chartData, (val, key) => {
+        if (this.curretIndicator === key) {
+          Object.assign(obj, val.total)
+        }
+      })
+      return obj
+    },
     convertInnerRange () {
       // 由于之前的innerrang 约定为 1hour 1day 1month ,新的innerrang 约定为 Hour Date Month,需要抓换
       if (this.innerRange === '1h') return 'Hour'
@@ -146,7 +156,6 @@ export default {
       if (this.innerRange === '1h') {
         return sourceData
       } else {
-        // this.curretIndicator = _.remove(this.curretIndicator, (val) => { return val != 'occupancy' })
         return sourceData.filter(e => e.value !== 'occupancy')
       }
     },
@@ -302,12 +311,19 @@ export default {
             })
           } else {
             let dataValues = Object.values(data.data)
-            Object.keys(dataValues[0]).map(list => {
+            let keyVal = Object.keys(data.data)
+            dataValues.map((data, index) => {
               let obj = {}
-              obj.name = list
-              obj.key = list
+              obj.name = keyVal[index]
+              obj.key = this.curretIndicator + '_' + keyVal[index] + '_' + that.time1
               obj.data = []
-              Object.values(dataValues[0][list]).map(val => obj.data.push(val))
+              Object.values(data).map(list => {
+                if (this.curretIndicator == 'CloseRate') {
+                  obj.data.push(Object.values(list)[0] * 100)
+                } else {
+                  obj.data.push(Object.values(list)[0])
+                }
+              })
               series.push(obj)
             })
           }
@@ -336,6 +352,7 @@ export default {
             }
             series.push(obj)
           })
+
           return series
         }
       }
@@ -346,6 +363,26 @@ export default {
     }
   },
   methods: {
+    tooltipUnit (type) { // 业态排行tooltip显示的单位
+      let name = ''
+      switch (type) {
+        case 'enter':
+        case 'occupancy':
+          name = '人次'
+          break
+        case 'SquaerMetre':
+          name = '元/m²'
+          break
+        case 'UnitPrice':
+        case 'SaleAmount':
+          name = '元'
+          break
+        case 'CloseRate':
+          name = '%'
+          break
+      }
+      return name
+    },
     getTrendData: _.debounce(function (params) {
       const { time1, time2, companyId, indicatorData } = this
       const reqs = Object.keys(indicatorData).map(e => {
@@ -365,15 +402,22 @@ export default {
       })
       Promise.all(reqs).then(res => { // enter occupancy SaleAmount SquaerMetre ClossRate UnitPrice
         let tml = {}
-        // if (this.timeNumber > 2) this.$vs.loading.close()
-        // this.$store.commit('loadingState', false)
         Object.keys(indicatorData).forEach((indicatorKey, index) => {
           const { data: { data: indicatorRes } } = res[index]
           let series = Object.keys(indicatorRes).map(date => {
             let eachDateRes = indicatorRes[date]
             let seriesData = Object.values(eachDateRes)
             seriesData = seriesData.map(val => Number(val) < 0 ? 0 : val)
-            if (['CloseRate', 'RepeatPurchaseRate'].includes(indicatorKey))seriesData = seriesData.map(e => NP.times(e, 100))// 复购率和成交率需要乘以100
+            if (['CloseRate', 'RepeatPurchaseRate'].includes(indicatorKey)) {
+              let newData = []
+              seriesData.map(val => {
+                let newObj = {}
+                let keyData = Object.keys(val)[0]
+                newObj[keyData] = NP.times(val[keyData], 100)
+                newData.push(newObj)
+              })
+              seriesData = newData
+            } // 复购率和成交率需要乘以100
             return {
               name: time2 ? `${indicatorData[indicatorKey].name} ${date.split(',').join(' - ')}` : indicatorData[indicatorKey].name,
               key: `${indicatorKey}_${date}`,
@@ -408,6 +452,23 @@ export default {
           }
           tml[indicatorKey] = { series, xAxis }
         })
+        _.forIn(tml, (val, key) => {
+          val.total = {}
+          const unit = this.tooltipUnit(key)
+          val.series.map(series => {
+            let totalNumber = 0
+            series.data.map(num => {
+              if (series.name === '客流量' || series.name === '集客量') {
+                Object.values(num).map(size => {
+                  totalNumber += Number(size)
+                })
+              } else {
+                totalNumber += Number(Object.values(num)[0])
+              }
+            })
+            val.total[`${series.key}_${time1}`] = totalNumber.toLocaleString() + unit
+          })
+        })
         this.chartData = tml
         this.allData = res
         this.canshow = true
@@ -419,31 +480,6 @@ export default {
     refreshChart () {
       let that = this
       let arr = []
-      // if (that.allData.length != 0) {
-      //   this.curretIndicator.map(name => {
-      //     switch (name) {
-      //       case 'enter':
-      //         arr.push(that.allData[0])
-      //         break
-      //       case 'occupancy':
-      //         arr.push(that.allData[1])
-      //         break
-      //       case 'SaleAmount':
-      //         arr.push(that.allData[2])
-      //         break
-      //       case 'SquaerMetre':
-      //         arr.push(that.allData[3])
-      //         break
-      //       case 'CloseRate':
-      //         arr.push(that.allData[4])
-      //         break
-      //       case 'UnitPrice':
-      //         arr.push(that.allData[5])
-      //         break
-      //     }
-      //   })
-      //   this.currentData = arr
-      // }
       switch (this.curretIndicator) {
         case 'enter':
           arr.push(that.allData[0])
@@ -490,7 +526,7 @@ export default {
       }
       return text
     },
-    exportBiztop () {
+    exportBiztop () { // 下载表格
       let time = this.time1.split(',')
       let newTableData = _.cloneDeep(this.tableListData)
       if (time[0] == time[1]) {
@@ -498,10 +534,6 @@ export default {
           list.time = time[0] + '  ' + list.time
         })
       }
-      // if (this.$store.state.home.loadingState == false) {
-      //   this.$store.commit('loadingState', true)
-      //   this.$vs.loading()
-      // }
       try {
         window.TDAPP.onEvent('集团页面', '趋势分析数据指标下载', { })
       } catch (error) {
@@ -520,8 +552,6 @@ export default {
         elink.click()
         URL.revokeObjectURL(elink.href)// 释放URL 对象
         document.body.removeChild(elink)
-        // this.$vs.loading.close()
-        // this.$store.commit('loadingState', false)
       })
     },
     enterTableChage (value) {

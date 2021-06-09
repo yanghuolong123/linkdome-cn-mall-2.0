@@ -57,7 +57,7 @@ export default {
   },
   computed: {
     tootipText () {
-      return this.$store.state.home.headerAction === 0 ? '平均客流量：所有购物中心实时累计客流之和除以购物中心个数\n客流峰值：所有购物中心当中客流峰值的最大值' : '今日平均客流量：累计客流量除以营业小时数\n今日客流峰值：从开始营业时间到目前时刻客流最大值'
+      return this.$store.state.home.headerAction === 0 ? '平均客流量：所有购物中心实时累计客流之和除以购物中心个数\n客流峰值：所有购物中心当中客流峰值的最大值\n集客量峰值：所有购物中心当中集客量峰值的最大值\n今日集客量：所有购物中心集客量之和' : '今日平均客流量：累计客流量除以营业小时数\n今日客流峰值：从开始营业时间到目前时刻客流最大值\n今日集客量峰值：从开始营业时间到目前时刻购物中心中驻留人数的最大值和时间点\n今日集客量：从开始营业时间到目前时刻的进入总客流与离开总客流之差'
     }
   },
   mounted () {
@@ -115,11 +115,11 @@ export default {
   display grid
   grid-template-columns 1fr 1.1fr
   grid-template-rows auto auto
-  grid-column-gap 29px
-  // @media (max-width 1200px) {
-  //   grid-template-columns  1fr
-  //   grid-template-rows 400px auto auto
-  // }
+  grid-column-gap 14px
+  @media (max-width 1200px) {
+    grid-template-columns  1fr
+    grid-template-rows 400px auto auto
+  }
   .mapCarousel
     grid-row 1/3
     padding-left 1px

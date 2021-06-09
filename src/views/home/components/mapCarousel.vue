@@ -1,64 +1,107 @@
 <template>
-	<div class="map-carousel-box box-card">
-		<div v-if="id ==='company'" class="amap-box">
-			<img src="@/assets/images/fixation_img/bg/map.webp" alt="">
-				<div  class="company-property"
-					:key="index" v-for="(item,index) in markers"
-					:style="{left:item.position[0],top:item.position[1]}"
-				>
-				<div class="property-list"  v-if='item.isText'>
-					<img  :src="item.img?item.img:floorImage" alt="">
-					<div class="list-right">
-						<p>{{item.name}}</p>
-						<p class="enter">实时客流: {{Number(item.enter).toLocaleString()}}</p>
-					</div>
-				</div>
+  <div class="map-carousel-box box-card">
+    <!-- <el-amap
+      v-if="id ==='company'"
+      class="amap-box"
+      vid="map"
+      :center="center"
+      :zooms="zooms"
+      ref="map"
+      key="mymap"
+    >
+      <el-amap-marker
+        v-for="(marker, index) in markers"
+        :key="index"
+        :events="marker.events"
+        :icon="marker.icon"
+        :position="marker.position"
+      ></el-amap-marker>
+      <el-amap-info-window
+        v-if="window"
+        :position="window.position"
+        :visible="window.visible"
+        :offset="window.offset"
+      >
+        <div class="mapslot" v-on:click="handleclick(window.zoneId)">
+          <p>{{window.name}}</p>
+          <p>
+            <span></span>
+            <template v-if="window.isexist">
+              实时客流:{{window.passengerFlow.number}}
+              <br>
+              {{window.passengerFlow.timeRange}}
+            </template>
+            <template v-else>暂无数据</template>
+          </p>
+        </div>
+      </el-amap-info-window>
+    </el-amap> -->
+    <div v-if="id ==='company'" class="amap-box">
+      <img src="@/assets/images/fixation_img/bg/map.webp" alt="">
+        <div  class="company-property"
+      :key="index" v-for="(item,index) in markers"
+      :style="{left:item.position[0],top:item.position[1]}"
+      >
+        <div class="property-list"  v-if='item.isText'>
+          <img  :src="item.img?item.img:floorImage" alt="">
+          <div class="list-right">
+            <p>{{item.name}}</p>
+            <p class="enter">实时客流: {{Number(item.enter).toLocaleString()}}</p>
+          </div>
+        </div>
 
-				<img class="map-icon"
-					v-on:mouseover="showData(index,'show')"
-					v-on:mouseout="showData(index,'hide')"
-					v-on:click="handleclick(item.id)"
-					src="@/assets/images/fixation_img/rest/map-icon.webp" alt=""
-				>
-				</div>
-		</div>
-		<div v-if="id!=='company'" style="width:100%;height:100%;">
-			<template v-if="mapCarousel">
-				<div class="carousel" >
-					<div v-if="storeDataList.length!==0" class="store-data-list">
-						 <div class="store-data-close" v-on:click="storeClose">
-							<Icon type="md-close" />
-						</div>
-						<ul>
-							<li :key="index" v-for="(item,index) in  storeDataList">
-								<p>{{item.name}}</p>
-								<span>{{item.enter}}(人次)</span>
-								<button v-on:click="entranceStore(index)">进入</button>
-							</li>
-						</ul>
-					</div>
-
-					<img class="carousel-bg" :src="mapCarousel.map_url ? mapCarousel.map_url :floorImage" alt="">
-
-					<div
-						class="positions"
-						style="position:absolute"
-						v-for="(pos,posindex) in mapCarousel.gate"
-						:key="posindex"
-						:style="{top:`${pos.position_y*100}%`,left:`${pos.position_x*100}%`}"
-					>
-						<img class="map-icon"
-							src="@/assets/images/fixation_img/rest/map-icon.webp" alt=""
-							v-on:click="storeClick(posindex)"
-						>
-					</div>
-				</div>
-			</template>
-			<template v-else>
-				<p class="noData">暂无数据</p>
-			</template>
-		</div>
-	</div>
+        <img class="map-icon"
+          v-on:mouseover="showData(index,'show')"
+          v-on:mouseout="showData(index,'hide')"
+          v-on:click="handleclick(item.id)"
+          src="@/assets/images/fixation_img/rest/map-icon.webp" alt=""
+        >
+        </div>
+    </div>
+    <div v-if="id!=='company'" style="width:100%;height:100%">
+      <template v-if=" mapCarousel && mapCarousel.length > 0 ">
+        <div v-for="(item,index) in mapCarousel" :key="index" class="carousel">
+          <img :src="item.map_url ? item.map_url :floorImage" alt="">
+            <div
+              class="positions"
+              style="position:absolute"
+              v-for="(pos,posindex) in item.gate"
+              :key="posindex"
+              :style="{top:`${pos.position_y*100}%`,left:`${pos.position_x*100}%`}"
+            >
+              {{pos.name}}
+              <br>
+              实时客流:{{pos.enter ? pos.enter.toLocaleString() : 0}}
+            </div>
+        </div>
+        <!-- <Carousel v-model="value1" class="carousel" radius-dot ref="careousel" :height="548">
+          <CarouselItem v-for="(item,index) in mapCarousel" :key="index">
+            <template>
+              <div
+                class="carouselItem"
+                :style="{background:`url(${item.map_url ? item.map_url :floorImage})`}"
+              >
+                <div
+                  class="positions"
+                  style="position:absolute"
+                  v-for="(pos,posindex) in item.gate"
+                  :key="posindex"
+                  :style="{top:`${pos.position_y*100}%`,left:`${pos.position_x*100}%`}"
+                >
+                  {{pos.name}}
+                  <br>
+                  实时客流:{{pos.enter ? pos.enter.toLocaleString() : 0}}
+                </div>
+              </div>
+            </template>
+          </CarouselItem>
+        </Carousel> -->
+      </template>
+      <template v-else>
+        <p class="noData">暂无数据</p>
+      </template>
+    </div>
+  </div>
 </template>
 <script>
 import _ from 'lodash'
@@ -98,11 +141,10 @@ export default {
       mapIcon: 'circle',
       current: 0,
       value1: 0,
-      floorImage: require('@/assets/images/fixation_img/bg/map.webp'),
+      floorImage: require('@/assets/images/user_data_img/home_floor.webp'),
       showEnter: false,
       intervalId: '',
-	  mapCarousel: {},
-	  storeDataList: []
+      mapCarousel: []
     }
   },
   computed: {
@@ -139,7 +181,7 @@ export default {
     propertImgGate () {
       homeImgGaet().then(res => {
         if (res.data.code == 200) {
-          this.mapCarousel = {}
+          this.mapCarousel = []
           let data = res.data.data.property
           if (data) {
             data.forEach(e => {
@@ -148,14 +190,14 @@ export default {
                 obj.id = e.id
                 obj.name = e.name
                 obj.map_url = e.map_url
-                obj.gate = e.province
-                this.mapCarousel = obj
+                obj.gate = e.gate
+                this.mapCarousel.push(obj)
               }
             })
           } else {
             let obj = {}
             obj.map_url = ''
-            this.mapCarousel = obj
+            this.mapCarousel.push(obj)
           }
         }
       })
@@ -197,206 +239,142 @@ export default {
         this.markers[index].isText = false
         this.showEnter = false
       }
-    },
-    storeClick (index) {
-	  this.storeDataList = this.mapCarousel.gate[index].store
-    },
-    storeClose () {
-      this.storeDataList = []
-    },
-    entranceStore (index) {
-      let id = this.storeDataList[index].id
-      this.$router.push({ name: 'Synthesize', params: { id: id } })
     }
   }
 }
 </script>
 <style lang="less" scope="scoped">
-.carousel{
-	position:relative;
-	width: 100%;
-	height: 100%;
-	.carousel-bg{
-		display: block;
-		width: 100%;
-		height: 100%;
-	}
-	.store-data-list{
-		position: absolute;
-		left: 10px;
-		top: 10px;
-		.store-data-close{
-			width: 25px;
-			height: 25px;
-			text-align: center;
-			line-height: 25px;
-			position: absolute;
-			right: -6px;
-			top: -6px;
-			background-color: #fff;
-			border-radius: 4px;
-			box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
-			cursor: pointer;
-			&:hover{
-				right: -10px;
-				top: -10px;
-			}
-			i{
-				font-size: 20px;
-			}
-		}
-		ul{
-			width: 100%;
-			height: auto;
-			li{
-				width: 160px;
-				height: auto;
-				background-color: #fff;
-				padding: 10px;
-				border-bottom: 1px solid #666;
-				&:last-child{
-					border-bottom:none;
-				}
-				p{
-					width: 100%;
-					height: auto;
-					margin-bottom: 5px;
-				}
-				span{
-					font-size: 16px;
-				}
-				button{
-					float: right;
-					background-color: cornflowerblue;
-					padding: 5px 10px;
-					border: none;
-					color: #fff;
-					cursor: pointer;
-				}
-			}
-		}
-	}
-	.positions{
-		img{
-			display: block;
-			width: 20px;
-			height: auto;
-			cursor: pointer;
-		}
-	}
-
-}
+ .carousel{
+    position: relative;
+    height: 100%;
+    img{
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .positions{
+      background-color: #3a96e8;
+      opacity :0.9;
+      -webkit-box-shadow: 0px 0px 6px 0px rgba(31,118,199,1);
+      -moz-box-shadow: 0px 0px 6px 0px rgba(31,118,199,1);
+      box-shadow: 0px 0px 6px 0px rgba(31,118,199,1);
+      padding: 2px 5px;
+      color: #fff;
+    }
+  }
 .amap-box{
-	height: 100%;
-	position: relative;
-	img{
-		display: block;
-		width: 100%;
-		height: 100%;
-	}
-	.company-property{
-		display: inline-block;
-		position: absolute;
-		.map-icon{
-			width: 20px;
-			height: auto;
-			cursor: pointer;
-		}
-		.map-icon-second{
-			 position: absolute;
-			 left:10px;
-			 top:-541px;
-		 }
-		.property-list{
-			display: block;
-			width: 280px;
-			height: 90px;
-			background-color: #fff;
-			border: 1px solid #fba940;
-			border-radius: 4px;
-			position: absolute;
-			left: -130px;
-			top: -93px;
-			z-index: 41001;
-			img{
-				display: block;
-				width: 50%;
-				height: 100%;
-				float: left;
-			}
-			.list-right{
-				display: block;
-				width: 50%;
-				height: 100%;
-				padding: 25px 20px;
-				float: left;
-				border-left: 1px solid #fba940;
-				p{
-					font-size: 12px;
-					color: #333;
-				}
-				.enter{
-					margin-top: 5px;
-					color: #222;
-				}
-			}
-		}
-	}
-	.map-position{
-		position: absolute;
-		top:20px;
-		left:25px;
-		width: 280px;
-		border-radius: 25px;
-		box-shadow: 0px 2px 9px 1px rgba(175, 175, 176, 0.25);
-		background-color: #fff;
-		padding:15px 20px;
-		p{
-			span:nth-child(2){
-				font-weight: 700;
-				font-size: 12px;
-				margin:0 15px;
-			}
-			span:nth-child(3){
-				font-size:14px;
-				font-weight: 700;
-			}
-		}
-	}
+  height: 100%;
+  position: relative;
+  img{
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .company-property{
+    display: inline-block;
+    position: absolute;
+    .map-icon{
+      width: 20px;
+      height: auto;
+      cursor: pointer;
+    }
+    .map-icon-second{
+       position: absolute;
+       left:10px;
+       top:-541px;
+     }
+    .property-list{
+      display: block;
+      width: 280px;
+      height: 90px;
+      background-color: #fff;
+      border: 1px solid #fba940;
+      border-radius: 4px;
+      position: absolute;
+      left: -130px;
+      top: -93px;
+      z-index: 41001;
+      img{
+        display: block;
+        width: 50%;
+        height: 100%;
+        float: left;
+      }
+      .list-right{
+        display: block;
+        width: 50%;
+        height: 100%;
+        padding: 25px 20px;
+        float: left;
+        border-left: 1px solid #fba940;
+        p{
+          font-size: 12px;
+          color: #333;
+        }
+        .enter{
+          margin-top: 5px;
+          color: #222;
+        }
+      }
+    }
+  }
+
+  .map-position{
+    position: absolute;
+    top:20px;
+    left:25px;
+    width: 280px;
+    border-radius: 25px;
+    box-shadow: 0px 2px 9px 1px rgba(175, 175, 176, 0.25);
+    background-color: #fff;
+    padding:15px 20px;
+    p{
+      span:nth-child(2){
+        font-weight: 700;
+        font-size: 12px;
+        margin:0 15px;
+      }
+      span:nth-child(3){
+        font-size:14px;
+        font-weight: 700;
+      }
+    }
+  }
 }
 </style>
 <style lang="stylus" scoped>
 .map-carousel-box
-	height 100%
-	border-radius 6px
+  height 100%
+  border-radius 6px
+  padding 6px
 .noData
-	text-align: center
-	line-height: 100%
+  text-align: center
+  line-height: 100%
 .carousel /deep/
-	.carouselItem
-		height: 100%
-		position relative
-		background-repeat no-repeat
-		background-size: 100% 100%!important
-		border-radius 6px
-		.positions
-			background-color #3a96e8
-			opacity 0.9
-			-webkit-box-shadow: 0px 0px 6px 0px rgba(31,118,199,1);
-			-moz-box-shadow: 0px 0px 6px 0px rgba(31,118,199,1);
-			box-shadow: 0px 0px 6px 0px rgba(31,118,199,1);
-			padding 2px 5px
-			color #fff
-	.ivu-carousel-arrow
-		border-radius 0px
-		height 69px
-		width 41px
-		&.left
-			left:0
-		&.right
-			right 0
-		>i
-			font-size 30px
-	.ivu-carousel-arrow-hover
-		display none
+  .carouselItem
+    height: 100%
+    position relative
+    background-repeat no-repeat
+    background-size: 100% 100%!important
+    border-radius 6px
+    .positions
+      background-color #3a96e8
+      opacity 0.9
+      -webkit-box-shadow: 0px 0px 6px 0px rgba(31,118,199,1);
+      -moz-box-shadow: 0px 0px 6px 0px rgba(31,118,199,1);
+      box-shadow: 0px 0px 6px 0px rgba(31,118,199,1);
+      padding 2px 5px
+      color #fff
+  .ivu-carousel-arrow
+    border-radius 0px
+    height 69px
+    width 41px
+    &.left
+      left:0
+    &.right
+      right 0
+    >i
+      font-size 30px
+  .ivu-carousel-arrow-hover
+    display none
 </style>

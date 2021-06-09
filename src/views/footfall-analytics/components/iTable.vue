@@ -17,38 +17,36 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      columns: {
-        type: Array,
-        default: () => []
-      },
-      data: {
-        type: Array,
-        default: () => []
-      },
-      noData: {
-        type: String,
-        default: '暂无数据'
-      }
+export default {
+  props: {
+    columns: {
+      type: Array,
+      default: () => []
+    },
+    data: {
+      type: Array,
+      default: () => []
+    },
+    noData: {
+      type: String,
+      default: '暂无数据'
     }
   }
+}
 </script>
 <style lang="stylus" scoped>
-  .vs-con-table .vs-con-tbody .vs-table--tbody-table .vs-table--thead th
-    background-color #f8f8f8
-  #i-table-component.vs-component.vs-con-table /deep/
-  .vs-table--thead
-    >tr
-      background-color #f8f8f8
-      >th
+#i-table-component.vs-component.vs-con-table /deep/
+    .vs-table--thead
+      >tr
+        background-color #f8f8f8
+        >th
+          white-space nowrap
+          min-width fit-content
+          padding-right 1em
+    .vs-table.vs-table--tbody-table
+      min-width max-content
+      >tr
+        border-bottom 1px solid #f8f8f8
         white-space nowrap
         min-width fit-content
-        padding-right 1em
-  .vs-table.vs-table--tbody-table
-    min-width max-content
-    >tr
-      border-bottom 1px solid #f8f8f8
-      white-space nowrap
-      min-width fit-content
 </style>

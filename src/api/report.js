@@ -1,6 +1,5 @@
 import naxios from '@/libs/api.request'
 import qs from 'qs'
-import axios from 'axios'
 export const fetchEntity = (timeRange, entityType, propertyId) => {
   return naxios.request({
     url: 'report/daily/entity',
@@ -68,77 +67,5 @@ export const getReportFormat = params => {
     url: 'flow/topShopByIndustry',
     params,
     method: 'get'
-  })
-}
-export const monthlySequential = (params, _this = {}) => {
-  const CancelToken = axios.CancelToken
-  return naxios.request({
-    url: 'report/month/contrast',
-    data: qs.stringify(params),
-    method: 'post',
-    cancelToken: new CancelToken(function executor (c) {
-      _this.cancelPostHistorycomputeAjax = c
-    })
-  })
-}
-export const newReportEnter = (params, _this = {}) => {
-  const CancelToken = axios.CancelToken
-  return naxios.request({
-    url: 'report/dailyReport',
-    data: qs.stringify(params),
-    method: 'post',
-    cancelToken: new CancelToken(function executor (c) {
-      _this.cancelPostHistorycomputeAjax = c
-    })
-  })
-}
-export const newReportSuggest = params => {
-  return naxios.request({
-    url: 'report/suggest',
-    params,
-    method: 'get'
-  })
-}
-export const newReportSuggestPost = params => {
-  return naxios.request({
-    url: 'report/suggest',
-    data: qs.stringify(params),
-    method: 'post'
-  })
-}
-export const newReportGate = params => {
-  return naxios.request({
-    url: 'report/entrance',
-    data: qs.stringify(params),
-    method: 'post'
-  })
-}
-export const newReportShop = params => {
-  return naxios.request({
-    url: 'report/daily/topShop',
-    data: qs.stringify(params),
-    method: 'post'
-  })
-}
-export const newReportMonthRemark = params => {
-  return naxios.request({
-    url: 'report/month/trend',
-    data: qs.stringify(params),
-    method: 'post'
-  })
-}
-export const newReportFloorShop = params => {
-  return naxios.request({
-    url: 'report/month/shop',
-    data: qs.stringify(params),
-    method: 'post'
-  })
-}
-
-export const newReportFormatShop = params => {
-  return naxios.request({
-    url: 'report/month/formatShop',
-    data: qs.stringify(params),
-    method: 'post'
   })
 }

@@ -24,6 +24,7 @@ footFall:客流
           v-model="exportType"
           :xAxis="bizChartData.xAxis"
           :series="bizChartData.series"
+          tooltipUnit="人次"
           :type="chartTypes"
           :extraOptions="bizExtraOptions"
           :istotal='istotal'
@@ -50,6 +51,7 @@ footFall:客流
         <chart-tabs
           v-model="exportType"
           :xAxis="topShopData.xAxis"
+          tooltipUnit="人次"
           :series="topShopData.series"
           :type="chartTypes"
           :extraOptions="extraOptions"
@@ -186,14 +188,6 @@ export default {
     }
   },
   watch: {
-    watch: {
-      '$store.state.home.headerAction' () {
-        let routerName = this.$router.currentRoute.name
-        if (routerName === 'Drainage') {
-          this.bizTopData = []
-        }
-      }
-    },
     time1: {
       immediate: true,
       handler: function (val, oldVal) {
@@ -225,6 +219,10 @@ export default {
       }
     },
     '$store.state.home.headerAction' () {
+      let routerName = this.$router.currentRoute.name
+      if (routerName === 'Drainage') {
+        this.bizTopData = []
+      }
       this.getDict()
     },
     // 监听业态变化
@@ -284,6 +282,7 @@ export default {
         })
       }
       let that = this
+
       return {
         xAxis: {
           name: '名称',
@@ -332,9 +331,12 @@ export default {
       let kes = Object.keys(sortedObj)[0]
       let objs = sortedObj[kes]
       var newArr = []
-      objs.forEach(function (res, index) {
-        if (index < 10) newArr.push(res)
-      })
+      if (objs) {
+        objs.forEach(function (res, index) {
+          if (index < 10) newArr.push(res)
+        })
+      }
+
       return {
         xAxis: {
           name: '名称',
@@ -413,21 +415,25 @@ export default {
        *  @description 对api 返回的对象进行排序，如{a:{xxx:val,xxx2:val},b:{xxx:val,xxx2:val}},
        *  @returns {a:[{xxx,val},{xxx2,val}],b:[{xxx,val},{xxx2,val}]}
        */
-      const allVals = _.cloneDeep(Object.values(obj))
-      const sumValsByKey = allVals.reduce((a, b) => {
-        Object.keys(a).forEach(k => { a[k] = Number(a[k]) + Number(b[k]) })
-        return a
-      })
-      const orderVals = Object.entries(sumValsByKey).sort((a, b) => b[1] - a[1])
-      let sortedObj = {}
-
-      Object.keys(_.cloneDeep(obj)).forEach(key => {
-        const ele = obj[key]
-        sortedObj[key] = orderVals.map(([k, v]) => {
-          return { name: [k], data: ele[k] }
+      if (obj.length > 0) {
+        const allVals = _.cloneDeep(Object.values(obj))
+        const sumValsByKey = allVals.reduce((a, b) => {
+          Object.keys(a).forEach(k => { a[k] = Number(a[k]) + Number(b[k]) })
+          return a
         })
-      })
-      return sortedObj
+        const orderVals = Object.entries(sumValsByKey).sort((a, b) => b[1] - a[1])
+        let sortedObj = {}
+
+        Object.keys(_.cloneDeep(obj)).forEach(key => {
+          const ele = obj[key]
+          sortedObj[key] = orderVals.map(([k, v]) => {
+            return { name: [k], data: ele[k] }
+          })
+        })
+        return sortedObj
+      } else {
+        return {}
+      }
     },
     dowloadXlsx (res) {
       /**
@@ -511,12 +517,12 @@ box-border(w,r)
     width 50%
     &:nth-child(1)
         border-right 1px solid border-color
-  // @media (max-width:768px)
-  //   flex-wrap wrap
-  //   border none
-  //   >div
-  //     width 100%
-  //     box-border 1px,8px
-  //     &:nth-child(1)
-  //       margin-bottom 1.25rem
+  @media (max-width:768px)
+    flex-wrap wrap
+    border none
+    >div
+      width 100%
+      box-border 1px,8px
+      &:nth-child(1)
+        margin-bottom 1.25rem
 </style>

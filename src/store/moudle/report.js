@@ -1,8 +1,8 @@
 export default {
   state: {
-    reportHeader: '',
     reportYear: '',
     companyName: '',
+    companyLogo: '',
     companyDateTime: '',
     coverDateTime: '',
     leftWidth: false
@@ -20,13 +20,11 @@ export default {
     companyName (state, value) {
       state.companyName = value
     },
-
+    companyLogo (state, value) {
+      state.companyLogo = value
+    },
     companyDateTime (state, value) {
       state.companyDateTime = value
-    },
-
-    reportHeader (state, value) {
-      state.reportHeader = value
     }
   },
   actions: {}

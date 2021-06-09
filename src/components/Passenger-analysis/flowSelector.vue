@@ -1,11 +1,9 @@
 <template>
     <div class="flow-selector">
         <vs-row>
-          <!-- 日期选择 -->
             <vs-col  style="width:230px;padding:0;margin-left:15px;" :vs-xs="12">
                 <i-date-picker :value='queryParams.date1Array' :dType="1" @selectDate="dateSelect"></i-date-picker>
             </vs-col>
-            <!-- 类型选择 -->
             <vs-col  style="width:230px;padding:0;margin-left:15px;" :vs-xs="12" v-if="compare" >
                  <vs-select v-model="compareType" width="230px;" autocomplete>
                     <vs-select-item
@@ -16,7 +14,6 @@
                     />
                 </vs-select>
             </vs-col>
-            <!-- 时间对比 显示第二个时间控件 -->
             <template v-if="['time','onYear','onMonth'].includes(compareType)" >
                 <vs-col  style="width:230px;padding:0;margin-left:15px;" :vs-xs="10">
                     <i-date-picker :disabled="['onYear','onMonth'].includes(compareType)"
@@ -26,17 +23,15 @@
                 </vs-col>
             </template>
         </vs-row>
-        <!-- 实体对比下的类型选择 -->
         <vs-row  v-show="compareType === 'entity'">
-            <vs-col class="mt-4" v-if="isRadio">
-                <!-- <vs-radio v-model="entityType" vs-value="shop" v-if="isShop" style="margin-right:1rem;">购物中心</vs-radio> -->
-                <vs-radio v-model="entityType" vs-value="floor" v-if="isFloor" class="mr-4">省份</vs-radio>
+            <vs-col class="mt-4">
+                <vs-radio v-model="entityType" vs-value="shop" v-if="isShop" style="margin-right:1rem;">购物中心</vs-radio>
+                <vs-radio v-model="entityType" vs-value="floor" v-if="isFloor" class="mr-4">楼层</vs-radio>
                 <vs-radio v-model="entityType" vs-value="store" v-if="isStore" class="mr-4">商铺</vs-radio>
-                <!-- <vs-radio v-model="entityType" vs-value="area" v-if="isArea" class="mr-4">区域</vs-radio>
-                <vs-radio v-model="entityType" vs-value="gate" v-if="isGate">出入口</vs-radio> -->
+                <vs-radio v-model="entityType" vs-value="area" v-if="isArea" class="mr-4">区域</vs-radio>
+                <vs-radio v-model="entityType" vs-value="gate" v-if="isGate">出入口</vs-radio>
             </vs-col>
         </vs-row>
-        <!--选择实体对比下的商铺选择显示出的实体列表  -->
         <vs-row>
           <vs-col v-if="isCascade"  style="width:230px;padding:0;margin-left:15px;" :vs-xs="12" class="mt-4">
             <div class="cascadeDom" v-if="isCascade">
@@ -50,9 +45,8 @@
                 </el-cascader>
             </div>
           </vs-col>
-          <!-- 除商铺选择外显示的实体列表 -->
+
           <vs-col v-else  style="width:230px;padding:0;margin-left:15px;" :vs-xs="12" class="mt-4">
-            <!-- 不是实体对比 要显示的列表的样式  -->
               <div class="cascadeDom" style="margin: 0" v-show="compareType !== 'entity'">
                   <el-cascader
                     @change="cascaderChange"
@@ -66,8 +60,6 @@
                   >
                   </el-cascader>
               </div>
-              <!-- 实体对比 显示的列表样式 -->
-               <!-- :value='selectList' -->
               <vs-select
                 v-show="compareType === 'entity'"
                 width="100%"
@@ -89,7 +81,6 @@
               />
               </vs-select>
           </vs-col>
-          <!-- 数据类型选择 -->
           <vs-col  style="width:230px;padding:0;margin-left:15px;" :vs-xs="12" v-if="footFall" class="mt-4">
               <vs-select v-model="queryParams.enterType" autocomplete width="100%">
                   <vs-select-item
@@ -100,7 +91,6 @@
                   />
               </vs-select>
           </vs-col>
-          <!-- 按钮 -->
           <vs-col style="width:230px;padding:0;margin-left:15px;" :vs-xs="12" class="mt-4">
               <vs-button color="primary" style="float:left;" @click="handleClick" class="btn">查询</vs-button>
               <vs-button color="" v-if="isReset" @click="resetClick" class="btn ml-4 reset">重置</vs-button>
@@ -115,7 +105,6 @@ import { getBussinessTree, getBussinessCommon, getCascadeList } from '@/api/pass
 import _ from 'lodash'
 import { setTimeout } from 'timers'
 import { formatEntityData, deepTraversal, findCascadeLastLevel, getUnique, findCascadeLastNode } from '@/libs/util'
-import { log } from 'util'
 export default {
   name: 'flowvs-selector',
   props: {
@@ -137,19 +126,19 @@ export default {
       default: false
     },
     // 开始 是否需要
-    isShop: { // 控制 购物中心
+    isShop: {// 控制 购物中心
       type: Boolean,
       default: false
     },
-    isFloor: { // 控制 楼层
+    isFloor: {// 控制 楼层
       type: Boolean,
       default: false
     },
-    isStore: { // 控制 商铺
+    isStore: {// 控制 商铺
       type: Boolean,
       default: false
     },
-    isArea: { // 控制 区域
+    isArea: {// 控制 区域
       type: Boolean,
       default: false
     },
@@ -177,7 +166,13 @@ export default {
     routName: {
       type: String,
       default: ''
-    }
+    },
+      initDate:{//初始化日期（有效客流分析用）
+        type:Array,
+          default:()=>{
+              return []
+          }
+      }
   },
   components: {
     iDatePicker
@@ -186,7 +181,6 @@ export default {
     return {
       isResouceShow: 0,
       isCascade: false,
-      isRadio: true,
       selectAll: 0,
       customType: [
         {
@@ -224,12 +218,12 @@ export default {
             return o.id
           }))
         } else {
-          setTimeout(() => {
-            // this.selectList = _.cloneDeep(that.treeList.map(o => {
-            //   return o.id
-            // }))
-            this.selectList = [that.treeList[0].id]
-          })
+          // setTimeout(() => {
+          //   this.selectList = _.cloneDeep(that.treeList.map(o => {
+          //     return o.id
+          //   }))
+          // })
+          this.selectList = [that.treeList[0].id]
         }
       }
     },
@@ -240,12 +234,13 @@ export default {
       if (this.compareType == 'entity') {
         if (this.routName == 'sales') {
           this.entityType = 'shop'
-        } else if (this.routName == 'entity' || this.routName == 'ageGender' || this.routName == 'dwellTime') {
+        } else if (this.routName == 'entity' || this.routName == 'ageGender') {
           this.isShop = false
-        } else {
+        } else  {
           this.entityType = 'floor'
         }
-
+        this.selectList = []
+        if (this.treeList.length != 0)  this.selectList = [that.treeList[0].id]
         if (this.isShop) {
           this.entityType = 'shop'
         } else if (this.isFloor) {
@@ -257,24 +252,11 @@ export default {
         } else if (this.isGate) {
           this.entityType = 'gate'
         }
-        // if (this.routName === 'dwellTime') {
-        //   this.entityType = 'floor'
-        //   if (this.treeList.length != 0) {
-        //     this.selectList = _.cloneDeep(that.treeList.map(o => {
-        //       return o.id
-        //     }))
-        //   }
-        //   this.isRadio = false
-        //   setTimeout(() => {
-        //     this.isRadio = true
-        //   })
-        // }
-        if (this.routName === 'ranking') {
-          setTimeout(() => {
-            this.selectList = [that.treeList[0].id]
-          }, 1000)
-        } else {
-          this.selectList = [that.treeList[0].id]
+        if (this.routName == 'dwellTime') {
+          this.entityType = 'shop'
+            this.selectList = _.cloneDeep(that.treeList.map(o => {
+            return o.id
+          }))
         }
       } else {
         if (this.routName == 'entity' || this.routName == 'ageGender') {
@@ -285,30 +267,16 @@ export default {
         } else {
           this.cascaderSelectList = [[this.cascaderTree[0].id]]
         }
-
         switch (this.compareType) {
-          case 'time':
-            // 自定义时间
-            this.queryParams.date2Array = []
-            break
           case 'onYear':
-            // 同比
-            this.queryParams.date2Array = [
-              Moment(this.queryParams.date1Array[0]).add(-1, 'y').format('YYYY-MM-DD'),
-              Moment(this.queryParams.date1Array[1]).add(-1, 'y').format('YYYY-MM-DD')
-            ]
+            this.queryParams.date2Array = [Moment(this.queryParams.date1Array[0]).add(-1, 'y').format('YYYY-MM-DD'), Moment(this.queryParams.date1Array[1]).add(-1, 'y').format('YYYY-MM-DD')]
             break
           case 'onMonth':
-            // 环比
-            let size = Moment(this.queryParams.date1Array[0]).diff(Moment(this.queryParams.date1Array[1]), 'days') - 1
-            this.queryParams.date2Array = [
-              Moment(this.queryParams.date1Array[0]).add(size, 'd').format('YYYY-MM-DD'),
-              Moment(this.queryParams.date1Array[1]).add(size, 'd').format('YYYY-MM-DD')
-            ]
+            this.queryParams.date2Array = [Moment(this.queryParams.date1Array[0]).add(-1, 'M').format('YYYY-MM-DD'), Moment(this.queryParams.date1Array[1]).add(-1, 'M').format('YYYY-MM-DD')]
             break
         }
         this.isCascade = false
-        this.selectList = []
+        this.selectList = [that.treeList[0].id]
       }
     },
     '$store.state.home.headerAction' () {
@@ -335,15 +303,7 @@ export default {
           } else {
             this.cascaderSelectList = this.multiple ? this.cascaderTree[0] && [[this.cascaderTree[0].id]] || [] : this.cascaderTree[0] && [this.cascaderTree[0].id] || []
           }
-          if (this.cascaderSelectList[0][0]) {
-            if (this.routName === 'ranking') {
-              setTimeout(() => {
-                this.handleClick()
-              }, 1500)
-            } else {
-              this.handleClick()
-            }
-          }
+          this.handleClick()
           this.isResouceShow = this.isResouceShow + 1
         }
       },
@@ -352,18 +312,16 @@ export default {
 
   },
   computed: {
-    selectListName () {
-      let nameArr = []
-      if (_.isArray(this.selectList)) {
-        this.selectList.map((val) => {
-          let name = _.filter(this.treeList, (o) => {
-            return val === o.value
-          })[0].label
-          nameArr.push(name)
-        })
-      }
-      return nameArr
-    },
+     selectListName(){
+      let nameArr = []
+      this.selectList.map((val)=>{
+       let name =  _.filter(this.treeList,(o)=>{
+          return val===o.value
+        })[0].label
+        nameArr.push(name)
+      })
+      return nameArr
+    },
     treeList () {
       let list = []
       if (this.compareType !== 'entity' && this.multiple) {
@@ -375,7 +333,7 @@ export default {
         }
         list.push(o)
       } else {
-        if (this.routName == 'ranking' || this.routName == 'ageGender' || this.routName == 'entity' || this.routName == 'dwellTime') {
+        if (this.routName == 'ranking' || this.routName == 'ageGender' || this.routName == 'entity') {
           var o = {
             value: 0,
             id: 0,
@@ -490,13 +448,16 @@ export default {
     }
   },
   created () {
+      if(this.initDate.length){
+          this.queryParams.date1Array = this.initDate;
+      }
   },
   mounted () {
     this.CascadeList()
     this.bussinessTreeReq()
   },
   methods: {
-    cascaderChange (e, index) {
+    cascaderChange (e) {
       const allList = e.filter(o => {
         return JSON.stringify(o).indexOf('all') > -1
       })
@@ -590,12 +551,10 @@ export default {
         }
       }
       this.selectList = []
-      // this.selectList = _.cloneDeep(that.treeList.map(o => {
-      //   return o.id
-      // }))
+      this.selectList = [that.treeList[0].id]
       setTimeout(() => {
         this.handleClick()
-      }, 1500)
+      })
     },
     dateSelect (date, shortname, dType) {
       date[0] = Moment(date[0]).format('YYYY-MM-DD')
@@ -649,7 +608,7 @@ export default {
           }
           copySelect.forEach(e => {
             let tml = _.find(this.treeList, (o) => o.value === e)
-            if (tml && tml.id != 0) entitys.push(tml)
+            if (tml != 0) entitys.push(tml)
           })
         }
       } else {
@@ -672,7 +631,8 @@ export default {
               label: node.label,
               name: node.name,
               itype: node.itype,
-              belongsType: node.belongsType
+              belongsType: node.belongsType,
+              property_id:node.property_id
             })
           }
         }
@@ -697,7 +657,7 @@ export default {
           this.compareType = 'entity'
           if (this.treeList.length !== 0) this.selectList = [this.treeList[0].id]
         } else {
-          if (this.treeList[1] && this.treeList[1].length > 0) this.selectList = [this.treeList[1].id]
+          if (this.treeList[1].length > 0) this.selectList = [this.treeList[1].id]
         }
       } else {
         this.$nextTick(() => {
@@ -719,19 +679,16 @@ export default {
       if (this.compareType != 'entity') {
         if (totalLength.length == 1) return false
       }
-      if (_.isArray(value)) {
-        if ((totalLength - value.length) == 1 && value.indexOf(0) != -1) {
-          this.selectAll = 0
-          that.selectList = _.filter(value, (e) => {
-            return e != 0
-          })
-        }
-        if (this.selectAll == 1 && value.indexOf(0) == -1) {
-          this.selectAll = 0
-          that.selectList = []
-        }
+      if ((totalLength - value.length) == 1 && value.indexOf(0) != -1) {
+        this.selectAll = 0
+        that.selectList = _.filter(value, (e) => {
+          return e != 0
+        })
       }
-
+      if (this.selectAll == 1 && value.indexOf(0) == -1) {
+        this.selectAll = 0
+        that.selectList = []
+      }
       if (_.last(value) == 0) {
         let arr = that.treeList.map((l) => {
           return l.value

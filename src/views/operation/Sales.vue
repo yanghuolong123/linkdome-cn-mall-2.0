@@ -36,7 +36,7 @@
       :istotal='true'
     ></Trend>
     <!-- 排行分析 -->
-    <!-- <Ranking :time1="outrange" :istotal='false' :time2="outrange2" :propertyId="propertyId"></Ranking> -->
+    <Ranking :time1="outrange" :istotal='false' :time2="outrange2" :propertyId="propertyId"></Ranking>
   </div>
 </template>
 

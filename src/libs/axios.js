@@ -65,9 +65,9 @@ class HttpRequest {
         if (reqNum <= 0) {
           store.commit('UPDATE_LOADING_STATUS', false)
         }
-        if (axios.isCancel(error)) {
-          // console.log('请求取消');
-          return new Promise(() => {})
+        if(axios.isCancel(error)){
+          console.log('请求取消');
+          return new Promise(()=>{})
         } else if ((error.response.status === 401 && error.response.data.error === 'token_expired') || error.response.data.error === 'token_invalid' || error.response.data.error === 'user_not_found') {
           store.commit('setToken', '')
           router.push({ name: 'pageLogin' })

@@ -21,7 +21,7 @@
                 <li :key="index" v-for="(item,index) in data1">
                     <p>{{item.name}}</p>
                     <p>{{item.age}}</p>
-                    <!-- <p>{{item.address}}</p> -->
+                    <p>{{item.address}}</p>
                 </li>
             </ul>
         </div>
@@ -89,7 +89,7 @@ export default {
                 background-color: #cfd5ea;
             }
             p{
-                width: 50%;
+                width: 33.33%;
                 float:left;
                 text-align: center;
                 color: #000;

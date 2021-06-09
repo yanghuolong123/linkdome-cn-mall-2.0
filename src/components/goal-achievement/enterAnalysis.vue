@@ -4,7 +4,7 @@
             ref="chartBar"
             type=bar
             height="640"
-            :options="options"
+            :options="chartOptions"
             :series="series"
             style="padding-top:55px"
         ></vue-apex-charts>
@@ -24,10 +24,6 @@ export default {
     },
     series: {
       type: Array
-    },
-    options: {
-      type: Object,
-      default: () => {}
     }
   },
   components: {
@@ -85,7 +81,7 @@ export default {
         tooltip: {
           y: {
             formatter: function (val) {
-              return val.toLocaleString() + '元'
+              return val.toLocaleString() + '人'
             }
           }
         }

@@ -5,7 +5,6 @@
         :tableList='tableList'
         :titleName='titleName'
         :userLvl="userLvl"
-        @imgConfig="imgConfig"
         @tableData='editMail'
         @removeData='delMail'
     >
@@ -31,35 +30,27 @@ export default {
   data () {
     return {
       titleName: '基本信息',
+      tableName: [
+        '名称', '本年客流目标', '本年销售目标', '详情地址', '描述', '操作'
+      ],
       tableList: [
       ]
     }
   },
   computed: {
-    tableName(){
-      if(this.userLvl === 'admin'){
-        return [
-          '名称', '本年客流目标', '本年销售目标', '详情地址', '描述',  '图片配置','操作'
-        ]
-      }else {
-        return [
-          '名称', '本年客流目标', '本年销售目标', '详情地址', '描述',  '操作'
-        ]
-      }
-    }
+
   },
   methods: {
     init () {
       var that = this
       getGroupOrganization()
-        .then( res=> {
+        .then(function (res) {
           var data = res.data.data
           that.tableList = []
           let shoppingInfoDate = that.$store.state.user.shoppingInfoDate
           let obj = {}
           obj = _.find(data.property, ['property_id', shoppingInfoDate.property_id])
           obj.operation = true
-          obj.imgConfig = this.userLvl === 'admin'
           //获取当年年份
           const currentYear = new Date().getFullYear()
           //当年的客流目标
@@ -104,9 +95,6 @@ export default {
           obj.describe = obj.description ? obj.description : ' '
           that.tableList.push(obj)
         })
-    },
-    imgConfig(){
-      this.$emit('imgConfig')
     },
     editMail (value) {
       this.$emit('editMail', value.data)

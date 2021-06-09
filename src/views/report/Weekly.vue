@@ -19,7 +19,7 @@
             </DatePicker>
           </Col>
         </Row>
-        <div class="report-query" v-on:click="reportQuery">查询</div>
+        <div class="report-query" v-on:click="reportQuery">提取</div>
         <div class="icon-download" v-on:click="uploadReport" title="下载报告">
           <icons type="daoru" color="#2a7dc1" :size = 20 ></icons>
         </div>
@@ -31,8 +31,8 @@
     <div id="pdfDom">
       <report-day-cover ref="coverData" :pageNumber="paginationNumber" :reportType="reportT"  key="surface " ></report-day-cover>
       <report-week-one  ref="cover_one_data" key="first" :computedData="eeoComputedRes"></report-week-one>
-      <!-- <report-week-two  ref="cover_two_data" key="second"></report-week-two>
-      <report-week-six  ref="cover_six_data" key="third"></report-week-six> -->
+      <report-week-two  ref="cover_two_data" key="second"></report-week-two>
+      <report-week-six  ref="cover_six_data" key="third"></report-week-six>
       <report-week-three
         :key='index' v-for="(list,index) in floorListData"
         :dataValue="list"
@@ -189,8 +189,8 @@ export default {
         that.floorListData = gateData
 
         let lastWeekData = res[5].data.data// 传递上周数据
-        // that.$refs.cover_two_data.tableList(gateData, Object.values(lastWeekData))
-        // that.$refs.cover_six_data.dataList(gateData)
+        that.$refs.cover_two_data.tableList(gateData, Object.values(lastWeekData))
+        that.$refs.cover_six_data.dataList(gateData)
         // 区域数据
         that.areaDataList(res[6].data.data)
         // 业态 商铺 数据
@@ -202,7 +202,7 @@ export default {
         } else {
           size = that.floorListData.length + 3
         }
-        that.paginationNumber = '共' + 1 + '页'
+        that.paginationNumber = '共' + size + '页'
         that.showPDF = true
       })
     },
@@ -210,7 +210,7 @@ export default {
       var that = this
       if (that.selectDateTime === '') { alert('请选择时间'); return false }
 
-      let date = moment(this.selectDateTime).format('YYYY-MM-DD')
+      let date = moment(this.selectDateTime).format('YYYY/MM/DD')
       let token = getToken()
       let pdfUrl = window.location.href.split('/#/')[0]
       let ht = pdfUrl.split('://')[0]
@@ -407,7 +407,7 @@ export default {
         text-align: center;
         line-height: 43px;
         float: left;
-        margin-left: 60px;
+        margin-left: 30px;
         box-shadow:0px 0px 9px 0px rgba(166, 168, 169, .4);
         cursor: pointer;
         &:before{
@@ -419,6 +419,7 @@ export default {
         margin: 0 auto;
         overflow: hidden;
         width: 80%;
+        min-width: 1200px;
         .reportOneText{
           float: left;
           width: 100%;

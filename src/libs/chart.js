@@ -62,7 +62,7 @@ export const options0 = {
         if (val == undefined || val == null || val == '') {
           return ''
         } else {
-          return val.toLocaleString() + '人'
+          return val.toLocaleString() + '人次'
         }
       }
     }

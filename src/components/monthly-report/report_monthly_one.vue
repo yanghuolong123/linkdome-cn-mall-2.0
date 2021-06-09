@@ -5,20 +5,15 @@
         <div class="one-occupancy-total">
             <page-title :companyName="companyName" :typeName="typeName"></page-title>
             <div class="one-occupancy-total-text">
-                <div
-                  class="one-occupancy-list"
-                  v-for="(item,index) in totalOccupancy"
-                  :key="index"
-                >
+                <div class="one-occupancy-list" v-for="item in totalOccupancy">
                     <img :src="item.img" alt="">
-                    <div
-                      class="one-occupancy-list-text"
-                      v-bind:class="{'list-text-one':item.action}"
+                    <div class="one-occupancy-list-text"
+                         v-bind:class="{'list-text-one':item.action}"
                     >
-                      <p class="list-text-name">{{item.name}}</p>
-                      <p class="list-text-data">{{item.data}}人</p>
-                      <p class="list-text-date" v-if="item.date">{{item.date}}</p>
-                      <p class="list-text-time" v-if="item.time">{{item.time}}</p>
+                        <p class="list-text-name">{{item.name}}</p>
+                        <p class="list-text-data">{{item.data}}人</p>
+                        <p class="list-text-date" v-if="item.date">{{item.date}}</p>
+                        <p class="list-text-time" v-if="item.time">{{item.time}}</p>
                     </div>
                 </div>
             </div>
@@ -34,46 +29,33 @@
             <page-title  :typeName="detailsType"></page-title>
             <ul class="table" v-if="ifOneCharts">
                 <li class="table-time">
-                    <p
-                      :key="index"
-                      v-for="(item,index) in tableData.time"
-                      :style="{width:tableWidth+'%',fontSize:tableSize+'px'}"
-                    >
-                      {{item}}
-                    </p>
+                    <p :key="index" v-for="(item,index) in tableData.time"
+                       :style="{width:tableWidth+'%'}"
+                    >{{item}}</p>
                 </li>
                 <li class="table-enter">
-                    <p
-                      :style="{width:tableWidth+'%'}"
-                    >
-                      <span>客流量</span>
-                      <span>{{tableData.enter.total}}人</span>
+                    <p  :style="{width:tableWidth+'%'}" >
+                        <span>客流量</span>
+                        <span>{{tableData.enter.total}}人</span>
                     </p>
-                    <p
-                      :style="{width:tableWidth+'%'}"
-                      v-for="(item,index) in tableData.enter.list"
-                      :key="index"
-                    >
-                      {{item}}人
-                    </p>
+                    <p  :style="{width:tableWidth+'%'}"
+                        v-for="item in tableData.enter.list"
+                    >{{item}}人</p>
                 </li>
                 <li class="table-peak">
-                  <div class="table-peak-total" :style="{width:tableWidth+'%'}">
-                    <div class="total-left">客流峰值</div>
-                    <div class="total-right">
-                        <p>{{tableData.peakData.total.data}}人</p>
-                        <p>{{tableData.peakData.total.time}}</p>
+                   <div class="table-peak-total" :style="{width:tableWidth+'%'}">
+                       <div class="total-left">客流峰值</div>
+                       <div class="total-right">
+                           <p>{{tableData.peakData.total.data}}人</p>
+                           <p>{{tableData.peakData.total.time}}</p>
+                       </div>
+                   </div>
+                    <div class="table-peak-list"
+                         :style="{width:tableWidth+'%'}"
+                         v-for="item in tableData.peakData.list">
+                        <p>{{item.data}}人</p>
+                        <p>{{item.time}}</p>
                     </div>
-                  </div>
-                  <div
-                    class="table-peak-list"
-                    :style="{width:tableWidth+'%'}"
-                    v-for="(item,index) in tableData.peakData.list"
-                    :key="index"
-                  >
-                    <p>{{item.data}}人</p>
-                    <p>{{item.time}}</p>
-                  </div>
                 </li>
             </ul>
         </div>
@@ -137,15 +119,15 @@ export default {
           data: 0,
           date: '每天'
 
-        }
-        // {
-        //   img: require('@/assets/images/fixation_img/logo/837398fc2219715c1fb81436befe6e7.webp'),
-        //   name: '集客量峰值',
-        //   data: 0,
-        //   date: '',
-        //   time: ''
+        },
+        {
+          img: require('@/assets/images/fixation_img/logo/837398fc2219715c1fb81436befe6e7.webp'),
+          name: '集客量峰值',
+          data: 0,
+          date: '',
+          time: ''
 
-        // }
+        }
       ],
       trendOption: {
         title: { text: ' ' },
@@ -153,12 +135,42 @@ export default {
         credits: { enabled: false },
         yAxis: {
           title: { text: '' },
-          min: 0,
-          allowDecimals: false
+          min: 0
+          /* plotLines:[{
+                            color:'red',            //线的颜色，定义为红色
+                            dashStyle:'solid',//标示线的样式，默认是solid（实线），这里定义为长虚线
+                            value:25681,                //定义在哪个值上显示标示线，这里是在x轴上刻度为3的值处垂直化一条线
+                            width:2,
+                            zIndex:10//标示线的宽度，2px
+                        }], */
         },
         xAxis: {
           categories: [],
-          plotBands: []
+          plotBands: [
+            /* {
+                                from: 0,               // 标示带开始值
+                                to: 2,                 // 标示带结束值
+                                color: '#FCFFC5',            // 标示带背景颜色
+                                label: {
+                                    text: '我是x轴标示区',
+                                    verticalAlign: 'top',
+                                    style: {
+                                        fontSize: '12px',
+                                        fontWeight: 600
+                                    }
+                                }
+                            },
+                            {
+                                from: 3,               // 标示带开始值
+                                to: 10,                 // 标示带结束值
+                                color: '#FCFFC5',            // 标示带背景颜色
+                            },
+                            {
+                                from: 7,               // 标示带开始值
+                                to: 10,                 // 标示带结束值
+                                color: '#FCFFC5',            // 标示带背景颜色
+                            } */
+          ]
         },
         tooltip: {
           // head + 每个 point + footer 拼接成完整的 table
@@ -239,15 +251,15 @@ export default {
       this.totalOccupancy[1].date = moment(showTime).format('YYYY-MM-DD')
       this.totalOccupancy[2].data = data.property[0].enter.avg.number.toLocaleString()
 
-      // this.totalOccupancy[3].data = data.property[0].occupancy.highest.number.toLocaleString()
-      // var occupancyTime = data.property[0].occupancy.highest.timeRange.split('-')
-      // var timeOne = occupancyTime[2].split(' ')[1]
-      // var timeTwo = occupancyTime[5].split(' ')[1]
-      // var timeThree = occupancyTime[2].split(' ')[0]
-      // var occupancyShowTime = occupancyTime[0] + '-' + occupancyTime[1] + '-' + timeThree
+      this.totalOccupancy[3].data = data.property[0].occupancy.highest.number.toLocaleString()
+      var occupancyTime = data.property[0].occupancy.highest.timeRange.split('-')
+      var timeOne = occupancyTime[2].split(' ')[1]
+      var timeTwo = occupancyTime[5].split(' ')[1]
+      var timeThree = occupancyTime[2].split(' ')[0]
+      var occupancyShowTime = occupancyTime[0] + '-' + occupancyTime[1] + '-' + timeThree
 
-      // this.totalOccupancy[3].date = moment(occupancyShowTime).format('YYYY-MM-DD')
-      // this.totalOccupancy[3].time = timeOne + ' - ' + timeTwo
+      this.totalOccupancy[3].date = moment(occupancyShowTime).format('YYYY-MM-DD')
+      this.totalOccupancy[3].time = timeOne + ' - ' + timeTwo
 
       /* table total data  */
       this.tableData.enter.total = data.property[0].enter.total.number.toLocaleString()
@@ -272,12 +284,13 @@ export default {
         that.trendOption.series[1].data.push(e.enter)
         that.trendOption.series[2].data.push(mean)
       })
-      let total = _.sum(that.trendOption.series[0].data)
-      if (total === 0) {
+      let oneTotal1 = _.sum(that.trendOption.series[0])
+      if (oneTotal1 === 0) {
         that.trendOption.yAxis.max = 5
       } else {
         that.trendOption.yAxis.max = null
       }
+
       /* 月份 分 周 开始 */
       var arr1 = [], arr2 = [], arr3 = [], arr4 = [], arr5 = [], arr6 = []
       var week = moment(data[0].begin).locale('zh').format('d')
@@ -344,7 +357,7 @@ export default {
         var arrTime1 = data[0].time + ' - ' + data[data.length - 1].time
         this.tableData.time.push(arrTime1)
         var enter = _.sumBy(data, function (o) { return o.enter })
-        this.tableData.enter.list.push(enter ? enter.toLocaleString() : '')
+        this.tableData.enter.list.push(enter.toLocaleString())
         var obj = {}
         obj.data = 0
         obj.time = ''
@@ -365,9 +378,6 @@ export default {
     },
     tableWidth () {
       return 100 / this.tableData.time.length
-    },
-    tableSize () {
-      return this.tableData.peakData.list.length < 6 ? 14 : 12
     }
   },
   created () {},
@@ -396,7 +406,7 @@ export default {
                 margin-top: 20px;
                 .one-occupancy-list{
                     height: 175px;
-                    width:31.2%;
+                    width: 23%;
                     margin-top: 19px;
                     border:1px solid #cecece;
                     float: left;
@@ -405,10 +415,11 @@ export default {
                     border-radius: 5px;
                     -moz-border-radius: 5px;
                     -webkit-border-radius: 5px;
+
                     img{
                         float: left;
                         display: block;
-                        width: 21%;
+                         width: 21%;
                         height: auto;
                         margin-top: 29px;
                     }
@@ -418,12 +429,12 @@ export default {
                         height: auto;
 
                         .list-text-name{
-                            font-size: 1.375rem;
+                             font-size: 1.375rem;
                             color: #1190d5;
                             letter-spacing: 3px;
                         }
                         .list-text-date{
-                            font-size: 1.375rem;
+                             font-size: 1.375rem;
                             color: #747474;
                         }
                         .list-text-time{
@@ -475,6 +486,7 @@ export default {
                         color: #fff;
                         border-right: 1px solid #fff;
                         height: 50px;
+                        font-size:12px;
                         line-height:50px;
                     }
                 }

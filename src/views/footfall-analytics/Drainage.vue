@@ -47,7 +47,6 @@ import _ from 'lodash'
 import drainageChart from './components/FootfallDirection'
 import { disabledDate } from '@/libs/util.js'
 import eventBus from '@/libs/bus'
-
 export default {
   name: 'drainage',
   components: {
@@ -148,8 +147,8 @@ export default {
       } catch (error) {
         console.log('实体引流分析页面-数据查询-埋点error:' + error)
       }
-      eventBus.$emit('drainageClick', { time: time, id: id })
       this.dataList(time, id)
+      eventBus.$emit('drainageClick', { time: time, id: id })
     },
     dataList (time, id) {
       drainageData({ time: time, bzid: id }).then(res => {

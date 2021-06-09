@@ -76,7 +76,7 @@ import {
   getStoreByDefaultEntity,
   saveFormateRelatedStore
 } from '@/api/formats.js'
-
+import { getBussinessDict } from '@/api/home'
 export default {
   components: {
     TableMultipleSelected,
@@ -219,6 +219,9 @@ export default {
       this.isAddAndEdit = false
       this.dataList()
       this.$store.commit('isGetDict', true)
+      getBussinessDict({ property_id: this.propertyId }).then(res => {
+        this.$store.commit('saveBussinessType', res.data.data)
+      })
       this.formatsName = ''
     },
     addFormats () {
@@ -275,6 +278,9 @@ export default {
               this.alertList('删除业态', '删除成功', '#00A0E9', false)
               this.dataList()
               this.$store.commit('isGetDict', true)
+              getBussinessDict({ property_id: this.propertyId }).then(res => {
+                this.$store.commit('saveBussinessType', res.data.data)
+              })
             }
           })
         } else {
@@ -289,6 +295,9 @@ export default {
                   this.alertList('删除业态', '删除成功', '#00A0E9', false)
                   this.dataList()
                   this.$store.commit('isGetDict', true)
+                  getBussinessDict({ property_id: this.propertyId }).then(res => {
+                    this.$store.commit('saveBussinessType', res.data.data)
+                  })
                 }
               }
             })
@@ -374,11 +383,17 @@ export default {
               height: 24px;
               border-radius: 50%;
               text-align: center;
-              line-height: 19px;
               font-size: 16px;
               color: #fff;
               cursor: pointer;
               background-color: #00A0E9;
+              position: relative;
+                i{
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%,-50%);
+                }
 
               &:nth-child(1) {
                   background-color: #2BD9CF;

@@ -2,12 +2,11 @@
 	<div class="login-container" :class="themeClass">
 		<div class="login">
 			<img src="@/assets/images/fixation_img/logo/logo.webp" width="150" alt="">
-			<!-- <div class="system-select" @click="selectBoxShow=true">{{systemSelectName}} <Icon type="md-arrow-dropdown" />
+			<div class="system-select" @click="selectBoxShow=true">{{systemSelectName}} <Icon type="md-arrow-dropdown" />
 				<div class="select-box" v-show="selectBoxShow">
 					<div class="sys-item" :class="{active:systemSelect===sys.id}" @click.stop="handleSystemSwitch(sys.id)" v-for="(sys,i) in systemList" :key="i">{{sys.name}}</div>
 				</div>
-			</div> -->
-      <p class="select-box">智慧门店管理系统</p>
+			</div>
 			<Form  @keydown.enter.native="handleLogin('formValidate')" ref="formValidate" class="form-data" :model="loginForm" :rules="validateRules" >
 				<FormItem prop="username">
 					<input placeholder="请输入账号" v-model="loginForm.username"></input>
@@ -27,9 +26,7 @@
 		<div class="bottom">
 			浙ICP备20009188号-1 浙江凌图科技有限公司 Copyright 2019-2020
 		</div>
-		<vs-alert :active="isalert" color="danger" icon-pack="feather" icon="icon-info">
-			<span>{{alertText}}</span>
-		</vs-alert>
+		<Alert type="error" show-icon v-show="isalert">{{alertText}}</Alert>
 	</div>
 </template>
 <script>

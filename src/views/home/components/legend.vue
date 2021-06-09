@@ -7,7 +7,7 @@
                         <icons :size="20" :type="item.icon" :color="item.color"></icons>
                         <span class="font-medium ml-2">{{item.title}}</span>
                     </span>
-                    <span style="margin-left:30px;line-height:30px;" class="text-grey-darker">{{Number(item.value).toLocaleString()}} 人</span>
+                    <span style="margin-left:30px;line-height:30px;" class="text-grey-darker">{{Number(item.value).toLocaleString()}} {{unit}}</span>
                 </p>
             </li>
         </ul>
@@ -15,15 +15,19 @@
 </template>
 
 <script>
-  export default {
-    name: 'customLegend',
-    props: {
-      data: {
-        type: Array,
-        default: () => []
-      }
+export default {
+  name: 'customLegend',
+  props: {
+    data: {
+      type: Array,
+      default: () => []
+    },
+    unit: {
+      type: String,
+      default: '人'
     }
   }
+}
 </script>
 <style lang="less" scoped>
   .custom-legend-box{

@@ -21,7 +21,7 @@
                     :options="cascaderTree"
             >
             </el-cascader>
-            <el-select @change="dateTypeChange" class="m-l-10" style="width: 160px" v-model="dateType" placeholder="请选择">
+            <el-select @change="dateTypeChange" class="m-l-10" style="width: 200px" v-model="dateType" placeholder="请选择">
                 <el-option
                         v-for="item in dateOpitons"
                         :key="item.value"
@@ -52,61 +52,55 @@
             <vs-button  color="primary"  @click="handleClick" class="m-l-10">查询</vs-button>
             <vs-button color=""  @click="resetClick" class="ml-4 reset">重置</vs-button>
         </div>
-        <div v-show="drainageType===1||drainageType===2" class="path-picker">
-
+        <div v-show="drainageType===1" class="path-picker">
+        
             <Select v-model="drainageType" class="select-type">
                 <Option v-for="item in tabsList" :value="item.value" :key="item.label"
                 >{{ item.label }}
                 </Option>
             </Select>
             <DatePicker
-            v-if="drainageType===1"
                     type="daterange"
                     v-model="dayTime"
                     placement="bottom-end"
                     placeholder="选择日期"
                     :options="disabledDate"
                     format="yyyy-MM-dd"
-                    style='width:230px'
+                    @on-change="changeDayTime"
+                    style='width:230px;float:left;'
             ></DatePicker>
-             <DatePicker
-            v-if="drainageType===2"
-                    type="date"
-                    v-model="oneDayTime"
-                    placeholder="选择日期"
-                    :options="disabledDate"
-                    format="yyyy-MM-dd"
-                    style='width:230px'
-            ></DatePicker>
-
-            <Cascader :data="storeCascade" trigger="hover"
-                      v-model="store"
-                      ref="cascader"
-                      style="width: 230px;margin-left: 10px"
-                      ></Cascader>
+            <Select v-model="hourTime" :disabled="disabled" class="selectExample">
+                <Option v-for="item in hourList" :value="item.value" :key="item.label"
+                        :disabled="item.disabled">{{ item.label }}
+                </Option>
+            </Select>
+            <Select v-model="floor" class="selectExample selectFloor">
+                <Option v-for="item in floorList" :value="item.value" :key="item.label">{{ item.label }}
+                </Option>
+            </Select>
             <div class="drainage-submit" v-on:click="searchData();initHeatMapGrid()">查询</div>
             <div class="drainage-submit drainage-reset" v-on:click="reset">重置</div>
         </div>
         <div class="content">
-            <!--时段客流分布-->
-
+            <!--      时段客流分布-->
             <div v-show="drainageType===0" id="passengerFlowDistribution" class="heatMapGrid" style="width:100%;height: 650px"></div>
-            <div v-show="drainageType===1||drainageType===2">
-
-                <div class="heatMap" ref="heatMap">
-                    <div class="colorNumber">
-                      <img :src="colorBar" alt="">
-                      <p>
-                        <span>{{maxNumber}}</span>
-                        <span>{{minNumber}}</span>
-                      </p>
-
+            <div v-show="drainageType===1" class="heatMap" id="heatMap"  :style="{width:canvasWidth,height:canvasHeight}">
+                <!--                    热力分布图-->
+                <img @load="imgLoad" :src="map" v-if="map" id="mapImg"/>
+                <div class="noData" v-else>暂无数据</div>
+                <div class="gateDataList"
+                     :key="index"
+                     v-for="(item,index) in gateList"
+                     :style="{left:item.position.x-15+'px',top:item.position.y-30+'px'}"
+                >
+                    <img :src="gateIcon" alt=""
+                         v-on:mouseover="showData(index,'show')"
+                         v-on:mouseout="showData(index,'hide')"
+                    >
+                    <div class="gateDataText" v-if="item.isText">
+                        <p>{{item.name}}</p>
+                        <span>客流 : {{item.enter}}</span>
                     </div>
-                    <!--热力分布图-->
-                    <heatmapjs-vue id="heat-grid" :max="maxValue" :min="0" :options='mapOptions' :data="heatMapDataList"></heatmapjs-vue>
-                    <img  :src="map" v-if="map" id="mapImg"/>
-                    <div class="noData" v-else>暂无数据</div>
-
                 </div>
             </div>
         </div>
@@ -118,11 +112,12 @@
 import moment from 'moment'
 import _ from 'lodash'
 import ChartOption from '@/views/ui-elements/card/analyticsData'
-import { getTimePassengerFlowDistribution, getHeatMapDistribution, getHwellTimeData } from '@/api/analysis.js'
-import { disabledDate, formatEntityData, deepTraversal, findCascadeLastLevel, getUnique, findCascadeLastNode, hasHeatMapData, getCascadeFstLeaf } from '@/libs/util.js'
+import { getHeatMapFloorData, getTimePassengerFlowDistribution, getHeatMapDistribution,getHeatMapFloorEnter } from '@/api/analysis.js'
+import { disabledDate, formatEntityData, deepTraversal, findCascadeLastLevel, getUnique, findCascadeLastNode, hasHeatMapData } from '@/libs/util.js'
 import { getBussinessTree, getBussinessCommon, getCascadeList } from '@/api/passenger.js'
 import relevanceTab from './components/components/RelevanceTab'
 let flowDistributionCharts = null
+let heatMapDistributionCharts = null
 export default {
   name: 'goShop',
   components: {
@@ -130,29 +125,22 @@ export default {
   },
   data () {
     return {
-      mapOptions: {
-        gradient: {
-          '.9': '#ec1313',
-          '.8': '#e8585a',
-          '.66': '#feb33d',
-          '.5': '#86ef40',
-          '.42': '#2bd9cf',
-          '.28': '#33b3ed',
-          '.15': '#7367f0'
-        },
-        radius: ''
-      },
-      maxNumber: '0',
+      maxNumber: '',
       minNumber: '0',
+      disabled: false,
+      canvasWidth: '',
+      canvasHeight: '',
+      screenWidth: '',
       map: '',
-      colorBar: require('@/assets/images/fixation_img/rest/colorBar2.webp'),
+      colorBar: require('@/assets/images/fixation_img/rest/colorBar.webp'),
       gateIcon: require('@/assets/images/fixation_img/rest/floor-gate-icon.webp'),
+      hourTime: '-1',
+      hourList: [],
+      floor: '',
+      floorList: [],
       dayTime: [],
-      oneDayTime: '',
       timeRange: '',
       cascaderTree: [],
-      storeCascade: [],
-      store: [],
       cascaderSelectList: [],
       disabledDate: '',
       drainageType: 0,
@@ -160,14 +148,9 @@ export default {
         {
           label: '时段客流分布',
           value: 0
-        },
-        {
-          label: '客流热力图',
+        }, {
+          label: '热力地图分布',
           value: 1
-        },
-        {
-          label: '停留热力图',
-          value: 2
         }
       ],
       dateType: 'week',
@@ -187,8 +170,7 @@ export default {
         }
       ],
       dateValue: null,
-      heatMapDataList: [],
-      maxValue: 0
+        gateList: [ ],
     }
   },
   created () {
@@ -197,28 +179,29 @@ export default {
     this.bussinessTreeReq()
   },
   watch: {
+      screenWidth: {
+          handler (val, old) {
+              this.screenWidth = val
+              let width = document.getElementById('heatMap').offsetWidth
+              let height = document.getElementById('heatMap').offsetHeight
+              this.canvasWidth = width
+              this.canvasHeight = height
+          }
+      },
     drainageType: {
       handler (newval) {
-        if (newval === 1 || newval === 2) {
-          deepTraversal(this.storeCascade, 'children', (node) => {
-            if (node.id === this.store[this.store.length - 1]) {
-              this.map = node.map_url
-            }
-          })
-          setTimeout(() => {
-            this.initHeatMapGrid()
-          })
+        if (newval === 1 && !this.floorList.length) {
+          this.initHourList()
+          this.getFloorList()
         }
       }
     },
     dayTime (val) {
       this.outRange = moment(val[0]).format('YYYY-MM-DD') + ',' + moment(val[1]).format('YYYY-MM-DD')
     },
-    oneDayTime (val) {
-      this.outRange = moment(val).format('YYYY-MM-DD') + ',' + moment(val).format('YYYY-MM-DD')
-    },
     '$store.state.home.headerAction' () {
       if (this.$router.currentRoute.name === 'HeatMap') {
+        this.getFloorList()
         setTimeout(() => {
           this.reset()
         }, 2000)
@@ -250,7 +233,6 @@ export default {
     }
   },
   mounted () {
-    // heatMapDistributionCharts = echarts.init(document.getElementById('heat-grid'))
     // 初始化时间
     let yesterday = moment(new Date()).format('YYYY-MM-DD')
     let yesterday1 = _.cloneDeep(yesterday)
@@ -261,53 +243,118 @@ export default {
     dayTime.push(yesterday)
     dayTime.push(yesterday)
     this.dayTime = dayTime
-    this.oneDayTime = yesterday
-
+    this.changeDayTime(dayTime)
     window.onresize = () => {
       flowDistributionCharts && flowDistributionCharts.resize()
+        return (() => {
+            window.screenWidth = document.body.clientWidth
+            this.screenWidth = window.screenWidth
+        })()
     }
   },
   methods: {
-    // imgLoad () {
-    //   this.initHeatMapGrid()
-    // },
+    imgLoad () {
+      this.initHeatMapGrid();
+        heatMapDistributionCharts = h337.create({
+            container: document.querySelector('#heatMap'),
+            backgroundColor: 'rgba(99,67,235,.2)',
+            radius: 10,
+            gradient: {
+                '1': '#ec1313',
+                '0.9': '#feb33d',
+                '0.5': '#86ef40',
+                '0.4': '#33b3ed',
+                '0.25': '#2bd9cf',
+                '0.15': '#7367f0',
+                '0': '#fff',
+            }
+        })
+        let width = document.getElementsByClassName('heatMap')[0].offsetWidth
+        let height = document.getElementsByClassName('heatMap')[0].offsetHeight
+        this.canvasWidth = width
+        this.canvasHeight = height
+    },
     // 初始化热力地图分布网格
     initHeatMapGrid () {
+      let begin_time = ''
+      let end_time = ''
+      let type = ''
+      if (this.isSingleDay && this.hourTime !== '-1') {
+        begin_time = `${moment(this.dayTime[0]).format('YYYY-MM-DD')} ${this.hourTime}:00:00`
+        end_time = `${moment(this.dayTime[0]).format('YYYY-MM-DD')} ${this.hourTime}:59:59`
+        type = 'hour'
+      } else {
+        begin_time = moment(this.dayTime[0]).format('YYYY-MM-DD')
+        end_time = moment(this.dayTime[1]).format('YYYY-MM-DD')
+        type = 'day'
+      }
       const params = {
-        store_bzid: this.store[this.store.length - 1],
-        begin_time: '',
-        end_time: '',
-        type: 'day'
+        floor_bzid: this.floor,
+        begin_time,
+        end_time,
+        type
       }
-      if (this.drainageType === 1) {
-        params.begin_time = moment(this.dayTime[0]).format('YYYY-MM-DD')
-        params.end_time = moment(this.dayTime[1]).format('YYYY-MM-DD')
-      } else if (this.drainageType === 2) {
-        params.begin_time = moment(this.oneDayTime).format('YYYY-MM-DD')
-        params.end_time = moment(this.oneDayTime).format('YYYY-MM-DD')
-      }
-      let apiData = this.drainageType === 1 ? getHeatMapDistribution(params) : getHwellTimeData(params)
-      apiData.then(res => {
-        res = res.data.data
-        const width = this.$refs.heatMap.offsetWidth
-        const height = this.$refs.heatMap.offsetHeight
-        if (res.length !== 0) {
-          let maxData = _.maxBy(res.list, function (o) { return o.enter_num ? o.enter_num : o.dwell_num })
-          this.maxNumber = maxData.enter_num ? maxData.enter_num : maxData.dwell_num
-          this.heatMapDataList = res.list.map(o => {
-            return {
-              x: Math.round(width * o.x_num),
-              y: Math.round(height * o.y_num),
-              value: o.enter_num ? o.enter_num : o.dwell_num,
-              radius: Number(width * 0.09)
-            }
-          })
-          this.maxValue = Math.max.apply(Math, this.heatMapDataList.map(item => { return item.value }))
-          if (!this.maxValue) this.heatMapDataList = []
-        } else {
-          this.maxNumber = 0
-          this.heatMapDataList = []
-        }
+      getHeatMapDistribution(params).then(res => {
+        res = res.data.data;
+        const xNum = res.floor.x_num;
+        const yNum = res.floor.y_num;
+        let data = [];
+        res.list.forEach(o=>{
+          data.push({
+			x:o.x_num/xNum.toFixed(4),
+			y:(yNum-o.y_num)/yNum.toFixed(4),
+			enter:Number(o.enter_num)
+		  })
+		})
+        this.initHeatMap([data])
+        // let option = _.cloneDeep(ChartOption.heatMapDistributeOption)
+        // // 构造x y轴格子数
+        // const xAxisNum = res.floor.x_num
+        // option.xAxis.data = []
+        // for (let i = 0; i < xAxisNum; i++) {
+        //   option.xAxis.data.push(i)
+        // }
+        // const yAxisNum = res.floor.y_num
+        // option.yAxis.data = []
+        // for (let k = 0; k < yAxisNum; k++) {
+        //   option.yAxis.data.push(k)
+        // }
+        // // 过滤enter为0的数据，提高计算性能
+        // let sourceData = res.list.filter(o => {
+        //   return o.enter_num > 0
+        // })
+        // let resultArr = []
+        // for (let x = 0; x < xAxisNum; x++) {
+        //   for (let y = 0; y < yAxisNum; y++) {
+        //     // 判断当前格子是否有数据
+        //     const data = hasHeatMapData(sourceData, x, y)
+        //     if (data) {
+        //       resultArr.push({
+        //         value: [y, x, data.node.enter_num],
+        //         name: data.node.name
+        //       })
+        //       // 删除已经找到的格子，提高计算性能
+        //       sourceData.splice(data.i, 1)
+        //     } else {
+        //       resultArr.push({
+        //         value: [y, x, 0],
+        //         name: ''
+        //       })
+        //     }
+        //   }
+        // }
+        // const singleArr = resultArr.map(o => {
+        //   return o.value[2]
+        // })
+        // const maxAvg = singleArr.length ? Math.max(...singleArr) : 0
+        // option.visualMap.max = maxAvg || 10
+        // resultArr = resultArr.map((item) => {
+        //   item.value = [item.value[1], item.value[0], item.value[2] || 0]
+        //   return item
+        // })
+        // option.series[0].data = resultArr
+        // heatMapDistributionCharts.setOption(option)
+        // heatMapDistributionCharts.resize()
       })
     },
     resetClick () {
@@ -384,15 +431,13 @@ export default {
         ]).then(res => {
           if (headerAction != 0) {
             const cascadeAuthData = _.cloneDeep(res[0].data.data).filter(o => { return o.property_id === headerAction })
-            this.cascaderTree = _.compact(formatEntityData(cascadeAuthData, this.$store.state.user.role_id, this.$store.state.user.checklist))
-            this.storeCascade = _.cloneDeep(this.cascaderTree)
-            this.store = getCascadeFstLeaf(this.storeCascade, 'children', 'id')// 赋默认值
-            this.formatCascadeAuthData()
+            this.formatCascadeAuthData(cascadeAuthData)
           }
         })
       }, timeOut)
     },
-    formatCascadeAuthData () {
+    formatCascadeAuthData (data) {
+      this.cascaderTree = _.compact(formatEntityData(data, this.$store.state.user.role_id, this.$store.state.user.checklist))
       const entityPrivilege = _.cloneDeep(this.$store.state.user.business_zone_privilege)
       // 给级联最后一层加全部按钮
       findCascadeLastLevel(this.cascaderTree, 'children', addAll)
@@ -518,13 +563,86 @@ export default {
       flowDistributionCharts.setOption(option)
       flowDistributionCharts.resize()
     },
+    getFloorList () {
+      var that = this
+      var property_id = this.$store.state.home.headerAction
+      let admin = this.$store.state.user.role_id
+      let allBzid = this.$store.state.user.bzid
+      let type = 'is_heatmap'
+      getHeatMapFloorData({ property_id, type }).then(res => {
+        if (res.data.code == 200) {
+          that.floorList = []
+          let data = res.data.data
+          let floorList = data.map(function (m, index) {
+            // if (index == 0) that.floor = m.bzid
+            let obj = {}
+            obj.label = m.name
+            obj.value = m.bzid
+            obj.url = m.map_url
+            obj.bzid = m.data.join(',')
+            return obj
+          })
+          if (admin < 3) {
+            that.floorList = floorList
+          } else {
+            let currList = []
+            floorList.map(list => {
+              allBzid.map(val => {
+                if (list.value == val) currList.push(list)
+              })
+            })
+            that.floorList = currList
+          }
+          if (that.floorList[0]) that.floor = that.floorList[0].value
+          that.searchData()
+        }
+      })
+    },
+    initHourList () {
+      let hourList = [{ 'label': '全天', 'value': '-1', 'disabled': false }]
+      for (let i = 0; i < 24; i++) {
+        let obj = {}
+        obj.label = (i + 1) + '时'
+        obj.value = i + 1 > 9 ? i + 1 + '' : `0${i + 1}`
+        obj.disabled = false
+        hourList.push(obj)
+      }
+      this.hourList = hourList
+    },
+    changeDayTime (value) {
+      var time1 = moment(this.dayTime[0]).format('YYYY-MM-DD')
+      var time2 = moment(this.dayTime[1]).format('YYYY-MM-DD')
+      var timeRange = ''
+      if (time1 == time2 && Boolean(time1)) {
+        timeRange = 'hourly'
+        let hourTime = moment(new Date()).format('HH')
+        this.disabled = false
+        var hourList = _.cloneDeep(this.hourList)
+        if (time1 == moment(new Date()).format('YYYY-MM-DD')) {
+          hourList = hourList.map(function (m) {
+            if (hourTime >= Number(m.value)) m.disabled = false
+            else m.disabled = true
+            return m
+          })
+        } else {
+          hourList = hourList.map(function (m) {
+            m.disabled = false
+            return m
+          })
+        }
+        this.hourList = hourList
+      } else {
+        timeRange = 'daily'
+        this.disabled = true
+      }
+      this.timeRange = timeRange
+    },
     reset () {
       let today = moment(new Date()).format('YYYY-MM-DD')
       let dayTime = [today, today]
       this.dayTime = dayTime
-      this.oneDayTime = today
-      // this.hourTime = moment(new Date()).format('HH')
-      // this.floor = this.floorList.length > 0 ? this.floorList[0].value : ''
+      this.hourTime = moment(new Date()).format('HH')
+      this.floor = this.floorList.length > 0 ? this.floorList[0].value : ''
       this.disabled = false
       // 去除选中的小时选项背景色
       let ulList = document.getElementsByClassName('ivu-select-dropdown-list')[0].children
@@ -541,23 +659,55 @@ export default {
         console.log(this.$route.meta.pageTitle + '页面-' + '重置-埋点error:' + error)
       }
     },
+      showData (index, type) {
+          if (type == 'show') this.gateList[index].isText = true
+          else this.gateList[index].isText = false
+      },
     /** 查询方法 */
     searchData () {
       var time1 = moment(this.dayTime[0]).format('YYYY-MM-DD')
       var time2 = moment(this.dayTime[1]).format('YYYY-MM-DD')
       var time = time1 + ',' + time2
-      if (this.drainageType === 1) {
-        deepTraversal(this.storeCascade, 'children', (node) => {
-          if (node.id === this.store[this.store.length - 1]) {
-            this.map = node.map_url
-          }
-        })
+      this.map = ''
+        this.gateList = []
+      if (this.floor == '') return false
+      let floor = _.find(this.floorList, ['value', this.floor])
+      if (!floor.bzid) {
+        return false
       }
-      try {
+      this.map = floor.url;
+        getHeatMapFloorEnter({ time: time, bzid: floor.value, type: this.timeRange }).then(res => {
+            if (res.data.code == 200) {
+                let data = res.data.data
+                let width = document.getElementsByClassName('heatMap')[0].offsetWidth
+                let height = document.getElementsByClassName('heatMap')[0].offsetHeight
+                data.map(list => {
+                    let obj = {}
+                    obj.name = list.name
+                    obj.id = list.bzid
+                    obj.isText = false
+                    obj.position = {
+                        x: Math.floor(list.position_x * width),
+                        y: Math.floor(list.position_y * height)
+                    }
+                    if (time1 == time2) {
+                        if (this.hourTime == '-1') obj.enter = (_.sum(Object.values(list.enterList))).toLocaleString()
+                        else obj.enter = (Object.values(list.enterList)[Number(this.hourTime) + 1]).toLocaleString()
+                    } else {
+                        obj.enter = (_.sum(Object.values(list.enterList))).toLocaleString()
+                    }
+                    this.gateList.push(obj)
+                })
+            }
+        })
+    
+        try {
+        let date = _.find(this.hourList, ['value', this.hourTime])
+        let hour = date.value == -1 ? '全天' : date.label
         window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', '数据查询', {
           '时间段': time,
-          '小时数': '全天'
-          // '实体选择': floor.label
+          '小时数': hour,
+          '实体选择': floor.label
         })
       } catch (error) {
         console.log(this.$route.meta.pageTitle + '页面-' + '数据查询' + '埋点error:' + error)
@@ -576,7 +726,44 @@ export default {
           this.dateValue = moment().day('Tuesday').format('YYYY-MM-DD')
           break
       }
-    }
+    },
+    initHeatMap (heatMapData) {
+        if (heatMapData.length > 0) {
+              let temp = heatMapData[0]
+              heatMapData.forEach( (m, index)=> {
+                  if (index > 0) {
+                      m.forEach(function (ele, eIndex) {
+                          temp[eIndex].enter += ele.enter
+                      })
+                  }
+              })
+              heatMapData = [temp]
+          } else {
+              return false
+          }
+          let width = document.getElementsByClassName('heatMap')[0].offsetWidth
+          let height = document.getElementsByClassName('heatMap')[0].offsetHeight
+          var points = []
+          var max = _.maxBy(heatMapData[0], 'enter')
+          max = max.enter
+          this.maxNumber = max
+          heatMapData[0].forEach( (m)=> {
+              var point = {
+                  x: Math.floor(m.x * width),
+                  y: Math.floor(m.y * height),
+                  value: m.enter
+              }
+              if (Number(m.x) != 0 && Number(m.y) != 0 && Number(m.enter) != 0) {
+                  points.push(point)
+              }
+          })
+        
+          var data = {
+              max: max,
+              data: points
+          }
+        heatMapDistributionCharts.setData(data)
+      }
   }
 }
 
@@ -584,9 +771,6 @@ export default {
 <style lang="less">
 
     .heatMaps {
-        .m-l-10{
-            margin-left: 10px;
-        }
         .path-picker {
             margin-bottom: 20px;
             overflow: hidden;
@@ -594,19 +778,18 @@ export default {
             box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .05);
             padding: 18px 30px;
             border-radius: .5rem;
-            display: flex;
-            align-items: center;
+        
             .con-select {
                 clear: none;
             }
-
+        
             .ivu-input {
-                height: 40px;
+                height: 43px;
                 font-size: 14px;
                 border: 1px solid rgba(0, 0, 0, .2);
                 font-family: "source_han_sans_cn", "Roboto", sans-serif;
             }
-
+        
             .selectExample {
                 float: left;
                 width: 100px;
@@ -620,15 +803,15 @@ export default {
             .selectFloor {
                 width: 150px;
             }
-
+        
             .ivu-input-suffix {
                 i {
-                    height: 40px;
+                    height: 43px;
                     width: 40px;
-                    line-height: 40px;
+                    line-height: 43px;
                 }
             }
-
+        
             .ivu-date-picker .ivu-select-dropdown {
                 z-index: 90000
             }
@@ -636,7 +819,10 @@ export default {
         .flex-box{
             display: flex;
             align-items: center;
-
+            .m-l-10{
+                margin-left: 10px;
+            }
+        
             .reset {
                 float: left;
                 height: 41px;
@@ -646,7 +832,8 @@ export default {
                 border: 1px solid #37b5ed !important;
             }
         }
-
+    
+    
         .drainage-submit {
             display: inline-block;
             padding: 0.75rem 2rem;
@@ -657,29 +844,29 @@ export default {
             font-size: 1rem;
             margin-left: 30px;
             cursor: pointer;
-
+        
             &:hover {
                 box-shadow: 0 8px 25px -8px #00A0E9;
             }
         }
-
+    
         .drainage-reset {
             background: #fff !important;
             color: #37b5ed;
             border: 1px solid #37b5ed;
         }
         .ivu-select-single .ivu-select-selection {
-            height: 40px;
+            height: 42px;
             border: 1px solid rgba(0, 0, 0, .2);
-
+        
             span {
                 font-size: 1rem;
             }
-
+        
         }
-
+    
         .ivu-select-single .ivu-select-selection .ivu-select-placeholder, .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
-            line-height: 40px;
+            line-height: 42px;
             padding-left: 20px;
         }
         .content {
@@ -688,46 +875,21 @@ export default {
 
             .heatMap {
                 position: relative;
-                z-index: 1;
-                .colorNumber{
-                  position: absolute;
-                  left: 0;
-                  top: 0;
-                  z-index: 10;
-                  overflow: hidden;
-                  img{
-                    display: block;
-                    width: auto;
-                    height: auto;
-                    float: left;
-                  }
-                  p{
-                    float: left;
-                    height: 130px;
-                    position: relative;
-                    margin-left: 5px;
-                    span{
-                      font-size: 14px;
-                      color: #fff;
-                      &:nth-child(2){
-                        position: absolute;
-                        left: 0;
-                        bottom: 0;
-                      }
-                    }
-                  }
-                }
+				/*background-color: rgba(99,67,235,.2);*/
+                z-index: 99;
+				/*canvas{*/
+				/*	height: 100%!important;*/
+				/*}*/
                 #heat-grid{
-                    position: absolute!important;
+                    position: absolute;
                     left: 0;
                     bottom: 0;
                     right: 0;
                     top: 0;
-                    z-index: 1;
+                    z-index: 101;
                     opacity: 0.7;
                     width: 100%;
                     height: 100%;
-                    background-color:rgba(65,62,223,.6) ;
                 }
 
                 .noData {
@@ -739,7 +901,7 @@ export default {
                     line-height: 568px;
                     font-size: 32px;
                     background-color: #fff;
-                    z-index: 1;
+                    z-index: 101;
                     text-align: center;
                 }
 
@@ -749,7 +911,7 @@ export default {
 
                 .gateDataList {
                     position: absolute;
-                    z-index: 1;
+                    z-index: 106;
 
                     img {
                         width: 30px;

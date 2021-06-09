@@ -216,9 +216,9 @@ export default {
       this.xAxis[0].data.forEach((e, dindex) => {
         let tml = {}
         column.forEach((k, kindex) => {
-          let value = this.mergeData[kindex].data[dindex]
-          if (typeof value === 'number') {
-            value = value.toLocaleString() + '人次'
+          let value = this.mergeData[kindex].data[dindex];
+          if(typeof value === 'number'){
+            value = value.toLocaleString()+'人次'
           }
           tml[k.key] = value
         })
@@ -268,16 +268,16 @@ export default {
               horizontal: true
             }
           },
-          tooltip: {
-            y: {
-              formatter: (val) => {
-                if (val == undefined || val == null || val == '') {
+          tooltip:{
+            y:{
+              formatter:(val)=>{
+                if (val == undefined || val == null || val == ''){
                   return ''
                 };
-                if (typeof val === 'number') {
-                  return val.toLocaleString() + '人次'
-                } else {
-                  return val + '人次'
+                if(typeof val === 'number'){
+                  return val.toLocaleString()+'人次'
+                }else {
+                  return val+'人次'
                 }
               }
             }
