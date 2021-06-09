@@ -19,7 +19,7 @@ export default {
   name: 'forgetHeader',
   data () {
     return {
-      logosrc: require('@/assets/images/fixation_img/logo/white-logo.png')
+      logosrc: require('@/assets/images/fixation_img/logo/cologo2.webp')
     }
   }
 }

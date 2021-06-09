@@ -1,27 +1,22 @@
 <!--调铺效果分析-->
 <template>
 	<div class="shop-portrait">
-    <div class="selector-container common-card" style="margin-bottom:20px">
-       <div class="flex-center">
-         	维度:&nbsp;&nbsp;
-          <Select v-model="type" @on-change="typeChange"  style="width:100px;" >
-            <Option v-for="(item,index) in typeOptions"
-                :value="item.value"
-                :key="index">{{ item.name }}</Option>
-          </Select>
-          <Select v-model="entity"  style="width:150px;margin:0 20px;">
-            <Option v-for="(item,index) in entityOpitons"
-                :value="item.id"
-                :key="index">{{ type==='store'?item.shop_name:item.location_name }}</Option>
-          </Select>
-          调铺时间:&nbsp;&nbsp;
-          <Select v-model="currentDate" @on-change="dateChange"  style="width:200px;margin:0 20px;" >
-            <Option v-for="(item,index) in dateOptions"
-                :value="item.location_change_time"
-                :key="index">{{ item.location_change_time }}</Option>
-          </Select> 
-        </div>   
-    </div>
+		<div class="box-card bg-white flex-box">
+			维度:&nbsp;&nbsp;
+			<vs-select style="width: 100px" class=" selects" @change="typeChange" autocomplete v-model="type">
+				<vs-select-item :value="item.value" :text="item.name" :key="index" v-for="(item,index) in typeOptions"/>
+			</vs-select>
+			<vs-select placeholder="实体选择" class=" selects " autocomplete v-model="entity" @change="entityChange">
+				<vs-select-item :value="item.id" :text="type==='store'?item.shop_name:item.location_name" :key="index"
+								v-for="(item,index) in entityOpitons"/>
+			</vs-select>
+			调铺时间:&nbsp;&nbsp;
+			<vs-select class=" selects " autocomplete @change="dateChange" v-model="currentDate">
+				<vs-select-item :value="item.location_change_time" :text="item.location_change_time" :key="index"
+								v-for="(item,index) in dateOptions"/>
+			</vs-select>
+
+		</div>
 		<div class="box-card bg-white flex-box">
 			<div class="card" >
 				<span class="flex-box"><span class="color" style="background-color: #009FE9"></span> 调铺前{{displayName}}</span>
@@ -50,14 +45,16 @@
 							@on-change="(val)=>{timeRangeChange(0,val)}"
 							type="daterange" style="width: 200px"></DatePicker>
 			</div>
-      <Select v-model="saleMultipleSelected" :max-tag-count="1" multiple style="width:220px">
-				<Option v-for="(item,index) in radarOptions"
-						:value="item.value"
-						:key="index">{{ item.name }}</Option>
-			</Select>
-      <Button size="large" type="primary" class="m-l-20"  @click="handleSearch" >查询</Button>
+			<vs-select multiple
+					   style="margin-right: 20px"
+					   autocomplete
+					   v-model="saleMultipleSelected">
+				<vs-select-item :value="item.value" :text="item.name" :key="index"
+								v-for="(item,index) in radarOptions"/>
+			</vs-select>
+			<vs-button color="primary" class="handleSearch " v-on:click="handleSearch">查询</vs-button>
 		</div>
-		<div class="box-card bg-white detail" v-if="showCharts">
+		<div class="box-card bg-white detail" v-show="showCharts">
 			<div class="chart-box">
 				<vue-apex-charts
 						ref="radarChart"
@@ -105,7 +102,6 @@ export default {
   name: 'ChangeStore',
   data () {
     return {
-      size:0,
       showCharts: false,
       entity: '',
       entityOpitons: [],
@@ -150,7 +146,6 @@ export default {
             }
           },
           tooltip: {
-            
             y: {
               formatter: function (val, params) {
                 return val
@@ -163,8 +158,8 @@ export default {
             labels: {
               formatter: function (val, i) {
                 return Math.round(val)
-              },
-            },
+              }
+            }
           },
           xaxis: {
             categories: []
@@ -222,7 +217,7 @@ export default {
         tooltip: {
           y: {
           },
-          shared: true
+          shared: false
         },
         stroke: {
           curve: 'straight',
@@ -287,32 +282,12 @@ export default {
       }) || {}
 	  }
   },
-  watch:{
-    entity(){
-      if (this.currentEntityInfo && this.currentEntityInfo.bzInfo) {
-        this.dateOptions = this.currentEntityInfo.bzInfo
-        this.currentDate = this.dateOptions[0].location_change_time
-      }
-      if (this.type === 'store') {
-        this.getShopChangeByStore(this.entity)
-      } else {
-        this.getShopChangeByPosition(this.entity)
-      }
-    }
-  },
-  activated () {
-    // this.showCharts = false
-    // setTimeout(() => {
-    //   this.showCharts = true
-    // })
-  },
-  mounted(){
-  },
   methods: {
     timeRangeChange (index, val) {
       this.$set(this.cardList[index], 'timeRange', val)
     },
     dateChange (val) {
+      this.showCharts = false
       this.dateRangeBefore = {
         disabledDate (date) {
           return Moment(date).isAfter(Moment(val))
@@ -329,6 +304,7 @@ export default {
       }
     },
     typeChange (e) {
+      this.showCharts = false
       if (e === 'store') {
         this.getStoreOpitons()
       } else {
@@ -336,6 +312,7 @@ export default {
       }
     },
     handleSearch () {
+      this.showCharts = false
       this.saleSelected = this.saleOptions[0].value
       const radar = this.radarOptions.filter(o => {
         return this.saleMultipleSelected.includes(o.value)
@@ -345,13 +322,11 @@ export default {
       })
       this.radarChart.series = []
       this.radarChart.chartOptions.xaxis.categories = categories
-      if( this.$refs.radarChart){
-        this.$refs.radarChart.updateOptions({
-          xaxis: {
-              categories
-          }
-        })
-      }
+      this.$refs.radarChart.updateOptions({
+		  xaxis: {
+          categories
+		  }
+      })
       this.radarOriginData.forEach(o => {
         this.radarChart.series.push({
           name: this.type === 'store' ? o.location_name : o.shop_name,
@@ -361,9 +336,7 @@ export default {
         })
       })
       if (!this.cardList[1] || !this.cardList[0]) {
-         this.$alert({
-              content:'没有调式的店铺请重新选择'
-          })
+        alert('没有调式的店铺请重新选择')
         return false
       }
       // 折线图数据
@@ -371,33 +344,30 @@ export default {
       this.saleMultipleSelected.forEach(type => {
         const data = {
           type,
-          bzid: `${this.cardList[1].bzid},${this.cardList[0].bzid}`,
+          bzid: `${this.cardList[1]&&this.cardList[1].bzid},${this.cardList[0]&&this.cardList[0].bzid}`,
           date1: this.cardList[1].timeRange.toString(),
           date2: this.cardList[0].timeRange.toString()
         }
         reqList.push(getShopChangeSaleTrend(data))
       })
-      this.showCharts = false
       Promise.all(reqList).then(res => {
         let result = {}
         res.forEach((o, i) => {
           result[this.saleMultipleSelected[i]] = o.data.data
         })
-        this.size = 1
         this.saleLineOriginData = result
         this.formatSaleLineChartData(result)
       })
     },
     formatSaleLineChartData (data) {
       if (!Object.keys(data).length) return
-      this.showCharts = true
       const targetData = data[this.saleSelected]
       this.lineOptions.xaxis.categories = []
       const saleSelectedName = this.currentSingleSale.name
       let seriesData1 = {
         name: `${this.cardList[1].name} | ${this.cardList[1].timeRange[0]}- ${this.cardList[1].timeRange[1]} | ${saleSelectedName}`,
-        key: 'bzid1',
-        data: []
+		  key: 'bzid1',
+		  data: []
       }
       let seriesData2 = {
         name: `${this.cardList[0].name} | ${this.cardList[0].timeRange[0]}- ${this.cardList[0].timeRange[1]} | ${saleSelectedName}`,
@@ -408,28 +378,28 @@ export default {
       targetData.forEach((o, i) => {
         this.lineOptions.xaxis.categories.push(`第${i + 1}天`)
         _.forIn(o, (val, key) => {
-            this.lineSeries.find(l => {
-              return l.key === key
-            }).data.push(this.currentSingleSale.value === 'Dwell' ? (val[this.saleSelected] / 60).toFixed(1) : val[this.saleSelected])
-        })
+          this.lineSeries.find(l => {
+            return l.key === key
+          }).data.push(this.currentSingleSale.value === 'Dwell' ? (val[this.saleSelected] / 60).toFixed(1) : val[this.saleSelected])
+		  })
       })
-      setTimeout(() => {
-        if(this.$refs.lineChart){
-          this.$refs.lineChart.updateOptions({
-              xaxis: {
-                categories: this.lineOptions.xaxis.categories
-              },
-              tooltip: {
-                y: {
-                  formatter: (val) => {
-                    if (!val && val != 0) return ''
-                    return Number(val).toLocaleString() + this.currentSingleSale.unit
-                  }
-                }
-              }
-            })
+      this.$refs.lineChart.updateOptions({
+        xaxis: {
+          categories: this.lineOptions.xaxis.categories
+		  },
+		  tooltip: {
+          y: {
+            formatter: (val) => {
+              if (!val && val != 0) return ''
+              // if(this.currentSingleSale.value === 'Dwell'){
+              //   val = Number(val)/60
+              // }
+              return Number(val).toLocaleString() + this.currentSingleSale.unit
+			  }
           }
-      });
+		  }
+      })
+      this.showCharts = true
     },
     getStoreOpitons () {
       return new Promise((resolve, reject) => {
@@ -441,6 +411,18 @@ export default {
           reject(err)
         })
       })
+    },
+    entityChange (val) {
+      this.showCharts = false
+      if (this.currentEntityInfo && this.currentEntityInfo.bzInfo) {
+        this.dateOptions = this.currentEntityInfo.bzInfo
+        this.currentDate = this.dateOptions[0].location_change_time
+      }
+      if (this.type === 'store') {
+        this.getShopChangeByStore(this.entity)
+      } else {
+        this.getShopChangeByPosition(this.entity)
+      }
     },
     getPositionOpitons () {
       getPositonOpiton().then(res => {
@@ -469,7 +451,6 @@ export default {
     getShopChangeByStore (id) {
       getShopChange(id).then(res => {
         this.handleResult(res.data.data[this.currentDate])
-        if(this.size ===0) this.handleSearch()
       })
     },
     getShopChangeByPosition (id) {
@@ -478,7 +459,6 @@ export default {
       })
     }
   },
-
   created () {
     this.getStoreOpitons().then(id => {
       this.getShopChangeByStore(id)

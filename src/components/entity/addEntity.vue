@@ -3,8 +3,7 @@
         <div class="dialogs-edit">
             <div class="dialogs-edit-bg"></div>
             <div class="dialogs-edit-text"
-                 :class="{largeScroll:formValidate.spc===1,noscroll:formValidate.spc!==1}"
-                 :style="{width:mWidth}"
+                 :style="{marginLeft:marginLeft,marginTop:marginTop,width:mWidth,height:mHeight}"
                  id="addEntity">
                 <div class="edit-title">{{editTitle}}</div>
                 <div class="edit-close" v-on:click="closeEdit">
@@ -144,7 +143,8 @@
                             </div>
 
                             <div class="right">
-                                <div class="form-control addsub flex-center">
+                                <div class="form-control addsub"
+                                     style="display: flex;align-items: center;margin-top: 30px;width: 45%">
                                     <FormItem label="选择年份" style="width: auto;word-break: keep-all"></FormItem>
                                     <Select v-model="currentYear"
                                             @on-change="currentYearChange">
@@ -156,7 +156,7 @@
                                 <div class="form-control addsub">
                                     <label></label>
                                     <row>
-                                        <i-col span="3" class="flex-center">
+                                        <i-col span="3" style="display:flex;">
                                             <FormItem label="全年目标"></FormItem>
                                             <Radio v-model="flowYear" @on-change="setFlowYearGoal"></Radio>
                                         </i-col>
@@ -171,12 +171,12 @@
                                 </div>
 
                                 <div class="form-control addsub">
-                                    <row class="m-t-20">
-                                        <i-col span="3" class="flex-center">
+                                    <row>
+                                        <i-col span="3" style="display:flex;">
                                             <FormItem label="每月目标"></FormItem>
                                             <Radio v-model="flowMonth" @on-change="setFlowMonthGoal"></Radio>
                                         </i-col>
-                                        <div  class="flex-wrap">
+                                        <div style="display:flex;flex-wrap: wrap;">
                                             <row class="omonth" v-for="(item,index) in monthsGoal" :key="index">
                                                 <i-col span="5" style="margin-left: -6px;">
                                                     <FormItem :label="item.name"></FormItem>
@@ -212,13 +212,13 @@
                                 </div>
 
                                 <div class="form-control addsub">
-                                    <row class="m-t-20">
-                                        <i-col span="3" class="flex-center">
+                                    <row>
+                                        <i-col span="3" style="display:flex;">
                                             <FormItem label="每月目标"></FormItem>
                                             <Radio v-model="saleMonth" @on-change="setSaleMonthGoal"></Radio>
 
                                         </i-col>
-                                        <div class="flex-wrap m-b-40">
+                                        <div style="display:flex;flex-wrap: wrap;margin-bottom: 50px">
                                             <row class="omonth" v-for="(item,index) in monthsSale" :key="index">
                                                 <i-col span="5" style="margin-left: -6px;">
                                                     <FormItem :label="item.name"></FormItem>
@@ -259,10 +259,10 @@ import {
   updateAreas,
   addmall,
   updateMallrData,
-  zones
+  zones,
 } from '@/api/manager.js'
 import { getFormateData } from '@/api/formats.js'
-import { getGroupOrganization } from '@/api/home.js'
+import {getGroupOrganization} from '@/api/home.js'
 
 export default {
   name: 'addEntity',
@@ -323,7 +323,7 @@ export default {
       controlLeft: '57%!important',
       controlBottom: '3%!important',
       mWidth: '1286px',
-      mHeight: '',
+      mHeight: '686px',
       marginLeft: '-643px',
       marginTop: '-414px',
       formValidate: {
@@ -506,7 +506,7 @@ export default {
       var s = 0
       if (this.flowMonth) {
         var monthsGoal = this.monthsGoal
-        s = monthsGoal.map(m=>{
+        s = monthsGoal.map(function (m) {
           return m.modal ? Number(m.modal) : 0
         })
         s = _.sum(s)
@@ -625,8 +625,11 @@ export default {
             *@return null
             */
     getZones () {
-      zones(this.propertyId).then(res=> {
-          this.zonelist = this.addValuesToEle2(res.data.data)
+      let that = this
+      zones(this.propertyId).then(function (res) {
+        if (res.data.code == 200) {
+          that.zonelist = that.addValuesToEle2(res.data.data)
+        }
       })
     },
     /* 获取商家业态数据列表
@@ -880,16 +883,18 @@ export default {
           }
         }
 
+        var year_data = new Date()
         var years = that.currentYear
-        getGroupOrganization().then(res=> {
-            that.$store.commit('saveOrganizationData', res.data.data)
+        getGroupOrganization().then(function (res) {
+          if (res.data.code == 200) {
             that.company_id = res.data.data.company_id
             var daily_start = that.formValidate.timerange[0]
             var daily_end = that.formValidate.timerange[1]
             if (!that.isModify) {
               addmall(that.mall, that.company_id, that.formValidate.name, that.formValidate.province, that.formValidate.city,
                 that.formValidate.address, that.formValidate.description, flowType, sumFlow, saleType, sumSale, that.zone_id,
-                daily_start, daily_end, that.flow_month, that.sale_month, Number(that.formValidate.area), years).then(res=> {
+                daily_start, daily_end, that.flow_month, that.sale_month, Number(that.formValidate.area), years).then(function (res) {
+                if (res.data.code == 200) {
                   that.closeEdit()
                   var alertText = {}
                   alertText.bg = '#00A0E9'
@@ -906,14 +911,13 @@ export default {
                   data.property_id = res.data.data.property_id
                   data.zones = that.zone_id.split(',').map(Number)
                   that.$emit('addTypeData', data)
+                }
               })
             } else {
               updateMallrData(that.mall, that.company_id, that.formValidate.name, that.formValidate.province, that.formValidate.city,
                 that.formValidate.address, that.formValidate.description, flowType, sumFlow, saleType, sumSale, that.zone_id,
-                daily_start, daily_end, that.flow_month, that.sale_month, Number(that.formValidate.area), years, that.formValidate.bzid, that.formValidate.property_id).then(res=> {
-                  getGroupOrganization().then(res => {
-                      that.$store.commit('saveOrganizationData', res.data.data)
-                  })
+                daily_start, daily_end, that.flow_month, that.sale_month, Number(that.formValidate.area), years, that.formValidate.bzid, that.formValidate.property_id).then(function (res) {
+                if (res.data.code == 200) {
                   that.closeEdit()
                   var alertText = {}
                   alertText.bg = '#00A0E9'
@@ -922,6 +926,7 @@ export default {
                   alertText.confirm = false
                   that.$emit('alertMessage', true, alertText)
                   var data = {}
+                  // data.children = [];
                   data.name = that.formValidate.name
                   data.label = that.formValidate.name
                   data.id = that.formValidate.bzid
@@ -930,13 +935,16 @@ export default {
                   data.zones = that.zone_id.split(',').map(Number)
                   that.$emit('updateTypeData', data)
                   that.$emit('init')
+                }
               })
             }
+          }
         })
       } else if (that.formValidate.spc == 2) {
         // 添加楼层
         if (!that.isModify) {
-          addtype(that.floor, that.addmall.property_id, that.floornum, that.addmall.id, that.zone_id, that.floorindex, that.formValidate.description).then(res=> {
+          addtype(that.floor, that.addmall.property_id, that.floornum, that.addmall.id, that.zone_id, that.floorindex, that.formValidate.description).then(function (res) {
+            if (res.data.code == 200) {
               that.closeEdit()
               var alertText = {}
               alertText.bg = '#00A0E9'
@@ -957,6 +965,7 @@ export default {
               data.parent_id = that.addmall.id
               data.zones = that.zone_id.split(',').map(Number)
               that.$emit('addFloorData', data.parent_id, data)
+            }
           })
         } else {
           // 编辑楼层
@@ -967,7 +976,8 @@ export default {
           let parent_id = that.formValidate.parentNode
           let zones = that.formValidate.zones.join(',')
           let zone_index = thefloor.value
-          updateFloorData(name, parent_id, zones, zone_index, description, bzid).then(res=> {
+          updateFloorData(name, parent_id, zones, zone_index, description, bzid).then(function (res) {
+            if (res.data.code == 200) {
               that.closeEdit()
               var alertText = {}
               alertText.bg = '#00A0E9'
@@ -989,6 +999,7 @@ export default {
               data.parent_id = that.addmall.id
               data.zones = that.zone_id.split(',').map(Number)
               that.$emit('updateFloorData', data.parent_id, data)
+            }
           })
         }
       } else {
@@ -1000,7 +1011,8 @@ export default {
 
         // 添加商铺
         if (!that.isModify) {
-          addAreas('store', that.addmall.property_id, name, parent_id, that.zone_id, business_type_id, area_size, description).then(res=> {
+          addAreas('store', that.addmall.property_id, name, parent_id, that.zone_id, business_type_id, area_size, description).then(function (res) {
+            if (res.data.code == 200) {
               that.closeEdit()
               var alertText = {}
               alertText.bg = '#00A0E9'
@@ -1020,10 +1032,12 @@ export default {
               data.area_size = area_size
               data.zones = that.zone_id.split(',').map(Number)
               that.$emit('addStoreData', that.addmall.id, parent_id, data)
+            }
           })
         } else {
           var bzid = that.formValidate.id
-          updateAreas('store', that.addmall.property_id, name, parent_id, that.zone_id, business_type_id, area_size, description, bzid).then(res=>{
+          updateAreas('store', that.addmall.property_id, name, parent_id, that.zone_id, business_type_id, area_size, description, bzid).then(function (res) {
+            if (res.data.code == 200) {
               that.closeEdit()
               var alertText = {}
               alertText.bg = '#00A0E9'
@@ -1043,6 +1057,7 @@ export default {
               data.area_size = area_size
               data.zones = that.zone_id.split(',').map(Number)
               that.$emit('updateStoreData', that.addmall.id, parent_id, data)
+            }
           })
         }
       }
@@ -1075,7 +1090,6 @@ export default {
 
     .ivu-form-item {
         width: 100%;
-        margin-bottom: 0;
     }
 
     .total {
@@ -1083,6 +1097,9 @@ export default {
         font-size: 16px;
     }
 
+    .ivu-form-item {
+        margin-bottom: 0;
+    }
 
     .months {
         text-align: right;
@@ -1129,9 +1146,10 @@ export default {
     }
 
     .control {
-        /*position: absolute;*/
-        text-align: right;
-        margin:0 20px 20px 0;
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
+
         .ivu-btn {
             width: 90px;
             color: #fff;
@@ -1175,14 +1193,14 @@ export default {
         width: 100%;
     }
 
-    // @media screen and (min-width: 769px), print {
-    //     .modal-content,
-    //     .modal-card {
-    //         margin: 0 auto;
-    //         max-height: 90vh;
-    //         width: 40%;
-    //     }
-    // }
+    @media screen and (min-width: 769px), print {
+        .modal-content,
+        .modal-card {
+            margin: 0 auto;
+            max-height: 90vh;
+            width: 40%;
+        }
+    }
 
     .modal-card-title {
         color: #363636;
@@ -1200,46 +1218,27 @@ export default {
         color: @color;
         position: relative
     }
+
     .formmail {
         padding: 20px;
         display: flex;
         width: 100%;
         flex-wrap: wrap;
-    
+
         .left {
             width: 28%;
             margin-right: 0;
         }
-    
+
         .right {
-            flex: 1;
-            margin-left:40px;
-            .form-control:nth-child(1){
-                margin-top: 30px;
-                width: 45%;
-            }
+            width: 68%;
+            margin-left: 4%;
+
             .radios {
                 display: flex;
             }
         }
     }
-    // @media (max-height:840px) {
-    //     .dialogs-edit-text{
-    //         max-height: 700px;
-    //         overflow-x: hidden;
-    //         &.largeScroll{
-    //             overflow-y: scroll;
-    //         }
-    //         &.noscroll{
-    //             overflow-y: hidden;
-    //         }
-    //     }
-    //     .formmail{
-    //         margin-top: 0;
-    
-    //     }
-    // }
-
 
     label {
         font-size: 18px;
@@ -1283,19 +1282,10 @@ export default {
     }
 
     .addsub {
-        .flex-wrap{
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .m-b-40{
-            margin-bottom: 40px;
-        }
         label {
             margin: 0;
         }
-        .m-t-20{
-            margin-top: 20px;
-        }
+
         .ivu-col-span-6 {
             margin-top: 0.3125rem;
 
@@ -1356,9 +1346,7 @@ export default {
             .dialogs-edit-text {
                 position: absolute;
                 left: 50%;
-                top: 10%;
-              
-                transform: translate(-50%,0%);
+                top: 50%;
                 // margin-left: -414px;
                 // margin-top: -343px;
                 // width: 828px;
@@ -1368,6 +1356,7 @@ export default {
                 border: 1px solid rgba(215, 223, 227, 1);
                 box-shadow: 1px 2px 10px 0px rgba(193, 193, 193, 0.2);
                 border-radius: 8px;
+
                 .edit-title {
                     width: 100%;
                     height: 53px;
@@ -1381,17 +1370,11 @@ export default {
                 }
             }
         }
-        .edit-text{
-          width: 100%;
-          max-height: 650px;
-          overflow: auto;
-          padding-bottom: 30px;
-          background-color: #fff;
-        }
+
         .edit-close {
             position: absolute;
-            right: -10px;
-            top: -10px;
+            right: -5px;
+            top: -5px;
             background: #fff;
             width: 33px;
             height: 33px;
@@ -1401,7 +1384,6 @@ export default {
             line-height: 33px;
             cursor: pointer;
             transition: all .23s ease .1s;
-            z-index: 10;
 
             &:hover {
                 transform: translate(5px, -5px);

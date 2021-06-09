@@ -4,6 +4,7 @@
 			class-name="cn-modal"
 			ref="modal"
 			@on-ok="handleOk"
+			@on-cancel="handleClose"
 			:width="width"
 			:footer-hide="footerHide"
 			v-model="modalShow"
@@ -36,6 +37,9 @@
     methods:{
       handleOk(){
         this.$emit('onOk')
+      },
+      handleClose(){
+        this.$emit('handleClose')
       },
       showModal() {
         this.modalShow = true

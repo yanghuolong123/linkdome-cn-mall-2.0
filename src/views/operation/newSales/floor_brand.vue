@@ -1,13 +1,13 @@
 <template>
-    <div class="sales-new-center" >
-        <div class="chart-list" style=" height: 509px;">
-            <chart-tabs  v-if="isFloorChart" class="bg-white box-card floor-chart" style=" height: 509px;"
+    <div class="sales-new-center" v-if="isHtml">
+        <div class="chart-list">
+            <chart-tabs  class="bg-white box-card floor-chart"
               :labels="floorOption.labels"
               :series="floorOption.series"
               :extraOptions="floorOption"
               title="楼层分析"
               :type='floorOption.type'
-              :unit='tooltipUnit'
+              :unit='floorUnit'
               :typeParameter='floorParameter.type'
               :tooltipUnit="tooltipUnit"
                @tableChage='floorTableChage'
@@ -29,13 +29,13 @@
             </template>
               <export-menu  slot="export" @onchange="ExportBiztop('floor')"></export-menu>
             </chart-tabs>
-            <chart-tabs  v-if="isFloorChart"  class="bg-white box-card floor-chart" style=" height: 509px;"
+            <chart-tabs  class="bg-white box-card floor-chart"
               :xAxis="brandOption.xAxis"
               :series="brandOption.series"
               :extraOptions="brandOption.options"
               title="品牌分析"
               :type='brandOption.type'
-              :unit='tooltipUnit'
+              :unit='floorUnit'
               :typeParameter='floorParameter.type'
               @tableChage='brabdTableChage'
               :tooltipUnit="tooltipUnit"
@@ -57,6 +57,17 @@
             </template>
               <export-menu  slot="export" @onchange="ExportBiztop('brand')"></export-menu>
             </chart-tabs>
+
+            <!-- <chart-tabs
+                :xAxis="brandXAxis"
+                :series="brandSeries"
+                :extraOptions="brandOptions"
+                class="bg-white box-card brand-chart"
+                title="品牌分析"
+                :type='brandType'
+                >
+                <export-menu  slot="export" @onchange="enterExportBiztop"></export-menu>
+            </chart-tabs> -->
         </div>
     </div>
 </template>
@@ -66,7 +77,7 @@ import chartTabs from '_c/common/CopyChartsTabs.vue'
 import exportMenu from '@/views/operation/components/ExportMenu.vue'
 import { getNewfloor, getNewbrand } from '@/api/newSales.js'
 import { exportEx } from '@/api/home.js'
-import {downloadEx} from '@/libs/util.js'
+import moment from 'moment'
 export default {
   name: 'floor_brand',
   components: {
@@ -85,7 +96,7 @@ export default {
   },
   data () {
     return {
-      isFloorChart: false,
+      isHtml: true,
       floorOption: {
         type: ['salesPie'],
         labels: {
@@ -105,7 +116,7 @@ export default {
         xAxis: {
           'name': '名称',
           'key': this.brandParameter.type,
-          'data': [],
+          'data': [ ]
         },
         series: [
           {
@@ -135,16 +146,8 @@ export default {
             'events': {}
           },
           'yaxis': {
-            labels: {
-              offsetY: 0,
-            }
-          },
-          xaxis:{
-            labels: {
-              trim:false,
-              formatter: (value) => {
-                return value.toLocaleString()
-              }
+            'labels': {
+              'offsetY': 0
             }
           }
         },
@@ -174,6 +177,9 @@ export default {
     propertyId () {
       return this.$store.state.home.headerAction
     },
+    floorUnit () {
+      return this.floorParameter.type !== 'CloseRate' ? '元' : '%'
+    }
   },
   watch: {
     '$store.state.home.bussinessDict' () {
@@ -181,14 +187,13 @@ export default {
     }
   },
   activated () {
-    this.isFloorChart = false
+    this.isHtml = false
     setTimeout(() => {
-      this.isFloorChart = true
-    },200)
+      this.isHtml = true
+    })
   },
   mounted () {
     this.floorBrandData()
-    
   },
   methods: {
     floorBrandData () {
@@ -225,10 +230,6 @@ export default {
         }
       })
       this.brandOption.selectAction = this.brandOption.selectList[0].value
-      this.isFloorChart = false
-      setTimeout(() => {
-        this.isFloorChart = true
-      })
     },
     floorTableChage (val) {
       this.floorTableListData = val.data
@@ -238,7 +239,6 @@ export default {
     },
     floorData (data) {
       let floor = this.floorOption
-      this.isFloorChart = true
       floor.labels = {
         name: '类型',
         key: this.floorParameter.type + '_' + this.floorParameter.time,
@@ -305,30 +305,45 @@ export default {
       }
     },
     ExportBiztop (type) {
+      try {
+        if (type === 'floor') {
+          window.TDAPP.onEvent('销售分析', '楼层分析下载', { })
+        } else {
+          window.TDAPP.onEvent('销售分析', '品牌分析下载', { })
+        }
+      } catch (error) {
+        if (type === 'floor') {
+          console.log('销售分析-楼层分析下载-埋点error:' + error)
+        } else {
+          console.log('销售分析-品牌分析下载-埋点error:' + error)
+        }
+      }
       let time = this.floorParameter.time.split(',')
       let newTableData
-      let name
       if (type === 'floor') {
         newTableData = _.cloneDeep(this.floorTableListData)
-        let type
-        this.floorOption.selectList.forEach(val=>{
-          if(val.value===this.floorOption.selectAction) type = val.name
-        })
-        name = '销售分析_'+type
       } else {
         newTableData = _.cloneDeep(this.brandTableListData)
-        let floor
-        this.brandOption.selectList.forEach(val=>{
-          if(val.value===this.brandOption.selectAction) floor = val.name
-        })
-         name = '销售分析_品牌分析_'+floor
       }
       if (time[0] == time[1]) {
         newTableData[1].map(list => {
           list.time = time[0] + '  ' + list.time
         })
       }
-      downloadEx(exportEx,name,newTableData)
+      exportEx(newTableData).then(res => {
+        let date = new Date()
+        const blob = new Blob([res.data])
+        let name = '销售分析'
+        let fileName = name + moment(date).format('YYYYMMDDHHmmss') + '.xls'
+        const elink = document.createElement('a')
+        elink.download = fileName
+        elink.style.display = 'none'
+        elink.href = URL.createObjectURL(blob)
+        document.body.appendChild(elink)
+        elink.click()
+        URL.revokeObjectURL(elink.href)// 释放URL 对象
+        document.body.removeChild(elink)
+      })
     }
   }
 }
@@ -339,11 +354,12 @@ export default {
 }
 .chart-list{
     width: 100%;
-   
+    height: 509px;
     margin-top: 20px;
     .floor-chart{
         width: 40%;
         float: left;
+        height: 509px;
       &:nth-child(2){
         width: 59%;
         float:right;

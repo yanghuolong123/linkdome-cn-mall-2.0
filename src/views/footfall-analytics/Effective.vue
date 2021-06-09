@@ -1,30 +1,26 @@
 <template>
   <div class="effective">
-    <flow-selector ref="selectData" @paramsPrepare="paramsPrepare"></flow-selector>
-    <div class="chartContent" v-if="isShowChart">
-      <div ref="effCahrt" class="eff-box">
-        <goalCharts   class="charts" id='tendencyLine' :height1="chartheight" :height3="chartheight" title1="有效客流趋势"
+    <div class="time-selector bg-white box-card px-4 pb-6">
+      <flow-selector style="background-color:#fff;border-radius: 6px;" @on-change="paramsPrepare" :isShop='true'
+        :isFloor='true' :isStore='true' :isArea='true' :multiple='false' :isNeedEntity='false' :footFall='false'
+        :typeText='dwellText' isReset ref="flowSelector" :initDate="defalutDate"></flow-selector>
+    </div>
+    <div class="chartContent">
+      <goalCharts v-if="isEffectiveChart" class="charts" id='tendencyLine' height1="455px" height3="455px" title1="有效客流趋势"
         :options1="trendAndAvg.trendLineOption" :series1="trendAndAvg.trendLineSeries"
         :options2="trendAndAvg.trendBarOption" :series2="trendAndAvg.trendBarSeries" :columns="trendAndAvg.trendColumn"
         :tableList="trendAndAvg.trendTable"></goalCharts>
-       
-      </div>
-      
       <div class="cardContent">
-        <Cards style="height: 165px;" :isTime="isTime" :isUp="isUp1" :item="effective"></Cards>
-        <Cards style="height: 165px;" :isTime="isTime" :isUp="isUp2" :item="repeat" margin="20px 0px"></Cards>
-        <Cards style="height: 165px;" :isTime="isTime" :isUp="isUp3" :item="avgTimes"></Cards>
+        <Cards :isTime="isTime" :isUp="isUp1" :item="effective"></Cards>
+        <Cards :isTime="isTime" :isUp="isUp2" :item="repeat" margin="20px 0px"></Cards>
+        <Cards :isTime="isTime" :isUp="isUp3" :item="avgTimes"></Cards>
       </div>
-      <div class="cir-box"></div>
       <div class="circles">
-        <storeChart class="cir" title1="到店次数"
-        :columns="chartColumns"
-        :tableList="chartTable"
-        :showCharts="showCharts"
-        :isTime="isTime" :pieType="pieType" :chartOptions="chartOptions" :series="circleSeries"></storeChart>
+        <storeChart class="cir" title1="到店次数" allHeight='395' :columns="chartColumns" :tableList="chartTable" :showCharts="showCharts"
+          :isTime="isTime" :pieType="pieType" :chartOptions="chartOptions" :series="circleSeries"></storeChart>
       </div>
-      <div style="width:54%;height:383px;display:inline-block">
-        <goalCharts height1="309px" height3="309px" title1="平均到访频次趋势" id='tendencyLine2'
+      <div style="width:54%;height:423px">
+        <goalCharts height1="344px" height3="344px" title1="平均到访频次趋势" id='tendencyLine2'
           :options1="trendAndAvg.avgLineOption" :series1="trendAndAvg.avgLineSeries"
           :options2="trendAndAvg.avgBarOption" :series2="trendAndAvg.avgBarSeries" :columns="trendAndAvg.avgColumn"
           :tableList="trendAndAvg.avgTable"></goalCharts>
@@ -37,6 +33,7 @@
 import Vue from 'vue'
 import goalCharts from '@/components/goal/goalCharts.vue'
 import Cards from './components/Cards.vue'
+import flowSelector from '@/components/Passenger-analysis/flowSelector.vue'
 import storeChart from '@/components/charts/storeChart.vue'
 import VueApexCharts from 'vue-apexcharts'
 import VxBreadcrumb from '@/layouts/components/VxBreadcrumb.vue'
@@ -45,24 +42,21 @@ import { getEntityFlow } from '@/api/home'
 
 import moment from 'moment'
 import _ from 'lodash'
-import { lineOptions, formatNumber, storeOption1, storeOption2, } from '@/libs/util'
+import { lineOptions, formatNumber, storeOption1, storeOption2 } from '@/libs/util'
 import { options2 } from '@/libs/chart.js'
-import FlowSelector from '_c/flow-selector/effective-flow-selector'
+
 Vue.component(VxBreadcrumb.name, VxBreadcrumb)
 export default {
   name: 'DwellTime',
-
   components: {
+    flowSelector,
     VueApexCharts,
     Cards,
     goalCharts,
-    storeChart,
-    FlowSelector,
+    storeChart
   },
   data () {
     return {
-      isShowChart:true,
-      chartheight:'0',
       isEffectiveChart: false,
       showCharts: false,
       isTime: false,
@@ -126,32 +120,26 @@ export default {
       circleSeries: [],
       chartColumns: [],
       chartTable: [],
-      isNumber: 0
+      isNumber: 0,
+      defalutDate: [moment().add(-7, 'day').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]
 
     }
   },
   activated () {
-    // this.isEffectiveChart = false
-    // setTimeout(() => {
-    //   this.isEffectiveChart = true
-    // })
+    this.isEffectiveChart = false
+    setTimeout(() => {
+      this.isEffectiveChart = true
+    })
   },
   mounted () {
-    setTimeout( ()=> {
-      let height = this.$refs.effCahrt.offsetHeight - 89
-      this.chartheight =  height + 'px'
+    var that = this
+    that.$refs.flowSelector.entityType = 'shop'
+    // that.$refs.flowSelector.handleClick()
+    setTimeout(function () {
+      that.$refs.flowSelector.handleClick()
     }, 200)
-    window.onresize=()=>{
-      this.isShowChart = false
-      let height = this.$refs.effCahrt.offsetHeight - 89
-      this.chartheight =  height + 'px'
-      setTimeout(() => {
-        this.isShowChart = true
-      },500);
-    }
   },
   methods: {
-
     /*
     *@method 处理图表需要的数据
     *@param {obj} res 请求的数据
@@ -184,41 +172,17 @@ export default {
         })
         var obj2 = {}
         obj2.name = '有效客流'
-        obj2.data = []
-        if(xaxisCategories != undefined){
-          xaxisCategories.forEach((element,index) => {
-            if(data[index]){
-              obj2.data.push(data[index].unique_visits)
-            }else{
-              obj2.data.push(0)
-            }
-          });
-        }else{
-          obj2.data = data.map(function (m) {
-            return m.unique_visits
-          })
-        }
-      
+        obj2.data = data.map(function (m) {
+          return m.unique_visits
+        })
         lineSeries.push(obj)
         lineSeries.push(obj2)
         var columnSeries = _.cloneDeep(lineSeries)
         columnSeries.forEach(function (m) {
           m.type = 'column'
         })
-     
         trendAndAvg.trendLineOption = lineO
         trendAndAvg.trendLineSeries = lineSeries
-        if(this.$refs.selectData.queryParams.compareType==='not'&&
-          this.$refs.selectData.queryParams.date1Array[0]===this.$refs.selectData.queryParams.date1Array[1]
-        ){
-          var div = document.getElementById('tendencyLine')
-          var width
-          if (div) width = div.offsetWidth
-          var number = (width / 2).toFixed(2) - 50
-          trendAndAvg.trendLineOption.xaxis.labels.offsetX = number
-        }else{
-          trendAndAvg.trendLineOption.xaxis.labels.offsetX = 0
-        }
         if (barO.xaxis.categories.length < 2) {
           barO.plotOptions.bar.columnWidth = '15%'
         } else {
@@ -239,42 +203,21 @@ export default {
         trendAndAvg.trendTable = res.data.data.map(function (m) {
           let obj = {}
           obj.name = moment(m.date_time).format('YYYY-MM-DD')
-          obj.begin = m.visits ? m.visits.toLocaleString() : ' '
-          obj.end = m.unique_visits ? m.unique_visits.toLocaleString() : ' '
+          obj.begin = m.visits ? m.visits.toLocaleString() + '人次' : ' '
+          obj.end = m.unique_visits ? m.unique_visits.toLocaleString() + '人' : ' '
           return obj
         })
-        trendAndAvg.trendColumn = ['日期', '全部客流量 ( 人 )', '有效客流量 ( 人 )']
+        trendAndAvg.trendColumn = ['日期', '全部客流量', '有效客流量']
 
         var avgSeries = []
         var obj3 = {}
         obj3.name = '平均到访频次'
-        obj3.data = []
-        if(xaxisCategories != undefined){
-          xaxisCategories.forEach((element,index) => {
-            if(data[index]){
-              obj3.data.push(data[index].avgFrequencyVisits)
-            }else{
-              obj3.data.push(0)
-            }
-          });
-        }else{
-          obj3.data = data.map(function (m) {
-           return m.avgFrequencyVisits
-          })
-        }
-       
+        obj3.data = data.map(function (m) {
+          return m.avgFrequencyVisits
+        })
         trendAndAvg.avgLineSeries = avgSeries
         trendAndAvg.avgLineOption = _.cloneDeep(lineO)
         //  trendAndAvg.avgLineOption.yaxis.tickAmount=2,
-        if(this.$refs.selectData.queryParams.compareType==='not'&&
-          this.$refs.selectData.queryParams.date1Array[0]===this.$refs.selectData.queryParams.date1Array[1]
-        ){
-          var div = document.getElementById('tendencyLine2')
-          var width
-          if (div) width = div.offsetWidth
-          var number = (width / 2).toFixed(2) - 50
-          trendAndAvg.avgLineOption.xaxis.labels.offsetX = number
-        }
         trendAndAvg.avgLineOption.yaxis.labels.formatter = (value) => {
           return Number(value).toFixed(1)
         }
@@ -285,17 +228,10 @@ export default {
           m.type = 'column'
         })
         trendAndAvg.avgBarOption = _.cloneDeep(barO)
-      
         if (trendAndAvg.avgBarOption.xaxis.categories.length < 2) {
-          trendAndAvg.avgBarOption.plotOptions.bar.columnWidth = '10%'
-        } else if(trendAndAvg.avgBarOption.xaxis.categories.length < 5){
-          trendAndAvg.avgBarOption.plotOptions.bar.columnWidth = '25%'
-        }else if(trendAndAvg.avgBarOption.xaxis.categories.length < 10){
-          trendAndAvg.avgBarOption.plotOptions.bar.columnWidth = '55%'
-        }else if(trendAndAvg.avgBarOption.xaxis.categories.length < 15){
-          trendAndAvg.avgBarOption.plotOptions.bar.columnWidth = '65%'
-        }else {
-          trendAndAvg.avgBarOption.plotOptions.bar.columnWidth = '80%'
+          trendAndAvg.avgBarOption.plotOptions.bar.columnWidth = '15%'
+        } else {
+          trendAndAvg.avgBarOption.plotOptions.bar.columnWidth = '45%'
         }
         trendAndAvg.avgBarOption.yaxis.labels.formatter = (value) => {
           return Number(value).toFixed(1)
@@ -304,11 +240,12 @@ export default {
         trendAndAvg.avgTable = res.data.data.map(function (m) {
           let obj = {}
           obj.begin = moment(m.date_time).format('YYYY-MM-DD')
-          obj.end = m.avgFrequencyVisits ? m.avgFrequencyVisits : ' '
+          obj.end = m.avgFrequencyVisits ? m.avgFrequencyVisits + '次' : ' '
           return obj
         })
         trendAndAvg.avgColumn = ['日期', '平均到访频次']
       }
+      console.log(trendAndAvg)
       return trendAndAvg
     },
     /*
@@ -318,7 +255,7 @@ export default {
     initCircle (resCircle) {
       var that = this
       if (resCircle.status == 200) {
-        that.chartColumns = [{ 'key': 'name', 'title': '类型', 'align': 'center' }, { 'key': 'enter', 'title': '客流量 ( 人 )', 'align': 'center' }]
+        that.chartColumns = [{ 'key': 'name', 'title': '类型', 'align': 'center' }, { 'key': 'enter', 'title': '客流量', 'align': 'center' }]
         var resCircleData = resCircle.data.data.arrival_distribution
         var circleSeries = []
         var chartTable = []
@@ -331,7 +268,7 @@ export default {
           } else {
             obj.name = j + '次'
           }
-          obj.enter = resCircleData[j]
+          obj.enter = resCircleData[j] + '人次'
           chartTable.push(obj)
           circleSeries.push(resCircleData[j])
         }
@@ -347,12 +284,12 @@ export default {
       var that = this
       this.showCharts = false
       if (value.entitys.length == 0 && this.isNumber > 0) {
-        this.$alert({ content:'请选择实体' })
+        alert('请选择实体')
         return false
       }
       this.isNumber = this.isNumber + 1
-     
-      var bzid = value.entitys[0] && value.entitys[0].id
+      if (!value.entitys.length) return
+      var bzid = value.entitys[0].id
       if (value.compareType == 'not') { // 无对比
         that.$store.commit('setRequestNumber', 2)
         this.isTime = false
@@ -377,7 +314,7 @@ export default {
             that.showCharts = true
           })
         })
-      } else if (['time','onYear','onChain'].includes(value.compareType)) { // 时间对比
+      } else if (['time', 'onYear', 'onMonth'].includes(value.compareType)) { // 时间对比
         that.$store.commit('setRequestNumber', 4)
         this.isTime = true
         this.pieType = 'bar'
@@ -415,12 +352,12 @@ export default {
         }
         var trendAndAvg = that.initTrend(initRes[0], xaxisCategories)
         var trendAndAvg2 = that.initTrend(initRes[1], xaxisCategories)
-       
-        var name1,name2,label = value.entitys[0].label,time1 = value.date1Array,time2=value.date2Array
-        name1 = time1[0] === time1[1]? time1[0] :time1.join(' - ')
-        name2 = time2[0] === time2[1]? time2[0] :time2.join(' - ')
-        // var name1 = value.entitys[0].label + ' ' + value.date1Array.join(' - ') + '有效客流'
-
+        var name1 = value.entitys[0].label + ' ' + value.date1Array.join(' - ') + '有效客流'
+        var name2 = value.entitys[0].label + ' ' + value.date2Array.join(' - ') + '有效客流'
+        var name3 = value.entitys[0].label + ' ' + value.date1Array.join(' - ') + '平均到访频次'
+        var name4 = value.entitys[0].label + ' ' + value.date2Array.join(' - ') + '平均到访频次'
+        var name5 = value.entitys[0].label + ' ' + value.date1Array.join(' - ') + '到店次数'
+        var name6 = value.entitys[0].label + ' ' + value.date2Array.join(' - ') + '到店次数'
         trendAndAvg.trendLineSeries[0].name = name1
         trendAndAvg.trendLineSeries[0].data = trendAndAvg.trendLineSeries[1].data
         trendAndAvg.trendLineSeries[1].name = name2
@@ -436,15 +373,15 @@ export default {
           trendTable.push(obj)
         })
         trendAndAvg.trendTable = trendTable
-        trendAndAvg.avgLineSeries[0].name = name1
+        trendAndAvg.avgLineSeries[0].name = name3
         trendAndAvg.avgLineSeries[1] = _.cloneDeep(trendAndAvg.avgLineSeries[0])
-        trendAndAvg.avgLineSeries[1].name = name2
+        trendAndAvg.avgLineSeries[1].name = name4
         trendAndAvg.avgLineSeries[1].data = trendAndAvg2.avgLineSeries[0].data
         trendAndAvg.avgBarSeries = _.cloneDeep(trendAndAvg.avgLineSeries)
         trendAndAvg.avgBarSeries.forEach(function (m) {
           m.type = 'column'
         })
-        trendAndAvg.avgColumn = ['日期', name1, name2]
+        trendAndAvg.avgColumn = ['日期', name3, name4]
         var avgTable = []
         xaxisCategories.forEach(function (m, index) {
           let obj = {}
@@ -455,14 +392,12 @@ export default {
         })
         trendAndAvg.avgTable = avgTable
         that.trendAndAvg = trendAndAvg
-
-      
-        that.effective.time1 = name1
-        that.effective.time2 = name2
-        that.repeat.time1 = name1
-        that.repeat.time2 = name2
-        that.avgTimes.time1 = name1
-        that.avgTimes.time2 = name2
+        that.effective.time1 = value.date1Array.join(' - ')
+        that.effective.time2 = value.date2Array.join(' - ')
+        that.repeat.time1 = value.date1Array.join(' - ')
+        that.repeat.time2 = value.date2Array.join(' - ')
+        that.avgTimes.time1 = value.date1Array.join(' - ')
+        that.avgTimes.time2 = value.date2Array.join(' - ')
 
         that.effective.precent = trendAndAvg.effectiveNumbser
 
@@ -538,7 +473,7 @@ export default {
         var resCircleData1, resCircleData2
 
         if (initRes[2].status == 200) {
-          var rcd1 = initRes[2].data.data.arrival_distribution
+          var rcd1 = initRes[3].data.data.arrival_distribution
           resCircleData1 = []
           for (let k in rcd1) {
             resCircleData1.push(rcd1[k])
@@ -565,14 +500,14 @@ export default {
         ]
         var chartTable = []
         var tableRow1 = {}
-        tableRow1.name = name1
+        tableRow1.name = name5
         tableRow1.value1 = resCircleData1[0]
         tableRow1.value2 = resCircleData1[1]
         tableRow1.value3 = resCircleData1[2]
         tableRow1.value4 = resCircleData1[3]
         tableRow1.value5 = resCircleData1[4]
         var tableRow2 = {}
-        tableRow2.name = name2
+        tableRow2.name = name6
         tableRow2.value1 = resCircleData2[0]
         tableRow2.value2 = resCircleData2[1]
         tableRow2.value3 = resCircleData2[2]
@@ -585,14 +520,30 @@ export default {
         var circleSeries = circleNames.map(function (m, index) {
           let obj = {}
           obj.name = m
-          obj.data = [resCircleData1[index]?resCircleData1[index]:0, resCircleData2[index]?resCircleData2[index]:0]
+          obj.data = [resCircleData1[index], resCircleData2[index]]
           return obj
         })
+
         var chartOptions = _.cloneDeep(storeOption2)
-        chartOptions.xaxis.categories = [name1, name2]
+        chartOptions.xaxis.categories = [name5, name6]
         this.chartOptions = chartOptions
         this.circleSeries = circleSeries
         this.showCharts = true
+      }
+
+      try {
+        let type, date
+        if (value.compareType === 'not') {
+          type = '无对比'
+          date = value.date1Array[0] + ',' + value.date1Array[1]
+        } else {
+          type = '时间对比'
+          date = [value.date1Array.join(','), value.date2Array.join(',')]
+        }
+
+        window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', '数据查询', { '对比方式': type, '时间段': date, '实体选择': value.entitys[0].label })
+      } catch (error) {
+        console.log(this.$route.meta.pageTitle + '页面-' + '数据查询' + '埋点error:' + error)
       }
     },
     /*
@@ -610,7 +561,7 @@ export default {
       else innerRange = 'Month'
       return innerRange
     }
-  },
+  }
 }
 </script>
 
@@ -621,31 +572,24 @@ export default {
     display: flex;
     flex-wrap: wrap;
     margin-top:20px;
-    .eff-box{
-        width: 77.5%;
-        margin-right: 20px;
+    .charts {
+      width: 77.5%;
+      height: 534px;
+      margin-bottom: 20px;
+      margin-right: 20px;
     }
-    // .charts {
-    //   width: 100%;
-    //   // height: 534px;
-    // }
     .cardContent {
       width: 21%;
       .cards{
         box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
         border-radius: 6px;
-      
+        height: 165px;
       }
-    }
-    .cir-box{
-      margin-top: 20px;
-      width: 100%;
     }
     .circles {
       border-radius: 6px;
       background-color: #fff;
       width: 44.5%;
-      display: inline-block;
       margin-right: 20px;
       box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
     }

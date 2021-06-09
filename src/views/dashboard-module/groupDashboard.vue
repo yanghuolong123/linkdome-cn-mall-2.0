@@ -10,7 +10,7 @@
                       :shopData="shopData"
                       :gateData="gateData"
                       :window="window"
-                      :timingValue='$store.state.home.intervalTime'
+                      :timingValue='currentTimeRefresh'
                       :id="currentMenuName"
                       @markClick="selectMenuByName"></map-carousel>
       </template>
@@ -27,7 +27,6 @@
               ref="currentKpi"
               textName='group-current'
               class='group-right-list groupStyle'
-              :moveWidth='0.024'
             >
             <template slot-scope="{item}">
                 <singleCard :isShowText='true' :item="item" :innerRange="innerRange"></singleCard>
@@ -47,7 +46,6 @@
           textName='group-histrry'
           scaleCards
           :defaultCountsOfCards="4"
-           :moveWidth='0.013'
         >
           <template slot-scope="{item}">
             <!-- 历史数据 卡片 列表  -->
@@ -72,7 +70,6 @@
             </template>
             <template slot="dateSelector">
               <i-date-picker @selectDate="selectDate"
-                             :value="historyDate"
                              class="mr-8 history-date-picker"></i-date-picker>
             </template>
           </template>
@@ -107,9 +104,12 @@ import {
 
 import rightData from './grouphaderRight'
 import {
+  getGroupOrganization,
   getCurrent,
   postHistorycompute,
   getEntityFlow,
+  // getCurrentGate
+  userKpiList
 } from '@/api/home.js'
 import groupTrend from '@/views/group/groupTrend'
 import groupAgeGender from '@/views/group/groupAgeGender'
@@ -144,11 +144,11 @@ export default {
   },
   data () {
     return {
-      historyDate:[Moment().add(-1, 'd').toDate(), Moment().add(-1, 'd').toDate()],//历史查询时间
       cancelGetGroupOrganizationAjax: null,
       cancelGetBussinessTreeAjax: null,
       cancelGetCurrentAjax: null,
       cancelGetSaleIndicatorsAjax: null,
+      currentTimeRefresh: '5分钟',
       isKipShow: false,
       rightShoppingList: {
         currentDay: 0,
@@ -174,52 +174,7 @@ export default {
       monthTargetVal: 0,
       todayEnter: 0,
       monthEnter: 0,
-      kpiData: [
-        {
-          data: 0,
-          id: 'enteravg',
-          name: '平均客流量',
-          type: {
-            icon: 'avg',
-            color: '#1dd9d1'
-          }
-        },
-        {
-          data: {
-            number: 0,
-            property: '007',
-            timeRange: '00:00-00:59'
-          },
-          id: 'enterhighest',
-          name: '客流峰值',
-          type: {
-            icon: 'highest',
-            color: '#e8585a'
-          }
-        },
-        {
-          data: {
-            number: 0,
-            property: '007',
-            timeRange: '00:00-00:59'
-          },
-          id: 'occupancyhighest',
-          name: '集客量峰值',
-          type: {
-            icon: 'occu_highest',
-            color: '#e8585a'
-          }
-        },
-        {
-          data: 0,
-          id: 'occupancytotal',
-          name: '集客量',
-          type: {
-            icon: 'liuliang',
-            color: '#857aef'
-          }
-        }
-      ],
+      kpiData: [],
       historyData: null,
       summarySalse: [],
       today: Moment().format('YYYY-MM-DD'),
@@ -264,7 +219,62 @@ export default {
     companyId () {
       return this.$store.state.user.companyId
     },
-    
+    customAnalytics () {
+      let tml = []
+      if (!Object.keys(this.footFallTypeRes).length) return tml
+      let data = this.footFallTypeRes
+      delete data.clerk_proportion
+      Object.keys(data).forEach(e => {
+        let chartObj = {}
+        // 由于年龄性别的数据结构不一致，采用另外一种处理方式
+        if (e === 'gender_propotion') {
+          let genderName = {
+            '0': {
+              name: '女',
+              icon: 'female'
+            },
+            '1': {
+              name: '男',
+              icon: 'male'
+            }
+          }
+          chartObj.labels = {
+            name: '性别',
+            key: 'gender',
+            data: Object.keys(data[e]).map(e => genderName[e].name),
+            icons: Object.keys(data[e]).map(e => genderName[e].icon)
+          }
+          chartObj.series = Object.values(data[e])
+        } else if (e === 'age_distribution') {
+          let genderName = {
+            male: '男性',
+            female: '女性'
+          }
+          chartObj.labels = {
+            name: '年龄',
+            key: 'age',
+            data: Object.keys(data[e]).map(e => { return this.ageNameformat(e) })
+          }
+          chartObj.series = Object.keys(genderName).map(k => ({ name: genderName[k], key: k, data: (Object.values(data[e])).map(o => o[k]) }))
+        } else {
+          chartObj.labels = {
+            name: '类型',
+            key: e,
+            data: Object.keys(data[e]).map(e => customerNameDict[e].name),
+            icons: Object.keys(data[e]).map(e => customerNameDict[e].icon)
+          }
+          chartObj.series = Object.values(data[e])
+        }
+        chartObj.title = this.customChecklist[e].name
+        chartObj.type = this.customChecklist[e].chartType
+        chartObj.height = this.customChecklist[e].height
+        tml.push(chartObj)
+      })
+      // 此处需要加上分号，防止语法解析错误
+      ;[tml[0], tml[1], tml[2], tml[3], tml[4]] = [tml[4], tml[3], tml[0], tml[1], tml[2]]// 交换位置
+      // tml[3].series = [156, 785]
+      return tml
+    },
     historyIndicators () {
       var arr = [...this.historyKpiData, ...this.summarySalse]
       return arr // 合并数组 组成一个新的数组
@@ -338,7 +348,7 @@ export default {
           name: '客流量',
           yaxis: {
             title: {
-              text: '客流量（人次）'
+              text: '客流量（人）'
             },
             labels: {
               formatter (value) {
@@ -351,7 +361,7 @@ export default {
           name: '集客量',
           yaxis: {
             title: {
-              text: '集客量（人次）'
+              text: '集客量（人）'
             },
             labels: {
               formatter (value) {
@@ -366,11 +376,17 @@ export default {
   },
   mounted () {
     this.initRequest()
+    userKpiList().then(res => {
+      if (res.data.code === 200) {
+        this.$refs.currentKpi.alllistData = res.data.data
+        this.$refs.currentKpi.typeList(res.data.data)
+        this.$refs.historyKpi.alllistData = res.data.data
+        this.$refs.historyKpi.typeList(res.data.data)
+      }
+  	})
   },
   activated () {
-    this.historyDate = [Moment().add(-1, 'd').toDate(), Moment().add(-1, 'd').toDate()];
-    this.innerRange = '1h'
-    this.intervalClick(this.$store.state.home.intervalTime)
+    this.intervalClick('5分钟')
     this.initRequest()
   },
   watch: {
@@ -388,11 +404,18 @@ export default {
     isRightImg (type) {
       this.isKipShow = type
     },
-   
+    ageNameformat (str) {
+      return str.replace('_', '-').replace('less-', '小于').replace(/more-/, '大于')
+    },
     updateMapZoneByName (name) {
       this.currentMenuName = name === 'company' ? name : Number(name)
       this.currentPropertyId = name === 'company' ? null : this.dashboardData[name].propertyId
       this.shopData = this.dashboardData[name].shopData ? this.dashboardData[name].shopData : null// 轮播图数据
+      if (this.shopData) {
+        // this.gateData = _.find(this.allPropetyGateData, e => {
+        //   return e.propertyid === this.shopData.property_id
+        // })
+      }
       this.kpiData = _.cloneDeep(this.dashboardData[name].compute)
     },
     selectMenuByName (name) {
@@ -402,10 +425,11 @@ export default {
       this.updateMapZoneByName(`${name}`)
     },
     mapDataInit (data) {
-      let markerIcon = require('@/assets/images/pages/marker.png')
-      const orgData = this.$store.state.home.organizationData
-      let currentData = data[0].data.data
-      let businessTreeData = data[1].data.data// 将businessTreeData 存入store,方便其他页面访问，避免重复请求
+      let markerIcon = require('@/assets/images/pages/marker.webp')
+      let orgData = data[0].data.data
+      let currentData = data[1].data.data
+      let businessTreeData = data[2].data.data// 将businessTreeData 存入store,方便其他页面访问，避免重复请求
+      // this.allPropetyGateData = data[3].data.data
       this.saveBusinessTree(businessTreeData)
 
       let currentMonthIndex = new Date().getMonth() // 当月月份
@@ -437,14 +461,14 @@ export default {
         })
         let size
         // 计算 客流达成率
-        groupData.monthlyGoal == 0 ? size = 1 : size = NP.divide(groupData.currentMonthly, groupData.monthlyGoal).toFixed(2)
+        groupData.monthlyGoal == 0 ? size = 1 : size = NP.divide(groupData.currentMonthly, groupData.monthlyGoal).toFixed(4)
         size = NP.times(size, 100)
         groupData.achievingRate = [size]
 
         // 添加千分符
-        groupData.currentDay = groupData.currentDay.toLocaleString()
-        groupData.currentMonthly = groupData.currentMonthly.toLocaleString()
-        groupData.monthlyGoal = groupData.monthlyGoal.toLocaleString()
+        groupData.currentDay = groupData.currentDay
+        groupData.currentMonthly = groupData.currentMonthly
+        groupData.monthlyGoal = groupData.monthlyGoal
       }
       try {
         for (let index = 0; index < targetArr.length; index++) {
@@ -514,6 +538,21 @@ export default {
               }
             })
           }
+          // if (ele.goal_flow && ele.goal_flow[0]) {
+          //   allTargetData.push({
+          //     id: ele.bzid,
+          //     data: ele.goal_flow,
+          //     marketData: ele.goal_sale
+          //   })
+          //   if (ele.goal_flow[0].is_year === 'year') {
+          //     shopTargetValue = ele.goal_flow[0].flow_year / 12 // 目标值为年
+          //     companyMonthTargetValue += shopTargetValue
+          //   } else {
+          //     const { detail: { months: everyMonth } } = ele.goal_flow[0]
+          //     shopTargetValue = everyMonth[currentMonthIndex][Object.keys(everyMonth[currentMonthIndex])[0]] || 0
+          //     companyMonthTargetValue += shopTargetValue // 集团当月目标值等于各商场的当月目标值
+          //   }
+          // }
           dashBoardObj[ele.bzid] = {
             compute: shopCurrent,
             name: ele.name,
@@ -646,7 +685,16 @@ export default {
       return tmlKPIarr
     },
     selectDate (date, clickType) {
+      try {
+        window.TDAPP.onEvent('集团页面', '历史数据时间选择', { '时间段': date })
+      } catch (error) {
+        console.log('集团页面-历史数据时间选择-埋点error:' + error)
+      }
       if (date[0] == '' || this.outRange == date.toString()) return false
+      // if (this.$store.state.home.loadingState == false) {
+      //   this.$store.commit('loadingState', true)
+      //   this.$vs.loading()
+      // }
       // 日期选
       this.clickTimeName = clickType
       this.outRange = date.toString()
@@ -675,6 +723,7 @@ export default {
       return postHistorycompute(params)
     },
     intervalClick (val) {
+      this.currentTimeRefresh = val
       clearInterval(this.intervalId)
       let time
       if (val == '30秒') {
@@ -689,18 +738,17 @@ export default {
         time = 1000 * 60 * 30
       }
       this.intervalId = setInterval(() => {
-        if(this.$route.name==='dashboardAnalytics'){
-           this.updateRealTimezone()
-        }else{
-          return false
-        }
-       
+        this.updateRealTimezone()
       }, time)
     },
     updateRealTimezone () {
       let companyId = this.companyId // 公司id
-      getCurrent({ time: this.today, companyId, offset: 60 }).then(res => {
-          this.$set(this.initRes, 0, res)
+      Promise.all([getCurrent({ time: this.today, companyId, offset: 60 })
+        // getCurrentGate({ companyid: companyId, time: this.today, offset: 60 })
+      ])
+        .then(res => {
+          this.$set(this.initRes, 1, res[0])
+          // this.$set(this.initRes, 3, res[1])
           this.mapDataInit(this.initRes)
         }).catch(err => {
           console.log(err)
@@ -712,6 +760,9 @@ export default {
       let companyId = this.companyId // companyId
 
       // 取消多余http请求
+      if (typeof this.cancelGetGroupOrganizationAjax === 'function') {
+        this.cancelGetGroupOrganizationAjax()
+      }
       if (typeof this.cancelGetBussinessTreeAjax === 'function') {
         this.cancelGetBussinessTreeAjax()
       }
@@ -720,12 +771,16 @@ export default {
       }
       // request orgnization and instantData of company
       this.initRes = await Promise.all([
+        getGroupOrganization(this),
         getCurrent({ time: this.today, companyId, offset: 60 }, this),
         getBussinessTree({ entity: 52 }, this)
+        // getCurrentGate({ companyid: companyId, time: this.today, offset: 60 })
       ])
       let nowBzid = this.$store.state.user.bzid
-      var resp = this.initRes[1]
+      var resp = this.initRes[2]
       var areaList = []
+      // this.$vs.loading.close()
+      // this.$store.commit('loadingState', false)
       resp.data.data.forEach(function (m) {
         if (nowBzid.indexOf(m.id) > -1) {
           m.children.forEach(function (l) {
@@ -808,5 +863,7 @@ export default {
   margin-top 0!important
 </style>
 <style lang="less" scoped>
-
+.groupStyle /deep/ .infocard{
+  margin-top: 0!important;
+}
 </style>

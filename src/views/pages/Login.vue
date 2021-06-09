@@ -1,9 +1,8 @@
 <template>
 	<div class="login-container" :class="themeClass">
 		<div class="login">
-			<img src="@/assets/images/fixation_img/logo/logo.png" width="150" alt="">
-<!--			<div class="system-select" @click="selectBoxShow=true">{{systemSelectName}} <Icon type="md-arrow-dropdown" />-->
-			<div class="system-select">{{systemSelectName}}
+			<img src="@/assets/images/fixation_img/logo/logo.webp" width="150" alt="">
+			<div class="system-select" @click="selectBoxShow=true">{{systemSelectName}} <Icon type="md-arrow-dropdown" />
 				<div class="select-box" v-show="selectBoxShow">
 					<div class="sys-item" :class="{active:systemSelect===sys.id}" @click.stop="handleSystemSwitch(sys.id)" v-for="(sys,i) in systemList" :key="i">{{sys.name}}</div>
 				</div>
@@ -25,18 +24,16 @@
 			<Button class="login-btn" :loading="loading" type="primary" @click="handleLogin('formValidate')">立即登录</Button>
 		</div>
 		<div class="bottom">
-			浙ICP备20009188号-1 浙江凌图科技有限公司 Copyright 2019-{{currentYear}}
+			浙ICP备20009188号-1 浙江凌图科技有限公司 Copyright 2019-2020
 		</div>
-		<vs-alert :active="isalert" color="danger" icon-pack="feather" icon="icon-info">
-			<span>{{alertText}}</span>
-		</vs-alert>
+		<Alert type="error" show-icon v-show="isalert">{{alertText}}</Alert>
 	</div>
 </template>
 <script>
 import { getMenuList } from '@/api/custom.js'
 import { login } from '@/api/user.js'
-import { getUrl,getGroupOrganization } from '@/api/home.js'
-import moment from 'moment'
+import { getUrl } from '@/api/home.js'
+
 import md5 from 'md5'
 import _ from 'lodash'
 import Cookies from 'js-cookie'
@@ -54,17 +51,13 @@ export default {
   data () {
     return {
       systemSelect: 2,
-			currentYear:moment().format('YYYY'),
-      systemList: [
-      //   {
-      //   name: '凌图智慧商业BI大屏',
-      //   id: 1
-      // },
-		{
+      systemList: [{
+        name: '凌图智慧商业BI大屏',
+        id: 1
+      }, {
         name: '凌图智慧商业综合分析平台',
         id: 2
-      }
-      ],
+      }],
       selectBoxShow: false,
       validateRules: {
         username: { required: true, message: '请输入账号', trigger: 'blur' },
@@ -131,7 +124,6 @@ export default {
                     })
                   })
                   menuList = _.orderBy(menuList, ['id'])
-                  window.localStorage.setItem('saleStatus',data.sale_feature) // 是否需要销售
                   window.localStorage.setItem('menuarr', JSON.stringify(menuarr))// 存所有菜单键值对到localStorage
                   window.localStorage.setItem('menulist', JSON.stringify(menuList))// 存所有菜单原始数据到localStorage
                 }
@@ -176,14 +168,7 @@ export default {
                   if (names) {
                     names = { name: names.name }
                     that.$store.commit('shopUserName', names)
-					          const orgData = await getGroupOrganization()
-                    this.$store.commit('saveOrganizationData', orgData.data.data);
-                    if(this.isRememberMe){
-                      Cookies.set('userInfo',this.loginForm)
-					}else {
-                      Cookies.remove('userInfo')
-					}
-                    that.$router.push(names);
+                    that.$router.push(names)
                   } else {
                     that.showHint('抱歉，你没有权限')
                   }
@@ -198,8 +183,7 @@ export default {
             }
           }).catch(err => {
             this.loading = false
-            console.log(err)
-            this.$Message.error('系统异常！')
+            this.$Message.error(err)
           })
         }
       })
@@ -254,10 +238,9 @@ export default {
     commitStoreData (data) {
       let isRememberMe = this.isRememberMe
       // 存token到store
-     
       this.$store.commit('setToken', { token: data.token, isRememberMe })
       this.$store.commit('allType', data.type_id)
-      this.$store.commit('setAvator', data.avatar ? data.avatar : require('@/assets/images/fixation_img/rest/who.png'))
+      this.$store.commit('setAvator', data.avatar ? data.avatar : require('@/assets/images/fixation_img/rest/who.webp'))
       this.$store.commit('setUserName', data.username)
       this.$store.commit('setUserId', data.userid)
       this.$store.commit('setBzid', data.bzid)
@@ -271,9 +254,8 @@ export default {
       this.$store.commit('setSex', data.sex)
       this.$store.commit('setemail', data.email)
       this.$store.commit('setCompanyId', data.company_id)
-      this.$store.commit('setEntityPrivilege', data.business_zone_privilege && JSON.parse(data.business_zone_privilege))
+      this.$store.commit('setEntityPrivilege', JSON.parse(data.business_zone_privilege))
       this.$store.commit('outSize', 0)
-      this.$store.commit('setSaleFeature', data.sale_feature)
     },
     showHint (text) {
       this.isalert = true
@@ -284,15 +266,6 @@ export default {
     alertType () {
       setTimeout(() => { this.isalert = false }, 2000)
     }
-  },
-  created () {
-    if(Cookies.get('userInfo')){
-      this.loginForm =  JSON.parse(Cookies.get('userInfo'))
-	  this.isRememberMe = true;
-	}else {
-      this.isRememberMe = false;
-	}
-  
   }
 
 }
@@ -313,7 +286,7 @@ export default {
 		overflow: hidden;
 		height: 100vh;
 		background-color: #2569A3;
-		background: url("../../assets/images/fixation_img/bg/login-bg-1.png") ;
+		background: url("../../assets/images/fixation_img/bg/login-bg-1.webp") ;
 		background-size: 100% 100%;
 		position: relative;
 		.login{
@@ -323,7 +296,7 @@ export default {
 			transform: translateY(-50%);
 			color: #464646;
 			font-size: 22px;
-			background: url("../../assets/images/fixation_img/bg/login-input-box-bg1.png")no-repeat;
+			background: url("../../assets/images/fixation_img/bg/login-input-box-bg1.webp")no-repeat;
 			background-size: 100% 100%;
 			width: 500px;
 			height: 620px;
@@ -424,9 +397,9 @@ export default {
 		}
 	}
 	&.dark{
-		background: url("../../assets/images/fixation_img/bg/login-bg-2.png") ;
+		background: url("../../assets/images/fixation_img/bg/login-bg-2.webp") ;
 		.login{
-			background: url("../../assets/images/fixation_img/bg/login-input-box-bg2.png")no-repeat;
+			background: url("../../assets/images/fixation_img/bg/login-input-box-bg2.webp")no-repeat;
 			.system-select{
 				color: white;
 				.select-box{

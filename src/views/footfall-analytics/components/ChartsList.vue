@@ -23,6 +23,4 @@ export default {
 </script>
 <style scoped lang="stylus">
 @import ('./chartList.styl')
-  .item
-    z-index 201
 </style>

@@ -21,6 +21,18 @@ export const dateCompare = params => {
     method: 'post'
   })
 }
+export const getHeatMapFloorEnter = params => {
+  const { bzid, type, time } = params
+  return naxios.request({
+    url: 'judge/getIsFloat',
+    params: {
+      bzid,
+      type,
+      time
+    },
+    method: 'get'
+  })
+}
 export const dwellTime = params => {
   const { time1, time2, bzid } = params
   return naxios.request({
@@ -248,21 +260,16 @@ export const getTimePassengerFlowDistribution = params => {
     },
   })
 }
-// 热力地图分布
+//热力地图分布
 export const getHeatMapDistribution = params => {
+  const { floor_bzid,bzIds, begin_time, end_time,type } = params
   return naxios.request({
     url: 'judge/heatMap',
-    params
-  })
-}
-export const Path3D = params => {
-  const { time, property_id } = params
-  return naxios.request({
-    url: 'flow/movingTd',
     params: {
-      time,
-      property_id
+      floor_bzid,
+      begin_time,
+      end_time,
+      type
     },
-    method: 'get'
   })
 }

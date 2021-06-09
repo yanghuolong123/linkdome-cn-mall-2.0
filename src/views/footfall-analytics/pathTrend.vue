@@ -166,9 +166,22 @@ export default {
   },
   created () {
     this.currentPropertyId = this.$store.state.home.headerAction
+    // this.searchData()
   },
   mounted () {
     this.init()
+
+    // window.onresize = () => {
+    //   console.log(111)
+
+    //   return () => {
+    //     let content = document.getElementsByClassName('pathContent')[0]
+    //     if (content) {
+    //       that.imgWidth = (content.clientWidth) - 20
+    //       that.dealWithSearchData(that.allMoveData, -1)
+    //     }
+    //   }
+    // }
   },
   methods: {
     init () {
@@ -214,7 +227,7 @@ export default {
           that.imageOnload++
           if (isOnloadFirst == 0) {
             that.scale = images.width / images.height
-            that.imgWidth = (document.getElementById('pathContent').clientWidth) - 20
+            that.imgWidth = (document.getElementById('pathContent').clientWidth) - 40
           }
           isOnloadFirst++
           m.isShow = true
@@ -707,10 +720,12 @@ export default {
       background-color: #fff;
   }
   .pathContent{
-    width: 80%;
+    width: 75%;
     position: relative;
     margin-top: 80px;
     overflow: hidden;
+    padding: 20px;
+    box-sizing: content-box;
     img{
       display: block;
     }

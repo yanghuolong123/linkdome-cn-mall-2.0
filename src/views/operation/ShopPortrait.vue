@@ -1,20 +1,24 @@
 <template>
     <div class="shop-portrait">
-        <div class="selector-container common-card">
-            <div class="flex-center">
-                <Select v-model="tableParams.property_id"  class="w-select" >
-                    <Option v-for="(item,index) in propertyList"
-                        :value="item.property_id"
-                        :key="index">{{ item.name }}</Option>
-                </Select>
-                <Select v-model="businessType"  class="w-select m-l-20" >
-                    <Option v-for="(item,index) in businessTypeOptions"
+        <div class="box-card bg-white header flex-box">
+            <vs-select class="m-r-10"  autocomplete v-model="tableParams.property_id">
+                <vs-select-item :value="item.property_id" :text="item.name" :key="index" v-for="(item,index) in propertyList"/>
+            </vs-select>
+            <vs-select
+                    class="m-r-10"
+                    autocomplete
+                    v-model="businessType"
+                    placeholder="选择业态"
+            >
+                <vs-select-item
                         :value="item.value"
-                        :key="index">{{ item.text }}</Option>
-                </Select>
-                <Button size="large" type="primary" class="m-l-20"  @click="getTableList" >查询</Button>
-                <Button size="large" class="m-l-20 goal-reset"  @click="handleCompare" >查看详情</Button>
-            </div>
+                        :text="item.text"
+                        :key="index"
+                        v-for="(item,index) in businessTypeOptions"
+                />
+            </vs-select>
+            <vs-button color="primary" class="handleSearch" v-on:click="getTableList">查询</vs-button>
+            <div class="goal-submit goal-reset" v-on:click="handleCompare">查看详情</div>
         </div>
         <div class="box-card bg-white detail" v-show="compareChartShow">
             <p>运营指数{{chartTitle}}</p>
@@ -235,15 +239,11 @@
             },
             handleCompare(){
                 if (!this.tableSelected.length) {
-                    this.$alert({
-                        content:'请选择要查看的店铺'
-                    })
+                    alert('请选择要查看的店铺');
                     return
                 }
                 if(this.tableSelected.length > 6){
-                    this.$alert({
-                        content:'最多选择6个店铺'
-                    })
+                    alert('最多选择6个店铺');
                     return
                 }
                 const params = {
@@ -261,7 +261,7 @@
                     this.series = [];
                     Array.isArray(res[1]) && res[1].forEach(o=>{
                         const obj = {
-                            name:o.shop_name+'指数',
+                            name:o.shop_name+'运营指数分配',
                             data:[o.sale?o.sale.toFixed(2):o.sale,o.sales_ratio?o.sales_ratio.toFixed(2):o.sales_ratio,o.dwellTime?o.dwellTime.toFixed(2):o.dwellTime,o.closeRate?o.closeRate.toFixed(2):o.closeRate,o.enter?o.enter.toFixed(2):o.enter]
                         };
                         this.series.push(obj)
@@ -311,8 +311,6 @@
     }
 </script>
 <style lang="less" scoped>
-
-
     .shop-portrait /deep/ .con-vs-pagination{
         margin: 0 auto;
     }
@@ -323,16 +321,29 @@
             .m-r-10{
                 margin-right: 10px;
             }
-       
-        }
-        .flex-center{
+            .handleSearch {
+                height: 42px;
+            }
+
+            .goal-submit {
+                display: inline-block;
+                padding: .75rem 2rem;
+                border-radius: 6px;
+                background: #37b5ed !important;
+                color: #fff;
+                font-size: 1rem;
+                cursor: pointer;
+                margin-left: 30px;
+                height: 42px;
+            }
+
             .goal-reset {
                 background: #fff !important;
                 color: #37b5ed;
                 border: 1px solid #37b5ed;
-                margin-left: 20px;
             }
         }
+
         .selected-table {
             position: relative;
             background-color: #fff;

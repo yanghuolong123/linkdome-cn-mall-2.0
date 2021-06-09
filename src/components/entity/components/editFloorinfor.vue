@@ -144,16 +144,16 @@ export default {
     width: 100%;
 }
 
-// @media screen and (min-width: 769px),
-// print {
+@media screen and (min-width: 769px),
+print {
 
-//     .modal-content,
-//     .modal-card {
-//         margin: 0 auto;
-//         max-height: calc(100vh - 40px);
-//         width: 520px;
-//     }
-// }
+    .modal-content,
+    .modal-card {
+        margin: 0 auto;
+        max-height: calc(100vh - 40px);
+        width: 520px;
+    }
+}
 
 .modal-close {
     background: none;

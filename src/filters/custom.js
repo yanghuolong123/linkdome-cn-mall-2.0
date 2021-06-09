@@ -9,13 +9,13 @@ export const tenthousandFormat = val =>{
     if(val<10000){
       return val.toLocaleString()
     } else if(val < 11000){
-      return '1 万'
+      return '1万'
     }else {
       let data = (val/10000).toFixed(1);
       if(Number(data) === Math.floor(data)){
-        return Math.floor(data).toLocaleString() + ' 万'
+        return Math.floor(data).toLocaleString() + '万'
       }else {
-        return data.toLocaleString() + ' 万'
+        return data.toLocaleString() + '万'
       }
     }
   }else {

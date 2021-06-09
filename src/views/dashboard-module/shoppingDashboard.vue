@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <!-- 实时数据区域 -->
     <real-time-data @interValChange="intervalClick"
                     @refresh="updateRealTimezone">
@@ -10,12 +10,11 @@
                       :shopData="shopData"
                       :gateData="gateData"
                       :window="window"
-                      :timingValue="$store.state.home.intervalTime"
-                      :id="currentMenuName"
+                      :timingValue="timingValue"
+                      :id="currentPropertyId"
                       @markClick="selectMenuByName"></map-carousel>
       </template>
       <template slot="dashboard">
-        
         <dashBoard :target="monthTargetVal"
                    :saleData="saleData"
                    :todayEnter="todayEnter"
@@ -29,11 +28,10 @@
                          textName='shop-center-current'
                          :propertyId="currentPropertyId"
                          ref="currentKpi"
-                         class="groupStyle"
-                          :moveWidth='0.024'
-                        >
+                         class="groupStyle">
           <template slot-scope="{item}">
             <singleCard :isShowText='true'
+                        textName='shop-center-current'
                         :item="item"
                         :innerRange="innerRange"></singleCard>
           </template>
@@ -43,16 +41,14 @@
     <!-- 历史数据区域 -->
     <template>
       <!-- 历史数据指标 -->
-      <div class="-mx-3 px-3 py-2">
+      <div class="overflow-hidden -mx-3 px-3 py-2" style="margin-top: 20px">
         <indicator-cards :indicatorList="historyIndicators"
                          :propertyId="currentPropertyId"
                          ref="historyKpi"
                          indicatorType="historyIndicator"
                          textName='shop-center-histrry'
                          scaleCards
-                         :defaultCountsOfCards="4"
-                         :moveWidth='0.013'
-                        >
+                         :defaultCountsOfCards="4">
           <template slot-scope="{item}">
             <!-- 历史数据 卡片 列表  -->
             <!-- 平均客流量 客流峰值 总客流 集客量峰值 销售额 有效客流 -->
@@ -76,7 +72,6 @@
             </template>
             <template slot="dateSelector">
               <i-date-picker @selectDate="selectDate"
-                             :value="historyDate"
                              class="mr-8 history-date-picker"></i-date-picker>
             </template>
           </template>
@@ -85,11 +80,10 @@
       <!-- 趋势对比 -->
       <Trend style="margin-top:20px"
              :time1="outRange"
-             @curretIndicatorChange="val=>{showTotal = !val}"
              :innerRange="innerRange"
              :propertyId="currentPropertyId"
              :indicatorData="trendIndicators"
-             :istotal='showTotal'></Trend>
+             :istotal='true'></Trend>
       <!-- 排行占比 -->
       <Ranking :time1="outRange"
                :propertyId="currentPropertyId"
@@ -97,13 +91,14 @@
                :defaultBizIndicator='rankingDataShowType'
                :defaultShopIndicator='rankingDataShowType' />
       <!-- 顾客类型数据 -->
+
       <customer-analytics :data="customAnalytics">
         <template slot-scope="{item}">
           <customer-charts :labels="item.labels"
                            :series="item.series"
                            :type="item.type"
+                           tooltipUnit='人'
                            :title="item.title"
-						   tooltipUnit='人'
                            :height="item.height"
                            @tableChage="shopTabChange">
             <export-menu  slot="export"
@@ -126,10 +121,12 @@ import {
 
 // api
 import {
+  getGroupOrganization,
   getCurrent,
   postHistorycompute,
   getEntityFlow,
   exportEx,
+  userKpiList,
   getSaleReach
 } from '@/api/home.js'
 import Ranking from '@/views/operation/components/RankingGroup.vue'
@@ -140,7 +137,7 @@ import iDatePicker from '_c/common/idatepicker.vue'
 import { mapMutations } from 'vuex'
 import Moment from 'moment'
 import _ from 'lodash'
-import { gotInnerRange,downloadEx } from '@/libs/util'
+import { gotInnerRange } from '@/libs/util'
 import customerNameDict from '../home/seriesDict'
 import salesMixin from '../operation/salseMixin'
 import salesDict from '@/views/home/components/salesIndicatorDict.js'
@@ -163,8 +160,7 @@ export default {
   },
   data () {
     return {
-      saleData:{},
-      historyDate:[Moment().add(-1, 'd').toDate(), Moment().add(-1, 'd').toDate()],//历史查询时间
+      saleData: {},
       rankingDataShowType: 'enter',
       dayTotalEnter: 0,
       innerRange: '1h',
@@ -179,20 +175,19 @@ export default {
       windows: [],
       shopData: null,
       gateData: null,
-      showTotal:true,
       monthTargetVal: 0,
       todayEnter: 0,
       monthEnter: 0,
-      kpiData: [],
+      enterKpiData: [],
       historyData: null,
       summarySalse: [],
+      currentSummarySalse: [], // 实时指标数据
       today: Moment().format('YYYY-MM-DD'),
       footFallTypeRes: {},
       zones: [],
       intervalId: '',
       initRes: [],
       changedMenuName: 'company',
-      currentMenuName: '',
       currentDayData: '',
       currentPropertyId: this.$store.state.home.headerAction,
       customChecklist: {
@@ -223,6 +218,7 @@ export default {
       obj3: [],
       obj4: [],
       downloadName: '',
+      timingValue: '5分钟',
       cancelGetGroupOrganizationAjax: null,
       cancelGetBussinessTreeAjax: null,
       cancelGetCurrentAjax: null,
@@ -230,6 +226,32 @@ export default {
     }
   },
   computed: {
+    kpiData () {
+      let enterKpiData = {}
+      if (this.dashboardData[this.$store.state.home.headerAction]) {
+        enterKpiData = this.dashboardData[this.$store.state.home.headerAction].compute.find(o => {
+          return o.id === 'occupancytotal'
+        })
+      }
+      let arr = [...this.currentSummarySalse, enterKpiData]
+      let dataObj = {}
+      const enterHighest = arr.find(o => { return o.id === 'enterhighest' })
+      if (enterHighest) {
+        dataObj.enterHighest = enterHighest.data.number
+        dataObj.enterTimerange = enterHighest.data.timeRange
+      }
+      const enterTotal = arr.find(o => { return o.id === 'entertotal' })
+      if (enterTotal) dataObj.enterTotal = enterTotal.data
+      if (this.saleData.highest_sales) {
+        dataObj.saleHighest = this.saleData.highest_sales.value
+        dataObj.saleHighestTimerange = this.saleData.highest_sales.timeRange
+        dataObj.saleTotal = this.saleData.sale_today
+      }
+      const resutl = arr.filter(o => {
+        return o.id !== 'SaleAmount'
+      })
+      return resutl
+    },
     tootipText () {
       return '总客流： 所选时间段内的客流之和\n客流峰值：所选时间段内的客流的最大值和时间点\n集客量峰值：所选时间段内的购物中心驻留人数的最大值和时间点\n有效客流：所选时间段内的购物中心用户的唯一客流人数\n销售额：所选时间段内购物中心销售额之和\n坪效： 所选时间段内销售额除以购物中心面积\n成交率：所选时间段内购物中心的成交单数除以进入购物中心的客流\n客单价： 所选时间段内购物中心所的销售额除以购物中心的成交单数\n'
     },
@@ -293,8 +315,7 @@ export default {
       return tml
     },
     historyIndicators () {
-      var arr = [...this.historyKpiData, ...this.summarySalse]
-      return arr // 合并数组 组成一个新的数组
+      return [...this.historyKpiData, ...this.summarySalse] // 合并数组 组成一个新的数组
     },
     historyNewKpi () {
       const { new_old_proportion, gender_propotion } = this.footFallTypeRes
@@ -334,7 +355,7 @@ export default {
     filterFootfallData () {
       if (!this.historyData) return null
       let currentData = null
-      currentData = _.find(this.historyData.property, o => o.property_id === this.currentMenuName)
+      currentData = _.find(this.historyData.property, o => o.property_id === this.currentPropertyId)
       return currentData
     },
     historyKpiData () {
@@ -373,7 +394,7 @@ export default {
           name: '客流量',
           yaxis: {
             title: {
-              text: '客流量（人次）'
+              text: '客流量（人）'
             },
             labels: {
               formatter (value) {
@@ -386,7 +407,7 @@ export default {
           name: '集客量',
           yaxis: {
             title: {
-              text: '集客量（人次）'
+              text: '集客量（人）'
             },
             labels: {
               formatter (value) {
@@ -401,12 +422,18 @@ export default {
   },
   mounted () {
     this.initRequest()
+  	userKpiList().then(res => {
+      if (res.data.code === 200) {
+        this.$refs.currentKpi.alllistData = res.data.data
+        this.$refs.currentKpi.typeList(res.data.data)
+        this.$refs.historyKpi.alllistData = res.data.data
+        this.$refs.historyKpi.typeList(res.data.data)
+      }
+    })
   },
   activated () {
-    this.historyDate = [Moment().add(-1, 'd').toDate(), Moment().add(-1, 'd').toDate()];
-    this.innerRange = '1h'
     this.initRequest()
-    this.intervalClick(this.$store.state.home.intervalTime)
+    this.intervalClick('5分钟')
   },
   watch: {
     outRange () {
@@ -434,7 +461,7 @@ export default {
       return str.replace('_', '-').replace('less-', '小于').replace(/more-/, '大于')
     },
     updateMapZoneByName (name) {
-      this.currentMenuName = Number(name)
+      // if (this.dashboardData.company) this.changedMenuName = `${name}`// 触发菜单栏更新
       this.currentPropertyId = Number(name)
       if (this.dashboardData[name]) {
         this.shopData = this.dashboardData[name].shopData ? this.dashboardData[name].shopData : null// 轮播图数据
@@ -442,10 +469,6 @@ export default {
         this.shopData = null
       }
       if (this.dashboardData[name]) {
-        var dayData = _.cloneDeep(this.dashboardData[name].compute)
-        this.kpiData = _.remove(dayData, function (n) {
-          return n.id !== 'entertotal'
-        })
         let totalData = _.find(this.dashboardData[name].compute, e => {
           return e.id === 'entertotal'
         })
@@ -467,16 +490,17 @@ export default {
       this.updateMapZoneByName(`${nameID}`)
     },
     mapDataInit (data) {
-      const orgData = this.$store.state.home.organizationData
-      let currentData = data[0].data.data
-      let businessTreeData = data[1].data.data// 将businessTreeData 存入store,方便其他页面访问，避免重复请求
-      this.saleData = data[2].data.data
+      let orgData = data[0].data.data
+      let currentData = data[1].data.data
+      let businessTreeData = data[2].data.data// 将businessTreeData 存入store,方便其他页面访问，避免重复请求
+      this.saleData = data[3].data.data
+      this.currentSummarySalse = data[4]
+      // this.allPropetyGateData = data[3].data.data
       this.saveBusinessTree(businessTreeData)
       let propertyId = this.$store.state.home.headerAction
       let currentMonthIndex = new Date().getMonth() // 当月月份
       this.windows = []
       const windows = [] // mapwindows
-      // const markers = [] // mapmarkers
       let companyMonthTargetValue = 0
       const { name: companyName } = orgData // 集团name
       const { property: targetArr } = orgData // 各商场的目标数据
@@ -519,38 +543,15 @@ export default {
               }
             })
           }
-          if (currentObj) {
-            this.currentDayData = currentObj
-            dashBoardObj[ele.property_id] = {
-              compute: shopCurrent,
-              name: ele.name,
-              targetValue: shopTargetValue,
-              shopData,
-              todayEnter: currentObj.enter.total,
-              monthEnter: currentObj.enter.month.number,
-              propertyId: ele.property_id
-            }
-            let dataObj={}
-            if (this.saleData.highest_sales) {
-              dataObj.saleHighest = this.saleData.highest_sales.value
-              dataObj.saleHighestTimerange = this.saleData.highest_sales.timeRange
-              dataObj.saleTotal = this.saleData.sale_today
-            }
-            dashBoardObj[ele.property_id] = {...dashBoardObj[ele.property_id],...dataObj}
-          } else {
-            this.currentDayData = 0
-            dashBoardObj[ele.property_id] = {
-              compute: shopCurrent,
-              name: ele.name,
-              targetValue: shopTargetValue,
-              shopData,
-              todayEnter: 0,
-              monthEnter: 0,
-              propertyId: ele.property_id,
-              saleHighest:0,
-              saleHighestTimerange:0,
-              saleTotal:0,
-            }
+          this.currentDayData = currentObj || 0
+          dashBoardObj[ele.property_id] = {
+            compute: shopCurrent,
+            name: ele.name,
+            targetValue: shopTargetValue,
+            shopData,
+            todayEnter: currentObj ? currentObj.enter.total : 0,
+            monthEnter: currentObj ? currentObj.enter.month.number : 0,
+            propertyId: ele.property_id
           }
         }
       } catch (error) {
@@ -558,12 +559,8 @@ export default {
       }
       this.saveAllTargetData(allTargetData)// 将目标数据存入store 中，方便目标管理页面使用
       this.windows = windows
-      let companyTargetValue = companyMonthTargetValue
-      let firstMenuName = ''
-
-      firstMenuName = this.$store.state.home.headerAction
       this.dashboardData = dashBoardObj
-      this.updateMapZoneByName(firstMenuName)
+      this.updateMapZoneByName(this.$store.state.home.headerAction)
     },
     processKPIData (data, type) {
       let pic = ''
@@ -577,6 +574,7 @@ export default {
         occupancy: {
           highest: pic + '集客量峰值',
           total: pic + '集客量'
+          // valid: prefix + '有效客流'
         }
       }
       let icontypes = {
@@ -618,10 +616,14 @@ export default {
           })
         }
       }
-
       return tmlKPIarr
     },
     selectDate (date, clickType) {
+      try {
+        window.TDAPP.onEvent('购物中心首页', '历史数据时间选择', { '时间段': date })
+      } catch (error) {
+        console.log('购物中心首页-历史数据时间选择-埋点error:' + error)
+      }
       if (date[0] == '' || this.outRange == date.toString()) return false
       // 日期选
       this.clickTimeName = clickType
@@ -638,7 +640,7 @@ export default {
     },
     getCustom () {
       // 请求客户数据
-      let params = { range: this.outRange, property_id: this.currentMenuName }
+      let params = { range: this.outRange, property_id: this.currentPropertyId }
       return getEntityFlow(params)
     },
     getHistoryComputed () {
@@ -651,6 +653,7 @@ export default {
       return postHistorycompute(params, this)
     },
     intervalClick (val) {
+      this.timingValue = val
       let time
       switch (val) {
         case '30秒':
@@ -671,39 +674,30 @@ export default {
       }
       clearInterval(this.intervalId)
       this.intervalId = setInterval(() => {
-        if(this.$route.name==='dashboardAnalytics'){
-           this.updateRealTimezone()
-        }else{
-          return false
-        }
+        this.updateRealTimezone()
       }, time)
     },
     updateRealTimezone () {
       let companyId = this.companyId // 公司id
-       Promise.all([
+      Promise.all([
         getCurrent({ time: this.today, companyId, offset: 60 }),
-        getSaleReach({ property_id: this.currentPropertyId }),
-       ])
-       .then(res=>{
-          this.$set(this.initRes, 0, res[0])
-          this.$set(this.initRes, 2, res[1])
-          this.mapDataInit(this.initRes)
-       })
-       .catch(err => {
+        this.getSalesData({ time1: `${this.today},${this.today}`, propertyId: this.currentPropertyId })
+      ]).then(res => {
+        this.$set(this.initRes, 1, res[0])
+        this.$set(this.initRes, 4, res[1])
+        this.mapDataInit(this.initRes)
+      }).catch(err => {
         console.log(err)
       })
-      // getCurrent({ time: this.today, companyId, offset: 60 }).then(res => {
-      //   this.$set(this.initRes, 0, res)
-      //   this.mapDataInit(this.initRes)
-      // }).catch(err => {
-      //   console.log(err)
-      // })
     },
     async initRequest () {
       // in 1.0 version has 'company'
       this.outRange = this.initDateDuration()// get this month's date range
       let companyId = this.companyId // companyId
       // request orgnization and instantData of company
+      if (typeof this.cancelGetGroupOrganizationAjax === 'function') {
+        this.cancelGetGroupOrganizationAjax()
+      }
       if (typeof this.cancelGetBussinessTreeAjax === 'function') {
         this.cancelGetBussinessTreeAjax()
       }
@@ -711,18 +705,19 @@ export default {
         this.cancelGetCurrentAjax()
       }
       this.initRes = await Promise.all([
+        getGroupOrganization(this),
         getCurrent({ time: this.today, companyId, offset: 60 }, this),
         getBussinessTree({ entity: 52 }, this),
         getSaleReach({ property_id: this.currentPropertyId }),
+        this.getSalesData({ time1: `${this.today},${this.today}`, propertyId: this.currentPropertyId })
       ])
-      let nowBzid = this.$store.state.user.bzid
-      var resp = this.initRes[1]
-      var areaList = []
-      resp.data.data.forEach(function (m) {
-        if (nowBzid.indexOf(m.id) > -1) {
-          m.children.forEach(function (l) {
+      const resp = this.initRes[2].data.data
+      let areaList = []
+      resp.forEach((m) => {
+        if (this.$store.state.user.bzid.indexOf(m.id) > -1) {
+          m.children.forEach((l) => {
             if (l.area) {
-              l.area.forEach(function (ele) {
+              l.area.forEach((ele) => {
                 let obj = {}
                 obj.id = ele.id
                 obj.value = ele.id
@@ -753,7 +748,10 @@ export default {
       if (req) reqs.push(req)
       let res = await Promise.all(reqs)
       const [salesData, customData, footFallData] = res
-      this.summarySalse = salesData
+
+      this.summarySalse = salesData.filter(o => {
+        return Boolean(o.name)
+      })
       if (customData) this.footFallTypeRes = customData.data.data
       if (footFallData) this.historyData = footFallData.data.data
     },
@@ -803,19 +801,45 @@ export default {
     genderExportBiztop (title) {
       switch (title) {
         case '年龄分布':
-          downloadEx(exportEx,'购物中心年龄分布客流数据',this.obj1)
+          this.downloadName = '购物中心年龄分布客流数据'
+          this.uploadList(this.obj1)
           break
         case '性别分布':
-          downloadEx(exportEx,'购物中心性别分布客流数据',this.obj2)
+          this.downloadName = '购物中心性别分布客流数据'
+          this.uploadList(this.obj2)
           break
         case '新老顾客占比':
-          downloadEx(exportEx,'购物中心新老顾客占比客流数据',this.obj3)
+          this.downloadName = '购物中心新老顾客占比客流数据'
+          this.uploadList(this.obj3)
           break
         case '到店次数':
-          downloadEx(exportEx,'购物中心顾客到店次数客流数据',this.obj4)
+          this.downloadName = '购物中心顾客到店次数客流数据'
+          this.uploadList(this.obj4)
           break
       }
+      let eventName = this.$store.state.home.headerAction === 0 ? '集团页面' : '购物中心首页'
+      try {
+        window.TDAPP.onEvent(eventName, title + '下载', { })
+      } catch (error) {
+        console.log(eventName + '-' + title + '下载-埋点error:' + error)
+      }
     },
+    uploadList (value) {
+      exportEx(value).then(res => {
+        let date = new Date()
+        const blob = new Blob([res.data])
+        let name = this.downloadName
+        let fileName = name + Moment(date).format('YYYYMMDDHHmmss') + '.xls'
+        const elink = document.createElement('a')
+        elink.download = fileName
+        elink.style.display = 'none'
+        elink.href = URL.createObjectURL(blob)
+        document.body.appendChild(elink)
+        elink.click()
+        URL.revokeObjectURL(elink.href)// 释放URL 对象
+        document.body.removeChild(elink)
+      })
+    }
   },
   deactivated () {
     this.intervalId && clearInterval(this.intervalId)
@@ -835,4 +859,66 @@ export default {
   padding-bottom 9px!important
   margin-top 0!important
 </style>
+<style lang="less" scoped>
+.groupStyle /deep/ .infocard{
+  margin-top: 0!important;
+}
+.groupStyle /deep/ .text-grey-lighter{
+  font-size: 12px;
+}
+@media (max-width: 1200px){
+  .groupStyle /deep/ .card-box{
+    padding: 5px!important;
+    height: 160px;
+  }
+  .groupStyle /deep/ .xs-timerange{
+    margin-left: 25px;
+  }
+  .groupStyle /deep/ .miniMultipleData{
+    font-size: 12px;
+  }
+  .groupStyle /deep/ .iconBox{
+    margin-bottom: 0px;
+  }
+  .groupStyle /deep/ .shop-current-font-size{
+   font-size: 12px;
+  }
+}
+@media (min-width: 1650px){
+  .groupStyle /deep/ .card-box{
+    padding: 22px 18px!important;
+    height: 200px;
+  }
+  .groupStyle /deep/ .shop-current-font-size{
+    font-size: 18px;
+  }
+}//窗口大于等于1650px，文字字号30px
+@media (max-width: 1649px) and (min-width: 1460px) {
+  .groupStyle /deep/ .card-box{
+    padding: 15px 12px!important;
+    height: 180px;
+  }
+  .groupStyle /deep/ .shop-current-font-size{
+    font-size: 16px;
+  }
+} //窗口小于等于1650px，文字字号16px
 
+@media (max-width: 1459px) and (min-width: 1200px) {
+  .groupStyle /deep/ .card-box{
+    padding: 10px 7px!important;
+    height: 170px;
+  }
+  .groupStyle /deep/ .shop-current-font-size{
+    font-size: 12px;
+  }
+  .groupStyle /deep/ .xs-timerange{
+    margin-left: 25px;
+  }
+  .groupStyle /deep/ .miniMultipleData{
+    font-size: 12px;
+  }
+  .groupStyle /deep/ .iconBox{
+    margin-bottom: 2px;
+  }
+}//窗口小于等于1550px，文字字号30px
+</style>

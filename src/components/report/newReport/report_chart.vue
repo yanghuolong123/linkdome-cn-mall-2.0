@@ -1,47 +1,24 @@
+
 <template>
-    <div class="reportOneText" style="width: 1200px;height:1682px;">
-        <div class="report-list" style=" padding-bottom: 180px;">
+    <div class="reportOneText">
+        <div class="report-list">
             <report-header></report-header>
             <report-title :title='title'></report-title>
-            <div class="name" v-if="storeName">{{storeName}}</div>
-            <div class="report-chart" style=" padding: 0 80px;
-                margin: 30px 0 30px 0;">
-                <title-name :listTitle='listTitle'></title-name>
-                <Row>
-                  <Col :span="24">
-                    <div class="report-chart-text" style="
-                        border: 4px dashed #4edbda;
-                        border-radius: 8px;
-                        margin-top: 12px;"
-                        v-if="ifOneCharts" :style="{height:chartHeight+'px'}"
-                    >
-                      <vue-highcharts
-                      style="width: 100%;height:100%;"
-                      :options="dataList.option"
-                      ></vue-highcharts>
-                    </div>
-                   </Col>
-                </Row>
-            
-            </div>
+            <report-chart :chartData='dataList' :stacking='stacking' :listTitle='listTitle'></report-chart>
             <report-remark v-if="isRemark" :dataList ='dataList.remarkData' ></report-remark>
             <report-flooter :size='page'></report-flooter>
         </div>
-        <img :src="flooterBg" class="report-bg" alt="">
+        <img :src="logo" class="report-bg" alt="">
     </div>
 </template>
 <script>
 import reportHeader from '@/components/report-public/report_header'
 import reportTitle from '@/components/report-public/report_title'
+import reportChart from '@/components/report-public/report_chart'
 import reportRemark from '@/components/report-public/report_remark'
 import reportFlooter from '@/components/report-public/report_flooter'
-
-import titleName from '@/components/report-public/report_title_name'
-import VueHighcharts from 'vue2-highcharts'
-import Bus from '@/libs/bus.js'
-
 export default {
-  name: 'report-chart',
+  name: 'report-week-one',
   props: {
     title: {
       type: String
@@ -55,70 +32,40 @@ export default {
     listTitle: {
       type: Object
     },
+    stacking: {
+      type: String,
+      default: null
+    },
     isRemark: {
       type: Boolean,
       default: true
-    },
-    chartHeight:{
-       type:Number,
-       default:0
-    },
-    storeName: {
-      type: String,
-      default: ''
     }
   },
   components: {
     reportHeader,
     reportTitle,
+    reportChart,
     reportRemark,
-    reportFlooter,
-    titleName,
-    VueHighcharts,
+    reportFlooter
   },
   data () {
     return {
-      flooterBg: require('@/assets/images/fixation_img/bg/list_bg.png'),
-      ifOneCharts: true,
+      logo: require('@/assets/images/fixation_img/bg/list_bg.png')
     }
-  },
-  watch:{
-    clickData(){
-      this.chartDataList()
-    }
-  },
-  mounted () {
-     Bus.$on('chartData', () => {
-      this.chartDataList()
-    })
   },
   methods: {
-    chartDataList () {
-      this.ifOneCharts = false
-      this.$nextTick(() => {
-        this.ifOneCharts = true
-      })
-    },
-  
   },
   computed: {
   },
-  created () {
-  
-  },
- 
+  created () {},
+  mounted () {}
 }
 </script>
 <style scoped lang="less">
-.report-chart {
-        width: 100%;
-        .report-chart-text{
-            width: 100%;
-            height: auto;
-        }
-    }
     .reportOneText {
         display: inline-block;
+        width: 1200px;
+        height: 1682px;
         overflow: hidden;
         background-color: #eff5fa;
         position: relative;
@@ -128,11 +75,8 @@ export default {
             position: absolute;
             left: 0;
             top: 0;
-          .name {
-            padding: 20Px 80Px 0 80Px;
-            font-size: 50Px;
-            font-weight: bold;
-          }
+            z-index: 10;
+            padding-bottom: 180px;
         }
         .report-bg{
             display: block;

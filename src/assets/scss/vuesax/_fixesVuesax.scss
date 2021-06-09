@@ -102,7 +102,7 @@
 }
 
 .con-vs-dropdown--menu {
-    z-index: 200;
+    z-index: 42000;
 }
 
 // List COMPONENT
@@ -134,8 +134,8 @@
 // SELECT FORM ELEMENT COMPONENT
 .con-select {
     .vs-select--input {
-        padding: 8.5px;
-        font-size: .8rem;
+        padding: 10px;
+        font-size: 1rem;
         border: 1px solid rgba(0, 0, 0, .2);
         font-family: serif;
         font-family: "source_han_sans_cn", "Roboto", sans-serif;
@@ -144,9 +144,9 @@
 
 // SELECT OPTIONS FONT SIZE FIX
 .vs-select--options {
-    font-size: .8rem;
+    font-size: 1rem;
     span {
-        font-size: .8rem;
+        font-size: 1rem;
     }
 }
 
@@ -358,7 +358,7 @@ i.feather {
     font-family: "source_han_sans_cn", "Roboto", sans-serif;
     font-size: 1rem;
     &:not(.vs-radius):not(.includeIconOnly):not(.small):not(.large) {
-        padding: .70rem 2rem;
+        padding: .75rem 2rem;
         &.vs-button-border {
             padding: .679rem 2rem;
         }
@@ -520,12 +520,4 @@ h3.vs-navbar--title {
 // Feather icon in avatar component
 .vs-avatar--text.feather {
     font-size: 1.3rem;
-}
-.feather-icon .feather{
-    width: .75rem!important;
-    height: .75rem!important;
-}
-.group-header .feather{
-    width: 1.25rem!important;
-    height: 1.25rem!important;
 }

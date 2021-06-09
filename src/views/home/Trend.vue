@@ -16,7 +16,7 @@
       <template>
         <div class="flex justify-between items-center mr-10">
           <span class="whitespace-no-wrap mx-4 text-sm">数据指标:</span>
-          <vs-select autocomplete :multiple='canSelectMulti' v-model="curretIndicator" :max-selected="2" id="chartSelect" @change="curretIndicatorChange">
+          <vs-select autocomplete :multiple='canSelectMulti' v-model="curretIndicator" :max-selected="2" id="chartSelect">
             <vs-select-item
                     v-for="(item,index) in filteredSelectList "
                     :text="item.name"
@@ -27,6 +27,7 @@
         </div>
       </template>
     </chart-tabs>
+
   </div>
 </template>
 <script>
@@ -39,7 +40,7 @@ import salesDict from './components/salesIndicatorDict'
 import NP from 'number-precision'
 import exportMenu from '@/views/operation/components/ExportMenu.vue'
 import { exportEx } from '@/api/home.js'
-import { downloadEx } from '@/libs/util'
+import moment from 'moment'
 export default {
   name: 'Trend',
   props: {
@@ -113,6 +114,15 @@ export default {
     curretIndicator (val, oldVal) {
       // 来回切换指标的数据，图表不能重新适应页面，所以在此处理重新绘制
       if (this.curretIndicator.length == 0) this.curretIndicator = ['enter']
+      try {
+        let curretIndicatorData = []
+        for (let i of val) {
+          curretIndicatorData.push(_.find(this.filteredSelectList, ['value', i]).name)
+        }
+        window.TDAPP.onEvent('购物中心首页', '趋势分析数据指标选择', { '指标': curretIndicatorData })
+      } catch (error) {
+        console.log('购物中心首页-趋势分析数据指标选择-埋点error:' + error)
+      }
       this.refreshChart()
     }
   },
@@ -143,14 +153,13 @@ export default {
       let sourceData = Object.keys(this.indicatorData).map(e => ({
         value: e, name: this.indicatorData[e].name
       }))
-        // this.curretIndicator = _.remove(this.curretIndicator, (val) => { return val != 'occupancy' })
+
+      if (this.innerRange === '1h') {
+        return sourceData
+      } else {
+        this.curretIndicator = _.remove(this.curretIndicator, (val) => { return val != 'occupancy' })
         return sourceData.filter(e => e.value !== 'occupancy')
-      // if (this.innerRange === '1h') {
-      //   return sourceData
-      // } else {
-      //   this.curretIndicator = _.remove(this.curretIndicator, (val) => { return val != 'occupancy' })
-      //   return sourceData.filter(e => e.value !== 'occupancy')
-      // }
+      }
     },
     filterSeries () {
       // 更据当前选择的指表获得图表需要的数据
@@ -266,12 +275,6 @@ export default {
     }
   },
   methods: {
-    curretIndicatorChange(val){
-      const hideSummary = val.some(o=>{
-        return ['SquaerMetre','CloseRate','UnitPrice'].includes(o)
-      })
-      this.$emit('curretIndicatorChange',hideSummary)
-    },
     tooltipUnit (type) { // 业态排行tooltip显示的单位
       if (Array.isArray(type)) {
         return type.map(o => {
@@ -303,8 +306,6 @@ export default {
     },
     getTrendData: _.debounce(function (params) {
       const { time1, time2, propertyId, indicatorData, bzids } = this
-      if(!time1) return
-      else this.curretIndicator = ['enter']
       const reqs = Object.keys(indicatorData).map(e => {
         let params = {
           time1,
@@ -320,7 +321,6 @@ export default {
           return getSalesTrend(params)
         }
       })
-   
       Promise.all(reqs).then(res => {
         let tml = {}
         Object.keys(indicatorData).forEach((indicatorKey, index) => {
@@ -330,7 +330,6 @@ export default {
             let seriesData = Object.values(eachDateRes)
             seriesData = seriesData.map(val => Number(val) < 0 ? 0 : val)
             if (['CloseRate', 'RepeatPurchaseRate'].includes(indicatorKey)) seriesData = seriesData.map(e => NP.times(e, 100))// 复购率和成交率需要乘以100
-            seriesData = seriesData.map(val => Number(val) < 0 ? 0 : parseInt(val))
             return {
               name: time2 ? `${indicatorData[indicatorKey].name} ${date.split(',').join(' - ')}` : indicatorData[indicatorKey].name,
               key: `${indicatorKey}_${date}`,
@@ -376,8 +375,9 @@ export default {
         })
         _.forIn(tml, (val, key) => {
           val.total = {}
+          const unit = this.tooltipUnit(key).name
           let series = val.series[0]
-          if(series) val.total[`${series.key}`] = _.sum(series.data).toLocaleString() 
+          val.total[`${series.key}`] = _.sum(series.data).toLocaleString() + unit
         })
         this.chartData = tml
         this.canshow = true
@@ -399,14 +399,32 @@ export default {
     // 下载exs
     TableChageList (value) { this.tableListData = value.data },
     enterExportBiztop () {
+      try {
+        window.TDAPP.onEvent('购物中心首页', '趋势分析数据指标下载', { })
+      } catch (error) {
+        console.log('购物中心首页-趋势分析数据指标下载-埋点error:' + error)
+      }
       let time = this.time1.split(',')
       let newTableData = _.cloneDeep(this.tableListData)
-      // if (time[0] == time[1]) {
-      //   newTableData[1].map(list => {
-      //     list.time = time[0] + '  ' + list.time
-      //   })
-      // }
-      downloadEx(exportEx,'购物中心趋势分析',newTableData)
+      if (time[0] == time[1]) {
+        newTableData[1].map(list => {
+          list.time = time[0] + '  ' + list.time
+        })
+      }
+      exportEx(newTableData).then(res => {
+        let date = new Date()
+        const blob = new Blob([res.data])
+        let name = '购物中心趋势分析'
+        let fileName = name + moment(date).format('YYYYMMDDHHmmss') + '.xls'
+        const elink = document.createElement('a')
+        elink.download = fileName
+        elink.style.display = 'none'
+        elink.href = URL.createObjectURL(blob)
+        document.body.appendChild(elink)
+        elink.click()
+        URL.revokeObjectURL(elink.href)// 释放URL 对象
+        document.body.removeChild(elink)
+      })
     }
   }
 

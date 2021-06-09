@@ -7,7 +7,7 @@ export default {
   state: {
     bussinessTree: null,
     propertMap: null,
-    organizationData: null,///mananger/organization接口数据
+    organizationData: null, /// mananger/organization接口数据
     allTargetData: [],
     realTimeIndicator: {}, // 存储首页cards list 类型，数据结构如{addList:['xx','xx',],delList:['xx','xx']}
     historyIndicator: {}, // 首页历史数据指标
@@ -17,8 +17,7 @@ export default {
     headerData: {},
     isGetDict: false,
     comprotList: [], // nav下拉框数据
-    outSize: 0,
-    intervalTime:'5分钟'
+    outSize: 0
   },
   mutations: {
     outSize (state, value) {
@@ -72,11 +71,8 @@ export default {
     saveComprotList (state, arr) {
       state.comprotList = arr
     },
-    saveOrganizationData (state,data){
-      state.organizationData = data;
-    },
-    saveIntervalTime(state,intervalTime){
-      state.intervalTime = intervalTime
+    saveOrganizationData (state, data) {
+      state.organizationData = data
     }
   },
 

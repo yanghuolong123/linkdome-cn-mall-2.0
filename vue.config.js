@@ -30,7 +30,7 @@ module.exports = {
   // If your app is deployed at a sub-path, you will need to specify that
   // sub-path here. For example, if your app is deployed at
   // https://www.foobar.com/my-app/
-  // then change this to '/my-app/'publicPath
+  // then change this to '/my-app/'
   baseUrl: BASE_URL,
   // tweak internal webpack configuration.
   // see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
@@ -54,30 +54,11 @@ module.exports = {
       VueECharts: 'VueECharts'
     })
   },
-  pluginOptions: {
-    'style-resources-loader': {
-      preProcessor: 'less',
-      patterns: [
-        path.resolve(__dirname, "./src/assets/css/varibles.less")
-      ]
-    }
-  },
   css: {
-
     extract: {
       filename: 'css/[name].' + Version + '.css',
       chunkFilename: 'css/[name].' + Version + '.css'
-    },
-    loaderOptions: {
-      postcss: {
-        plugins: [
-          require('postcss-pxtorem')({
-            rootValue:16,
-            propList: ['*']
-          }), // 换算的基数
-        ]
-      }
-    },
+    }
   },
   configureWebpack: {
     output: {
@@ -98,13 +79,9 @@ module.exports = {
     // proxy: 'https://enjoycity.linkdome.cn/api/v1'
     // proxy: 'http://wxmall.linkdome.cn/api/v1'
     // proxy:'https://chuangyigu.linkdome.cn/api/v1'
-    proxy: 'https://dev_mall.linkdome.cn/api/v1'
-    // proxy: 'https://sale_mall_dev.linkdome.cn/api/v1'
-    // proxy: 'https://peacebird_v4.linkdome.cn//api/v1'
-    // proxy: 'https://ai_mall_dev.linkdome.cn/api/v1'
+    // proxy: 'https://dev_mall.linkdome.cn/api/v1'
+    proxy: 'https://sale_mall_dev.linkdome.cn/api/v1'
     // proxy: 'https://taikoo.linkdome.cn/api/v1'
-    // proxy: 'https://huijia.linkdome.cn/api/v1'
-    // proxy:'https://csgc.linkdome.cn/api/v1'
-    // proxy:'http://ship.linkdome.cn:8092/api/v1'
+
   }
 }

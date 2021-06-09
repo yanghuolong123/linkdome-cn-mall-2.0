@@ -2,17 +2,18 @@
   <div class="cards" :style="{margin:margin}">
         <div class="left" v-if="!isTime">
           <div class="circles" :style="{backgroundColor:item.bg,}">
-            <icons :type="item.icon" :size='28'  :color="item.color" class="icons"></icons>
+            <icons :type="item.icon" :size=28  :color="item.color" class="icons"></icons>
           </div>
         </div>
         <div class="right" v-if="!isTime">
           <p class="title">{{item.title}}</p>
-          <p class="number">{{Number(item.number).toLocaleString()}}</p>
+          <p v-if="item.title=='平均到访次数'" class="number">{{Number(item.number).toLocaleString()}}次</p>
+          <p v-else class="number">{{Number(item.number).toLocaleString()}}人</p>
         </div>
       <div class="header" v-if="isTime">
          <div class="left">
           <div class="circles" :style="{backgroundColor:item.bg,}">
-            <icons :type="item.icon" :size='28'  :color="item.color" class="icons"></icons>
+            <icons :type="item.icon" :size=28  :color="item.color" class="icons"></icons>
           </div>
         </div>
         <div class="right">
@@ -25,7 +26,7 @@
           <p class="time2">{{item.time2}}</p>
         </div>
         <div class="right">
-          <p class="precent">{{Number(item.precent).toLocaleString()}}</p>
+          <p class="precent">{{item.precent}}</p>
           <div class="iconss" v-bind:class="{up:isUp}">
             <icons type="xiala" color="#EC7172" ></icons>
             <p class="addPrecent">{{item.addPrecent}}</p>

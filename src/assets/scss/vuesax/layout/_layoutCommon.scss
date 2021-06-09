@@ -214,17 +214,17 @@ div[id$="demo"] {
 // MEDIA QUERIES
 // ======================================================================================
 
-// @media (max-width: 576px) {
-// 	.router-view {
-// 		padding: 1.2rem !important;	
-// 	}
+@media (max-width: 576px) {
+	.router-view {
+		padding: 1.2rem !important;	
+	}
 
-// 	.footer-sticky{
-// 		.router-view{
-// 			padding-bottom: 5rem !important;
-// 		}
-// 	}
-// }
+	.footer-sticky{
+		.router-view{
+			padding-bottom: 5rem !important;
+		}
+	}
+}
 .ivu-select-dropdown.ivu-date-picker-transfer{
 	z-index: 51000!important;
 }

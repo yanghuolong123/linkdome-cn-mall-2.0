@@ -16,7 +16,6 @@
           v-show="showCompany&&isnotBgmange"
           @change="comprotChange"
         >
-
         <vs-select-item
         class="headeSele"
           :key="index"
@@ -26,13 +25,13 @@
         />
         </vs-select>
         <vs-spacer></vs-spacer>
-        <div class="flex-center">
+        <div class="the-navbar__user-meta flex items-center sm:ml-5 ml-2">
           <!-- <div id="openVip" @click="openModal" v-if="showVIpModule">
               <Badge  :count="VIPNoRead">
                   <icon type="ios-notifications-outline" size="26"></icon>
               </Badge>
           </div> -->
-          <!-- <div class="BIButton" v-show="showBI" v-on:click="openBILarge">点击开启BI大屏</div> -->
+          <div class="BIButton" v-show="showBI" v-on:click="openBILarge">点击开启BI大屏</div>
           <div class="text-right leading-tight hidden sm:block">
             <p class="font-semibold">{{user.userName}}</p>
           </div>
@@ -142,7 +141,7 @@ export default {
       dataList: {},
       isEdit: false,
       isAccount: false,
-      nameImg: require('@/assets/images/fixation_img/rest/who.png'),
+      nameImg: require('@/assets/images/fixation_img/rest/who.webp'),
       navbarSearchAndPinList: this.$store.state.navbarSearchAndPinList,
       searchQuery: '',
       showFullSearch: false,
@@ -174,80 +173,88 @@ export default {
     var showCompany
     if (this.$store.state.user.role_id < 3) {
       this.showCompany = true
-      this.comprotList = []
-      this.comprotModel = ''
-      const data = this.$store.state.home.organizationData
-      let obj = {
-        text: data.name,
-        value: 0,
-        img: data.map_url ? data.map_url : ''
-      }
-      this.comprotList.push(obj)
-      if (data.property.length != 0) {
-        data.property.map(list => {
-          if (list.property_id && list.bzid) {
-            let l = {
-              text: list.name,
-              value: list.property_id,
-              img: list.map_url
-            }
-            this.comprotList.push(l)
+      getGroupOrganization().then(res => {
+        if (res.data.code == 200) {
+          this.comprotList = []
+          this.comprotModel = ''
+          let data = res.data.data
+          let obj = {
+            text: data.name,
+            value: 0,
+            img: data.map_url
           }
-        })
-      }
-      let modal = _.filter(data.property, (o) => { return o.property_id === this.$store.state.home.headerAction })
-      this.comprotModel = modal.length === 0 ? 0 : this.$store.state.home.headerAction
-      var that = this
-      var img = _.find(this.comprotList, function (list) { return list.value == that.actionIndex }).img
-      this.$store.commit('headerImg', img)
-      this.$store.commit('saveComprotList', this.comprotList)
+          this.comprotList.push(obj)
+          if (data.property.length != 0) {
+            data.property.map(list => {
+              if (list.property_id && list.bzid) {
+                let l = {
+                  text: list.name,
+                  value: list.property_id,
+                  img: list.map_url
+                }
+                this.comprotList.push(l)
+              }
+            })
+          }
+          this.comprotModel = this.$store.state.home.headerAction
+          var that = this
+          var img = _.find(this.comprotList, function (list) { return list.value == that.actionIndex }).img
+          this.$store.commit('headerImg', img)
+          this.$store.commit('saveComprotList', this.comprotList)
+        }
+      })
     } else {
       _.indexOf(this.$store.state.user.access, GroupCompany) > -1 ? showCompany = true : showCompany = false // 判断是否显示集团
       this.showCompany = showCompany
       let role_property = this.$store.state.user.checklist
       let allBzid = this.$store.state.user.bzid
       if (role_property.length) {
-        this.comprotList = []
-        this.comprotModel = ''
-        const data = this.$store.state.home.organizationData
-        if (showCompany) {
-          const obj = {
-            text: data.name,
-            value: 0,
-            img: data.map_url
-          }
-          this.comprotList.push(obj)
-        }
-        if (data.property.length != 0) {
-          data.property.map(list => {
-            if (list.property_id && list.bzid) {
-              let l = {
-                text: list.name,
-                bzId: list.bzid,
-                value: list.property_id,
-                img: list.map_url
+        getGroupOrganization().then(res => {
+          if (res.data.code == 200) {
+            this.comprotList = []
+            this.comprotModel = ''
+            if (showCompany) {
+              let data = res.data.data
+              let obj = {
+                text: data.name,
+                value: 0,
+                img: data.map_url
               }
-              if (role_property.indexOf(l.value) > -1) this.comprotList.push(l)
+              this.comprotList.push(obj)
             }
-          })
-        }
+            let data = res.data.data
+            if (data.property.length != 0) {
+              data.property.map(list => {
+                if (list.property_id && list.bzid) {
+                  let l = {
+                    text: list.name,
+                    bzId: list.bzid,
+                    value: list.property_id,
+                    img: list.map_url
+                  }
+                  if (role_property.indexOf(l.value) > -1) this.comprotList.push(l)
+                }
+              })
+            }
 
-        let currList = []
-        let typeId = this.$store.state.user.allType
-        let property_type = _.find(typeId, (val) => { return val == 52 })
-        if (property_type) {
-          this.comprotList.map(list => {
-            allBzid.map(val => {
-              if (list.bzId == val) currList.push(list)
-            })
-          })
-          this.comprotList = currList
-        }
-        if (this.comprotList.length > 1) this.showCompany = true
-        else this.showCompany = false
-        this.comprotModel = this.comprotList[0].value
-        this.$store.commit('headerImg', this.comprotList[0].img)
-        this.$store.commit('saveComprotList', this.comprotList)
+            let currList = []
+            let typeId = this.$store.state.user.allType
+            let property_type = _.find(typeId, (val) => { return val == 52 })
+            if (property_type) {
+              this.comprotList.map(list => {
+                allBzid.map(val => {
+                  if (list.bzId == val) currList.push(list)
+                })
+              })
+              this.comprotList = currList
+            }
+            if (this.comprotList.length > 1) this.showCompany = true
+            else this.showCompany = false
+            this.comprotModel = this.comprotList[0].value
+            this.$store.commit('headerImg', this.comprotList[0].img)
+            this.$store.commit('saveComprotList', this.comprotList)
+          }
+        })
       }
     }
     getUrl().then(res => {
@@ -357,7 +364,6 @@ export default {
       let companyLogo = _.find(this.comprotList, function (e) {
         return e.value == that.comprotModel
       })
-      if (!companyLogo) return false
       this.actionIndex = companyLogo.value
       this.$store.commit('headerAction', this.comprotModel)
       this.$store.commit('headerImg', companyLogo.img)
@@ -365,12 +371,17 @@ export default {
       if (this.comprotModel == 0) {
         this.$router.push({ name: 'Dashboard' })
       }
+      try {
+        window.TDAPP.onEvent('集团页面', '顶部实体选择', { '实体名称': companyLogo.text })
+      } catch (error) {
+        console.log('集团页面-顶部实体选择-埋点error:' + error)
+      }
     },
     openBILarge () {
       let token = Cookies.get('token')
       let userName = this.$store.state.user.userName
       if (this.Biurl == '') return false
-      window.location.href = this.Biurl + '/#/?homeUrl=' + this.homeUrl + '&user=' + userName + '&token=' + token
+      window.location.href = 'https://' + this.Biurl + '/#/?homeUrl=' + this.homeUrl + '&user=' + userName + '&token=' + token
     }
   },
   directives: {
@@ -410,7 +421,7 @@ export default {
 }
 .vs-sidebar--background,
 .vs-sidebar {
-  z-index: 201;
+  z-index: 66666;
 }
 .vs-avatar--con-img img {
   width: 100%;
@@ -422,9 +433,6 @@ export default {
   justify-content: center;
   flex-direction: column;
   width: 100%;
-  .con-img{
-    margin-left: 0;
-  }
   h4 {
     display: flex;
     align-items: center;
@@ -471,7 +479,7 @@ export default {
       top: 5px;
       left: -20px;
       position: relative;
-      z-index: 3;
+      z-index: 99999;
       cursor: pointer;
       img{
         width: 31px;
@@ -506,11 +514,12 @@ export default {
 .BIButton{
   border-radius: 4px;
   background: #5f81f4;
-  padding: 5px 10px;
+  height: 32px;
+  width: 130px;
   font-size: 12px;
   color: #fff;
   text-align: center;
-  line-height: 22px;
+  line-height: 32px;
   margin-right: 78px;
   cursor: pointer;
 }

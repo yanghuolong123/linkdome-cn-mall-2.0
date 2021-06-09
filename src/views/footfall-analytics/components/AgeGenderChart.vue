@@ -5,7 +5,7 @@
                   :series="agechartData.series"
                   :type="agechartData.type"
                   title="年龄分布"
-                    tooltipUnit='人'
+                  tooltipUnit="人"
                   :extraOptions="agechartData.extraOptions"
                   @tableChage="ageTabChange">
         <export-menu slot="export"
@@ -17,7 +17,7 @@
                   :series="genderChartData.series"
                   :type="genderChartData.type"
                   title="性别分布"
-                    tooltipUnit='人'
+                  tooltipUnit="人"
                   :extraOptions="genderChartData.extraOptions"
                   @tableChage="genderTabChange">
         <export-menu slot="export"
@@ -29,7 +29,6 @@
 
 <script>
 import exportMenu from '@/views/operation/components/ExportMenu.vue'
-import { downloadEx } from '@/libs/util'
 import { getEntityFlow, exportEx } from '@/api/home'
 import chartTabs from '@/components/common/CopyChartsTabs.vue'
 import moment from 'moment'
@@ -95,8 +94,11 @@ export default {
   },
   mounted () {
     let that = this
-    that.getAgeGenderData()
-    eventBus.$on('drainageClick', data => {
+    setTimeout(() => {
+      this.getAgeGenderData()
+    })
+
+    eventBus.$on('drainageClick', val => {
       that.getAgeGenderData()
     })
   },
@@ -104,17 +106,36 @@ export default {
     ageTabChange (value) {
       this.ageTabList = value.data
     },
-    genderTabChange (value) {
-      this.genderTabList = value.data
-    },
     ageExportBiztop () {
       this.uploadList(this.ageTabList)
+    },
+    genderTabChange (value) {
+      this.genderTabList = value.data
     },
     genderExportBiztop () {
       this.uploadList(this.genderTabList)
     },
     uploadList (value) {
-       downloadEx(exportEx,'实体引流客流详细数据',value)
+      if (this.$store.state.home.loadingState == false) {
+        this.$store.commit('loadingState', true)
+        this.$vs.loading()
+      }
+      exportEx(value).then(res => {
+        let date = new Date()
+        const blob = new Blob([res.data])
+        let name = '实体引流客流详细数据'
+        let fileName = name + moment(date).format('YYYYMMDDHHmmss') + '.xls'
+        const elink = document.createElement('a')
+        elink.download = fileName
+        elink.style.display = 'none'
+        elink.href = URL.createObjectURL(blob)
+        document.body.appendChild(elink)
+        elink.click()
+        URL.revokeObjectURL(elink.href)// 释放URL 对象
+        document.body.removeChild(elink)
+        this.$vs.loading.close()
+        this.$store.commit('loadingState', false)
+      })
     },
     async getAgeGenderData () {
       const { time1, bzid } = this
@@ -158,12 +179,58 @@ export default {
         series: Object.values(genderData),
         type: ['radialBar']
       }
-      // ageChartData.series[0].data = [0, 0, 0, 0, 0]
-      // ageChartData.series[1].data = [0, 0, 0, 0, 0]
-      // genderChartData.series = [0, 0]
       this.agechartData = ageChartData
       this.genderChartData = genderChartData
     }
+    // getAgeGenderData: _.debounce(async function () {
+    //   console.log(999)
+    //   const { time1, bzid } = this
+    //   let res = await getEntityFlow({ range: time1, bzid: bzid, type: 0 })
+    //   const { data: { data: sourceData } } = res
+    //   const { age_distribution: ageData, gender_propotion: genderData } = sourceData
+    //   const genderName = {
+    //     '0': {
+    //       name: '女',
+    //       icon: 'female'
+    //     },
+    //     '1': {
+    //       name: '男',
+    //       icon: 'male'
+    //     }
+    //   }
+    //   const genderDict = {
+    //     male: '男性',
+    //     female: '女姓'
+    //   }
+    //   let ageChartData = null
+    //   let genderChartData = null
+    //   let ageLabels = {
+    //     name: '年龄',
+    //     key: 'age',
+    //     data: Object.keys(ageData).map(e => { return e.replace('_', '-').replace('less-', '小于').replace(/more-/, '大于') })
+    //   }
+    //   let genderLabels = {
+    //     name: '性别',
+    //     key: 'gender',
+    //     data: Object.keys(genderData).map(e => genderName[e].name),
+    //     icons: Object.keys(genderData).map(e => genderName[e].icon)
+    //   }
+    //   ageChartData = {
+    //     labels: ageLabels,
+    //     series: Object.keys(genderDict).map(g => ({ name: genderDict[g], key: g, data: Object.values(ageData).map(e => e[g]) })),
+    //     type: ['bar']
+    //   }
+    //   genderChartData = {
+    //     labels: genderLabels,
+    //     series: Object.values(genderData),
+    //     type: ['radialBar']
+    //   }
+    //   // ageChartData.series[0].data = [0, 0, 0, 0, 0]
+    //   // ageChartData.series[1].data = [0, 0, 0, 0, 0]
+    //   // genderChartData.series = [0, 0]
+    //   this.agechartData = ageChartData
+    //   this.genderChartData = genderChartData
+    // }, 100)
   }
 }
 </script>
@@ -173,11 +240,10 @@ export default {
   display grid
   grid-template-columns repeat(2, minmax(10px, 1fr))
   grid-template-areas 'age gender'
+  @media (max-width: 768px)
+    grid-template-columns minmax(10px, 1fr)
+    grid-template-areas 'age' 'gender'
   grid-gap 20px
-  // @media (max-width: 768px)
-  //   grid-template-columns minmax(10px, 1fr)
-  //   grid-template-areas 'age' 'gender'
-  // grid-gap 20px
   >div
     &:nth-child(1)
       grid-area age

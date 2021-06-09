@@ -37,11 +37,10 @@ export const d3Color = (index) => {
 }
 // 有序图
 export const d3Chaer = (that, name, data, idList) => {
- 
   var cityName = name
   var matrix = data
-  var width = that.$refs.relevanceChart.offsetWidth
-  var height = that.$refs.relevanceChart.offsetWidth
+  var width = 600
+  var height = 630
   var innerRadius = Math.min(width, height) * 0.39
   var outerRadius = innerRadius * 1.1
   // 颜色数组
@@ -51,8 +50,8 @@ export const d3Chaer = (that, name, data, idList) => {
   if (domSvg) parent.removeChild(domSvg)
   var svg = d3.select('#d3Chart').append('svg')
     .attr('id', 'svgDom')
-    .attr('width', '100%')
-    .attr('height', '100%')
+    .attr('width', width)
+    .attr('height', height)
     .append('g')
     .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
   var chord = d3.layout.chord()
@@ -263,10 +262,7 @@ export const svgChord = (that, data) => {
     d3AllData.push(dataValue)
   })
   totalNumber == 0 ? that.isTotalData = true : that.isTotalData = false
-  setTimeout(() => {
-    d3Chaer(that, d3AllName, d3AllData, d3NameId)
-  });
-  
+  d3Chaer(that, d3AllName, d3AllData, d3NameId)
 }
 // 当前商铺关系
 export const currentShop = (that, idOne, idTwo) => {

@@ -12,18 +12,18 @@ my-box-card()
           display grid
           grid-gap 15px
           grid-template-columns minmax(100px,3.9fr) minmax(100px,1fr)
-          // @media (max-width:768px)
-          //     grid-template-columns minmax(100px,1fr)
-          //     grid-auto-rows auto
-          //     .right-card-box
-          //       grid-template-columns repeat(3,minmax(100px,1fr))
+          @media (max-width:768px)
+              grid-template-columns minmax(100px,1fr)
+              grid-auto-rows auto
+              .right-card-box
+                grid-template-columns repeat(3,minmax(100px,1fr))
           .right-card-box
             grid-gap 15px
             display grid
             grid-auto-rows 140px
-            // @media (max-width:576px) {
-            //     grid-template-columns 1fr
-            // }
+            @media (max-width:576px) {
+                grid-template-columns 1fr
+            }
             >div
               my-box-card()
               background-color #fff

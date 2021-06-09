@@ -1,8 +1,19 @@
 <template>
   <div>
-    <flow-selector @paramsPrepare="paramsPrepare"></flow-selector>
+    <div class="bg-white box-card pb-6 px-4">
+      <flow-selector @on-change="paramsPrepare"
+                     routName='ageGender'
+                     :isFloor='true'
+                     :isStore='true'
+                     :isShop='false'
+                     :isArea='true'
+                     :isGate='true'
+                     :isReset='true'
+                     isAgeGender>
+      </flow-selector>
+    </div>
     <!-- enter -->
-    <div class="mt-6 age-chart-box" >
+    <div class="mt-6 age-chart-box">
       <div class="bg-white box-card pb-6">
         <chart-tabs :xAxis="agechartData.xAxis"
                     :labels="agechartData.labels"
@@ -11,6 +22,7 @@
                     :chartWidth='ageChartWidth'
                     title="年龄分布"
                     tooltipUnit="人"
+                    :extraOptions="agechartData.extraOptions"
                     @tableChage="ageTableChange">
           <export-menu slot="export"
                        @onchange="ageExportBiztop"></export-menu>
@@ -24,6 +36,7 @@
                     :chartWidth='ageChartWidth'
                     title="性别分布"
                     tooltipUnit="人"
+                    :extraOptions="genderChartData.extraOptions"
                     @tableChage="genderTableChange">
           <export-menu slot="export"
                        @onchange="genderExportBiztop"></export-menu>
@@ -34,16 +47,15 @@
 </template>
 <script>
 import { exportEx } from '@/api/home.js'
-import { downloadEx } from '@/libs/util'
+import flowSelector from '@/components/Passenger-analysis/flowSelector.vue'
 import { getEntityFlowBatch } from '@/api/analysis'
 import exportMenu from '@/views/operation/components/ExportMenu.vue'
 import chartTabs from '@/components/common/CopyChartsTabs.vue'
-import FlowSelector from '_c/flow-selector/age-gender-flow-selector'
 import moment from 'moment'
 export default {
   name: 'ageGender',
   components: {
-    FlowSelector,
+    flowSelector,
     chartTabs,
     exportMenu
   },
@@ -69,6 +81,9 @@ export default {
       },
       chartData: { age: {}, gender: {} },
       extraOptions: {
+        tooltip: {
+          y: {}
+        },
         chart: {
           stacked: true
         },
@@ -103,17 +118,41 @@ export default {
   },
   methods: {
     async  paramsPrepare (pparams) {
+      if (this.$store.state.home.headerAction && pparams.entitys.length == 0) {
+        alert('请选择实体')
+        return false
+      }
+      // if (this.$store.state.home.loadingState == false) this.$vs.loading()
       this.entitys = pparams.entitys
       this.bzids = this.entitys.map(i => i.id)
       this.range = pparams.date1Array.toString()
       let res
-      if (['time','onYear','onChain'].includes(pparams.compareType)) { // 时间对比
+      if (['time', 'onYear', 'onMonth'].includes(pparams.compareType)) { // 时间对比
         this.range2 = pparams.date2Array.toString()
         res = await getEntityFlowBatch({ range1: this.range, range2: this.range2, bzid: this.bzids.toString() })
       } else {
         res = await getEntityFlowBatch({ range1: this.range, bzid: this.bzids.toString() })
       }
       this.chartData = this.handleTypeData(res)
+
+      try {
+        let type, date, value
+        if (pparams.compareType === 'not') {
+          type = '无对比'
+          date = pparams.date1Array[0] + ',' + pparams.date1Array[1]
+        } else if (pparams.compareType === 'entity') {
+          type = '实体对比'
+          pparams.entitys.forEach(item => {
+            value = item.belongsType ? item.belongsType : ''
+          })
+        } else {
+          type = '时间对比'
+          date = [pparams.date1Array.join(','), pparams.date2Array.join(',')]
+        }
+        window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', '数据查询', { '对比方式': type, '时间段': date, '实体选择': value })
+      } catch (error) {
+        console.log(this.$route.meta.pageTitle + '页面-' + '数据查询' + '埋点error:' + error)
+      }
     },
     handleTypeData (res) {
       const { data: { data } } = res
@@ -124,6 +163,8 @@ export default {
       let ageXaxis = []
       let ageSeries
       let genderChartData
+      // this.$vs.loading.close()
+      // this.$store.commit('loadingState', false)
       data.forEach(e => {
         Object.keys(e.stat).forEach(i => {
           let eleOfTimes = e.stat[i]
@@ -131,24 +172,21 @@ export default {
             id: e.bzid,
             time: i,
             name: 'age_distribution',
-            data: eleOfTimes.age_distribution? eleOfTimes.age_distribution:[]
+            data: eleOfTimes.age_distribution
           })
           genderCollection.push({
             id: e.bzid,
             time: i,
             name: 'gender_propotion',
-            data: eleOfTimes.gender_propotion?eleOfTimes.gender_propotion:[]
+            data: eleOfTimes.gender_propotion
           })
         })
       })
-      if(ageCollection[0].data){
-        ageLabels = {
-          name: '年龄',
-          key: 'age',
-          data: Object.keys(ageCollection[0].data).map(e => { return e.replace('_', '-').replace('less-', '小于').replace(/more-/, '大于') })
-        }
+      ageLabels = {
+        name: '年龄',
+        key: 'age',
+        data: Object.keys(ageCollection[0].data).map(e => { return e.replace('_', '-').replace('less-', '小于').replace(/more-/, '大于') })
       }
-    
       if (singleTime) { // 多个实体单个时间，柱状图，xAxis,分类为实体
         const { labels, ...rest } = this.getGenderChartData(genderCollection, ['id'])
         genderChartData = {
@@ -194,11 +232,7 @@ export default {
             series: Object.values(genderCollection[0].data),
             type: ['radialBar']
           }
-          ageSeries = Object.keys(this.genderDict).map(g => ({
-            name: this.genderDict[g],
-            key: g,
-            data: Object.values(ageCollection[0].data).map(e => e[g])
-          }))
+          ageSeries = Object.keys(this.genderDict).map(g => ({ name: this.genderDict[g], key: g, data: Object.values(ageCollection[0].data).map(e => e[g]) }))
         } else { // 单个实体多个时间,柱状图，xAxis,series,横轴分类为时间
           const { labels, ...rest } = this.getGenderChartData(genderCollection, ['time'])
           genderChartData = {
@@ -292,41 +326,24 @@ export default {
     },
     getAgeSeries (data) {
       let res = []
-      let newData = null
-      data.forEach(list=>{
-        if(list.data.length!==0){
-          newData = list.data
-          return false
-        }
-      })
-      if(!newData) return res
-        Object.keys(newData).forEach(e => {
+      Object.keys(data[0].data).forEach(e => {
         let tml = {}
         let eachSeriesData = []
-        tml.name = e
+        tml.name = e.replace('_', '-').replace('less-', '小于').replace(/more-/, '大于')
         tml.key = e
         data.forEach(c => {
           Object.keys(this.genderDict).forEach(gender => {
-            if(c.data[e]){
-              eachSeriesData.push(c.data[e][gender])
-            }else{
-              eachSeriesData.push(0)
-            }
-            
+            eachSeriesData.push(c.data[e][gender])
           })
         })
         tml.data = eachSeriesData
         res.push(tml)
-      })
-      res.map(list=>{
-        list.name = list.name.replace('_', '-').replace('less-', '小于').replace(/more-/, '大于')
       })
       return res
     },
     getGenderChartData (data, keys) {
       let labels = []
       let series = []
-      let newData = null
       data.forEach(e => {
         let categories = []
         keys.forEach(k => {
@@ -335,25 +352,14 @@ export default {
         })
         labels.push(categories.join(' '))
       })
-      data.forEach(list=>{
-        if(list.length!==0){
-          newData = list.data
-          return false
-        }
-      })
-      if(!newData){
-        series = []
-        return false
-      }
-      series = Object.keys(newData).map(e => {
+      series = Object.keys(data[0].data).map(e => {
         let tml = {
           name: this.genderName[e].name,
           key: e,
-          data: labels.map((label, index) => { return data[index].data[e]||0 })
+          data: labels.map((label, index) => { return data[index].data[e] })
         }
         return tml
       })
-     
       let genderOpt = {
         chart: {
           stacked: keys.length !== 1
@@ -374,19 +380,46 @@ export default {
     },
     ageExportBiztop () {
       this.uploadList(this.ageTableList)
+      try {
+        window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', '年龄分布' + '下载', { })
+      } catch (error) {
+        console.log(this.$route.meta.pageTitle + '页面-' + '年龄分布' + '下载-埋点error:' + error)
+      }
     },
     genderTableChange (value) {
       this.genderTableList = value.data
     },
     genderExportBiztop () {
       this.uploadList(this.genderTableList)
+      try {
+        window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', '性别分布' + '下载', { })
+      } catch (error) {
+        console.log(this.$route.meta.pageTitle + '页面-' + '性别分布' + '下载-埋点error:' + error)
+      }
     },
     uploadList (value) {
-      downloadEx(exportEx,'年龄性别客流数据',value)
+      // if (this.$store.state.home.loadingState == false) {
+      //   this.$store.commit('loadingState', true)
+      //   this.$vs.loading()
+      // }
+      exportEx(value).then(res => {
+        let date = new Date()
+        const blob = new Blob([res.data])
+        let name = '年龄性别客流数据'
+        let fileName = name + moment(date).format('YYYYMMDDHHmmss') + '.xls'
+        const elink = document.createElement('a')
+        elink.download = fileName
+        elink.style.display = 'none'
+        elink.href = URL.createObjectURL(blob)
+        document.body.appendChild(elink)
+        elink.click()
+        URL.revokeObjectURL(elink.href)// 释放URL 对象
+        document.body.removeChild(elink)
+        // this.$vs.loading.close()
+        // this.$store.commit('loadingState', false)
+      })
     }
-  },
-  activated() {
-  },
+  }
 }
 </script>
 <style lang="stylus">
@@ -394,17 +427,15 @@ export default {
   display grid
   grid-template-columns repeat(2, minmax(10px, 1fr))
   grid-template-areas 'age gender'
+  @media (max-width: 768px)
+    grid-template-columns minmax(10px, 1fr)
+    grid-template-areas 'age' 'gender'
   grid-gap 20px
-  // @media (max-width: 768px)
-  //   grid-template-columns minmax(10px, 1fr)
-  //   grid-template-areas 'age' 'gender'
-  // grid-gap 20px
   >div
     &:nth-child(1)
       grid-area age
-      margin-right 20px
     &:nth-child(2) /deep/
       grid-area gender
       .custom-legend-box
-        padding 0 60px
+        padding 0 4rem
 </style>

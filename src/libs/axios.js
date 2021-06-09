@@ -5,7 +5,9 @@ import router from '@/router'
 const alertfn = _.debounce((text) => {
   alert(text)
 }, 500)
-
+const closeLoading = _.debounce(function () {
+  store.commit('UPDATE_LOADING_STATUS', false)
+}, 500)
 let reqNum = 0
 class HttpRequest {
   constructor (baseUrl = baseURL) {
@@ -23,14 +25,16 @@ class HttpRequest {
     delete this.queue[url]
     var requestNumber = store.state.user.requestNumber
     requestNumber--
-    if (requestNumber !== 0) {
+    if (requestNumber == 0) {
+    } else {
       store.commit('setRequestNumber', requestNumber)
     }
   }
   interceptors (instance, url) {
     // 请求拦截
-    const pageUrl = window.location ? window.location.href.split('#')[1] : ''
-    const notTarget = !pageUrl.match(/\/admin/)
+
+    let pageUrl = window.location ? window.location.href.split('#')[1] : ''
+    let notTarget = !pageUrl.match(/\/admin/)
     instance.interceptors.request.use(
       config => {
         notTarget && store.commit('UPDATE_LOADING_STATUS', true)
@@ -61,11 +65,12 @@ class HttpRequest {
         if (reqNum <= 0) {
           store.commit('UPDATE_LOADING_STATUS', false)
         }
-        if (axios.isCancel(error)) {
-          return new Promise(() => {})
+        if(axios.isCancel(error)){
+          console.log('请求取消');
+          return new Promise(()=>{})
         } else if ((error.response.status === 401 && error.response.data.error === 'token_expired') || error.response.data.error === 'token_invalid' || error.response.data.error === 'user_not_found') {
           store.commit('setToken', '')
-          router.push({ name: 'Login' })
+          router.push({ name: 'pageLogin' })
           let outSize = store.state.home.outSize
           if (outSize == 0) {
             alertfn('登录过期，请重新登录')

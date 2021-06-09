@@ -1,6 +1,11 @@
 <template>
     <div class="holiday">
         <div class="headerSelect">
+<!--          <div class="account-add-remove" title="添加">-->
+<!--                <span class="account-add" @click="addData">-->
+<!--                    <Icon type="md-add" />-->
+<!--                </span>-->
+<!--            </div>-->
             <vs-select class="selectExample"  autocomplete v-model="selectYear">
                 <vs-select-item :key="index" :value="item.value" :text="item.key" v-for="(item,index) in years" />
             </vs-select>
@@ -204,19 +209,22 @@ export default {
               that.alertText.confirm = false
               that.initData(21, false)
             } else {
-              this.$alert({content:res.data.message})
+              alert(res.data.message)
             }
           })
         } else {
           let curLe = this.selected.length
           this.selected.forEach(list => {
             deleteActiveDays(list.id).then(res => {
+              if (res.data.code == 200) {
                 this.selected.splice(0, this.selected.length)
                 curLe--
                 if (curLe == 0) {
-                  this.$alert({content:'删除成功'})
+                  this.isAlert = true
+                  this.alertList('删除活动管理', '删除成功', '#00A0E9', false)
                   this.initData(21, false)
                 }
+              }
             })
           })
         }
@@ -238,10 +246,9 @@ export default {
       this.selected = value
     },
     deleteMultiple () {
-      if (!this.selected.length) {
-          this.$alert({
-              content:'删除活动管理请选择最少一个！'
-          })
+      if (this.selected.length == 0) {
+        this.isAlert = true
+        this.alertList('删除活动管理', '删除活动管理请选择最少一个！', '#00A0E9', false)
       } else {
         this.isAlert = true
         this.alertList('删除活动管理', '确定要删除所选中的活动管理？', '#00A0E9', true)
@@ -255,24 +262,35 @@ export default {
       this.alertText.confirm = confirm
     },
     initData (type, isInit) {
+      // if (this.$store.state.home.loadingState == false) {
+      //     this.$store.commit('loadingState', true)
+      //     this.$vs.loading()
+      // }
       var that = this
       if (type === 20) {
-        getActiveDays(this.selectYear, 20).then(res=>{
-            this.loading = false
+        getActiveDays(that.selectYear, 20).then(function (res) {
+          if (res.data.code === 200) {
+            that.loading = false
             let data = res.data.data
-            this.holidayAllData = _.cloneDeep(data)
+            that.holidayAllData = _.cloneDeep(data)
             data.forEach(e => { e.duration = `${e.duration}天` })
-            this.holidayTotal = Math.ceil(data.length / 5)
-            this.holidays = _.clone(data)
+            that.holidayTotal = Math.ceil(data.length / 5)
+            that.holidays = _.clone(data)
             if (isInit) {
-                this.showHolidays = data.splice(0, 5)
-                this.currentx = 1
+              that.showHolidays = data.splice(0, 5)
+              that.currentx = 1
             } else {
-                this.showHolidays = data.splice((this.currentx - 1) * 5, 5)
+              that.showHolidays = data.splice((that.currentx - 1) * 5, 5)
             }
-        }).catch(err=>{
-            this.showHolidays = []
-            this.holidayTotal = 1
+          } else {
+            that.showHolidays = []
+            that.holidayTotal = 1
+          }
+          // this.$vs.loading.close()
+          // this.$store.commit('loadingState', false)
+        }).catch(err => {
+          // this.$vs.loading.close()
+          // this.$store.commit('loadingState', false)
         })
       } else if (type === 21) {
         // 查询所有购物中心的活动
@@ -300,26 +318,19 @@ export default {
               this.showEvents = list.splice((this.currentActive - 1) * 5, 5)
             }
           }
+          // this.$vs.loading.close()
+          // this.$store.commit('loadingState', false)
         }).catch(err => {
           that.showEvents = []
           that.eventTotal = 1
+          // this.$vs.loading.close()
+          // this.$store.commit('loadingState', false)
         })
       }
     }
   }
 }
 </script>
-<style lang="less">
-  .vs-pagination--buttons{
-    z-index: 1;
-  }
-  .vs-pagination--li span{
-    z-index: 1;
-  }
-  .vs-pagination--li .effect{
-    z-index: 1;
-  }
-</style>
 <style lang="scss" scope>
 .holiday{
   .headerSelect{
@@ -341,7 +352,7 @@ export default {
     background: none
   }
   .account-add-remove{
-      z-index: 1;
+      z-index: 10003;
       position: absolute;
       top:5px;
       right: 20px;
@@ -349,18 +360,19 @@ export default {
           margin-top: 16px!important;
       }
       span{
-          float: left;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          display: inline-block;
           width: 24px;
           height: 24px;
           border-radius: 50%;
           text-align: center;
+          line-height: 19px;
           font-size: 16px;
           color: #fff;
           margin-left: 20px;
           cursor: pointer;
+          i{
+            margin-top:3px;
+          }
           &:nth-child(1){
               margin-top: 9px;
               background-color: #2BD9CF;
@@ -376,12 +388,10 @@ export default {
     background-color: #fff;
     border-radius: 6px;
     margin-bottom: 20px;
-    padding-bottom: 20px;
   }
   .paginations{
     position: relative;
     bottom: 6px;
-    margin-top: 20px;
   }
 
   .router-view {

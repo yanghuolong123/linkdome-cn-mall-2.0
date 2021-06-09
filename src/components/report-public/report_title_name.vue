@@ -1,24 +1,13 @@
 
 <template>
     <div class="report-list-title">
-      	<div class="list-title" style=" padding-left: 20px;">
-            <p style=" font-size: 28px;" v-if="listTitle">{{listTitle.name}}</p>
-			<span style=" font-size: 22px;
-                margin-left: 22px;" v-if="listTitle">{{listTitle.text}}</span>
+      	<div class="list-title">
+            <p>{{listTitle.name}}</p>
+			<span>{{listTitle.text}}</span>
         </div>
-        <div class="list-line" style="  height: 2px;">
-          <span style=" width: 18px;
-                height: 18px;
-                border-radius: 50%;
-                left: 0;
-                top: -9px;
-                border: 2px solid #99abb4;"></span>
-          <span style=" width: 18px;
-                height: 18px;
-                border-radius: 50%;
-                 right: 0;
-                top: -9px;
-                border: 2px solid #99abb4;"></span>
+        <div class="list-line">
+          <span></span>
+          <span></span>
         </div>
     </div>
 </template>
@@ -48,6 +37,7 @@ export default {
 
   },
   mounted () {
+
   }
 }
 </script>
@@ -56,25 +46,41 @@ export default {
         width: 100%;
         .list-title{
 		    width: 100%;
+            padding-left: 20px;
             p{
                 display: inline-block;
+                font-size: 28px;
                 color: #515355;
             }
             span{
                 display: inline-block;
+                font-size: 22px;
                 color: #515355;
                 opacity: 0.8;
-                 
+                margin-left: 22px;
             }
         }
         .list-line{
             width: 100%;
+            height: 2px;
             background-color: #99abb4;
             position: relative;
             span{
                 display: inline-block;
                 background-color: #fff;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                border: 2px solid #99abb4;
                 position: absolute;
+                &:nth-child(1){
+                    left: 0;
+                    top: -9px;
+                }
+                &:nth-child(2){
+                    right: 0;
+                    top: -9px;
+                }
             }
         }
     }

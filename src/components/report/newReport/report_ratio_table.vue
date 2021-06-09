@@ -1,13 +1,9 @@
 
 <template>
-    <div class="reportOneText" style="  width: 1200px;
-        height: 1682px;">
-        <div class="report-list" style="padding-bottom: 180px;">
-           
+    <div class="reportOneText">
+        <div class="report-list">
             <report-header></report-header>
-
             <report-title :title="title"></report-title>
-            <div class="name" v-if="storeName">{{storeName}}</div>
             <report-ratio
             :listTitle='listTitle'
             :tableColumn='tableColumn'
@@ -43,11 +39,7 @@ export default {
     tableData: {
       type: Array,
       defaults: []
-    },
-	  storeName: {
-		  type: String,
-		  default: ''
-	  }
+    }
   },
   components: {
     reportHeader,
@@ -73,7 +65,8 @@ export default {
 <style scoped lang="less">
     .reportOneText {
         display: inline-block;
-      
+        width: 1200px;
+        height: 1682px;
         overflow: hidden;
         background-color: #eff5fa;
         position: relative;
@@ -83,11 +76,7 @@ export default {
             position: absolute;
             left: 0;
             top: 0;
-            .name {
-                padding: 20Px 80Px;
-                font-size: 50Px;
-                font-weight: bold;
-            }
+            padding-bottom: 180px;
         }
         .report-bg{
             display: block;

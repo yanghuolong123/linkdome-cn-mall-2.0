@@ -1,24 +1,40 @@
 <template>
     <div>
         <div class="box-card bg-white hotItem">
-          <i-date-picker style="width:200px; display: inline-block;" :value='date1Array' :dType="1" @selectDate="dateSelect"></i-date-picker>
-          <Select v-model="selectType" @on-change=selectTypeData style="width:200px;margin-left:15px;">
-            <Option v-for="(item,index) in typeOptions"
-                :value="item.value"
-                :key="index">{{ item.label }}</Option>
-          </Select>
-          <Select v-model="typeAction" multiple :max-tag-count="1" style="width:200px;margin-left:15px;" >
-            <Option v-for="(item,index) in typeList"
-                :value="item.value"
-                :key="index">{{ item.label }}</Option>
-          </Select>
-          <Button style="margin-left:15px;" size="large" type="primary"  @click="handleClick" >查询</Button>
+            <vs-row>
+                <vs-col  style="width:250px;" :vs-xs="12">
+                    <i-date-picker :value='date1Array' :dType="1" @selectDate="dateSelect"></i-date-picker>
+                </vs-col>
+                <vs-col  style="width:150px;padding:0;margin-left:15px;" :vs-xs="12"  >
+                    <vs-select v-model="selectType" width="100%;" autocomplete @change=selectTypeData>
+                        <vs-select-item
+                                v-for="(item,index) in typeOptions"
+                                :key="index"
+                                :value="item.value"
+                                :text="item.label"
+                        />
+                    </vs-select>
+                </vs-col>
+                <vs-col  style="width:150px;padding:0;margin-left:15px;" :vs-xs="12"  >
+                    <vs-select v-model="typeAction" width="100%;" autocomplete   :multiple="multiple" >
+                        <vs-select-item
+                                v-for="(item,index) in typeList"
+                                :key="index"
+                                :value="item.value"
+                                :text="item.label"
+                        />
+                    </vs-select>
+                </vs-col>
+                <vs-col style="width:230px;padding:0;margin-left:25px;" :vs-xs="12">
+                    <vs-button color="primary" style="float:left;" @click="handleClick" class="btn">查询</vs-button>
+                </vs-col>
+            </vs-row>
         </div>
         <div class="box-card bg-white hotItem" style="margin-top: 20px">
-            <div class="hotItem-chart" v-if="isChart">
+            <div class="hotItem-chart">
                 <p class="name1">销售额</p>
                 <p class="name2">订单数</p>
-                <vChart   style="width:100%;height:600px"  ref="graphChart" :options="polar"/>
+                <vChart  style="width:100%;height:600px"  ref="graphChart" :options="polar"/>
             </div>
         </div>
     </div>
@@ -36,7 +52,7 @@ export default {
   },
   data () {
     return {
-      isChart:false,
+      isChart: true,
       multiple: true,
       date1Array: [moment().add(-1, 'd').format('YYYY-MM-DD'), moment().add(-1, 'd').format('YYYY-MM-DD')],
       selectType: 'floor',
@@ -94,12 +110,6 @@ export default {
         series: []
       }
     }
-  },
-  activated() {
-    this.isChart = false
-    setTimeout(() => {
-      this.isChart = true
-    })
   },
   computed: {
     propertyId () {
@@ -164,10 +174,7 @@ export default {
       this.date1Array = val
     },
     onResize () {
-      setTimeout(() => {
-         this.$refs.graphChart.resize()
-      },200);
-     
+      this.$refs.graphChart.resize()
     },
     handleClick () {
       // 商品分析
@@ -189,17 +196,20 @@ export default {
           hotParameter.floor_id = this.typeAction.join(',')
           break
       }
-      
-      if( hotParameter.bzid === '' && hotParameter.floor_id === '' && hotParameter.industry_id === '' ){
-        this.$alert({
-          content:'请选择实体'
-        })
-        return false
-      }
+      // if (this.selectType === 'entity') {
+      //   hotParameter.bzid = this.typeAction.join(',')
+      // } else if (this.selectType === 'business') {
+      //   hotParameter.industry_id = this.typeAction.join(',')
+      // } else if (this.selectType === 'floor') {
+      //   hotParameter.floor_id = this.typeAction.join(',')
+      // }
+      let currDate = this.date1Array
+      let diffDays = moment.duration(moment(currDate[1]).diff(moment(currDate[0]))).asDays()
       gethotGoode(hotParameter).then(res => {
         if (res.data.code === 200) {
           let newHotData = []
           res.data.data.map(list => {
+            let ratio = Math.round(list.ratio / (diffDays + 1))
             newHotData.push([list.amount, list.order_num, list.ratio, list.goods_name, '商品热度'])
           })
           this.polar.series = []
@@ -249,7 +259,6 @@ export default {
         height: auto;
         margin-top: 20px;
         padding: 20px;
-       
         p{
         font-size:18px;
         font-weight:400;

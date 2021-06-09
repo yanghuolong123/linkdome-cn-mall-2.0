@@ -30,7 +30,7 @@ export default {
     shopUserName: '',
     accountLvl:"",
     business_zone_privilege:[],//实体权限
-    sale_feature:"",
+
   },
   mutations: {
     shopUserName (state, value) {
@@ -124,9 +124,6 @@ export default {
         state.vipRecordNumber--
         if (state.vipRecordNumber < 0)state.vipRecordNumber = 0
       }
-    },
-    setSaleFeature(state,value){
-      state.sale_feature = value
     }
 
   },

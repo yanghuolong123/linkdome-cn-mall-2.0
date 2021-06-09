@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div ref="dom"  id="dom" >
+  <div ref="dom"  id="dom" :style="{height:`${height}px`}">
   </div>
 </div>
 
@@ -21,6 +21,7 @@ export default {
   data () {
     return {
       dom: null,
+      height: '600',
       option: {
         title: {
           text: ''
@@ -73,7 +74,7 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-        this.initCharts()
+      this.initCharts()
     })
   },
   methods: {
@@ -83,13 +84,7 @@ export default {
       this.$nextTick(() => {
         this.dom = Highcharts.chart(this.$refs.dom, this.option)
       })
-      
     }
   }
 }
 </script>
-<style>
-  #dom{
-    height: 600px;
-  }
-</style>

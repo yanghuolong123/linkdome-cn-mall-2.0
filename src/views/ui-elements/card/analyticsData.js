@@ -1044,10 +1044,7 @@ export default {
   //Heatmap
   timeDistributeOption:{
     tooltip: {
-      position: 'top',
-      formatter(params){
-          return params.seriesName+'<br>'+params.marker+params.name +' '+params.data[params.data.length-1]
-      }
+      position: 'top'
     },
     animation: false,
     grid: {
@@ -1127,7 +1124,7 @@ export default {
         show: false,
         onZero: true,
         lineStyle: {
-          color: 'transparent',
+          color: '#FFF',
           width: 0,
           type: 'solid'
         }
@@ -1147,7 +1144,7 @@ export default {
         show: false,
         onZero: true,
         lineStyle: {
-          color: 'transparent',
+          color: '#FFF',
           width: 0,
           type: 'solid'
         }

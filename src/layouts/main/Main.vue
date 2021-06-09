@@ -23,7 +23,7 @@
     /> -->
     <vx-sidebar
       :sidebarItems="menuList"
-      :logo="require('@/assets/images/fixation_img/logo/logo.png')"
+      :logo="require('@/assets/images/fixation_img/logo/logo.webp')"
       title="DeepNorth"
       parent=".layout--main"
     />
@@ -86,7 +86,6 @@
                       <router-link to="/apps/email" class="flex items-center">
                         <feather-icon
                           icon="MailIcon"
-                          
                           class="inline-block mr-2"
                           svgClasses="w-4 h-4"
                         />

@@ -24,18 +24,16 @@
 
           </ul>
         </div>
-        <div class="flex-cell">
-          <vue-apex-charts v-if="iconIndex == 0"
-                           ref="ageGenderBar"
-                           type=bar
-                           :options="ageOptions"
-                           :series="ageSeries"></vue-apex-charts>
-          <table-default v-else
-                         class="groupTable"
-                         :tableName='ageName'
-                         :tableList='ageTableList'></table-default>
-        </div>
-       
+        <vue-apex-charts v-if="iconIndex == 0"
+                         ref="ageGenderBar"
+                         height="500"
+                         type=bar
+                         :options="ageOptions"
+                         :series="ageSeries"></vue-apex-charts>
+        <table-default v-else
+                       class="groupTable"
+                       :tableName='ageName'
+                       :tableList='ageTableList'></table-default>
       </div>
 
       <div class=" box-card center">
@@ -55,18 +53,16 @@
 
           </ul>
         </div>
-        <div class="flex-cell">
-          <vue-apex-charts v-if="genderIconIndex == 0"
-                           ref="genderBar"
-                           type=bar
-                           :options="genderChartOptions"
-                           :series="genderSeries"></vue-apex-charts>
-          <table-default v-else
-                         class="groupTable"
-                         :tableName='genderName'
-                         :tableList='genderTableList'></table-default>
-        </div>
-       
+        <vue-apex-charts v-if="this.genderIconIndex == 0"
+                         height="500"
+                         ref="genderBar"
+                         type=bar
+                         :options="genderChartOptions"
+                         :series="genderSeries"></vue-apex-charts>
+        <table-default v-else
+                       class="groupTable"
+                       :tableName='genderName'
+                       :tableList='genderTableList'></table-default>
       </div>
     </div>
     <div class=" group-age-gender">
@@ -95,19 +91,17 @@
           </ul>
 
         </div>
-        <div class="flex-cell">
-          <vue-apex-charts v-if="clientIconIndex == 0"
-                           ref="clientBar"
-                           type=bar
-                           :options="clientOptions"
-                           :series="clientSeries"></vue-apex-charts>
-          <table-default v-else
-                         class="groupTable"
-                         :tableName='clientName'
-                         :tableList='clientTableList'>
-          </table-default>
-        </div>
-       
+        <vue-apex-charts v-if="this.clientIconIndex == 0"
+                         height="500"
+                         ref="clientBar"
+                         type=bar
+                         :options="clientOptions"
+                         :series="clientSeries"></vue-apex-charts>
+        <table-default v-else
+                       class="groupTable"
+                       :tableName='clientName'
+                       :tableList='clientTableList'>
+        </table-default>
       </div>
       <div class=" box-card right">
         <div class="title">
@@ -126,17 +120,16 @@
 
           </ul>
         </div>
-        <div class="flex-cell">
-          <vue-apex-charts v-if="frequencyIconIndex == 0"
-                           ref="frequencyBar"
-                           type=bar
-                           :options="frequencyOptions"
-                           :series="frequencySeries"></vue-apex-charts>
-          <table-default v-else
-                         class="groupTable"
-                         :tableName='frequencyName'
-                         :tableList='frequencyTableList'></table-default>
-        </div>
+        <vue-apex-charts v-if="this.frequencyIconIndex == 0"
+                        height="500"
+                        ref="frequencyBar"
+                        type=bar
+                        :options="frequencyOptions"
+                        :series="frequencySeries"></vue-apex-charts>
+        <table-default v-else
+                      class="groupTable"
+                      :tableName='frequencyName'
+                      :tableList='frequencyTableList'></table-default>
       </div>
     </div>
   </div>
@@ -145,7 +138,6 @@
 import VueApexCharts from 'vue-apexcharts'
 import { getEntityFlow, exportEx } from '@/api/home.js'
 import TableDefault from '@/views/ui-elements/table/TableDefault.vue'
-import { downloadEx } from '@/libs/util'
 import _ from 'lodash'
 import moment from 'moment'
 export default {
@@ -202,7 +194,6 @@ export default {
       vipName: ['购物中心'],
       vipTableList: [],
       // chart type
-      // 年龄分布
       ageSeries: [],
       ageOptions: {
         chart: {
@@ -245,7 +236,7 @@ export default {
         tooltip: {
           y: {
             formatter: function (val) {
-              return val.toLocaleString()+'人'
+              return val.toLocaleString()
             }
           }
         },
@@ -256,7 +247,6 @@ export default {
           offsetY: 0
         }
       },
-      // 到店次数
       frequencySeries: [],
       frequencyOptions: {
         chart: {
@@ -300,7 +290,7 @@ export default {
         tooltip: {
           y: {
             formatter: function (val) {
-              return val.toLocaleString()+'人'
+              return val.toLocaleString()
             }
           }
         },
@@ -311,7 +301,6 @@ export default {
           offsetY: 0
         }
       },
-      // 新老顾客
       clientSeries: [],
       clientOptions: {
         chart: {
@@ -355,7 +344,7 @@ export default {
         tooltip: {
           y: {
             formatter: function (val) {
-              return val.toLocaleString()+'人'
+              return val.toLocaleString()
             }
           }
         },
@@ -365,7 +354,6 @@ export default {
           offsetY: 0
         }
       },
-      // 性别分布
       genderSeries: [],
       genderChartOptions: {
         chart: {
@@ -410,7 +398,7 @@ export default {
         tooltip: {
           y: {
             formatter: function (val) {
-              return val.toLocaleString()+'人'
+              return val.toLocaleString()
             }
           }
         },
@@ -485,7 +473,7 @@ export default {
   updated () {
   },
   activated () { // 进入页面 初始化页面数据
-    // this.initializeData()
+    this.initializeData()
   },
   watch: {
     // 监听事件 请求数据
@@ -529,30 +517,16 @@ export default {
           }
 
           this.genderChartOptions.xaxis.categories = genderKeys
-          that.$refs.genderBar&&that.$refs.genderBar.updateOptions({
+          that.$refs.genderBar.updateOptions({
             xaxis: { categories: that.genderChartOptions.xaxis.categories }
           })
-          that.genderSeries.map(name => { that.genderName.push(name.name +' ( 人 ) ') })
+          that.genderSeries.map(name => { that.genderName.push(name.name) })
           genderKeys.map(function (list, index) {
             let obj = {}
             obj.name = list
             obj.percentList = []
-            that.genderSeries.map(val => { obj.percentList.push(Number(val.data[index]).toLocaleString()) })
+            that.genderSeries.map(val => { obj.percentList.push(Number(val.data[index]).toLocaleString() + '人') })
             that.genderTableList.push(obj)
-          })
-          this.$nextTick(()=>{
-          this.iconIndex = -1
-          this.frequencyIconIndex =  -1
-          this.vipIconIndex =  -1
-          this.clientIconIndex =  -1
-          this.genderIconIndex =  -1
-          setTimeout(()=>{
-            this.iconIndex = 0
-            this.frequencyIconIndex = 0
-            this.vipIconIndex = 0
-            this.clientIconIndex = 0
-            this.genderIconIndex = 0
-            },100)
           })
         }
       })
@@ -595,10 +569,8 @@ export default {
           let xName
           Number(list) == nameList.length ? xName = list + '次及以上' : xName = list + '次'
           obj.name = xName
-        } else if(type==='age'){
-           obj.name = list.replace('_', '-').replace('less-', '小于').replace(/more-/, '大于') 
-        } else{
-          obj.name = list +' ( 人 ) '
+        } else {
+          obj.name = list
         }
         obj.data = []
         ageValue.map(function (val, vIndex) {
@@ -613,14 +585,13 @@ export default {
         dataNumber.series.push(obj)
       })
       dataNumber.series.map(name => {
-        let tableName = name.name +' ( 人 ) '
-        type == 'age' ? that.ageName.push(tableName) : that.frequencyName.push(tableName)
+        type == 'age' ? that.ageName.push(name.name) : that.frequencyName.push(name.name)
       })
       dataNumber.xaxis.map(function (list, index) {
         let obj = {}
         obj.name = list
         obj.percentList = []
-        dataNumber.series.map(val => { obj.percentList.push(Number(val.data[index]).toLocaleString()) })
+        dataNumber.series.map(val => { obj.percentList.push(Number(val.data[index]).toLocaleString() + '人') })
         type == 'age' ? that.ageTableList.push(obj) : that.frequencyTableList.push(obj)
       })
       return dataNumber
@@ -648,15 +619,14 @@ export default {
       })
 
       dataNumber.series.map(name => {
-        let tableName = name.name +' ( 人 ) '
-        type == 'client' ? that.clientName.push(tableName) : that.vipName.push(tableName)
+        type == 'client' ? that.clientName.push(name.name) : that.vipName.push(name.name)
       })
       dataNumber.xaxis.map(function (list, index) {
         let obj = {}
         obj.name = list
         obj.percentList = []
         dataNumber.series.map(val => {
-          obj.percentList.push(Number(val.data[index]).toLocaleString())
+          obj.percentList.push(Number(val.data[index]).toLocaleString() + '人')
         })
         type == 'client' ? that.clientTableList.push(obj) : that.vipTableList.push(obj)
       })
@@ -718,46 +688,79 @@ export default {
       this.vipTableList = []
     },
     downloadData (val1, val2) {
-      let  [columns,data] = [[],[]]
-      val1.forEach((list,index)=>{
-        if(index==0){
-          columns.push({title:list,key:'name'})
-        }else{
-          columns.push({title:list,key:'type'+index})
-        }
-      })
-     
-      val2.forEach((list,index)=>{
+      let arr = []
+      let columns = [{ title: val1[0], key: 'name' }, { title: val2[0].name, key: 'city1' }, { title: val2[1].name, key: 'city2' }]
+      let data = val1.map((m, index) => {
+        let indexs = index
         let obj = {}
-        obj.name = list.name
-        columns.forEach((val,vindex)=>{
-          if(vindex===0){
-            obj[val.key] = list.name
-          }else{
-            obj[val.key] = list.percentList[vindex-1]
-          }
-        })
-        data.push(obj)
+        obj.name = val1[++indexs]
+        obj.city1 = val2[0].percentList[index]
+        obj.city2 = val2[1].percentList[index]
+        return obj
       })
-      return [columns,data]
+      data.pop()
+      arr.push(columns)
+      arr.push(data)
+      return arr
     },
     downloadAgeData () {
-      let tableData = this.downloadData(this.ageName, this.ageTableList)
-      downloadEx(exportEx, '年龄分布客流数据',tableData)
+      this.ageTabList = this.downloadData(this.ageName, this.ageTableList)
+      this.downloadName = '年龄分布客流数据'
+      this.dowloadList(this.ageTabList)
+      try {
+        window.TDAPP.onEvent('集团页面', '年龄分布下载', { })
+      } catch (error) {
+        console.log('集团页面-年龄分布下载-埋点error:' + error)
+      }
     },
     downloadGenData () {
-      let tableData = this.downloadData(this.genderName, this.genderTableList)
-      downloadEx(exportEx, '性别分布客流数据',tableData)
+      this.genderTabList = this.downloadData(this.genderName, this.genderTableList)
+      this.downloadName = '性别分布客流数据'
+      this.dowloadList(this.genderTabList)
+      try {
+        window.TDAPP.onEvent('集团页面', '性别分布下载', { })
+      } catch (error) {
+        console.log('集团页面-性别分布下载-埋点error:' + error)
+      }
     },
     downloadCusData () {
-      let tableData = this.downloadData(this.clientName, this.clientTableList)
-      downloadEx(exportEx, '新老顾客占比数据',tableData)
+      this.customTabList = this.downloadData(this.clientName, this.clientTableList)
+      this.downloadName = '新老顾客占比数据'
+      this.dowloadList(this.customTabList)
+      try {
+        window.TDAPP.onEvent('集团页面', '新老顾客占比下载', { })
+      } catch (error) {
+        console.log('集团页面-新老顾客占比下载-埋点error:' + error)
+      }
     },
     downloadNumData () {
-      let tableData = this.downloadData(this.frequencyName, this.frequencyTableList)
-      downloadEx(exportEx, '顾客到店次数占比数据',tableData)
+      this.numTabList = this.downloadData(this.frequencyName, this.frequencyTableList)
+      this.downloadName = '顾客到店次数占比数据'
+      this.dowloadList(this.numTabList)
+      try {
+        window.TDAPP.onEvent('集团页面', '到店次数下载', { })
+      } catch (error) {
+        console.log('集团页面-到店次数下载-埋点error:' + error)
+      }
     },
     downloadVipData () {},
+    // 下载表格
+    dowloadList (value) {
+      exportEx(value).then(res => {
+        let date = new Date()
+        const blob = new Blob([res.data])
+        let name = this.downloadName
+        let fileName = name + moment(date).format('YYYYMMDDHHmmss') + '.xls'
+        const elink = document.createElement('a')
+        elink.download = fileName
+        elink.style.display = 'none'
+        elink.href = URL.createObjectURL(blob)
+        document.body.appendChild(elink)
+        elink.click()
+        URL.revokeObjectURL(elink.href)// 释放URL 对象
+        document.body.removeChild(elink)
+      })
+    }
   },
   deactivated () { } // 离开页面使用时调用
 }

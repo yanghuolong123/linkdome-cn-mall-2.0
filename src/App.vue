@@ -38,25 +38,24 @@ export default {
     }
   },
   mounted () {
-    this.toggleClassInBody(themeConfig.theme);
-	  //点击文本就让它自动点击前面的input就可以触发选择。但是因组件阻止了冒泡，暂时想不到好方法来触发。
-	  //这种比较耗性能，暂时想不到其他的，能实现效果了。
-	  setInterval(function() {
-		  document.querySelectorAll(".el-cascader-node__label").forEach(el => {
-			  el.onclick = function() {
-				  if (this.previousElementSibling) this.previousElementSibling.click();
-			  };
-		  });
-	  }, 1000);
+    this.toggleClassInBody(themeConfig.theme)
+	  // 点击文本就让它自动点击前面的input就可以触发选择。但是因组件阻止了冒泡，暂时想不到好方法来触发。
+	  // 这种比较耗性能，暂时想不到其他的，能实现效果了。
+	  setInterval(function () {
+		  document.querySelectorAll('.el-cascader-node__label').forEach(el => {
+			  el.onclick = function () {
+				  if (this.previousElementSibling) this.previousElementSibling.click()
+			  }
+		  })
+	  }, 1000)
   }
 }
 </script>
 <style>
-body{
-  /* min-width: 1360px;
-  overflow-x: auto!important; */
-	font-size: 16px;
-}
+/* body{
+  min-width: 1400px;
+  overflow-x: auto!important;
+} */
 path{
   cursor: pointer;
 }
@@ -88,14 +87,14 @@ path{
   white-space: normal; */
   /* word-break: break-all; */
 }
-.box-card:hover,.dashboard-box:hover,.group-age-gender .left:hover,.group-age-gender .right:hover,
+.static-box:hover,.mapCarousel:hover,.dashboard-box .chart-box:hover,.group-age-gender .left:hover,.group-age-gender .right:hover,
 .group-client .left:hover,.group-client .center:hover,.account-center .account-text .account-text-right .account-seach .data-picker:hover,
 .bg-white.box-card.px-4.pb-6:hover,.item.box-card.bg-white:hover,.bg-white.box-card:hover,
 .bg-white.box-card.mt-6:hover,.selectorbox.ivu-card.ivu-card-bordered:hover,
 .go-shop .go-time-selector:hover,.go-shop .go-shop-chart-list:hover,
-.heatMaps .path-picker:hover,.heatMaps .heatMap:hover,.heatMaps .heatMapGrid:hover,
+.heatMaps .path-picker:hover,.heatMaps .content:hover,
 .effective .chartContent .cardContent .cards:hover,.effective .chartContent .circles:hover,
-.relevance .relevance-picker:hover,.tab-container:hover,
+/*.relevance .relevance-picker:hover,.tab-container:hover,*/
 .relevance .relevanceTOP3 h4 ul li:hover,.relevance .relevance-graph:hover,.relevance-table:hover,
 .cross_analysis_time >div:hover,.cross_analysis:hover,.cross_analysis:hover,
 .pathTrend .path-picker:hover,.pathTrend .path-title:hover,
@@ -107,6 +106,8 @@ path{
 .day-report-date:hover,.month-report-date:hover,#pdfDom:hover,
 .topArea:hover,.vx-card.formatsList:hover,
 .holiday .holidayTable:hover,
+.shop-portrait .selected-table:hover,
+.shop-portrait .box-card:hover,
 .account-center .account-text .account-text-right .account-table:hover,
 .roles .left:hover,.CheckboxGroups:hover,
 .left-floor .vx-card:hover,.stall-header-right .vx-card:hover,.area-list-right .vx-card:hover,#pathContent:hover {

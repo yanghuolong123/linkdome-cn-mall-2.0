@@ -1,7 +1,7 @@
 <template>
   <div class="roles">
     <div class="left">
-        <Menu :accordion="accordion" @on-open-change="changeOpenChange" style="z-index:1;">
+        <Menu :accordion="accordion" @on-open-change="changeOpenChange">
             <Submenu name="1" v-if="showSuperAdmin" v-bind:class="{'ivu-menu-opened':theRoleId==1}">
                 <template slot="title">
                     <p>超级管理员</p>
@@ -90,7 +90,10 @@ export default {
   },
   created () {
     var that = this
-    
+    // if (this.$store.state.home.loadingState == false) {
+    //   this.$store.commit('loadingState', true)
+    //   this.$vs.loading()
+    // }
     getMenuList().then(res => {
       if (res.data.code == 200) {
         that.menuListData = res.data.data.main
@@ -111,16 +114,8 @@ export default {
   },
   computed: {
     menuListDatas () {
-      let that = this
       return _.filter(this.menuListData, function (e) {
-        if(that.$store.state.user.sale_feature!==1){  
-          e.subpagesList = _.filter(e.subpagesList,(s)=>{
-            return s.id !==37 && s.id!==36 && s.id!==35 && s.id!==34
-          })
-          return e.name != 'Admin' && e.name != 'AddEditUser'
-        }else{
-          return e.name != 'Admin' && e.name != 'AddEditUser'
-        }
+        return e.name != 'Admin' && e.name != 'AddEditUser'
       })
     },
     manageListDatas () {
@@ -151,9 +146,14 @@ export default {
       })
       pages_privilege.sort()
       data.pages_privilege = pages_privilege.join(',')
+      // if (this.$store.state.home.loadingState == false) {
+      //   this.$store.commit('loadingState', true)
+      //   this.$vs.loading()
+      // }
       updateRoles(data).then(function (res) {
         if (res.data.code == 200) {
-         
+          // that.$vs.loading.close()
+          // that.$store.commit('loadingState', false)
           let role_id = that.$store.state.user.role_id
           if (role_id == data.id) {
             that.$store.commit('setAccess', data.pages_privilege)
@@ -234,8 +234,14 @@ export default {
       let property = this.$store.state.user.role_property
       let role_id = that.$store.state.user.role_id
       property = role_id < 3 ? '' : property
+      // if (this.$store.state.home.loadingState == false) {
+      //   this.$store.commit('loadingState', true)
+      //   this.$vs.loading()
+      // }
       getRolesList(property).then(res => {
         if (res.data.code == 200) {
+          // this.$vs.loading.close()
+          // this.$store.commit('loadingState', false)
           let data = res.data.data
           that.roleList = data.map(function (m) {
             let obj = {}
@@ -371,9 +377,6 @@ export default {
         background: linear-gradient(to right, rgb(55, 181, 237), rgba(55, 181, 237, 0.7));
         border-radius: 4px;
         color:#fff;
-          /deep/i{
-              font-size: 16px!important;
-          }
       }
       li{
         font-size: 14px;

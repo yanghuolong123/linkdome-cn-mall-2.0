@@ -4,7 +4,7 @@
             ref="chartBar"
             type=bar
             height="640"
-            :options="options"
+            :options="chartOptions"
             :series="series"
             style="padding-top:55px"
         ></vue-apex-charts>
@@ -24,10 +24,6 @@ export default {
     },
     series: {
       type: Array
-    },
-    options: {
-      type: Object,
-      default: () => {}
     }
   },
   components: {
@@ -85,7 +81,7 @@ export default {
         tooltip: {
           y: {
             formatter: function (val) {
-              return val.toLocaleString() + '元'
+              return val.toLocaleString() + '人'
             }
           }
         }
@@ -113,18 +109,13 @@ export default {
       this.$refs.chartBar.updateOptions({
         xaxis: { categories: that.chartOptions.xaxis.categories }
       })
-      if (that.chartOptions.xaxis.categories.length < 2) {
-        that.chartOptions.plotOptions.bar.columnWidth = '10%'
-      } else if(that.chartOptions.xaxis.categories.length < 5) {
-          that.chartOptions.plotOptions.bar.columnWidth = '25%'
-      }else if(that.chartOptions.xaxis.categories.length < 10) {
-          that.chartOptions.plotOptions.bar.columnWidth = '55%'
-      }else if(that.chartOptions.xaxis.categories.length < 15) {
-          that.chartOptions.plotOptions.bar.columnWidth = '65%'
-      }else {
-        that.chartOptions.plotOptions.bar.columnWidth = '80%'
-      }
+      if (that.chartOptions.xaxis.categories.length < 5) {
+        that.chartOptions.plotOptions.bar.columnWidth = '15%'
         that.$refs.chartBar.updateOptions({ plotOptions: that.chartOptions.plotOptions })
+      } else {
+        that.chartOptions.plotOptions.bar.columnWidth = '70%'
+        that.$refs.chartBar.updateOptions({ plotOptions: that.chartOptions.plotOptions })
+      }
     }
   }
 }

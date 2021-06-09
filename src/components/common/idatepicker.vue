@@ -35,11 +35,21 @@ export default {
     }
   },
   data () {
-     let that = this
     return {
       clickTimeName: 'l',
       options: {
         shortcuts: [
+          {
+            text: '今 日',
+            value () {
+              const end = new Date()
+              const start = new Date()
+              return [start, end]
+            },
+            onClick: picker => {
+              this.clickTimeName = 't'
+            }
+          },
           {
             text: '昨 日',
             value () {
@@ -120,12 +130,7 @@ export default {
           }
         ],
         disabledDate (date) {
-          if(!['EntityNew','Entity'].includes(that.$route.name)){
-            return  date && date.valueOf() > Date.now() - 86400000
-          }else{
-            return  date && date.valueOf() > Date.now()
-          }
-          
+          return Moment(date).isAfter(Moment())
         }
       }
     }
@@ -140,6 +145,21 @@ export default {
         return newval
       }
     }
+  },
+  watch: {
+    // '$store.state.home.headerAction' () {
+    //   this.value = []
+    //   let date = [Moment().add(-1, 'd').toDate(), Moment().add(-1, 'd').toDate()]
+    //   this.value = date
+    // }
+  },
+  // activated () {
+  //   this.value = []
+  //   let date = [Moment().add(-1, 'd').toDate(), Moment().add(-1, 'd').toDate()]
+  //   this.value = date
+  // },
+  mounted () {
+
   },
   methods: {
     selectDate (date) {
@@ -173,3 +193,15 @@ export default {
   }
 }
 </script>
+<style lang="stylus" scoped>
+.idatePicker /deep/
+  input
+    height 43px
+    font-size 14px
+    font-family "source_han_sans_cn", "Roboto", sans-serif
+    border 1px solid rgba(0,0,0,.2)
+  i
+    height 40px
+    width 40px
+    line-height 43px
+</style>

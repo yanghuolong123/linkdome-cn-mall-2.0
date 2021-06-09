@@ -59,6 +59,12 @@ export default {
       }
       return type
     }
-  }
+  },
+  mounted () {
+  },
+  activated () { }, // 进入页面就触发 可用于初始化页面数据等
+  watch: {},
+  methods: {},
+  deactivated () { } // 离开页面使用时调用
 }
 </script>

@@ -1,16 +1,15 @@
 <template>
-    <div class="sales-new-center" style="min-height:500px" >
+    <div class="sales-new-center" v-if="isHtml">
         <chart-tabs
             :xAxis="xAxisObj"
             :series="finnalSeries"
             :extraOptions="extraOptWithYaxis"
             @tableChage='TableChageList'
             class="bg-white box-card"
-            :title="chartTitle"
+            title="销售分析"
             :type='typeList'
             id="marketChart"
             :tooltipUnit="tooltipUnit"
-            v-if="isHtml"
             >
              <template>
               <div class="flex justify-between items-center mr-10">
@@ -37,7 +36,7 @@ import chartTabs from '_c/common/CopyChartsTabs.vue'
 import exportMenu from '@/views/operation/components/ExportMenu.vue'
 import { getNewbusiness } from '@/api/newSales.js'
 import { exportEx } from '@/api/home.js'
-import {downloadEx} from '@/libs/util.js'
+import moment from 'moment'
 export default {
   name: 'market',
   components: {
@@ -48,17 +47,12 @@ export default {
     parameter: {
       type: Object,
       default: {}
-    },
-    chartTitle:{
-      type:String,
-      default: '111'
     }
-
 
   },
   data () {
     return {
-      isHtml:true,
+      isHtml: true,
       selectList: [],
       floorAction: '',
       xAxisObj: {
@@ -139,6 +133,11 @@ export default {
   },
   methods: {
     enterExportBiztop () {
+      try {
+        window.TDAPP.onEvent('销售分析', '销售分析下载', { })
+      } catch (error) {
+        console.log('销售分析-销售分析下载-埋点error:' + error)
+      }
       let time = this.parameter.time.split(',')
       let newTableData = _.cloneDeep(this.tableListData)
       if (time[0] == time[1]) {
@@ -146,22 +145,20 @@ export default {
           list.time = time[0] + '  ' + list.time
         })
       }
-      let name
-      switch(this.parameter.type){
-        case 'SaleAmount':
-          name = '销售多维度_销售'
-          break
-        case 'SquaerMetre':
-          name = '销售多维度_坪效'
-          break
-        case 'UnitPrice':
-          name = '销售多维度_客单价'
-          break
-        case 'CloseRate':
-          name = '销售多维度_成交率'
-          break
-      }
-      downloadEx(exportEx,name,newTableData)
+      exportEx(newTableData).then(res => {
+        let date = new Date()
+        const blob = new Blob([res.data])
+        let name = '销售分析'
+        let fileName = name + moment(date).format('YYYYMMDDHHmmss') + '.xls'
+        const elink = document.createElement('a')
+        elink.download = fileName
+        elink.style.display = 'none'
+        elink.href = URL.createObjectURL(blob)
+        document.body.appendChild(elink)
+        elink.click()
+        URL.revokeObjectURL(elink.href)// 释放URL 对象
+        document.body.removeChild(elink)
+      })
     },
     TableChageList (val) {
       this.tableListData = val.data
@@ -177,29 +174,11 @@ export default {
       })
       this.xAxisObj.data = []
       this.xAxisObj.data = Object.keys(data[0].list)
-      switch(this.parameter.type){
-        case 'SaleAmount':
-          this.extraOptWithYaxis.yaxis.title.text = '销售额（元）'
-          break
-        case 'SquaerMetre':
-          this.extraOptWithYaxis.yaxis.title.text = '坪效（元/m²）'
-          break
-        case 'UnitPrice':
-          this.extraOptWithYaxis.yaxis.title.text = '客单价（元）'
-          break
-        case 'CloseRate':
-          this.extraOptWithYaxis.yaxis.title.text = '成交率（%）'
-          break
-      }
       if (this.xAxisObj.data.length == 1) {
         this.extraOptWithYaxis.xaxis.labels.offsetX = (document.getElementById('marketChart').offsetWidth / 2) - 100
       } else {
         this.extraOptWithYaxis.xaxis.labels.offsetX = 0
       }
-      this.isHtml = false
-      setTimeout(() => {
-        this.isHtml = true
-      })
     },
     selectFloor () {
       this.parameter.floor_id = this.floorAction

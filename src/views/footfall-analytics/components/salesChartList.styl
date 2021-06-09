@@ -1,0 +1,13 @@
+son-row-flex()
+  >.tab-box
+    .chart-tab-box
+      flex-direction row!important
+.chart-list
+  display grid
+  grid-template-columns repeat(2, minmax(1rem, 1fr))
+  grid-gap 20px
+  son-row-flex()
+@media (max-width 768px)
+  .item
+    grid-column-end span 4 !important
+

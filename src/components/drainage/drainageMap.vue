@@ -5,7 +5,7 @@
             <icons type="wenhao"/>
         </Tooltip>
       </h1>
-      <div class="drainage-map-text" :style="{margin:mapMargin}">
+      <div class="drainage-map-text" :style="{height:mapHeight,margin:mapMargin}">
           <div class="drainage-map-left">
               <div class="drainage-map-left-top">
                   <ul>
@@ -49,10 +49,8 @@
           <div class="drainage-map-center">
               <img class="drainage-map-center-bg" :src="centerImg" alt="">
               <div class="drainage-map-center-text">
-                  <div>
-                        <img :src="shopImg">
-                        <p class="drainage-shop-name">{{presentData.name}}</p>
-                  </div>
+                  <img :src="shopImg" :style="{margin:margin}"alt="">
+                  <p class="drainage-shop-name">{{presentData.name}}</p>
               </div>
               <div class="text-location" v-for="item in centerData" >
                   <p>{{item.text}}：{{item.value}}%</p>
@@ -174,9 +172,9 @@ export default {
           link: 10
         }
       ],
-      centerImg: require('@/assets/images/fixation_img/bg/draniage_center.png'),
-      shopImg: require('@/assets/images/fixation_img/rest/shop.png'),
-      accessImg: require('@/assets/images/fixation_img/rest/access.png'),
+      centerImg: require('@/assets/images/fixation_img/bg/draniage_center.webp'),
+      shopImg: require('@/assets/images/fixation_img/rest/shop.webp'),
+      accessImg: require('@/assets/images/fixation_img/rest/access.webp'),
       tootipText: '该引流图包括出入口引入客流、店铺引入客流、辐射店铺客流和离场客流，其中：\n出入口引入客流：从出入口直接进入所选店铺的转化客流\n店铺引入客流：从其他店铺到所选店铺的转化客流\n辐射店铺客流：从所选店铺到其他店铺转化客流\n离场客流：从所选店铺直接离开购物中心的客流'
     }
   },
@@ -204,7 +202,6 @@ export default {
     }
     .drainage-map-text{
         width: 95%;
-        height: 800px;
         padding-bottom: 50px;
         .drainage-map-left,.drainage-map-center,.drainage-map-right{
             float: left;
@@ -369,22 +366,18 @@ export default {
                 top: 0;
                 width: 100%;
                 height: 100%;
-                div {
+                img{
+                    display: block;
+                    height: 100px;
                     position: absolute;
                     left: 50%;
                     top: 50%;
-                    margin: -50px;
-                    width: 100px;
-                    height: 100px;
-                    img{
-                        display: block;
-                        height: 100px;
-                        background-color: #fff;
-                        border-radius: 50%;
-                    }
+                    margin-left: -50px;
+                    background-color: #fff;
+                    border-radius: 50%;
                 }
                 .drainage-shop-name{
-                    margin-top: 10px;
+                    margin-top: 440px;
                     font-size: 18px;
                     text-align: center;
                     width: 100%;

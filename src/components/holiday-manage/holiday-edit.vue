@@ -12,24 +12,33 @@
             <div class="edit-text">
                 <Form  ref="formInline" :model="datas" :rules="ruleInline" label-position="right" inline :label-width="80">
                     <FormItem prop="name" label="名称">
-                        <Input v-model="datas.name"></Input>
+                        <Input v-model="datas.name" style="width:218px"></Input>
                     </FormItem>
                     <FormItem prop="begin" label="开始日期">
-                        <DatePicker v-model="datas.begin" format="yyyy-MM-dd" :editable="false" type="date" placeholder="选择日期" @on-change="beginDateDidChange"></DatePicker>
+                        <DatePicker v-model="datas.begin" format="yyyy-MM-dd" :editable="false" type="date" placeholder="选择日期" style="width: 218px" @on-change="beginDateDidChange"></DatePicker>
                     </FormItem>
                     <FormItem prop="end" label="结束日期">
-                      <DatePicker v-model="datas.end" format="yyyy-MM-dd" type="date" :editable="false" placeholder="选择日期"  @on-change="endDateDidChange"></DatePicker>
+                      <DatePicker v-model="datas.end" format="yyyy-MM-dd" type="date" :editable="false" placeholder="选择日期" style="width: 218px" @on-change="endDateDidChange"></DatePicker>
                     </FormItem>
                     <FormItem prop="property" label="活动归属"  class="belongs" v-show = "showBelong">
-                        <i-select v-model="datas.property" >
+                        <i-select v-model="datas.property" style="width:218px">
                             <i-option v-for="item in propertyList" :value="item.value" :key="item.value">{{item.label}}</i-option>
                         </i-select>
                     </FormItem>
+                    <!-- <FormItem prop="property_id" label="活动归属"  class="belongs">
+                        <Select v-model="datas.property_id" style="width:218px" >
+                          <Option
+                          v-for="item in propertyList"
+                          :value="item.value"
+                          :key="item.value"
+                          >{{ item.label }}</Option>
+                      </Select>
+                    </FormItem> -->
                     <FormItem prop="target_enter" label="目标客流">
-                       <Input v-model="datas.target_enter" type="number" ></Input>
+                       <Input v-model="datas.target_enter" type="number" style="width:218px"></Input>
                     </FormItem>
-                    <FormItem prop="description" label="描述" >
-                        <Input type="textarea" v-model="datas.description" ></Input>
+                    <FormItem prop="description" label="描述" style="margin-top: 12px;">
+                        <Input type="textarea" v-model="datas.description" style="width:218px"></Input>
                     </FormItem>
                     <FormItem style="margin-bottom:0px;margin-left:20px;">
                         <Button type="primary" @click="handleSubmit('formInline')">保存</Button>
@@ -51,8 +60,8 @@
 
 <script>
 import { validName, validRemark } from '@/libs/util'
-import {  addActiveDays, updateActiveDays } from '@/api/manager.js'
-import moment from 'moment'
+import { getActiveDays, addActiveDays, updateActiveDays, deleteActiveDays } from '@/api/manager.js'
+import { getGroupOrganization } from '@/api/home.js'
 import alert from '@/components/alert.vue'
 export default {
   name: 'editHoliday',
@@ -63,32 +72,37 @@ export default {
     alert
   },
   created () {
-    let propertyList = []
-    let data = this.$store.state.home.organizationData.property
-    let rold_id = this.$store.state.user.role_id
-    if (rold_id < 3) {
-      data.map(function (m) {
-        let obj = {}
-        obj.name = m.name
-        obj.label = m.name
-        obj.value = m.property_id
-        obj.id = m.property_id
-        propertyList.push(obj)
-      })
-    } else {
-      let checkilist = this.$store.state.user.checklist
-      data.map(function (m) {
-        if (checkilist.indexOf(m.property_id) > -1) {
-          let obj = {}
-          obj.name = m.name
-          obj.label = m.name
-          obj.value = m.property_id
-          obj.id = m.property_id
-          propertyList.push(obj)
+    var that = this
+    getGroupOrganization().then(function (resd) {
+      if (resd.data.code == 200) {
+        let propertyList = []
+        let data = resd.data.data.property
+        let rold_id = that.$store.state.user.role_id
+        if (rold_id < 3) {
+          data.map(function (m) {
+            let obj = {}
+            obj.name = m.name
+            obj.label = m.name
+            obj.value = m.property_id
+            obj.id = m.property_id
+            propertyList.push(obj)
+          })
+        } else {
+          let checkilist = that.$store.state.user.checklist
+          data.map(function (m) {
+            if (checkilist.indexOf(m.property_id) > -1) {
+              let obj = {}
+              obj.name = m.name
+              obj.label = m.name
+              obj.value = m.property_id
+              obj.id = m.property_id
+              propertyList.push(obj)
+            }
+          })
         }
-      })
-    }
-    this.propertyList = propertyList
+        that.propertyList = propertyList
+      }
+    })
   },
   mounted () {
   },
@@ -133,7 +147,7 @@ export default {
       ruleInline: {
         name: [{ required: true, validator: validName, trigger: 'blur' }],
         begin: [{ required: true, validator: validate, trigger: 'change' }],
-        end: [{ required: true, validator: this.validateEndTime, trigger: 'change' }],
+        end: [{ required: true, validator: validate, trigger: 'change' }],
         property: [{ required: true, validator: validateProperty, trigger: 'change' }],
         description: [
           { required: false, validator: validRemark, trigger: 'blur' }
@@ -144,15 +158,6 @@ export default {
   computed: {
   },
   methods: {
-      validateEndTime(rule, value, callback){
-          if (value === '') {
-              callback(new Error('请选择结束时间'));
-          } else if (moment(value).isBefore(this.datas.begin)) {
-              callback(new Error('结束时间应晚于开始时间'));
-          } else {
-              callback();
-          }
-      },
     formatDate (date) {
       var nDate = new Date(date)
       var year = nDate.getFullYear()
@@ -167,9 +172,22 @@ export default {
       var endString = this.formatDate(this.datas.end)
       endString = endString.indexOf('NaN') > -1 ? '' : endString
       this.datas.end = endString
-      this.$refs[name].validate((valid) => {
+      var numberBegin = Number(beginString.replace('-', '').replace('-', ''))
+      var numberEnd = Number(endString.replace('-', '').replace('-', ''))
+      var that = this
+      that.$refs[name].validate((valid) => {
         if (valid) {
-            this.mok(this.datas)
+          if (numberBegin > numberEnd) {
+            that.isAlert = true
+            that.alertText.bg = '#00A0E9'
+            that.alertText.title = '编辑活动'
+            that.alertText.text = '开始日期不能大于结束日期'
+            that.alertText.confirm = false
+            alert('')
+            return false
+          }
+          that.mok(that.datas)
+        } else {
         }
       })
     },
@@ -183,51 +201,61 @@ export default {
       this.datas.begin = fdate
     },
     alertConfirm (valuer) {
-      if (valuer) {
-          this.$emit('editData')
+      var that = this
+      if (valuer == true) {
+        that.$emit('editData')
       } else {
-          this.isAlert = false
+        that.isAlert = false
       }
     },
     closeEdit () {
       this.$emit('closeEdit')
     },
     mok (row) {
+      var that = this
       var toBeEdit = row
       toBeEdit.end = toBeEdit.end + ' 23:59:59'
       toBeEdit.property_id = toBeEdit.property
-      if (this.isUpdate) {
-        updateActiveDays(toBeEdit).then(res=> {
+      if (that.isUpdate) {
+        updateActiveDays(toBeEdit).then(function (res) {
+          if (res.data.code === 200) {
             if (res.data.message.length > 0) {
-                this.isAlert = true
-                this.alertText.bg = '#00A0E9'
-                this.alertText.title = '编辑活动'
-                this.alertText.text = '活动名称已存在,请修改'
-                this.alertText.confirm = false
+              that.isAlert = true
+              that.alertText.bg = '#00A0E9'
+              that.alertText.title = '编辑活动'
+              that.alertText.text = '活动名称已存在,请修改'
+              that.alertText.confirm = false
             } else {
-                this.$emit('closeEdit')
-                this.$emit('showAlert', true, '#00A0E9', '编辑活动', '修改活动成功', false)
-                this.$emit('initData', 21, false)
+              that.$emit('closeEdit')
+              that.$emit('showAlert', true, '#00A0E9', '编辑活动', '修改活动成功', false)
+              that.$emit('initData', 21, false)
             }
+          } else {
+            alert(res.data.message)
+          }
         })
       }
-      if (!this.isUpdate) {
+      if (!that.isUpdate) {
         var toBeEdit = _.cloneDeep(this.datas)
         toBeEdit.property_id = toBeEdit.property
         toBeEdit.type_id = 21
-        toBeEdit.date = this.selectyear
-        addActiveDays(toBeEdit).then(res=> {
+        toBeEdit.date = that.selectyear
+        addActiveDays(toBeEdit).then(function (res) {
+          if (res.data.code === 200) {
             if (res.data.message.length > 0) {
-                this.isAlert = true
-                this.alertText.bg = '#00A0E9'
-                this.alertText.title = '添加活动'
-                this.alertText.text = '活动名称已存在,请修改'
-                this.alertText.confirm = false
+              that.isAlert = true
+              that.alertText.bg = '#00A0E9'
+              that.alertText.title = '添加活动'
+              that.alertText.text = '活动名称已存在,请修改'
+              that.alertText.confirm = false
             } else {
-                this.$emit('closeEdit')
-                this.$emit('showAlert', true, '#00A0E9', '添加活动', '添加活动', false)
-                this.$emit('initData', 21, false)
+              that.$emit('closeEdit')
+              that.$emit('showAlert', true, '#00A0E9', '添加活动', '添加活动', false)
+              that.$emit('initData', 21, false)
             }
+          } else {
+            alert(res.data.message)
+          }
         })
       }
     }
@@ -256,6 +284,7 @@ export default {
                 margin-left: -220px;
                 margin-top: -243px;
                 width: 440px;
+                height: 486px;
                 background-color: #fff;
                 background: white;
                 border: 1px solid #d7dfe3;
@@ -274,15 +303,9 @@ export default {
                 color:rgba(91,89,89,1)
             }
             .edit-text{
-                display: flex;
-                padding: 24px 0;
+            display: flex;
+                padding-top: 24px;
                 width: 100%;
-                /deep/.ivu-form-item-content{
-                    width: 218px!important;
-                }
-                /deep/.ivu-input{
-                    width: 218px!important;
-                }
 
     }
         }

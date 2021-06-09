@@ -24,14 +24,12 @@ footFall:客流
           v-model="exportType"
           :xAxis="bizChartData.xAxis"
           :series="bizChartData.series"
-          :tooltipUnit="tooltipUnit(bizIndicator)"
           :type="chartTypes"
+          :tooltipUnit="tooltipUnit(bizIndicator)"
           :extraOptions="bizExtraOptions"
           :istotal='istotal'
           :title="titleText.left"
           key="bizTop"
-          @getShopTableCoumn="leftTableCoumn"
-          @getShopTableData="letfTableData"
         >
           <span class="mx-4 text-sm" style="line-height:37px">数据指标:</span>
           <vs-select
@@ -55,14 +53,14 @@ footFall:客流
           v-model="exportType"
           :xAxis="topShopData.xAxis"
           :series="topShopData.series"
-          :tooltipUnit="tooltipUnit(shopIndicator)"
           :type="chartTypes"
+          :tooltipUnit="tooltipUnit(shopIndicator)"
           :extraOptions="extraOptions"
           :title="titleText.right"
           :isHome='true'
           :istotal='istotal'
-          @getShopTableCoumn="rightTableCoumn"
-          @getShopTableData="rightTableData"
+          @getShopTableCoumn="getShopTableCoumn"
+          @getShopTableData="getShopTableData"
           key="shopTop"
         >
           <export-menu slot="export" @onchange="exportShoptop"></export-menu>
@@ -94,10 +92,12 @@ import {
   getTopShop,
   getShopTopFootFall,
   getBizTopFootFall,
-  getBussinessDict,
-  exportEx
+  exportBizXls,
+  exportShopXls,
+  flowexcel,
+  flowstoreexcel
 } from '@/api/home.js'
-import { downloadEx,isEmpty } from '@/libs/util'
+import { getBussinessDict, exportEx } from '@/api/home'
 import salesDict from '@/views/home/components/salesIndicatorDict.js'
 import exportMenu from './ExportMenu.vue'
 import moment from 'moment'
@@ -184,6 +184,7 @@ export default {
       shopTopData: [],
       allBizTopData: [],
       chartTypes: ['bar'],
+      // bizTypeOfSelect: 'all',
       extraOptions: {
         plotOptions: {
           bar: {
@@ -198,22 +199,17 @@ export default {
         }
       },
       exportType: '',
-      tableList:{
-        coumnOne:'',
-        dataOne:'',
-         coumnTwo:'',
-         dataTwo:''
-      },
+	  ShopTableCoumn: '',
+	  ShopTableData: '',
+      cancelGetBizTopFootFallAjax: null,
+      cancelGetTopShopAjax: null
     }
   },
   watch: {
     time1: {
       immediate: true,
       handler: function (val, oldVal) {
-        if(val){
-          this.getTopData()
-        }
-        
+        this.getTopData()
       }
     },
     time2: {
@@ -238,6 +234,18 @@ export default {
               if (v === l.value) this.bussinessType = v
             })
           })
+        }
+
+        if (window.location.href.indexOf('dashboard/analytics') > -1) {
+          try {
+            let find = _.find(this.withAllOptions, ['value', val])
+            let name = find && find.text ? find.text : ''
+            let eventName = this.$store.state.home.headerAction === 0 ? '集团页面' : '购物中心首页'
+
+            window.TDAPP.onEvent(eventName, '业态排行业态选择', { '业态': name })
+          } catch (error) {
+            console.log(eventName + '-业态排行业态选择-埋点error:' + error)
+          }
         }
       }
     },
@@ -321,29 +329,19 @@ export default {
           })
         })
       }
+      let that = this
       return {
         xAxis: {
           name: '名称',
           key: 'bussiness',
           data: Object.values(Object.values(tml)[0]).map(e => e.name)
         },
-        series: Object.keys(tml).map((e, index) => {
+        series: Object.keys(tml).map(function (e, index) {
           if (index < 10) {
-            const time = e.split(',');
-            let name = e.replace(',',' - ');
-            if(!isEmpty(time) && time[0] === time[1]){
-              name = time[0]
-            }
             let obj = {
-              name,
-              key: `data_${e}`,
-              data: Object.values(tml[e]).map(o => {
-                if(this.bizIndicator === 'CloseRate'){
-                  return o.data*100
-                }else{
-                  return o.data
-                }
-              })
+              name: `${that.indicatorData[that.bizIndicator].name} ${e.split(',').join(' - ')}`,
+              key: `data_${e}_enter`,
+              data: Object.values(tml[e]).map(o => o.data)
             }
             return obj
           }
@@ -352,7 +350,6 @@ export default {
       }
     },
     topShopData () {
-      
       // 商铺排行和业态排行同时依赖当前用户选择的业态 this.currentBizIdx，
       // 但是用户可以在业态排行图表可以选择某条数据（相当于选择了一个业态），
       // 这时商铺排行的数据需要依赖这个，但是不能影响原来的业态排行
@@ -360,10 +357,10 @@ export default {
       let bizIndex = this.currentBizIdx
       if (bizIndex < 0) {
         // 全部业态
-        if (this.allBizTopData.length == 0) return false
+        if (!this.allBizTopData.length) return false
         source = this.allBizTopData[0].data.data
       } else {
-        if (this.shopTopData.length == 0) return false
+        if (!this.shopTopData.length) return false
         if (this.shopTopData[0]) source = this.shopTopData[0].data.data
         else return false
       }
@@ -386,18 +383,11 @@ export default {
             else return e.name
           })
         },
-        series: Object.keys(sortedObj).map(e => {
-          const time = e.split(',');
-          let name = e.replace(',',' - ');
-          if(!isEmpty(time) && time[0] === time[1]){
-            name = time[0]
-          }
-          return {
-            name,
-            key: `data_${e}`,
-            data: Object.values(sortedObj[e]).map(e => { return e.data })// 因为排序后的数据是数组，所以需要判断
-          }
-        })
+        series: Object.keys(sortedObj).map(e => ({
+          name: `${this.indicatorData[this.shopIndicator].name} ${e.split(',').join(' - ')}`,
+          key: `data_${e}_enter`,
+          data: Object.values(sortedObj[e]).map(e => { return e.data })// 因为排序后的数据是数组，所以需要判断
+        }))
       }
     },
     bizExtraOptions () {
@@ -428,12 +418,11 @@ export default {
           return '人次'
         case 'SquaerMetre':
           return '元/m²'
+        case 'UnitPrice':
         case 'SaleAmount':
           return '元'
         case 'CloseRate':
           return '%'
-        case 'UnitPrice':
-          return '元'
       }
     },
     // 业态数据
@@ -444,44 +433,27 @@ export default {
         type: this.bizIndicator,
         bzid: this.bzid && this.bzid.toString()
       }
-      if(!this.time1) return
       if (this.time2) bizParams.time2 = this.time2
       // 判断是集团还是购物中心
       let currentPropertyId = this.$store.state.home.headerAction
       if (currentPropertyId != 0) bizParams.property_id = currentPropertyId
       else bizParams.company_id = this.$store.state.user.companyId
+      if (typeof this.cancelGetBizTopFootFallAjax === 'function') {
+        this.cancelGetBizTopFootFallAjax()
+      }
       this.bizIndicator == 'enter' ? bizTypesTopReqs = getBizTopFootFall(bizParams, this) : bizTypesTopReqs = getTopBussinessType(bizParams)
       bizTypesTopReqs.then(res => {
+        this.cancelGetBizTopFootFallAjax = null
         this.bizTopData = res
       })
     },
-    leftTableCoumn(value){
-      value.map(list=>{
-        if(list.title!=='名称'){
-          let newTime =  list.title.split(' - ')
-          if(newTime[0]===newTime[1]){
-            list.title = newTime[0]
-          }
-        }
-      })
-      this.tableList.coumnOne = value
+    // 获取购物中心排行表格的表头
+    getShopTableCoumn (value) {
+      this.ShopTableCoumn = value
     },
-    letfTableData(value){
-      this.tableList.dataOne = value
-    },
-    rightTableCoumn(value){
-      value.map(list=>{
-        if(list.title!=='名称'){
-          let newTime =  list.title.split(' - ')
-          if(newTime[0]===newTime[1]){
-            list.title = newTime[0]
-          }
-        }
-      })
-      this.tableList.coumnTwo = value
-    },
-    rightTableData(value){
-      this.tableList.dataTwo = value
+    // 获取购物中心排行表格的数据
+    getShopTableData (value) {
+      this.ShopTableData = value
     },
     // 购物中心 商铺数据
     shopAndStoreDataList () {
@@ -496,14 +468,17 @@ export default {
           industry_id: typeId.value,
           bzid: this.bzid && this.bzid.toString()
         }
-        if(!this.time1) return
         // 判断是集团还是购物中心
         if (currentPropertyId != 0) topShopParam.property_id = currentPropertyId
         else topShopParam.company_id = this.$store.state.user.companyId
         if (this.time2) topShopParam.time2 = this.time2
 
-        let url = this.shopIndicator == 'enter' ? getShopTopFootFall(topShopParam) : getTopShop(topShopParam, this)
+        let url = this.shopIndicator == 'enter' ? getShopTopFootFall(topShopParam, this) : getTopShop(topShopParam, this)
         topShopOfBizType.push(url)
+      }
+
+      if (typeof this.cancelGetTopShopAjax === 'function') {
+        this.cancelGetTopShopAjax()
       }
       // 购物中心或者商铺 合计
       let shopParams = {
@@ -511,15 +486,15 @@ export default {
         type: this.shopIndicator,
         bzid: this.bzid && this.bzid.toString()
       }
-      if(!this.time1) return
       if (currentPropertyId != 0) shopParams.property_id = currentPropertyId
       else shopParams.company_id = this.$store.state.user.companyId
       if (this.time2) shopParams.time2 = this.time2
-      let totalUrl = this.shopIndicator == 'enter' ? getShopTopFootFall(shopParams) : getTopShop(shopParams, this)
+      let totalUrl = this.shopIndicator == 'enter' ? getShopTopFootFall(shopParams, this) : getTopShop(shopParams, this)
       topShopOfAllBizType.push(totalUrl)
       Promise.all([topShopOfAllBizType, topShopOfBizType].map(innerPromises => {
         return Promise.all(innerPromises)
       })).then(res => {
+        this.cancelGetTopShopAjax = null;
         [this.allBizTopData, this.shopTopData] = res
       }).catch(err => {
         console.log(err)
@@ -527,6 +502,7 @@ export default {
     },
     handleChartPointSelect (e) {
       this.bussinessType = this.bizChartData.source[e.dataPointIndex]
+      // this.bizTypeOfSelect = this.bizChartData.source[e.dataPointIndex]
     },
     sortdObj (obj) {
       // 2019-06-26 修改，对两个时间的各项求和在排序
@@ -551,28 +527,121 @@ export default {
       })
       return sortedObj
     },
-    exportBiztop () {
-      let name
-      if(this.$store.state.home.headerAction===0) name='集团业态排行'
-      else{
-        if(this.$router.currentRoute.name==='SalesAnalytics'){
-            name='销售业态排行'
-        }else{
-           name='业态排行'
-        }
+    dowloadXlsx (res) {
+      /**
+       * @description 下载文件
+       */
+      let date = new Date()
+      const blob = new Blob([res.data])
+      var url = this.$router.currentRoute.name
+      var titleName = ''
+      if (url == 'drainage') {
+        titleName = '实体引流分析'
+      } else if (url == 'pathTrend') {
+        titleName = '路径动向分析'
+      } else if (url == 'sales') {
+        titleName = '销售分析'
       }
-      downloadEx(exportEx,name,[this.tableList.coumnOne,this.tableList.dataOne])
+      let name = ''
+      this.exportEx == 1 ? name = '业态排行' : name = '商铺排行'
+      let fileName = titleName + name + moment(date).format('YYYYMMDDHHmmss') + '.xls'
+      const elink = document.createElement('a')
+      elink.download = fileName
+      elink.style.display = 'none'
+      elink.href = URL.createObjectURL(blob)
+      document.body.appendChild(elink)
+      elink.click()
+      URL.revokeObjectURL(elink.href)// 释放URL 对象
+      document.body.removeChild(elink)
+    },
+    exportBiztop (type) {
+      if (type === 'current') {
+        if (this.typeName == 'drainage') {
+          flowexcel(this.drainageApi).then(res => {
+            this.exportEx = 1
+            this.dowloadXlsx(res)
+          })
+        } else {
+          exportBizXls({
+            time1: this.time1,
+            time2: this.time2,
+            property_id: this.propertyId,
+            type: this.bizIndicator,
+            bzid: this.bzid && this.bzid.toString()
+          }).then(res => {
+            if (window.location.href.indexOf('dashboard/analytics') > -1) {
+              let eventName = this.$store.state.home.headerAction === 0 ? '集团页面' : '购物中心首页'
+              try {
+                window.TDAPP.onEvent(eventName, '业态排行下载', { })
+              } catch (error) {
+                console.log(eventName + '-业态排行下载-埋点error:' + error)
+              }
+            }
+
+            this.exportEx = 1
+            this.dowloadXlsx(res)
+          })
+        }
+      } else {
+
+      }
     },
     exportShoptop (type) {
-      let name
-      if(this.$store.state.home.headerAction===0) name='购物中心业态排行'
-      else
-        if(this.$router.currentRoute.name==='SalesAnalytics'){
-            name='销售商铺排行'
-        }else{
-           name='商铺排行'
+      if (type === 'current') {
+        if (this.typeName == 'drainage') {
+          flowstoreexcel(this.drainageApi).then(res => {
+            this.exportEx = 2
+            this.dowloadXlsx(res)
+          })
+        } else if (window.location.href.indexOf('dashboard/analytics') > -1) {
+          if (this.$store.state.home.headerAction === 0) {
+            let data = [this.ShopTableCoumn, this.ShopTableData]
+			      if (this.ShopTableData.length == 0) {
+              alert('暂无数据可下载')
+              return false
+            }
+            exportEx(data).then(res => {
+              let date = new Date()
+              const blob = new Blob([res.data])
+              let name = '购物中心排行下载'
+              let fileName = name + moment(date).format('YYYYMMDDHHmmss') + '.xls'
+              const elink = document.createElement('a')
+              elink.download = fileName
+              elink.style.display = 'none'
+              elink.href = URL.createObjectURL(blob)
+              document.body.appendChild(elink)
+              elink.click()
+              URL.revokeObjectURL(elink.href)// 释放URL 对象
+              document.body.removeChild(elink)
+            })
+
+            try {
+              window.TDAPP.onEvent('集团页面', '购物中心排行下载', { })
+            } catch (error) {
+              console.log('集团页面-购物中心排行下载-埋点error:' + error)
+            }
+          } else {
+            exportShopXls({
+              time1: this.time1,
+              time2: this.time2,
+              property_id: this.propertyId,
+              type: this.shopIndicator,
+              bzid: this.bzid && this.bzid.toString(),
+              industry_id: this.bussinessType === 'all' ? null : this.bussinessType })
+              .then(res => {
+                try {
+                  window.TDAPP.onEvent('购物中心首页', '商铺排行下载', { })
+                } catch (error) {
+                  console.log('购物中心首页-商铺排行下载-埋点error:' + error)
+                }
+                this.exportEx = 2
+                this.dowloadXlsx(res)
+              })
+          }
         }
-      downloadEx(exportEx,name,[this.tableList.coumnTwo,this.tableList.dataTwo])
+      } else {
+
+      }
     },
     // 请求业态数据
     getDict () {
@@ -580,6 +649,7 @@ export default {
       propertyId = propertyId == 0 ? '' : propertyId
       getBussinessDict({ property_id: propertyId }).then(res => {
         this.bussinessDictList = res.data.data
+        this.$store.commit('saveBussinessType', res.data.data)
         this.$store.commit('isGetDict', false)
         this.getTopData()
       }).catch(err => {
@@ -612,4 +682,12 @@ box-border(w,r)
     width 50%
     &:nth-child(1)
         border-right 1px solid border-color
+  @media (max-width:768px)
+    flex-wrap wrap
+    border none
+    >div
+      width 100%
+      box-border 1px,8px
+      &:nth-child(1)
+        margin-bottom 1.25rem
 </style>

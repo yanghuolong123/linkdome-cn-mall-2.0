@@ -47,6 +47,7 @@ export const ExcelDataApi = params => {
     method: 'get'
   })
 }
+
 export const getShopPortrait = params =>{
   return naxios.request({
     url: 'sale/shopPortrait',
@@ -67,7 +68,6 @@ export const getIndexMap = params =>{
     params,
   })
 }
-
 //获取位置列表
 export const getPositonOpiton = () =>{
   return naxios.request({
@@ -106,4 +106,3 @@ export const getShopChangeSaleTrend = (data) =>{
     method:'post'
   })
 }
-

@@ -31,6 +31,12 @@ export default {
     flowType: {
       immediate: true,
       handler: function (val, oldVal) {
+        let label = val === 'from' ? '来源流量分析' : '目的流量分析'
+        try {
+          window.TDAPP.onEvent('实体引流分析页面', label, { })
+        } catch (error) {
+          console.log('实体引流分析页面-' + label + '-error:' + error)
+        }
         this.$emit('input', val)
       }
     }

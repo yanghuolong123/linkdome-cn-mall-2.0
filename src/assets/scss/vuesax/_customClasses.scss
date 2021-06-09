@@ -233,14 +233,14 @@
     }
 }
 
-// @media only screen and (max-width: 992px) {
-//     .full-vs-sidebar {
-//         .vs-sidebar {
-//             max-width: 100%;
-//             margin-left: 0;
-//         }
-//     }
-// }
+@media only screen and (max-width: 992px) {
+    .full-vs-sidebar {
+        .vs-sidebar {
+            max-width: 100%;
+            margin-left: 0;
+        }
+    }
+}
 
 //////////////////////////////////////////////////////////////////////////
 // OTHER

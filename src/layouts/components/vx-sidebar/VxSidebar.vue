@@ -22,11 +22,11 @@
       :click-not-close="clickNotClose"
       :reduce-not-rebound="reduceNotRebound"
     >
-      <!-- {{isSidebarActive}} -->
       <div @mouseenter="sidebarMouseEntered" @mouseleave="sidebarMouseLeave">
-        <div class="header-sidebar-main flex items-center flex-center" slot="header">
-          <div class="logo " :style="{backgroundImage:`url(${logoImg?logoImg:logo})`}"></div>
-          <span>
+        <div class="header-sidebar-main flex items-center justify-between" slot="header">
+          <div class="logo" :style="{backgroundImage:`url(${logoImg?logoImg:logo})`}"></div>
+          <div>
+
             <template v-if="showCloseButton">
               <feather-icon
                 icon="XIcon"
@@ -34,6 +34,7 @@
                 @click="$store.commit('TOGGLE_IS_SIDEBAR_ACTIVE', false)"
               ></feather-icon>
             </template>
+
             <template v-else-if="!showCloseButton && !sidebarItemsMin">
               <!-- <feather-icon
                 icon="ArrowLeftIcon"
@@ -43,20 +44,23 @@
                 @click="toggleReduce(true)"
               ></feather-icon> -->
               <span
+                icon="ArrowLeftIcon"
                 class="mr-0 cursor-pointer"
                 svg-classes="stroke-current"
                 v-show="!reduce"
                 @click="toggleReduce(true)"
               >
-                <icons class="shrink" type="icon_huabanfuben"></icons>
+                <icons type="icon_huabanfuben" style="color:#37b5ed;font-size:24px;"></icons>
               </span>
+
               <span
+                icon="CircleIcon"
                 class="mr-0 cursor-pointer"
                 svg-classes="stroke-current"
                 v-show="reduce"
                 @click="toggleReduce(false)"
               >
-                  <icons class="shrink" type="icon_fuben"></icons>
+                <icons type="icon_fuben" style="color:#37b5ed;font-size:24px;"></icons>
               </span>
               <!-- <feather-icon
                 icon="CircleIcon"
@@ -66,7 +70,7 @@
                 @click="toggleReduce(false)"
               ></feather-icon> -->
             </template>
-          </span>
+          </div>
         </div>
         <div class="shadow-bottom" v-show="showShadowBottom"></div>
         <VuePerfectScrollbar
@@ -85,7 +89,6 @@
             >{{ $t(sidebarItem.i18n) || sidebarItem.header }}</span>
             <template v-else-if="!sidebarItem.header">
               <!-- IF IT'S SINGLE ITEM -->
-
               <vx-sidebar-item
                 ref="sidebarLink"
                 :key="`sidebarItem-${index}`"
@@ -113,8 +116,10 @@
               <template v-else>
                 <vx-sidebar-group
                   ref="sidebarGrp"
-                  :key="`group-${index}`"
+                  @closeOthers="closeOthers"
+                  :keyId="`group-${index}`"
                   :openHover="openGroupHover"
+                  :activeKey="activeKey"
                   :group="sidebarItem"
                   :shopingList="shopingList"
                   :groupIndex="index"
@@ -132,6 +137,7 @@
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import VxSidebarGroup from './VxSidebarGroup.vue'
 import VxSidebarItem from './VxSidebarItem.vue'
+import { getGroupOrganization } from '@/api/home.js'
 export default {
   name: 'vx-sidebar',
   props: {
@@ -169,7 +175,8 @@ export default {
       swipeEasing: true
     },
     windowWidth: window.innerWidth, // width of windows
-    showShadowBottom: false
+    showShadowBottom: false,
+    activeKey: ''
   }),
   computed: {
     isSidebarActive: {
@@ -231,6 +238,9 @@ export default {
     }
   },
   methods: {
+    closeOthers (key) {
+      this.activeKey = key
+    },
     sidebarMouseEntered () {
       if (this.reduce) this.$store.commit('UPDATE_SIDEBAR_ITEMS_MIN', false)
       this.isMouseEnter = true
@@ -294,19 +304,24 @@ export default {
   created () {
     this.shopingList = []
     if (this.$store.state.user.role_id < 3) {
-        const data = this.$store.state.home.organizationData
-        if (data.property.length != 0) {
-          data.property.map(list => {
-            if (list.property_id && list.bzid) {
-              let l = {
-                text: list.name,
-                value: list.property_id,
-                img: list.map_url
+      getGroupOrganization().then(res => {
+        if (res.data.code == 200) {
+          let data = res.data.data
+          this.$store.commit('saveOrganizationData', data)
+          if (data.property.length != 0) {
+            data.property.map(list => {
+              if (list.property_id && list.bzid) {
+                let l = {
+                  text: list.name,
+                  value: list.property_id,
+                  img: list.map_url
+                }
+                this.shopingList.push(l)
               }
-              this.shopingList.push(l)
-            }
-          })
+            })
+          }
         }
+      })
     }
   },
   beforeDestroy () {
@@ -319,10 +334,6 @@ export default {
 @import "@/assets/scss/vuesax/components/vxSidebar.scss";
 </style>
 <style lang="less">
-.shrink{
-  color:#37b5ed !important;
-  font-size:24px !important;
-}
   .group-header{
     font-weight: bold;
   }

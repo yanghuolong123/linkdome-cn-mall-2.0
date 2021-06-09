@@ -8,7 +8,7 @@
               <hr v-if="dataType"></hr><p>{{dataType}}</p>
             </span>
           </div>
-          <vue-apex-charts v-if="isChart"  :height="height1" :options="options1" :series="series1"></vue-apex-charts>
+          <vue-apex-charts v-if="isChart" type="line" :height="height1" :options="options1" :series="series1"></vue-apex-charts>
       </tab-item>
       <tab-item :icon="icon2" class="chart-div" >
         <div class="left-title">
@@ -77,7 +77,7 @@ export default {
     },
     columns: {
       type: Array,
-      default: () => ['日期', '客流量 ( 人次 )', '目标客流量 ( 人次 )']
+      default: () => ['日期', '客流量', '目标客流量']
     },
     tableList: {
       type: Array,
@@ -118,6 +118,43 @@ export default {
     return {
       current: 0,
       isChart: false,
+      lineSeries: [
+        {
+          'name': '第一购物中心 2019-12-01 - 2019-12-10有效客流',
+          'data': [ 11965, 17167, 18516, 18896, 18572, 21328, 33557, 8562, 0, 0 ]
+        },
+        {
+          'name': '第一购物中心 2019-12-03 - 2019-12-12有效客流',
+          'data': [18516, 18896, 18572, 21328, 33557, 8562, 0, 0, 0, 0]
+        }
+      ],
+      chartOptions: {
+        chart: {
+          height: 350,
+          zoom: {
+            enabled: false
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          curve: 'straight'
+        },
+        title: {
+          text: 'Product Trends by Month',
+          align: 'left'
+        },
+        grid: {
+          row: {
+            colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+            opacity: 0.5
+          }
+        },
+        xaxis: {
+          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+        }
+      }
     }
   },
   computed: {

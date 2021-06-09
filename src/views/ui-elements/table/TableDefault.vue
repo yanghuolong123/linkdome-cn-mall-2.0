@@ -8,18 +8,18 @@
 	Author URL: hhttp://www.themeforest.net/user/pixinvent
 ========================================================================================== -->
 <template>
-  <vx-card :title="tableTitle" class="headline">
+  <vx-card stripe :title="tableTitle" class="headline">
 
     <vs-table :data="tableList"
               :noDataText="name">
       <!-- table title -->
-      <template slot="thead" #thead>
+      <template slot="thead">
         <vs-th :key="index"
                class="table-title"
                v-for="(item,index) in tableName">{{item}}</vs-th>
       </template>
       <!-- table list -->
-      <template slot-scope="{data}" #tbody>
+      <template slot-scope="{data}">
         <vs-tr :key="indextr"
                v-for="(tr, indextr) in data">
           <vs-td :data="data[indextr].name"

@@ -62,12 +62,12 @@ export default {
   >div /deep/
     width 24%
     margin-bottom 1.5rem
-    // @media (max-width 992px) {
-    //   width 48%
-    // }
-    // @media (max-width 576px) {
-    //   width 100%
-    // }
+    @media (max-width 992px) {
+      width 48%
+    }
+    @media (max-width 576px) {
+      width 100%
+    }
     >div
       height 200px
       padding 20px!important
@@ -75,7 +75,7 @@ export default {
         transform scale(1.5) translateX(4px)
         margin-bottom 15px
       .type-name
-        font-size 1.15rem!important
+        font-size 1.25rem!important
         line-height 2
       .number-con
         font-size 2.14rem!important

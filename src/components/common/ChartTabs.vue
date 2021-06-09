@@ -102,6 +102,22 @@ export default {
       chartWidth: '99%',
       chartHeight: 385,
       canshow: false,
+      option: {
+        legend: {},
+        tooltip: {
+          trigger: 'axis'
+        },
+        dataset: {
+          source: []
+        },
+        grid: {
+          left: 'center',
+          width: '90%'
+        },
+        xAxis: { type: 'category' },
+        yAxis: { type: 'value' },
+        series: []
+      },
       iconCheck: {
         bar: '62',
         line: 'zhexiantu'
@@ -111,6 +127,9 @@ export default {
           categories: [],
           labels: {
             show: true,
+            style: {
+              fontFamily: 'Roboto,sans-serif'
+            }
           }
         },
         colors: ['#00A0E9', '#2BD9CF', '#8D82F0', '#E8585A', '#E8585A', '#94E2FF'],
@@ -118,8 +137,15 @@ export default {
           labels: {
             formatter (value) {
               return value ? value.toLocaleString() : ''
+            },
+            style: {
+              fontFamily: 'Roboto,sans-serif',
+              marginLeft: '10px'
             }
           }
+        },
+        tooltip: {
+          shared: true
         },
         stroke: {
           curve: 'straight',
@@ -143,13 +169,16 @@ export default {
           offsetX: 0,
           offsetY: 0,
           style: {
+            color: undefined,
             fontSize: '14px',
+            fontFamily: undefined
           }
         },
         chart: {
           toolbar: {
             show: false
           },
+          fontFamily: 'source_han_sans_cn',
           zoom: {
             enabled: false
           }
@@ -182,20 +211,14 @@ export default {
       if (!this.mergeData.length) return { column, data }
       this.mergeData.forEach((e, dindex) => {
         let { name: title, key } = e
-        if(dindex > 0){
-          title = title +' ( 人次 ) '
-          column.push({ title, key })
-        }else{
-          column.push({ title, key })
-        }
-       
+        column.push({ title, key })
       })
       this.xAxis[0].data.forEach((e, dindex) => {
         let tml = {}
         column.forEach((k, kindex) => {
-          let value = this.mergeData[kindex].data[dindex]
-          if (typeof value === 'number') {
-            value = value.toLocaleString() 
+          let value = this.mergeData[kindex].data[dindex];
+          if(typeof value === 'number'){
+            value = value.toLocaleString()+'人次'
           }
           tml[k.key] = value
         })
@@ -232,28 +255,38 @@ export default {
         let horizbar = {
           yaxis: {
             labels: {
-              align:'center',
+              offsetY: categories.length < 5 ? -10 : 0,
               offsetX: 10,
               show: ifhasData
+              // formatter: (value) => { return value + '123' }
             },
             show: ifhasData
           },
           plotOptions: {
             bar: {
-              barHeight: categories.length < 5 ? '30%' : '70%',
+              barHeight: categories.length < 5 ? '20%' : '70%',
               horizontal: true
             }
           },
-          tooltip: {
-            y: {
-              formatter: (val) => {
-                if(val===0) return 0 +'人次'
-                if (val == undefined || val == null || val == '')  return ''
-                if (typeof val === 'number') return val.toLocaleString() + '人次'
-                else  return val + '人次'
-                
+          tooltip:{
+            y:{
+              formatter:(val)=>{
+                if (val == undefined || val == null || val == ''){
+                  return ''
+                };
+                if(typeof val === 'number'){
+                  return val.toLocaleString()+'人次'
+                }else {
+                  return val+'人次'
+                }
               }
             }
+          },
+          xAxis: {
+            lines: {
+              show: ifhasData
+            }
+
           },
           grid: {
             yaxis: {
@@ -268,15 +301,9 @@ export default {
       let mergeObj = _.merge(this.apexOptions, extraBarOpt)
       let xData = {
         xaxis: {
-          lines: {
-            show: ifhasData
-          },
           categories,
           labels: {
-            trim:false,
-            formatter: (value) => {
-              return value.toLocaleString()
-            }
+            formatter: (value) => { return value.toLocaleString() }
           }
         }
       }

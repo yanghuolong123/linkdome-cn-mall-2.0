@@ -26,19 +26,19 @@
             <div class="left-title">
               <p class="title">{{titleText}}</p>
             </div>
-            <vue-apex-charts type="line" height="530" :options="options1" :series="series1" class="ape-chart"></vue-apex-charts>
+            <vue-apex-charts type="line" height="530" :options="options1" :series="series1" style="padding-top:55px"></vue-apex-charts>
         </tab-item>
         <tab-item  class="chart-div" v-if="typeAction==1" >
             <div class="left-title">
               <p class="title">{{titleText}}</p>
             </div>
-            <gola-enter-analysis :xAxis='options2.xaxis.categories' :options="options2" :series='series2'></gola-enter-analysis>
+            <gola-enter-analysis :xAxis='options2.xaxis.categories' :series='series2'></gola-enter-analysis>
         </tab-item>
         <tab-item  class="chart-div">
             <div class="left-title">
                 <p class="title">{{titleText}}</p>
             </div>
-            <TableMultipleSelected style="height:530px" class="table-chart" :tableName="columns" :tableList="tableList"></TableMultipleSelected>
+            <TableMultipleSelected  style="overflow-y:scroll;margin-top:50px;height:530px"  :tableName="columns" :tableList="tableList"></TableMultipleSelected>
         </tab-item>
     </i-tabs>
   </div>
@@ -75,7 +75,7 @@ export default {
     },
     columns: {
       type: Array,
-      default: () => ['日期', '客流量 ( 人次 )', '目标客流量 ( 人次 )']
+      default: () => ['日期', '客流量', '目标客流量']
     },
     tableList: {
       type: Array,
@@ -130,6 +130,7 @@ export default {
     this.current = 0
   },
   mounted () {
+
   },
   methods: {
     enterTypeClick (index) {
@@ -138,6 +139,14 @@ export default {
         this.iconList[0].type = 'zhexiantu'
       } else {
         this.iconList[0].type = '62'
+      }
+      if (this.titleText === '客流量趋势') {
+        let label = index == 0 ? '客流量年度趋势' : '客流量月度趋势'
+        try {
+          window.TDAPP.onEvent('目标达成分析页面', label, { })
+        } catch (error) {
+          console.log('目标达成分析页面-' + label + '-埋点error:' + error)
+        }
       }
     },
     iconClick (index) {
@@ -159,13 +168,6 @@ export default {
     margin-top: 0!important;
     .chart-div{
       position: relative;
-        .ape-chart{
-            padding-top: 55px;
-        }
-        .table-chart{
-            overflow-y:scroll;
-            margin-top:60px;
-        }
     }
     .tab-bar{
        height: 50px;
@@ -210,7 +212,7 @@ export default {
     right: 0px;
     top: 69px;
     height: auto;
-    z-index: 1;
+    z-index: 60;
     padding: 0 10px;
     box-shadow:0px 3px 2px 0px rgba(166, 168, 169, .3);
     // .lineBox{
@@ -250,8 +252,8 @@ export default {
 .enterIcon{
     position: absolute;
     right: 50px;
-    top: 60px;
-    z-index: 1;
+    top: 69px;
+    z-index: 60;
     li{
         float:left;
         &:nth-child(1){

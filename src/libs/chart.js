@@ -59,9 +59,11 @@ export const options0 = {
   tooltip: {
     y: {
       formatter: function (val) {
-        if(val===0) return 0 + "人次"
-        if (val == undefined || val == null || val == '') return ''
-        else  return val.toLocaleString() + '人次'
+        if (val == undefined || val == null || val == '') {
+          return ''
+        } else {
+          return val.toLocaleString() + '人次'
+        }
       }
     }
   },
@@ -140,9 +142,11 @@ export const options2 = {
   tooltip: {
     y: {
       formatter: function (val) {
-        if(val===0) return 0+ '人次'
-        if (val == undefined || val == null || val == '')  return ''
-        else return val.toLocaleString() + '人次'
+        if (val == undefined || val == null || val == '') {
+          return ''
+        } else {
+          return val.toLocaleString() + '人'
+        }
       }
     }
   }

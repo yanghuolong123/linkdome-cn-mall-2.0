@@ -1,25 +1,23 @@
 <template>
   <div>
-    <div class="selector-container bg-white box-card">
-        <div class="flex-center">
-            <DatePicker
-                    type="daterange"
-                    v-model="drainageDate"
-                    placement="bottom-end"
-                    :options="disabledDate"
-                    placeholder="选择日期"
-                    class="w-select"
-            ></DatePicker>
-            <el-cascader
-                    class="w-select m-l-20"
-                    v-model="shopValue"
-                    :options="shopList"
-                    :props="{expandTrigger:'hover'}"
-            >
-            </el-cascader>
-            <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">查询</Button>
-            <Button size="large" class="m-l-20" @click="resetData">重置</Button>
-        </div>
+    <div class="deainage-picker">
+        <DatePicker
+            type="daterange"
+            v-model="drainageDate"
+            placement="bottom-end"
+            :options="disabledDate"
+            placeholder="选择日期"
+            style='width:230px;float:left;'
+        ></DatePicker>
+        <el-cascader
+          v-model="shopValue"
+          :options="shopList"
+          :props="{expandTrigger:'hover'}"
+          class="selectExample"
+        >
+        </el-cascader>
+        <div class="drainage-submit" v-on:click="paramsPrepare">查询</div>
+        <div class="drainage-reset" v-on:click="resetData">重置</div>
     </div>
     <!-- 引流图片 -->
     <drainage-map
@@ -45,10 +43,10 @@ import { getCascadeList } from '@/api/passenger.js'
 import { drainageData } from '@/api/analysis'
 import moment from 'moment'
 import NP from 'number-precision'
+import _ from 'lodash'
 import drainageChart from './components/FootfallDirection'
 import { disabledDate } from '@/libs/util.js'
 import eventBus from '@/libs/bus'
-
 export default {
   name: 'drainage',
   components: {
@@ -128,18 +126,29 @@ export default {
     paramsPrepare () {
       var that = this
       if (this.drainageDate.length == 0) {
-        this.$alert({ content:'请选择时间' })
+        alert('时间不能为空，请选择时间')
         return false
       }
       let time = moment(that.drainageDate[0]).format('YYYY-MM-DD') + ',' +
       moment(that.drainageDate[1]).format('YYYY-MM-DD')
       let id = this.shopValue[1]
       if (!id) {
-        this.$alert({ content:'请选择商铺' })
+        alert('商铺不能为空，请选择商铺')
         return false
       }
-      eventBus.$emit('drainageClick', { time: time, id: id })
+      try {
+        let entityName = this.shopValue[0]
+        let children = _.find(this.shopList, ['label', this.shopValue[0]]).children
+        let find = _.find(children, ['value', this.shopValue[1]])
+        find = find && find.name ? find.name : ''
+        entityName += '/' + find
+        let times = moment(this.drainageDate[0]).format('YYYY-MM-DD') + ',' + moment(this.drainageDate[1]).format('YYYY-MM-DD')
+        window.TDAPP.onEvent('实体引流分析页面', '数据查询', { '时间段': times, '实体选择': entityName })
+      } catch (error) {
+        console.log('实体引流分析页面-数据查询-埋点error:' + error)
+      }
       this.dataList(time, id)
+      eventBus.$emit('drainageClick', { time: time, id: id })
     },
     dataList (time, id) {
       drainageData({ time: time, bzid: id }).then(res => {
@@ -245,6 +254,11 @@ export default {
     },
     // 重置 选择
     resetData () {
+      try {
+        window.TDAPP.onEvent('实体引流分析页面', '重置', { })
+      } catch (error) {
+        console.log('实体引流分析页面-重置-埋点error:' + error)
+      }
       var date = new Date()
       date = date.setDate(date.getDate() - 1)
       var dateTime = [moment(date).format('YYYY-MM-DD'), moment(date).format('YYYY-MM-DD')]
@@ -256,7 +270,74 @@ export default {
 </script>
 
 <style lang="less" >
-    .selector-container{
-        margin-bottom: 20px;
+ .deainage-picker{
+    margin-bottom: 20px;
+    overflow: hidden;
+    background-color: #fff;
+    padding: 18px 30px;
+    box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
+    border-radius: 6px;
+    .con-select{
+      clear: none;
     }
+    .ivu-input{
+      width: 230px;
+        height: 43px;
+        font-size: 14px;
+        border: 1px solid rgba(0,0,0,.2);
+        font-family: "source_han_sans_cn", "Roboto", sans-serif;
+    }
+    .selectExample{
+      float: left;
+      width: 230px;
+      margin-left: 30px;
+
+      input{
+        height: 43px;
+        border: 1px solid rgba(0,0,0,.2);
+      }
+    }
+    .ivu-input-suffix {
+      i{
+      height: 43px;
+      width: 40px;
+      line-height: 43px;
+      }
+    }
+    .ivu-date-picker .ivu-select-dropdown{
+      z-index:90000
+    }
+  }
+</style>
+<style lang="less" scoped>
+  .drainage-submit{
+    display:inline-block;
+    padding: 0.75rem 2rem;
+    text-align:center;
+    border-radius: 6px;
+    background-color: #00A0E9;
+    border: 1px solid #00A0E9;
+    color: #fff;
+    font-size: 1rem;
+    margin-left:30px;
+    cursor: pointer;
+    &:hover{
+      box-shadow: 0 8px 25px -8px #00A0E9;
+    }
+  }
+  .drainage-reset{
+    display:inline-block;
+    padding: 0.75rem 2rem;
+    text-align:center;
+    border-radius: 6px;
+    background-color: #fff;
+     border: 1px solid #00A0E9;
+    color: #00A0E9;
+    font-size: 1rem;
+    margin-left:30px;
+    cursor: pointer;
+    &:hover{
+      box-shadow: 0 8px 25px -8px #00A0E9;
+    }
+  }
 </style>

@@ -1,28 +1,29 @@
 <template>
   <div class="relevance">
-    <div class="selector-container bg-white box-card">
-        <div class="flex-center">
+    <div class="relevance-picker"  >
+        <div class="relevance-date-picker">
           <DatePicker
             type="daterange"
             v-model="relevanceDate"
-            class="w-select"
             placement="bottom-end"
             placeholder="选择日期"
            :options="disabledDate"
+            style='width:100%;'
           ></DatePicker>
         </div>
-        <div class="flex-center">
-            <el-cascader v-model="relevanceValue"
-                         v-if="isSelected"
-                         class="cascade-dom w-select"
-                         collapse-tags
-                         popper-class="relevance-cascade-dom"
-                         :props="{ multiple: true,expandTrigger:'hover'}"
-                         :options="relevanceList">
-            </el-cascader>
+        <div style="display: flex;align-items: center">
+            <div class="cascade" v-if="isSelected">
+                <el-cascader v-model="relevanceValue"
+                             class="cascade-dom"
+                             collapse-tags
+                             popper-class="relevance-cascade-dom"
+                             :props="{ multiple: true,expandTrigger:'hover'}"
+                             :options="relevanceList">
+                </el-cascader>
+            </div>
             <div class="cascade" v-else></div>
-            <Button size="large" class="m-l-20" type="primary" @click="relevanceDataClick">查询 </Button>
-            <Button size="large" class="m-l-20" @click="resetData">重置 </Button>
+            <div class="relevance-query" v-on:click="relevanceDataClick">查询 </div>
+            <div class="relevance-reset" v-on:click="resetData">重置 </div>
         </div>
     </div>
     <div class="relevance-container">
@@ -33,7 +34,29 @@
             <h3 v-show="isData == true"> 暂无数据</h3>
             <h3 v-show="isTotalData == true">
               实体客流无关联
+              <!-- <div></div>
+              <p>转化率为0</p> -->
+
             </h3>
+            <!-- <h1>关联关系
+              <Tooltip  :content="tootipText"  placement="right" theme="light" transfer max-width="400">
+                <icons type="wenhao"/>
+              </Tooltip>
+            </h1> -->
+            <!-- <vs-select
+              placeholder="选择关联"
+              autocomplete
+              class="chartSelect"
+              v-model="chartSelectModel"
+            >
+              <vs-select-item
+              :value="item.value"
+              :text="item.text"
+              :key="index"
+              v-for="(item,index) in selectChartType"
+              />
+            </vs-select> -->
+
             <div class="relevance-svg">
               <div class="relevance-left">
                 <dependencywheel
@@ -46,7 +69,6 @@
                 <div id="d3Chart"
                 v-bind:class="{d3ChartChartaAction:drainageType==1}"
                 class="relevanceChart"
-                ref="relevanceChart"
                 v-show="isData == false&&isTotalData==false"
                 style="margin:-15px 0 0 -15px"
                 ></div>
@@ -139,7 +161,7 @@
 import relevanceTab from './components/components/RelevanceTab'
 import dependencywheel from '@/components/charts/dependency.vue'
 import TableDefault from '../ui-elements/table/TableDefault.vue'
-import { getBussinessTree } from '@/api/passenger.js'
+import { getBussinessTree, getBussinessCommon } from '@/api/passenger.js'
 import { relevanceData, directionData } from '@/api/analysis'
 import moment from 'moment'
 import _ from 'lodash'
@@ -184,7 +206,6 @@ export default {
       changeTitle: '转化量排行',
       sourceTitle: '来源排行',
       tableName: ['来源实体', '目的实体', '关联度'],
-      chartTwoData:[],
       // 转换量
       changeTableName: ['来源实体', '目的实体', '转换量'],
       changeTableList: [],
@@ -205,6 +226,10 @@ export default {
     }
   },
   watch: {
+    'relevanceList'(newval,old){
+      console.log(newval);
+      console.log(old);
+    },
     '$store.state.home.headerAction' () {
       this.resetData()
       let routerName = this.$router.currentRoute.name
@@ -238,6 +263,13 @@ export default {
           number: list.percent
         }
       })
+
+      try {
+        let type = this.drainageType == 0 ? '无序图' : '有序图'
+        window.TDAPP.onEvent('店铺关联页面', type + '选择', { })
+      } catch (error) {
+        console.log('店铺关联页面-' + type + '选择' + '埋点error:' + error)
+      }
     }
   },
   created () {
@@ -249,12 +281,7 @@ export default {
     var dateTime = [moment(date).format('YYYY-MM-DD'), moment(date).format('YYYY-MM-DD')]
     this.relevanceDate = dateTime
     this.allZoneList()
-    setTimeout(() => {
-      d3Chaer(this, [], [], [])
-    });
-    window.onresize=()=>{
-      svgChord(this,this.chartTwoData)
-    }
+    d3Chaer(this, [], [], [])
   },
   methods: {
     // 所有店铺 区域 列表
@@ -275,10 +302,7 @@ export default {
       let time = moment(this.relevanceDate[0]).format('YYYY-MM-DD') + ',' +
       moment(this.relevanceDate[1]).format('YYYY-MM-DD')
       if (this.relevanceValue.length <= 1) {
-        this.$alert({ content:'请选择最少两个实体' })
-        return false
-      }if (this.relevanceValue.length >= 40){
-        this.$alert({ content:'因页面效果最多选择40个实体, 请重新选择实体' })
+        alert('请选择最少两个实体')
         return false
       }
       let ListId = _.clone(this.relevanceValue)
@@ -297,11 +321,31 @@ export default {
         tableDataList(this, data1)
         // 有序
         var data2 = res[1].data.data
-        this.chartTwoData = data2
         svgChord(this, data2)
       }).catch(err => {
         console.log(err)
       })
+
+      try {
+        let arr = []
+        console.log(this.relevanceValue);
+        console.log(this.relevanceList);
+        this.relevanceValue.map(item => {
+          this.relevanceList.map(list => {
+            if (list.id == item[0]) {
+              list.children.map(val => {
+                if (val.id == item[1]) {
+                  arr.push(list.label + '/' + val.label)
+                }
+              })
+            }
+          })
+        })
+        console.log(this.relevanceList);
+        window.TDAPP.onEvent('店铺关联页面', '数据查询', { '时间段': time, '实体选择': arr.join(',') })
+      } catch (error) {
+        console.log('店铺关联页面-' + '数据查询' + '埋点error:' + error)
+      }
     },
     // 重置选择
     resetData () {
@@ -310,6 +354,12 @@ export default {
       var dateTime = [moment(date).format('YYYY-MM-DD'), moment(date).format('YYYY-MM-DD')]
       this.relevanceDate = dateTime
       this.relevanceValue = []
+
+      try {
+        window.TDAPP.onEvent('店铺关联页面', '重置', {})
+      } catch (error) {
+        console.log('店铺关联页面-' + '重置-埋点error:' + error)
+      }
     },
     showStore () {
       this.isStoreData = false
@@ -318,7 +368,27 @@ export default {
 }
 </script>
 <style lang="less">
-
+.relevance{
+  .ivu-date-picker .ivu-select-dropdown{
+    z-index:90000
+  }
+}
+.relevance-cascade-dom /deep/ .el-scrollbar:nth-child(1) .is-disabled {
+    /*display: none;*/
+}
+.relevance-date-picker{
+  .ivu-date-picker{
+    input{
+      height: 43px;
+      font-size: 14px;
+      border: 1px solid rgba(0,0,0,.2);
+    }
+    i{
+      height: 43px;
+      line-height: 43px;
+    }
+  }
+}
 .chart-text{
   position: fixed;
   background-color: rgba(0,0,0,.5);
@@ -329,6 +399,12 @@ export default {
   font-size: 14px;
   border-radius:5px;
   opacity: 0;
+}
+.cascade{
+  .el-cascader__tags {
+    top: 10px;
+    transform: translateY(0%);
+  }
 }
 
 .relevance-table{
@@ -353,9 +429,86 @@ export default {
       padding-left: 0px;
     }
   }
+  .relevance /deep/ .el-input__inner{
+    border: none;
+  }
   .relevance{
     width: 100%;
     height: auto;
+    .relevance-picker{
+      padding: 18px 16px 18px 30px;
+      border: 1px solid #dcdee2;
+      border-color: #e8eaec;
+      background-color: #fff;
+      overflow: hidden;
+      box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
+      border-radius: 6px;
+      .cascade{
+          width: 230px;
+          height: 43px;
+          border-radius: 5px;
+          overflow: hidden;
+          border: 1px solid rgba(0, 0, 0, .2);
+          .cascade-dom{
+              width: 100%;
+              background-color: #fff;
+              /*height: 43px;*/
+              overflow: hidden;
+              border: 0;
+
+              input {
+                  border: none;
+                  font-size: 1rem;
+                  background-color: #fff;
+              }
+          }
+      }
+      .relevance-date-picker{
+          width:230px;
+          margin-bottom: 20px;
+
+      }
+      .ivu-date-picker{
+          margin-top: 5px;
+          input{
+              height: 43px;
+          }
+
+      }
+      .selectExample{
+          width: 230px;
+          float: left;
+      }
+      .relevance-query{
+        display:inline-block;
+        padding: .75rem 2rem;
+        border-radius: 6px;
+        background: rgba(55,181,237,1)!important;
+        border: 1px solid rgba(55,181,237,1);
+        color: #fff;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-left: 30px;
+        &:hover{
+          box-shadow: 0 8px 25px -8px rgba(55,181,237,1);
+          color: #fff;
+        }
+      }
+      .relevance-reset{
+        display:inline-block;
+        padding: .75rem 2rem;
+        border-radius: 6px;
+        background: #fff;
+        border: 1px solid rgba(55,181,237,1);
+        color: rgba(55,181,237,1);
+        font-size: 1rem;
+        cursor: pointer;
+        margin-left: 30px;
+        &:hover{
+          box-shadow: 0 8px 25px -8px rgba(55,181,237,1);
+        }
+      }
+    }
     .relevance-graph{
         width: 100%;
         position: relative;
@@ -559,11 +712,8 @@ export default {
         width: 560px;
         height: auto;
         margin-left: 10%;
-        /deep/  .d3Chart{
-          width: 100%;
-          height: 630px;
-        }
       }
+      // text-align: center;
       .d3NameList{
         position: absolute;
         right: 10px;
@@ -606,9 +756,7 @@ export default {
     z-index: 60;
   }
   .relevanceChart{
-  transform: translateY(100%);
-    width: 600px;
-    height: 600px;
+  transform: translateY(100%)
   }
   .dependencywheelAction{
   transform: translateY(0%)
@@ -621,7 +769,7 @@ export default {
     width: 25px;
     height: 25px;
     margin:0 5px -5px;
-    background: url('../../assets/images/pages/qiehuan.png');
+    background: url('../../assets/images/pages/qiehuan.webp');
     background-size: 100% 100%;
   }
    .img-connectors{
@@ -629,7 +777,7 @@ export default {
     width: 25px;
     height: 25px;
     margin:0 5px -5px;
-    background: url('../../assets/images/pages/single.png');
+    background: url('../../assets/images/pages/single.webp');
     background-size: 100% 100%;
   }
   .relevance-container{

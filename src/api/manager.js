@@ -139,6 +139,17 @@ export const getDataEntity = model => {
   })
 }
 
+export const getAllDate = model => {
+  return axios.request({
+    url: groupApi,
+    method: 'post',
+    data: {
+      name: model.name,
+      address: model.address
+    }
+  })
+}
+
 export const getbusinessDate = entity => {
   return axios.request({
     url: businesstreeApi,
@@ -207,13 +218,13 @@ export const updateAreas = (ids, property_id, name, parent_id, zones, business_t
       zones: zones,
       business_type_id: business_type_id,
       area_size: area_size,
-      bzid,
-      description: description,
+      bzid: bzid,
+      description: description
     }
   })
 }
 // 添加出入口
-export const addGate = (property_id, name, parent_id, gateId, description,gate_type_id) => {
+export const addGate = (property_id, name, parent_id, gateId, description) => {
   return axios.request({
     url: businesstreeApi,
     method: 'post',
@@ -223,8 +234,7 @@ export const addGate = (property_id, name, parent_id, gateId, description,gate_t
       name: name,
       parent_id: parent_id,
       gate_id: gateId,
-      description,
-      gate_type_id,
+      description: description
     }
   })
 }
@@ -382,7 +392,7 @@ export const updateFloorData = (
 }
 
 // 编辑出入口
-export const updateFloorGate = (property_id, name, parent_id, gateId, description, bzid,gate_type_id) => {
+export const updateFloorGate = (property_id, name, parent_id, gateId, description, bzid) => {
   return axios.request({
     url: businesstreeApi,
     method: 'put',
@@ -393,8 +403,7 @@ export const updateFloorGate = (property_id, name, parent_id, gateId, descriptio
       parent_id: parent_id,
       gate_id: gateId,
       description: description,
-      bzid: bzid,
-      gate_type_id
+      bzid: bzid
     }
   })
 }
@@ -454,33 +463,5 @@ export const holidayAnalysis = (type, bzid, year) => {
       bzid,
       year
     }
-  })
-}
-//图片配置中用到的组织结构
-export const getConfigStructure = async () => {
-  return await axios.request({
-    url: '/config/structure',
-  })
-}
-//后台管理->配置图片，点位
-export const configEntity =  (data) => {
-  return  axios.request({
-    url: '/config/entity',
-    method:'post',
-    data
-  })
-}
-
-//摄像头图片查询
-export const getCameraImageUrl =  (params) => {
-  return  axios.request({
-    url: '/config/camera',
-    params
-  })
-}
-//出入口类型
-export const getGateTypeList =  () => {
-  return  axios.request({
-    url: '/mananger/gate',
   })
 }

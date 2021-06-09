@@ -1,24 +1,23 @@
 <template>
   <div class="pathTrend">
-      <div class="path-picker flex-center">
+      <div class="path-picker">
           <DatePicker
               type="date"
               v-model="drainageDate"
               placeholder="选择日期"
-              class="select-date"
               :options="disabledDate"
               format="yyyy-MM-dd"
+              style='width:230px;float:left;'
           ></DatePicker>
 
           <Select v-model="floor" class="selectExample selectFloor">
               <Option v-for="item in allMoveData" :value="item.floor_index" :key="item.floor_index">{{ item.name }}</Option>
           </Select>
-          <Button size="large" type="primary" class="m-l-20" @click="searchData">查询</Button>
-
+          <div class="drainage-submit" v-on:click="searchData">查询</div>
+          <div class="drainage-submit drainage-reset" v-on:click="reset">重置</div>
       </div>
 
 <!-- 中间内容 -->
-
       <div class="flexs">
           <new-path ref="newPath" v-if="isNewPath"></new-path>
           <div class="paths"  v-else >
@@ -26,6 +25,7 @@
                 <p class="title">路径动向图</p>
                 <p class="icons">
                     <icons :type="leftIcon"   :color="mainColor" :size=24  :title="titlePath" style="cursor:pointer;" @click.native="changePath"></icons>
+                    <!-- <icons :type="rightIcon" color="#A6A7A7" :size=24 ></icons> -->
                 </p>
             </div>
             <div class="svgs" :width="canvasWidth" :height="canvasHeight" v-for="item in svgLists" v-if="showPath">
@@ -46,7 +46,17 @@
                 <p class="minNumber">{{minNumber}}</p>
                 <img :src="colorBar" width="20">
               </div>
-              <div  v-for="item in titleLists" class="titleList" :title="item.name" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}"></div>
+
+                <div  class="titleList" v-for="item in titleLists" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}">
+                    <Tooltip theme="light">
+                        <div style="color: transparent">{{item.name}}</div>
+                        <div slot="content">
+                            <p>店铺：{{item.name}}</p>
+                            <p>客流量：{{item.enter}}人</p>
+                            <p>销售额：{{item.sale_amount}}元</p>
+                       </div>
+                    </Tooltip>
+                </div>
             </div>
           </div>
 
@@ -58,16 +68,16 @@
 
         <div>
     <!-- 排行占比分析 -->
-    <Ranking
-    v-if="false"
-      class="mx-3"
-      :selectTitle="selectTitle"
-      :time1="topRange"
-      :defaultBizIndicator="bizSalesType"
-      :defaultShopIndicator="shopSalesType"
-      :indicatorSelector="showList"
-      :propertyId="currentPropertyId"
-      :indicatorData="enterIndicator"/>
+<!--    <Ranking-->
+<!--    v-if="false"-->
+<!--      class="mx-3"-->
+<!--      :selectTitle="selectTitle"-->
+<!--      :time1="topRange"-->
+<!--      :defaultBizIndicator="bizSalesType"-->
+<!--      :defaultShopIndicator="shopSalesType"-->
+<!--      :indicatorSelector="showList"-->
+<!--      :propertyId="currentPropertyId"-->
+<!--      :indicatorData="enterIndicator"/>-->
         </div>
   </div>
 </template>
@@ -79,7 +89,7 @@ import newPath from './pathTrend.vue'
 import Ranking from '@/views/operation/components/RankingAnalytics.vue'
 import { getBussinessTree } from '@/api/passenger'
 import { flowMoving } from '@/api/analysis'
-import { disabledDate,initTimes } from '@/libs/util.js'
+import { disabledDate } from '@/libs/util.js'
 
 import moment from 'moment'
 import _ from 'lodash'
@@ -92,14 +102,14 @@ export default {
   },
   data () {
     return {
-      isNewPath: false,
+      isNewPath: true,
       maxNumber: '',
       minNumber: '0',
       pleft: '0px',
       ptop: '0px',
       mainPath: false,
       floor: '',
-      colorBar: require('@/assets/images/fixation_img/rest/colorBar.png'),
+      colorBar: require('@/assets/images/fixation_img/rest/colorBar2.webp'),
       map: '',
       enterIndicator: {
         enter: { name: '入客流' }
@@ -143,11 +153,13 @@ export default {
         this.screenWidth = val
         if (document.getElementsByClassName('canvas')[0]) {
           let width = document.getElementsByClassName('canvas')[0].offsetWidth
-          let height = document.getElementsByClassName('canvas')[0].offsetHeight
+          let height = width * 614 / 1171 // 按照图片的比例计算高度
           this.canvasWidth = width
           this.canvasHeight = height
           this.searchData()
         }
+
+        // this.drawLine()
       }
     },
     drainageDate (val) {
@@ -159,6 +171,9 @@ export default {
       let routerName = this.$router.currentRoute.name
       if (routerName === 'OldPath') {
         this.searchData()
+        setTimeout(() => {
+          this.reset()
+        }, 2000)
       }
     }
   },
@@ -173,8 +188,8 @@ export default {
   created () {
     // 初始化时间
     this.disabledDate = disabledDate
-    this.drainageDate = moment(moment(new Date())).add('-1','day').format('YYYY-MM-DD')
-    this.outRange = moment(moment(new Date())).add('-1','day').format('YYYY-MM-DD')
+    this.drainageDate = moment(moment(new Date())).format('YYYY-MM-DD')
+    this.outRange = moment(moment(new Date())).format('YYYY-MM-DD')
     this.initFloorData()
   },
   mounted () {
@@ -215,6 +230,7 @@ export default {
       var length = this.mainPath ? 3 : 1000
       var titleList = []
       this.positions = []
+
       var paths = []
       if (moveData.paths) {
         moveData.paths.forEach(function (m) {
@@ -240,7 +256,8 @@ export default {
             obj.x = Math.floor(e.x * that.canvasWidth)
             obj.y = Math.floor(e.y * that.canvasHeight)
             obj.enter = m.enter
-            obj.name = e.name
+            obj.name = e.name;
+            obj.sale_amount = m.sale_amount;
             clickNodes.push(obj)
             titleList.push(obj)
             if (!e.x && !e.y) {
@@ -253,7 +270,8 @@ export default {
             if (controlNode.x < 0 || controlNode.y < 0) {
               return false
             }
-            that.positions.push(clickNodes)
+              console.log(clickNodes);
+              that.positions.push(clickNodes)
           }
         }
       })
@@ -326,7 +344,16 @@ export default {
         })
       } else {
         this.isNewPath = false
-        this.initFloorData()
+        setTimeout(() => {
+          let canvas = document.getElementsByClassName('canvas')[0]
+          if (canvas) {
+            let width = canvas.offsetWidth
+            let height = width * 614 / 1171 // 按照图片的比例计算高度
+            this.canvasWidth = width
+            this.canvasHeight = height
+            this.initFloorData()
+          }
+        })
       }
     },
     initFloorData: _.throttle(function () {
@@ -334,8 +361,7 @@ export default {
         clearInterval(this.timer)
       }
       var canvas = document.getElementById('canvasCircle')
-     
-        if (canvas) {
+      if (canvas) {
         var ctx = canvas.getContext('2d')
         ctx.clearRect(0, 0, canvas.width, canvas.height)
       }
@@ -348,21 +374,19 @@ export default {
       let admin = this.$store.state.user.role_id
       let allBzid = this.$store.state.user.bzid
       let property_id = this.$store.state.home.headerAction
-     
-     setTimeout(() => {
-        let canvasBox = document.getElementsByClassName('canvas')[0]
-        if (canvasBox) {
-          let width = canvasBox.offsetWidth
-          let height = canvasBox.offsetHeight // 按照图片的比例计算高度
-          // let height = width * 614 / 1171 // 按照图片的比例计算高度
-          this.canvasWidth = width
-          this.canvasHeight = height
-        }
-     });
       flowMoving({ time: this.outRange, property_id: property_id }).then(res => {
+        if (res.data.code == 200) {
           that.allMoveData = _.cloneDeep(res.data.data)
+          let allObj = [{
+            floor_index: 0,
+            name: '总览'
+          }]
+          that.allMoveData = [...allObj, ...that.allMoveData]
           if (admin > 3) {
-            let currList = []
+            let currList = [{
+              floor_index: 0,
+              name: '总览'
+            }]
             that.allMoveData.map(list => {
               allBzid.map(val => {
                 if (list.bzid == val) currList.push(list)
@@ -371,9 +395,8 @@ export default {
             that.allMoveData = currList
           }
           if (!that.floor) {
-            that.floor = that.allMoveData[0].floor_index
+            that.floor = that.allMoveData[0] ? that.allMoveData[0].floor_index : ''
           }
-          that.isNewPath = that.floor === 0 ? true : false
           var moveData = _.find(that.allMoveData, ['floor_index', that.floor])
           if (!moveData) return false
           that.map = moveData ? moveData.map_url : ''
@@ -385,8 +408,51 @@ export default {
           setTimeout(() => {
             that.drawLine()
           })
+        }
       })
+      try {
+        let value = _.find(this.allMoveData, ['floor_index', this.floor])
+        window.TDAPP.onEvent('路径动向分析页面', '数据查询', { '时间段': this.outRange, '实体选择': value.name })
+      } catch (error) {
+        console.log('路径动向分析页面-' + '数据查询' + '埋点error:' + error)
+      }
     }, 1000),
+    // 秒 转换时分秒
+    initTimes (val) {
+      let hour = ''
+      let minute = ''
+      let second = val
+      if (val > 3600) {
+        hour = Math.floor(val / 3600)
+        hour = hour >= 10 ? hour : '0' + hour
+        second = val % 3600
+      } else {
+        hour = '00'
+      }
+      if (second > 60) {
+        minute = Math.floor(second / 60)
+        minute = minute >= 10 ? minute : '0' + minute
+        second = Math.floor(second % 60)
+      } else {
+        minute = '00'
+      }
+      if (second > 0) {
+        second = second > 10 ? second : '0' + second
+      } else {
+        second = '00'
+      }
+      return hour + ':' + minute + ':' + second
+    },
+    // 重置
+    reset () {
+      this.drainageDate = moment(moment(new Date())).format('YYYY-MM-DD')
+      this.floor = this.allMoveData.length > 0 ? this.allMoveData[0].floor_index : ''
+      try {
+        window.TDAPP.onEvent('路径动向分析页面', '重置', {})
+      } catch (error) {
+        console.log('路径动向分析页面-' + '重置-埋点error:' + error)
+      }
+    },
     strollAbout () {
       let property_id = this.$store.state.home.headerAction
       flowMoving({ time: this.outRange, property_id: property_id }).then(res => {
@@ -397,7 +463,7 @@ export default {
               sumNumber += list.depthOfWandering
             })
             sumNumber = sumNumber / res.data.data.length
-            this.number1 = sumNumber.toFixed(0)
+            this.number1 = sumNumber
           }
         }
       })
@@ -431,10 +497,6 @@ export default {
           font-size: 16px;
           font-family: "source_han_sans_cn", "Roboto", sans-serif;
       }
-      .select-date{
-          float: left;
-          width: 230px;
-      }
       .selectExample{
         float: left;
         width: 150px;
@@ -453,9 +515,31 @@ export default {
         z-index:90000
       }
     }
+    .drainage-submit{
+        display:inline-block;
+        padding: 0.75rem 2rem;
+        text-align:center;
+        border-radius: 6px;
+        background-color: #00A0E9;
+        color: #fff;
+        font-size: 1rem;
+        margin-left:30px;
+        cursor: pointer;
+        &:hover{
+            box-shadow: 0 8px 25px -8px #00A0E9;
+        }
+    }
+    .drainage-reset{
+      background: #fff !important;
+      color: #37b5ed;
+      border: 1px solid #37b5ed;
+    }
     .flexs{
       display: flex;
+      // min-width:1200px;
+      // overflow-x: auto;
       .paths{
+        width:100%;
         border-radius: .5rem;
         background-color: #fff;
         position: relative;
@@ -491,8 +575,6 @@ export default {
         }
         .canvas{
           position: relative;
-          width: 100%;
-            height: 650px;
           .titleList{
             position:absolute;
             z-index:3700;
@@ -502,9 +584,13 @@ export default {
           }
           .imgs{
               width: 100%;
+              height: 600px;
+              padding-left: 60px;
+              padding: 0px 0px 20px 0px;
               position: relative;
               z-index: 99;
-              height:100%;
+              width:100%;
+              height:auto;
           }
           .noData{
             position: relative;
@@ -559,14 +645,19 @@ export default {
       right: 20px;
       width: 18%;
       height: auto;
+      z-index: 999;
       }
     }
 
 .ball {
   width: 20px;
   height: 20px;
+  // background-color: red;
   border-radius: 50%;
+
+  // offset-path: path('M92 131 Q 279 48,393 159');
   offset-distance: 0%;
+
   animation: red-ball 3s linear  infinite;
 }
 
@@ -582,10 +673,22 @@ export default {
     stroke-dasharray: none!important;
     animation: none!important;
 }
+    .ivu-select-single .ivu-select-selection {
+
+        height:43px;
+        border: 1px solid rgba(0, 0, 0, .2);
+    }
+    .ivu-select-single .ivu-select-selection .ivu-select-placeholder, .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+        line-height: 43px;
+        padding-left: 20px;
+    }
 .ivu-select .ivu-select-dropdown {
     z-index: 99999;
 }
 }
+    .ivu-tooltip-rel{
+        height: 15px;
+    }
 </style>
 
     <style>

@@ -1,45 +1,61 @@
 <template>
-    <div>
-      <flow-selector @paramsPrepare="paramsPrepare"></flow-selector>
-      <div class="dewll_graph flex-column">
+    <div style="position:relative">
+        <!-- <div v-if="hasCover == 1" style="position:absolute;left:0;top:0;background:rgba(0, 0, 0, .3);z-index:999;width:100%;height:100%"></div> -->
+      <div class="time-selector">
+          <flow-selector
+            @on-change="paramsPrepare"
+            :isShop='true'
+            :isGate='false'
+            :isFloor='true'
+            :isStore='true'
+            :footFall='true'
+            :isArea='true'
+            :isReset='true'
+            typeText='dwellText'
+            ref="flowSelector"
+            :routName='dwellTime'
+          ></flow-selector>
+      </div>
+      <div class="dewll_graph">
         <div class="dewll_graph_title">
-          <span>停留时间分布</span>
-          <div class="dwell-time-icon" @click="iconClick">
-            <icons
-                     v-for="(icon,index) in iconList"
-                     :key="index"
-                     :data-value="icon.value"
-                    :title="iconTitle[icon.type]"
-                    :type="icon.type"
-                    :size="20"
-                    :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
-            ></icons>
-          </div>
+          <p>停留时间分布</p>
         </div>
-        
-        <div class="dwell-chart-box" >
+        <div class="dwell-time-icon">
+          <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(icon.value)">
+            <icons
+              :title="iconTitle[icon.type]"
+              :type="icon.type"
+              :size="20"
+              :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
+            ></icons>
+          </span>
+        </div>
+        <div class="dewll_graph_text" >
           <vue-apex-charts
-              v-show="iconIndex == 1"
-              height='100%'
+              class="chartsStyleOne"
+              v-bind:class="{ barActive: iconIndex == 1 }"
+              height='400'
               ref="graphBar"
+              v-if="isGraph"
               type="bar"
               :options="graphData.chartOptions"
               :series="graphData.series"
           ></vue-apex-charts>
           <vue-apex-charts
             class="chartsStyleTwo"
-            v-show="iconIndex == 0"
+            v-bind:class="{ lineActive: iconIndex == 0 }"
+            v-if="isGraph"
             ref="graphLine"
-            height='100%'
+            height='400'
             width="100%"
             type="line"
             :options="lineData.chartOptions"
             :series="lineData.series"
           ></vue-apex-charts>
-          <div class=" dwell-chart-table"
-          v-show="iconIndex == 2"
+          <div class="dewll_graph_text dwell-chart-table"
+          v-bind:class="{ tableActive: iconIndex == 2 }"
           >
-            <dwell-table maxHeight='400px' :columns='columnsList' :data='chartTableList'></dwell-table>
+            <dwell-table :columns='columnsList' :data='chartTableList'></dwell-table>
           </div>
         </div>
 
@@ -52,28 +68,28 @@
 
 <script>
 import Vue from 'vue'
+import flowSelector from '@/components/Passenger-analysis/flowSelector.vue'
 import TableDefault from '../ui-elements/table/TableDefault.vue'
 import VueApexCharts from 'vue-apexcharts'
 import VxBreadcrumb from '@/layouts/components/VxBreadcrumb.vue'
 import { dwellTime } from '@/api/analysis'
 import dwellTable from '@/views/footfall-analytics/components/iTable.vue'
+import moment from 'moment'
 import _ from 'lodash'
-import FlowSelector from '_c/flow-selector/dwellTime-flow-selector'
-import {initTimes} from '@/libs/util'
+
 Vue.component(VxBreadcrumb.name, VxBreadcrumb)
 export default {
   name: 'DwellTime',
-
   components: {
+    flowSelector,
     VueApexCharts,
     TableDefault,
-    dwellTable,
-    FlowSelector
+    dwellTable
   },
   data () {
     let that = this
     return {
-
+      dwellTime: 'dwellTime',
       tableTitle: '详细数据信息',
       isGraph: false,
       isTableDate: false,
@@ -136,7 +152,7 @@ export default {
             labels: {
               show: true,
               formatter: (value) => {
-                return initTimes(value)
+                return that.dateTiem(value)
               }
             }
           },
@@ -147,7 +163,7 @@ export default {
           tooltip: {
             y: {
               formatter: function (val) {
-                return initTimes(val)
+                return that.dateTiem(val)
               }
             }
           }
@@ -181,7 +197,12 @@ export default {
           },
           colors: ['#33B3ED', '#2BD9CF', '#94E2FF', '#FBAB40', '#8D82F0', '#E8585A'],
           legend: {
-            height:30
+            // onItemClick: {
+            //   toggleDataSeries: false
+            // },
+            // onItemHover: {
+            //   highlightDataSeries: true
+            // }
           },
           yaxis: {
             title: {
@@ -190,7 +211,7 @@ export default {
             labels: {
               show: true,
               formatter: (value) => {
-                return initTimes(value)
+                return that.dateTiem(value)
               }
             }
           },
@@ -205,10 +226,13 @@ export default {
               radius: 0
             }
           },
+          // markers: {
+          //   size: 4
+          // },
           tooltip: {
             y: {
               formatter: function (val) {
-                return initTimes(val)
+                return that.dateTiem(val)
               }
             }
           }
@@ -226,24 +250,46 @@ export default {
     }
   },
   mounted () {
-   
+    var that = this
+    that.$refs.flowSelector.entityType = 'shop'
+    this.isGraph = true
     this.iconIndex = 1
   },
-  activated() {
-     this.isGraph = false
-     setTimeout(() => {
-        this.isGraph = true
-     });
+  activated () {
+
   },
   methods: {
-
     paramsPrepare (value) {
+      if (this.$store.state.home.headerAction && value.entitys.length == 0) {
+        alert('请选择实体')
+        return false
+      }
+      try {
+        let compare = ''
+        let times = ''
+        let entityName = value.entitys.map(m => {
+          return m.name
+        })
+        if (value.compareType == 'not') {
+          compare = '无对比'
+          times = value.date1Array.join(',')
+        } else if (value.compareType == 'entity') {
+          compare = '实体对比'
+          times = value.date1Array.join(',')
+        } else if (['time','onYear','onMonth'].includes(value.compareType)) {
+          compare = '时间对比'
+          times = [value.date1Array.join(','), value.date2Array.join(',')]
+        }
+        window.TDAPP.onEvent('停留时间分析页面', '数据查询', { '时间段': times, '对比方式': compare, '实体选择': entityName })
+      } catch (error) {
+        console.log('停留时间分析页面-数据查询-埋点error:' + error)
+      }
       var time1 = value.date1Array[0] + ',' + value.date1Array[1]
       var time2
       this.prepareValue = value
       var charType = false
       this.compareData = value
-      if (['time','onYear','onChain'].includes(value.compareType)) {
+      if (['time','onYear','onMonth'].includes(value.compareType)) {
         this.isTableDate = true
         time2 = value.date2Array[0] + ',' + value.date2Array[1]
         if (value.date1Array[0] === value.date1Array[1]) {
@@ -298,6 +344,10 @@ export default {
         this.iconIndex = 0
         this.iconList = arr
       }
+      // if (this.$store.state.home.loadingState == false) {
+      //   this.$store.commit('loadingState', true)
+      //   this.$vs.loading()
+      // }
       this.tableType(time2)
       this.initialData()
       this.dataList(time1, time2, bzid, charType)
@@ -305,6 +355,8 @@ export default {
     dataList (time1, time2, bzid, charType) {
       var that = this
       dwellTime({ time1, time2, bzid }).then(res => {
+        // that.$vs.loading.close()
+        // that.$store.commit('loadingState', false)
         // 图表数据
         that.graphData.chartOptions.xaxis.categories = []
         res.data.data.charts.categories.map(function (n) {
@@ -313,38 +365,29 @@ export default {
           that.lineData.chartOptions.xaxis.categories.push(n)
         })
         if (res.data.data.charts.series.length !== 0) {
-          // that.graphData.series = res.data.data.charts.series
+          that.graphData.series = res.data.data.charts.series
           res.data.data.charts.series.map(function (d) {
             var obj = {}
-            const arr = d.name.split(',');
-            let name =  d.name.replace(/,/g, ' - ')
-            if(arr.length === 2){
-              if(arr[0].split(' ')[1]=== arr[1]){
-                name = arr[0]
-              }
-            }
+            var name = d.name.replace(/,/g, ' - ')
             obj.name = name
             obj.data = []
             d.data.map((num, index) => { obj.data.push(num) })
             that.lineData.series.push(obj)
-            that.graphData.series.push(obj)
           })
         }
         // 更新 x 坐标 以及 柱状图宽度
         if (that.$refs.graphBar) {
           that.$refs.graphBar.updateOptions({ xaxis: that.graphData.chartOptions.xaxis })
           if (that.graphData.chartOptions.xaxis.categories.length < 2) {
-            that.graphData.chartOptions.plotOptions.bar.columnWidth = '10%'
-          } else if(that.graphData.chartOptions.xaxis.categories.length < 5){
-            that.graphData.chartOptions.plotOptions.bar.columnWidth = '25%'
-          }else if(that.graphData.chartOptions.xaxis.categories.length < 10){
-            that.graphData.chartOptions.plotOptions.bar.columnWidth = '55%'
-          }else if(that.graphData.chartOptions.xaxis.categories.length < 15){
-            that.graphData.chartOptions.plotOptions.bar.columnWidth = '65%'
-          }else {
-            that.graphData.chartOptions.plotOptions.bar.columnWidth = '80%'
+            that.graphData.chartOptions.plotOptions.bar.columnWidth = '5%'
+            that.$refs.graphBar.updateOptions({ plotOptions: that.graphData.chartOptions.plotOptions })
+          } else if (that.graphData.chartOptions.xaxis.categories.length < 5) {
+            that.graphData.chartOptions.plotOptions.bar.columnWidth = '20%'
+            that.$refs.graphBar.updateOptions({ plotOptions: that.graphData.chartOptions.plotOptions })
+          } else {
+            that.graphData.chartOptions.plotOptions.bar.columnWidth = '70%'
+            that.$refs.graphBar.updateOptions({ plotOptions: that.graphData.chartOptions.plotOptions })
           }
-          that.$refs.graphBar.updateOptions({ plotOptions: that.graphData.chartOptions.plotOptions })
         }
         if (that.$refs.graphLine) {
           that.$refs.graphLine.updateOptions({
@@ -359,39 +402,16 @@ export default {
           obj.name = d.name
           obj.type = d.type == null ? '出入口' : d.type
           if (that.isTableDate === false) obj.time = ''
-          else {
-            let date;
-            if(d.date){
-              const arr = d.date.split(',');
-              if(arr[0] === arr[1]){
-                date = arr[0]
-              }else {
-                date = `${arr[0]} - ${arr[1]}`
-              }
-            }
-            obj.time = d.date ? date : obj.time = ' '
-          }
-          obj.avg = initTimes(d.avg)
+          else obj.time = d.date ? d.date : obj.time = ' '
+          obj.avg = that.dateTiem(d.avg)
           that.tableList.push(obj)
         })
       }).catch(err => {
         console.log(err)
       })
     },
-    iconClick (e) {
-      this.iconIndex = Number(e.target.getAttribute('data-value'))
-      switch (this.iconIndex) {
-        case 1:
-          this.$nextTick(()=>{
-            this.$refs.graphBar.updateOptions(this.graphData.chartOptions)
-          });
-          break;
-        case 0:
-          this.$nextTick(()=>{
-            this.$refs.graphLine.updateOptions(this.lineData.chartOptions)
-          });
-          break;
-      }
+    iconClick (index) {
+      this.iconIndex = index
     },
 
     tableType (value) { // 表格 标题
@@ -430,7 +450,7 @@ export default {
         var timeType = that.compareData.compareType
         series.map(function (list, index) {
           var obj = {}
-          if (['time','onYear','onChain'].includes(timeType)) {
+          if (['time','onYear','onMonth'].includes(timeType)) {
             var num = Number(index) + 1
             obj.time = '第' + num + '天'
           } else {
@@ -439,22 +459,15 @@ export default {
 
           list.data.map(function (d, index) {
             var key = 'avg' + index
-            obj[key] = initTimes(d)
+            obj[key] = that.dateTiem(d)
           })
           that.chartTableList.push(obj)
         })
       } else {
         series.map(function (n, index) {
-          const arr = n.name.split(',');
-          let name =  n.name.replace(/,/g, ' - ')
-          if(arr.length === 2){
-            if(arr[0].split(' ')[1]=== arr[1]){
-              name = arr[0]
-            }
-          }
           var obj = {}
           var kk = 'avg' + index
-          obj.title = name
+          obj.title = n.name
           obj.key = kk
           that.columnsList.push(obj)
         })
@@ -463,7 +476,7 @@ export default {
           obj.time = d
           series.map(function (da, iIndexs) {
             var akey = 'avg' + iIndexs
-            obj[akey] = initTimes(series[iIndexs].data[index])
+            obj[akey] = that.dateTiem(series[iIndexs].data[index])
           })
           that.chartTableList.push(obj)
         })
@@ -477,40 +490,105 @@ export default {
       that.lineData.series = []
       that.tableList = []
     },
+    dateTiem (value) { // 秒转换为时分秒
+      var secondTime = parseInt(value), minuteTime, hourTime
+      if (secondTime >= 60) {
+        minuteTime = parseInt(secondTime / 60)
+        secondTime = parseInt(secondTime % 60)
+        if (minuteTime >= 60) {
+          hourTime = parseInt(minuteTime / 60)
+          minuteTime = parseInt(minuteTime % 60)
+        }
+      }
+      if (secondTime > 0) {
+        secondTime = secondTime < 10 ? '0' + parseInt(secondTime) : parseInt(secondTime)
+      } else {
+        secondTime = '00'
+      }
+      if (minuteTime > 0) {
+        minuteTime = minuteTime < 10 ? '0' + parseInt(minuteTime) : parseInt(minuteTime)
+      } else {
+        minuteTime = '00'
+      }
+      if (hourTime > 0) {
+        hourTime = hourTime < 10 ? '0' + parseInt(hourTime) : parseInt(hourTime)
+      } else {
+        hourTime = '00'
+      }
+      return hourTime + ':' + minuteTime + ':' + secondTime
+    }
   }
 }
 </script>
-<style lang="scss">
-.dwell-chart-table{
-  padding: 20px;
-  padding-top: 0;
+
+<style>
+.ivu-select-dropdown{
+    z-index: 52000!important;
 }
+</style>
+<style lang="scss">
+.chartsActive,{
+  display: block!important;
+}
+.barActive{
+  transform: translateY(0%)!important;
+}
+.lineActive{
+  transform: translateY(-100%)!important;
+}
+.tableActive{
+  transform: translateY(-200%)!important;
+}
+.dwell-chart-table{
+  width: 100%;
+  height: 100%;
+  overflow:auto;
+  padding:0;
+  margin-top:20px;
+  transform: translateY(100%);
+}
+.chartsStyleOne,.chartsStyleTwo{
+transform: translateY(100%);
+}
+  .time-selector {
+    background-color: #fff;
+    padding: 0px 15px 18px;
+    box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
+    border-radius: 6px;
+  }
   .dewll_graph{
     background:#fff;
     box-shadow:0 4px 20px 0 rgba(0,0,0,.05);
     border-radius: .5rem;
     margin-top: 20px;
-    height: 500Px;
+    padding: 27px 19px 0;
+    position: relative;
     .dewll_graph_title{
-      padding: 20px;
-      font-size:18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      .dwell-time-icon{
-        cursor: pointer;
+      p{
+        font-size:18px;
+        font-family:SourceHanSansCN-Medium;
         font-weight:500;
         color:rgba(62,60,60,1);
-        >*+*{
-          margin-left: 10px;
-        }
+        line-height:20px;
       }
     }
-    .dwell-chart-box{
-      height: 0;
-      flex: 1;
-    }
+    .dwell-time-icon{
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      span{
+        display: inline-block;
+        cursor: pointer;
+         margin-left: 10px;
 
+      }
+    }
+  .dewll_graph_text{
+    display: block;
+    height: 415px;
+    overflow: hidden;
+
+  }
 }
 .dwell-time-table{
   margin-top: 20px;

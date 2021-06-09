@@ -2,17 +2,17 @@
     <div class="goalAnaysis">
         <div  class="box-card bg-white header">
             <Col>
-              <vs-select class="selectExample" autocomplete v-model="goalDate" >
+              <vs-select class="selectExample selects" autocomplete v-model="goalDate" >
                 <vs-select-item  :value="item" :text="item" :key="index" v-for="(item,index) in years" />
               </vs-select>
             </Col>
-            <vs-select class="selectExample m-l-20 " autocomplete v-model="activitySelect">
+            <vs-select class="selectExample selects" autocomplete v-model="activitySelect">
               <vs-select-item :key="index" :value="item.value" :text="item.key"
                 v-for="(item,index) in activityList"
               />
             </vs-select>
-            <Button size="large" class="m-l-20" type="primary" @click="handleSearch">查询 </Button>
-            <Button size="large" class="m-l-20" @click="reset">重置 </Button>
+            <vs-button color="primary"  class="handleSearch" v-on:click="handleSearch" >查询</vs-button>
+            <div class="goal-submit goal-reset" v-on:click="reset">重置</div>
         </div>
         <!-- 客流量趋势 -->
         <goalCharts
@@ -41,6 +41,7 @@
           style="margin-top:20px"
         >
         </goal-enter>
+
         <!-- 销售额趋势 -->
         <goal-enter
           v-if="isMarket"
@@ -62,10 +63,11 @@
 
 <script>
 import { options0, options2 } from '@/libs/chart.js'
+import flowSelector from '_c/Passenger-analysis/flowSelector'
 import moment from 'moment'
 import goalCharts from '@/components/goal/goalCharts.vue'
 import goalEnter from '@/components/goal/goalEnter.vue'
-import { postEntitysCompare, getSalesTrend } from '@/api/home.js'
+import { postEntitysCompare, getSalesTrend,getGroupOrganization } from '@/api/home.js'
 import { activityDataList } from '@/api/analysis.js'
 import _ from 'lodash'
 
@@ -73,6 +75,7 @@ export default {
   components: {
     goalCharts,
     goalEnter,
+    flowSelector
   },
 
   data () {
@@ -103,6 +106,7 @@ export default {
       activitySelect: '',
       selectEntity: '',
       targetData: [],
+      current: 0,
       year: '',
       bzids: [],
       tableData: [],
@@ -112,7 +116,7 @@ export default {
       options1: {},
       options2: {},
       // 销售 类型
-      marketTableTitle: ['日期', '销售额 ( 元 )', '目标销售额 ( 元 )'],
+      marketTableTitle: ['日期', '销售额', '目标销售额'],
       marketTableData: [],
       marketOptions1: {},
       marketOptions2: {},
@@ -124,29 +128,13 @@ export default {
     this.checkTargetData()
     this.options1 = _.cloneDeep(options0)
     this.marketOptions1 = _.cloneDeep(options0)
-    // this.marketOptions1.tooltip.y = {
-    //   formatter: function (val) {
-    //     console.log(val);
-    //     if (val == undefined || val == null || val == '') {
-    //       return ''
-    //     } else {
-    //       return val.toLocaleString() + '元'
-    //     }
-    //   }
-    // }
     this.options2 = _.cloneDeep(options2)
     this.marketOptions2 = _.cloneDeep(options2)
-    // this.marketOptions2.tooltip.y = {
-    //   formatter: function (val) {
-    //     if (val == undefined || val == null || val == '') {
-    //       return ''
-    //     } else {
-    //       return val.toLocaleString() + '元'
-    //     }
-    //   }
-    // }
   },
   watch: {
+    // selectEntity () {
+    //   this.activityData()
+    // },
     '$store.state.home.headerAction' () {
       this.reset()
       let routerName = this.$router.currentRoute.name
@@ -161,6 +149,20 @@ export default {
   mounted () {
     this.goalDate = moment(new Date()).year()
     this.shoppingList()
+    var that = this
+    if (that.$refs.goalCharts) {
+      that.$refs.goalCharts.updateOptions({ xaxis: { categories: that.options2.xaxis } })
+      if (that.options2.xaxis.categories.length < 2) {
+        that.options2.plotOptions.bar.columnWidth = '10%'
+        that.$refs.goalCharts.updateOptions({ plotOptions: that.options2.plotOptions })
+      } else if (that.options2.xaxis.categories.length < 5) {
+        that.options2.plotOptions.bar.columnWidth = '20%'
+        that.$refs.goalCharts.updateOptions({ plotOptions: that.options2.plotOptions })
+      } else {
+        that.options2.plotOptions.bar.columnWidth = '70%'
+        that.$refs.goalCharts.updateOptions({ plotOptions: that.options2.plotOptions })
+      }
+    }
   },
   activated () {
     this.isChart = false
@@ -169,6 +171,11 @@ export default {
   },
   methods: {
     reset () {
+      try {
+        window.TDAPP.onEvent('目标达成分析页面', '重置', { })
+      } catch (error) {
+        console.log('目标达成分析页面-重置-埋点error:' + error)
+      }
       this.goalDate = moment(new Date()).year()
       this.activitySelect = this.activityList[0].value
     },
@@ -189,22 +196,37 @@ export default {
       })
       this.shoppingInfoData()
     },
-    handleShoppingInfoData (data) {
-      let bzid = this.entities[0].value
-      const property = data.find(a => {
-        return a.property_id === this.$store.state.home.headerAction
-      })
-      this.years = property.goal_sale.map(a => {
-        return a.year
-      })
-      data.map(list => {
-        if (list.bzid == bzid) this.flow_year_data = list
-      })
-      this.activityData()
-    },
+      handleShoppingInfoData(data){
+          let bzid = this.entities[0].value
+          const property = data.find(a => {
+              return a.property_id === this.$store.state.home.headerAction
+          })
+          this.years = property.goal_sale.map(a => {
+              return a.year
+          })
+          data.map(list => {
+              if (list.bzid == bzid) this.flow_year_data = list
+          })
+          this.activityData()
+      },
     shoppingInfoData () {
-      const organizationData = this.$store.state.home.organizationData
-      this.handleShoppingInfoData(organizationData.property)
+        const organizationData = this.$store.state.home.organizationData;
+        if(organizationData && organizationData.property){
+            this.handleShoppingInfoData(organizationData.property)
+        }else {
+            getGroupOrganization().then(res => {
+                if (res.data.code == 200) {
+                    const data = res.data.data;
+                    this.$store.commit('saveOrganizationData', data);
+                    this.handleShoppingInfoData(data.property)
+                } else {
+                    this.years = []
+                }
+            }).catch(err => {
+                this.years = []
+            })
+        }
+
     },
     activityData () { // 选择列表
       var that = this
@@ -253,8 +275,15 @@ export default {
       }
       var that = this
       if (!year) {
-        this.$alert({ content:'请选择年份' })
+        alert('请选择年份')
         return
+      }
+      try {
+        let find = _.find(this.activityList, ['value', this.activitySelect])
+        find = find && find.key ? find.key : ''
+        window.TDAPP.onEvent('目标达成分析页面', '数据查询', { '时间段': this.goalDate.toString(), '目标实体选择': find })
+      } catch (error) {
+        console.log('目标达成分析页面-数据查询-埋点error:' + error)
       }
       if (this.flow_year_data.goal_flow) {
         if (this.flow_year_data.goal_flow[0].flow_year) {
@@ -264,10 +293,14 @@ export default {
           let date1 = moment(range.split(',')[0])
           let date2 = moment(range.split(',')[1])
           var innerRange = Math.abs(date2.diff(date1, 'day')) < 60 ? '1day' : '1month'
+          // if (this.$store.state.home.loadingState == false) {
+          //   this.$store.commit('loadingState', true)
+          //   this.$vs.loading()
+          // }
           this.getData(range, this.entities[0].value, innerRange)
           this.marketData(year, this.entities[0].property_id)
         } else {
-          this.$alert({ content:'选择商场无目标数据' })
+          alert('选择商场无目标数据')
         }
       }
     },
@@ -357,7 +390,7 @@ export default {
           let obj = {}
           obj.name = xAxis[index]
           barData1.push(reallyValue[index])
-          let begin = reallyValue[index] ? (reallyValue[index].toLocaleString() ) : ' '
+          let begin = reallyValue[index] ? (reallyValue[index].toLocaleString() + ' 人次') : ' '
           obj.begin = begin
           var num
 
@@ -369,7 +402,7 @@ export default {
             })
           }
           num == null ? barData2.push(0) : barData2.push(num)
-          var end = Number(num).toLocaleString() 
+          var end = Number(num).toLocaleString() + ' 人次'
           obj.end = end
           tableData.push(obj)
         })
@@ -378,11 +411,11 @@ export default {
           let obj = {}
           obj.name = xAxis[index]
           barData1.push(reallyValue[index])
-          let begin = reallyValue[index] ? (reallyValue[index].toLocaleString()  ) : ' '
+          let begin = reallyValue[index] ? (reallyValue[index].toLocaleString() + ' 人次') : ' '
           obj.begin = begin
           var num = (sele.enter / data.length).toFixed(0)
           barData2.push(num)
-          var end = Number(num).toLocaleString() 
+          var end = Number(num).toLocaleString() + ' 人次'
           obj.end = end
           tableData.push(obj)
         })
@@ -396,17 +429,6 @@ export default {
       let optionsBar = _.cloneDeep(options2)
       optionsBar.xaxis.categories = xAxis
       this.xAxis = xAxis
-        if (xAxis.length < 2) {
-            optionsBar.plotOptions.bar.columnWidth = '10%'
-        } else if (xAxis.length < 5) {
-            optionsBar.plotOptions.bar.columnWidth = '55%'
-        }else if (xAxis.length < 10) {
-            optionsBar.plotOptions.bar.columnWidth = '55%'
-        }else if (xAxis.length < 15) {
-            optionsBar.plotOptions.bar.columnWidth = '65%'
-        } else {
-            optionsBar.plotOptions.bar.columnWidth = '80%'
-        }
       this.options2 = optionsBar
       this.tableData = tableData
     },
@@ -452,16 +474,13 @@ export default {
         })
     },
     markerListData (data, bzid) {
-        const index = this.years.findIndex(o=>{
-            return o === this.goalDate
-        })
-        let dataList = this.flow_year_data.goal_sale[index]
+      let dataList = this.flow_year_data.goal_sale[0]
       let compares = []
       data.forEach(e => { compares.push(e.compares) })
       let zipCompares = _.zip(...compares)
       let reallyValue = zipCompares[0].map(e => e.number)
       let xAxis = []
-      while (reallyValue.length !== 12) { reallyValue.push(null) }
+      while (reallyValue.length < 12) { reallyValue.push(null) }
       let tableData = []
       var goalNumber
       if (dataList.is_year == 'year') {
@@ -497,22 +516,13 @@ export default {
         ]
         this.marketOptions1 = _.cloneDeep(options0)
         this.marketOptions1.xaxis.categories = xAxis
-        this.marketOptions1.tooltip.y = {
-          formatter: function (val) {
-            if (val == undefined || val == null || val == '') {
-              return ''
-            } else {
-              return val.toLocaleString() +'元'
-            }
-          }
-        }
         var barData1 = []
         var barData2 = []
         dataList.detail.months.map(function (list, index) {
           let obj = {}
           obj.name = xAxis[index]
           barData1.push(reallyValue[index])
-          let begin = reallyValue[index] ? (reallyValue[index].toLocaleString() ) : ' '
+          let begin = reallyValue[index] ? (reallyValue[index].toLocaleString() + ' 元') : ' '
           obj.begin = begin
           var num
           if (dataList.is_year == 'year') {
@@ -523,7 +533,7 @@ export default {
             })
           }
           num == null ? barData2.push(0) : barData2.push(num)
-          var end = Number(num).toLocaleString() 
+          var end = Number(num).toLocaleString() + ' 元'
           obj.end = end
           tableData.push(obj)
         })
@@ -534,15 +544,6 @@ export default {
         ]
         this.marketOptions2 = _.cloneDeep(options2)
         this.marketOptions2.xaxis.categories = xAxis
-        this.marketOptions2.tooltip.y = {
-          formatter: function (val) {
-            if (val == undefined || val == null || val == '') {
-              return ''
-            } else { 
-              return val.toLocaleString() +'元'
-            }
-          }
-        }
         this.marketTableData = tableData
       }
     }
@@ -563,8 +564,15 @@ export default {
 .goalAnaysis{
     .header{
         display: flex;
-        align-items: center;
-        padding: 20px;
+        height: 78px;
+        padding-top: 18px;
+        padding-left: 30px;
+    }
+    .selects{
+        margin-right: 20px;
+    }
+    .handleSearch{
+      height: 42px;
     }
     .more{
         width:300px;
@@ -575,5 +583,25 @@ export default {
       }
     }
 }
+  .goal-submit{
+    display: inline-block;
+    padding: .75rem 2rem;
+    border-radius: 6px;
+    background: #37b5ed !important;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: 30px;
+    height: 42px;
+    margin-top: 0px;
+    &:hover{
+    box-shadow: 0 8px 25px -8px #00a0e9;
+    }
+  }
+  .goal-reset{
+    background: #fff !important;
+    color: #37b5ed;
+    border: 1px solid #37b5ed;
+  }
 
 </style>

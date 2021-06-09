@@ -15,7 +15,7 @@
   white-space: nowrap;
 
   .vs-sidebar{
-    z-index: 5;
+    z-index: 51000;
     position: fixed;
 
     .vs-sidebar--items {
@@ -23,7 +23,7 @@
     }
     &.vs-sidebar-reduce{
       max-width: $reduced-sidebar-width;
-
+    
       &:hover:not(.vs-sidebar-reduceNotRebound):not(.vs-sidebar-reduceNotHoverExpand){
         .vs-sidebar--items {
         }
@@ -36,14 +36,13 @@
       }
     }
   }
-
+  
   .header-sidebar-main {
     padding: 20px 19px 16px 23px;
-
+    
     .logo{
       // border: 1px solid red;
-      //flex-grow: 1;
-      width: 80%;
+      flex-grow: 1;
       height: 45px;
       background-size: contain;
       background-repeat: no-repeat;
@@ -125,7 +124,7 @@
         transform: translateX(5px);
       }
     }
-
+  
     &.vs-sidebar-item-active {
 	  	border-right: none !important;
       font-weight: 400;
@@ -156,8 +155,8 @@
       }
     }
 
-
-
+    
+    
     .router-link-active{
       background: linear-gradient(118deg, rgba(var(--vs-primary),1), rgba(var(--vs-primary),.7));
       font-weight: 400;

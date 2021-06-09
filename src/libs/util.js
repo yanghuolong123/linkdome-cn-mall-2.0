@@ -3,7 +3,6 @@ import Cookies from 'js-cookie'
 // import { forEach, hasOneOf} from '@/libs/tools'
 import Moment from 'moment'
 import _ from 'lodash'
-
 export const TOKEN_KEY = 'token'
 export const setToken = (token, expiresTime) => {
   if (expiresTime) Cookies.set(TOKEN_KEY, token, { expires: expiresTime })
@@ -32,12 +31,10 @@ const showThisMenuEle = (item, access) => {
      * @access
      * @returns {Array}
      */
-    // 菜单列表
-
 export const getMenuByRouter = (list, access) => {
   let res = []
-  let saleStatus = window.localStorage.getItem('saleStatus')
   let menuList = JSON.parse(window.localStorage.getItem('menulist'))
+
   let lists = _.cloneDeep(list)
   lists.forEach(function (m) {
     let findOne = _.find(menuList, ['name', m.name])
@@ -61,46 +58,116 @@ export const getMenuByRouter = (list, access) => {
       })
     }
   })
+
   lists.forEach(e => {
     if (!e.meta || (e.meta && !e.meta.hideInMenu)) {
-      if(saleStatus==='0'){
-        if(e.name!=="CommodityAnalytics"&&e.name!=="changeStore"&&e.name!=="销售多维度"&&e.name!=="shopPortrait"){
-          let obg = {
-            url: e.name,
-            name: e.name,
-            icon: e.meta && e.meta.icon,
-            i18n: e.name,
-            meta: e.meta || ''
-          }
-          if (hasChild(e) && showThisMenuEle(e, access)) obg.submenu = getMenuByRouter(e.children, access)
-          if (showThisMenuEle(e, access)) res.push(obg)
-        }
-      }else{
-        let obg = {
-          url: e.name,
-          name: e.name,
-          icon: e.meta && e.meta.icon,
-          i18n: e.name,
-          meta: e.meta || ''
-        }
-        if (hasChild(e) && showThisMenuEle(e, access)) obg.submenu = getMenuByRouter(e.children, access)
-        if (showThisMenuEle(e, access)) res.push(obg)
+      let obg = {
+        url: e.name,
+        name: e.name,
+        icon: e.meta && e.meta.icon,
+        i18n: e.name,
+        meta: e.meta || ''
       }
+      if (hasChild(e) && showThisMenuEle(e, access)) obg.submenu = getMenuByRouter(e.children, access)
+      if (showThisMenuEle(e, access)) res.push(obg)
     }
   })
   return res
 }
 
+/**
+ * @param {*} access 用户权限数组，如 ['super_admin', 'admin']
+ * @param {*} route 路由列表
+ */
+const hasAccess = (access, route) => {
+  if (route.meta && route.meta.access) {
+    return hasOneOf(access, route.meta.access)
+  } else return true
+}
 
+/**
+ * 权鉴
+ * @param {*} name 即将跳转的路由name
+ * @param {*} access 用户权限数组
+ * @param {*} routes 路由列表
+ * @description 用户是否可跳转到该页
+ */
+export const canTurnTo = (name, access, routes) => {
+  const routePermissionJudge = list => {
+    return list.some(item => {
+      if (item.children && item.children.length) {
+        return routePermissionJudge(item.children)
+      } else if (item.name === name) {
+        return hasAccess(access, item)
+      }
+    })
+  }
 
+  return routePermissionJudge(routes)
+}
+/**
+     * @param {Object} file 从上传组件得到的文件对象
+     * @returns {Promise} resolve参数是解析后的二维数组
+     * @description 从Csv文件中解析出表格，解析成二维数组
+     */
+export const getArrayFromFile = file => {
+  let nameSplit = file.name.split('.')
+  let format = nameSplit[nameSplit.length - 1]
+  return new Promise((resolve, reject) => {
+    let reader = new FileReader()
+    reader.readAsText(file) // 以文本格式读取
+    let arr = []
+    reader.onload = function (evt) {
+      let data = evt.target.result // 读到的数据
+      let pasteData = data.trim()
+      arr = pasteData
+        .split(/[\n\u0085\u2028\u2029]|\r\n?/g)
+        .map(row => {
+          return row.split('\t')
+        })
+        .map(item => {
+          return item[0].split(',')
+        })
+      if (format === 'csv') resolve(arr)
+      else reject(new Error('[Format Error]:你上传的不是Csv文件'))
+    }
+  })
+}
+
+/**
+ * @param {Array} array 表格数据二维数组
+ * @returns {Object} { columns, tableData }
+ * @description 从二维数组中获取表头和表格数据，将第一行作为表头，用于在iView的表格中展示数据
+ */
+export const getTableDataFromArray = array => {
+  let columns = []
+  let tableData = []
+  if (array.length > 1) {
+    let titles = array.shift()
+    columns = titles.map(item => {
+      return {
+        title: item,
+        key: item
+      }
+    })
+    tableData = array.map(item => {
+      let res = {}
+      item.forEach((col, i) => {
+        res[titles[i]] = col
+      })
+      return res
+    })
+  }
+  return {
+    columns,
+    tableData
+  }
+}
 /**
      * @description根据时间选择器选择的时间范围返回innerrange
      * @param [] date
      */
 export const gotInnerRange = date => {
-  if(!date.length) {
-    return ''
-  }
   const [start, end] = date
   let startTime = Moment(start)
   let endTime = Moment(end)
@@ -110,6 +177,52 @@ export const gotInnerRange = date => {
   else if (diffDays < 60) innerRange = '1day'
   else innerRange = '1month'
   return innerRange
+}
+/**
+     * @description 处理年龄和性别数据
+     * @param data 待处理数据
+     * @param color highcharts 图标需要颜色
+     * @returns {*}返回不同年龄段所有性别的数据总和，根据年龄段划分的横轴坐标两种性别的总书记
+     */
+export const handleAgeandGenderData = data => {
+  // 定义所有年龄段两种性别的总人数Array，所有年龄段不同性别的人数和总人数
+  let sumMale = 0
+  let sumFemale = 0
+  let ageLabels = []
+  let ageSeries = []
+  for (const e of data) {
+    let reg1 = /0/g
+    let reg2 = /_/
+    ageLabels.push(e.alias.replace(reg1, '0岁').replace(reg2, '-').replace('less-', '小于').replace('more-', '').replace(/^60岁/, '60岁以上'))
+    sumMale += Number(e.male)
+    sumFemale += Number(e.famale)
+  }
+  ageSeries = [{
+    name: '男性',
+    key: 'male',
+    data: data.map(e => e.male)
+  },
+  {
+    name: '女性',
+    key: 'female',
+    data: data.map(e => e.famale)
+  }
+  ]
+  return {
+    ageLabels: {
+      name: '年龄',
+      key: 'age',
+      data: ageLabels
+    },
+    ageSeries,
+    genderLabels: {
+      name: '性别',
+      key: 'gender',
+      data: ['男性', '女性'],
+      icons: ['male', 'female']
+    },
+    genderSeries: [sumMale, sumFemale]
+  }
 }
 export const formatTableData = (data, keys) => {
   /**
@@ -240,12 +353,8 @@ export const lineOptions = {
   markers: {
     size: [4]
   },
-
   xaxis: {
-    categories: [],
-     labels: {
-              offsetX: 0 // 720
-            },
+    categories: []
   },
   yaxis: {
     title: {
@@ -255,10 +364,8 @@ export const lineOptions = {
     labels: {
       show: true,
       formatter: (value) => {
-
-        // if(val===0) return 0
         if (typeof (value) === 'number') {
-         return Number(Math.ceil(value)).toLocaleString()
+          return Number(Math.ceil(value)).toLocaleString()
         } else {
           return value
         }
@@ -288,9 +395,11 @@ export const lineOptions = {
   tooltip: {
     y: {
       formatter: function (val) {
-        if(val===0) return 0
-        if (val == undefined || val == null || val == '')  return ''
-        else return val.toLocaleString()
+        if (val == undefined || val == null || val == '') {
+          return ''
+        } else {
+          return val.toLocaleString() + '人'
+        }
       }
     }
   }
@@ -489,7 +598,7 @@ export const initTimes = (val) => {
 // 日期控件不可选择日期限制
 export const disabledDate = {
   disabledDate (date) {
-    return date && date.valueOf() > Date.now() - 86400000
+    return date && date.valueOf() > Date.now()
   }
 }
 // 处理实体权限级联数据
@@ -497,7 +606,6 @@ export const formatEntityData = (data, role_id, checklist) => {
   let organization = data.map(function (m, index) {
     m.value = m.id
     m.label = m.name
-    m.itype = m.itype
     m.disabled = false
     m.cascadeValue = [m.id]
     if (m.children) {
@@ -576,38 +684,7 @@ export const formatEntityData = (data, role_id, checklist) => {
     }
   }
 }
-export const deepFind = (arr, condition, children) => {
-  let result = null
-  // 用try方案方便直接中止所有递归的程序
-  try {
-    (function poll(arr, level) {
-      if (!Array.isArray(arr)) return
-      // 遍历数组
-      for (let i = 0; i < arr.length; i++) {
-        const item = arr[i]
-        result = item
-        const isFind = condition && condition(item, i, level) || false
 
-        // 如果已经找到了
-        if (isFind) {
-          // 直接抛出错误中断所有轮询
-          throw Error
-
-          // 如果存在children，那么深入递归
-        } else if (children && item[children] && item[children].length) {
-          poll(item[children], level + 1)
-
-          // 如果是最后一个且没有找到值，那么通过修改数组长度来删除当前项
-        } else if (i === arr.length - 1) {
-          // 删除占位预设值
-          result = null
-        }
-      }
-    })(arr, 0)
-    // 使用try/catch是为了中止所有轮询中的任务
-  } catch (err) {}
-  return result
-}
 export const deepTraversal = (arr, child, callback) => {
   function traversal (a) {
     a.forEach(o => {
@@ -698,114 +775,4 @@ export const hasHeatMapData = (targetArr, x, y) => {
     };
   }
   return result
-}
-//级联数据 获取第一个叶子节点
-export const getCascadeFstLeaf = (arr,child,id='id') =>{
-  let result = [];
-  function traversal (a) {
-    result.push(a[0][id]);
-    if(a[0][child] && a[0][child].length){
-      traversal(a[0][child])
-    }
-  }
-  traversal(arr)
-  return result
-}
-export const isEmpty = (value) => {
-  let type;
-  if (value == null) {
-    return true
-  }
-  type = Object.prototype.toString.call(value).slice(8, -1)
-  switch (type) {
-    case 'String':
-      return value.length === 0
-    case 'Array':
-      return !value.length
-    case 'Object':
-      return Object.keys(value).length === 0 && value.constructor === Object
-    default:
-      return false
-  }
-}
-
-export const downloadEx =(fun,name,value)=>{
-  value[1].map(list=>{
-    Object.keys(list).map(k=>{
-      if(!_.isNumber(list[k])){
-      list[k] = list[k].replace(',','')
-      }
-    })
-  })
-  fun(value).then(res => {
-    let date = new Date()
-    const blob = new Blob([res.data])
-    let fileName = name + Moment(date).format('YYYYMMDDHHmmss') + '.xls'
-    const elink = document.createElement('a')
-    elink.download = fileName
-    elink.style.display = 'none'
-    elink.href = URL.createObjectURL(blob)
-    document.body.appendChild(elink)
-    elink.click()
-    URL.revokeObjectURL(elink.href)// 释放URL 对象
-    document.body.removeChild(elink)
-  })
-}
-export const findKey = (arr,valueKey,value,targetkey)=>{
-  const node = arr.find(o=>{
-    return o[valueKey] === value
-  })
-  if(node){
-    return node[targetkey]
-  }else {
-    return ''
-  }
-}
-//将负数转为正数
-export const transNegToPos = (number)=>{
-  return Number(number)<0?0:Number(number)
-}
-//获取最大值的下标
-export const getMaxIndex = (arr) => {
-  var max = arr[0];
-  var index = 0;
-  for (var i = 0; i < arr.length; i++) {
-    if (max < arr[i]) {
-      max = arr[i];
-      index = i;
-    }
-  }
-  return index;
-}
-/*
-* 获取（同比，环比）日期
-* params{
-*   date:原始时间 数据类型为数组时，表示时间范围；字符串表示单天时间
-*   compateType：对比类型（同比，环比）
-* }
-* */
-export const getCompareDate = (originDate,compateType) => {
-  if(Array.isArray(originDate)){
-    switch (compateType) {
-      case 'onYear'://同比
-        return [
-          Moment(originDate[0]).add(-1, 'y').format('YYYY-MM-DD'),
-          Moment(originDate[1]).add(-1, 'y').format('YYYY-MM-DD')
-        ]
-      case 'onChain'://环比
-        const diff = Moment(originDate[0]).diff(Moment(originDate[1]), 'days') - 1
-        return [
-          Moment(originDate[0]).add(diff, 'd').format('YYYY-MM-DD'),
-          Moment(originDate[1]).add(diff, 'd').format('YYYY-MM-DD')
-        ]
-    }
-  }else {
-    switch (compateType) {
-      case 'onYear'://同比
-        return Moment(originDate).add(-1, 'y').format('YYYY-MM-DD')
-      case 'onChain'://环比
-        return Moment(originDate).add(-1, 'd').format('YYYY-MM-DD')
-    }
-  }
-
 }

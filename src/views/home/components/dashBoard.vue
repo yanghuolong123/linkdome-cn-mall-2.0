@@ -1,40 +1,39 @@
 <template>
-<div>
-  <div class="sale-dashboard-box" v-if="isSole">
+  <div class=" dashboard-box">
     <div class="static-box">
       <div class="static-l bg-white">
         <div>
           <p class="title flex-box">
             <i class="iconfont iconenter_total"></i>
-            <span class="text-size" >当日累积客流(人次)</span>
+            <span class="text-size" style="color: #3F3B3B">当日累积客流(人次)</span>
           </p>
           <div class="value-size" style="color: #3E3C3C"><b>{{dayTotalEnter | tenthousandFormat}}</b></div>
         </div>
         <div>
           <p class="title flex-box">
             <i class="iconfont icondangrixiaoshoue"></i>
-            <span class="text-size">当日累积销售额(元)</span>
+            <span class="text-size" style="color: #3F3B3B">当日累积销售额(元)</span>
           </p>
-          <div class="value-size"><b>{{ saleData.sale_today| tenthousandFormat}}</b></div>
+          <div class="value-size" style="color: #3E3C3C"><b>{{ saleData.sale_today| tenthousandFormat}}</b></div>
         </div>
       </div>
       <div class="static-l bg-white">
         <div>
           <p class="title flex-box">
-            <i class="iconfont iconyuekeliu-copy"></i>
-            <span class="text-size" >本月累积客流(人次)</span>
+            <i class="iconfont iconenter_total"></i>
+            <span class="text-size" style="color: #A0A0A0">本月累积客流(人次)</span>
           </p>
-          <div class="value-size" s><b>{{ monthEnter| tenthousandFormat}}</b></div>
+          <div class="value-size" style="color: #A0A0A0"><b>{{ monthEnter| tenthousandFormat}}</b></div>
         </div>
         <div>
           <p class="title flex-box">
-            <i class="iconfont iconyuexiaoshoue"></i>
-            <span class="text-size" >本月累积销售额(元)</span>
+            <i class="iconfont icondangrixiaoshoue"></i>
+            <span class="text-size" style="color: #A0A0A0">本月累积销售额(元)</span>
           </p>
-          <div class="value-size" ><b>{{ saleData.sale_month| tenthousandFormat}}</b></div>
+          <div class="value-size" style="color: #A0A0A0"><b>{{ saleData.sale_month| tenthousandFormat}}</b></div>
         </div>
       </div>
-    </div> 
+    </div>
 
     <div class="chart-box bg-white flex-box">
       <div class="chart-b">
@@ -57,16 +56,13 @@
        <span>月达标值(元)</span>
        <span>{{ saleData.sale_target| tenthousandFormat}}</span>
      </div>
-    </div> 
+    </div>
   </div>
-  <dev-board :dayTotalEnter='dayTotalEnter' :monthEnter='monthEnter' :chartData=chartData(target,monthEnter) :chartOptions=chartOptions v-else></dev-board>
-</div>
-  
 </template>
 <script>
 import VueApexCharts from 'vue-apexcharts'
+import Moment from 'moment'
 import NP from 'number-precision'
-import devBoard from './devBoard'
 export default {
   name: 'dashBoard',
   props: {
@@ -92,14 +88,9 @@ export default {
     }
   },
   components: {
-    VueApexCharts,
-    devBoard
+    VueApexCharts
   },
   computed: {
-    isSole(){
-      if(this.$store.state.user.sale_feature === 1 )return true
-      else return false
-    },
     chartData () {
       return function (target, value) {
         if (!target) return [0]// 除数不能为零
@@ -337,10 +328,6 @@ export default {
         ]
       }
     }
-  },
-  data(){
-    return {
-    }
   }
 }
 </script>
@@ -350,35 +337,19 @@ export default {
   display: flex;
   align-items: center;
 }
-.sale-dashboard-box{
+.dashboard-box{
+  /*box-shadow:0px 0px 8px 1px rgba(166,167,167,0.3);*/
+  /*border-radius:6px;*/
+  /*padding: 10px;*/
   display: flex;
   align-items: stretch;
   height: 300px;
-    .dev-box{
-      width: 100%;
-      height: 100%;
-      display: flex;
-      background-color: #fff;
-    }
     .static-box{
       box-shadow:0px 0px 8px 1px rgba(166,167,167,0.3);
       width: 55%;
       margin-right: 10px;
       background-color: #fff;
       display: flex;
-      &:hover{
-        border:1px solid #23aeee!important;
-        border-radius: 6px;
-        box-shadow: 0px 0px 18px 0px rgba(160, 163, 164, .5)!important;
-      }
-      .text-size{
-        font-size: 17px;
-        color: #3f3b3b;
-      }
-      .value-size{
-        font-size: 30px;
-        color: #3e3c3c;
-      }
       .static-l{
         position: relative;
         border-radius:6px;
@@ -394,36 +365,100 @@ export default {
           }
           i{
             color: rgb(34, 128, 215);
-            font-size: 20px;
-            margin-right: 10px;
-            &.icondangrixiaoshoue,&.iconyuexiaoshoue{
+            &.icondangrixiaoshoue{
               color: #E75759;
             }
           }
         }
+
       }
+
+      // .static-l:nth-child(1):after{
+      //   content: '';
+      //   position: absolute;
+      //   width:2px;
+      //   height: 35%;
+      //   background-color: #A0A0A0;
+      //   right: 17px;
+      //   top: 50%;
+      //   transform: translateY(-50%);
+      // }
     }
     .chart-box{
       flex: 1;
       box-shadow:0px 0px 8px 1px rgba(166,167,167,0.3);
       border-radius:6px;
-      &:hover{
-        border:1px solid #23aeee!important;
-        border-radius: 6px;
-        box-shadow: 0px 0px 18px 0px rgba(160, 163, 164, .5)!important;
-      }
       .chart-b{
         width: 50%;
         display: flex;
         flex-direction: column;
         align-items: center;
         padding: 10px;
-        font-size: 16px;
-        color: #3e3c3c;
         .chart{
           color: #9E9E9E;
         }
       }
     }
 }
+@media (max-width: 1200px){
+  i{
+    font-size: 18px;
+    margin-right: 5px;
+    &.icondangrixiaoshoue{
+      font-size: 22px;
+    }
+  }
+  .text-size{
+    font-size: 17px;
+  }
+  .value-size{
+    font-size: 28px;
+  }
+}
+@media (min-width: 1650px){
+  i{
+    font-size: 18px;
+    margin-right: 5px;
+    &.icondangrixiaoshoue{
+      font-size: 22px;
+      margin-right: 3px;
+    }
+  }
+  .text-size{
+    font-size: 17px;
+  }
+  .value-size{
+    font-size: 28px;
+  }
+}//窗口大于等于1650px，文字字号30px
+@media (max-width: 1649px) and (min-width: 1460px) {
+  i{
+    font-size: 16px;
+    margin-right: 3px;
+    &.icondangrixiaoshoue{
+      font-size:18px;
+      margin-right: 1px;
+    }
+  }
+  .text-size{
+    font-size: 14px;
+  }
+  .value-size{
+    font-size: 24px;
+  }
+} //窗口小于等于1650px，文字字号16px
+
+@media (max-width: 1459px) and (min-width: 1200px) {
+  i{
+    font-size: 14px;
+
+  }
+  .text-size{
+    font-size: 12px;
+  }
+  .value-size{
+    font-size: 18px;
+  }
+}//窗口小于等于1550px，文字字号30px
+
 </style>

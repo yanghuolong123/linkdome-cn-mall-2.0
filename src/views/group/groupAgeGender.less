@@ -2,22 +2,44 @@
   height: 575px;
   display: flex;
   margin: 20px 0;
-  .box-card{
+  .left {
     width: 50%;
     background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    .flex-cell{
-      flex: 1;
-    }
-  }
-  .left {
     margin-right: 10px;
   }
   .right {
+    width: 50%;
+    background-color: #fff;
     margin-left: 10px;
   }
-
+  .title {
+    padding: 27px 10px 10px 19px;
+    p {
+      line-height: 30px;
+      font-size: 1.25rem;
+      color: #3e3c3c;
+      display: inLine-block;
+    }
+    ul {
+      width: auto;
+      float: right;
+      display: flex;
+      li {
+        cursor: pointer;
+        &:nth-child(1) {
+          margin-right: 10px;
+        }
+        &:nth-child(2) {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+  .groupTable {
+    height: 428px;
+    box-shadow: none;
+    overflow: auto;
+  }
 }
 .group-client {
   height: 575px;
@@ -27,57 +49,38 @@
     width: 50%;
     background-color: #fff;
     margin-right: 10px;
-    display: flex;
-    flex-direction: column;
-    .flex-cell{
-      flex: 1;
-    }
   }
   .center {
     width: 50%;
     background-color: #fff;
     margin-left: 10px;
-    display: flex;
-    flex-direction: column;
-    .flex-cell{
-      flex: 1;
-    }
   }
   .right {
     width: 33.33%;
     background-color: #fff;
     margin-left: 10px;
-    display: flex;
-    flex-direction: column;
-    .flex-cell{
-      flex: 1;
+  }
+  .title {
+    padding: 27px 10px 10px 19px;
+    p {
+      line-height: 30px;
+      font-size: 1.25rem;
+      color: #3e3c3c;
+      display: inLine-block;
+    }
+    ul {
+      width: auto;
+      float: right;
+      display: flex;
+      li {
+        cursor: pointer;
+        &:nth-child(1) {
+          margin-right: 10px;
+        }
+        &:nth-child(2) {
+          margin-right: 10px;
+        }
+      }
     }
   }
-
-}
-.title {
-  padding: 20px;
-  padding-bottom: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  p {
-    font-size: 18px;
-    color: #3e3c3c;
-  }
-  ul {
-    display: flex;
-    align-items: center;
-    li {
-      cursor: pointer;
-    }
-    li+li{
-      margin-left: 10px;
-    }
-  }
-}
-.groupTable {
-  //height: 428px;
-  box-shadow: none;
-  overflow: auto;
 }

@@ -1,20 +1,26 @@
 <template>
-  <div class="report-center" style="min-width: 1200px;">
+  <div class="report-center">
     <div style="margin-bottom: 21px">
-      <div class="day-report-date flex-center">
-          <DatePicker
-            type="date"
-            @on-change="selectTimeDate"
-            :editable="false"
-            :options="options3"
-            placeholder="选择日期"
-            v-model="selectDateTime"
-          >
-          </DatePicker>
+      <div class="day-report-date">
+        <Row style="float: left">
+          <Col span="12">
+            <DatePicker
+              type="date"
+              @on-change="selectTimeDate"
+              :editable="false"
+              :options="options3"
+              placeholder="选择日期"
+              style="width: 230px"
+              v-model="selectDateTime"
+            >
+            </DatePicker>
+          </Col>
+        </Row>
         <div class="report-query" v-on:click="reportQuery">查询</div>
-        <div class="icon-download" v-on:click="downloadReport('day',selectDateText)" title="下载报告">
-			  <icons type="daoru" color="#2a7dc1" :size=20 ></icons>
+        <div class="icon-download" v-on:click="uploadReport('day',selectDateText)" title="下载报告">
+			  <icons type="daoru" color="#2a7dc1" :size = 20 ></icons>
       </div>
+      <div style="clear: both"></div>
       </div>
     </div>
     <report-suggest v-if="showPDF&&userRole==='超级管理员'"
@@ -23,54 +29,26 @@
       :date='selectDateText'
       :suggestText='suggestText'
     ></report-suggest>
-    <div class="pdf-text-box" style="max-width:1200px"  v-if="showPDF" >
-      <div id="pdfDom" >
-        <!-- 封面 -->
-        <report-cover
-          :suggestText='suggestText'
-          titleName='凌图智慧日报'
-          :pageTotal='`${11+allHeatMap.length}`'
-        ></report-cover>
-        <!-- 总览 -->
+    <div class="pdf-text-box" v-bind:class="{pdfAction:showPDF}">
+      <div id="pdfDom">
+          <!-- 封面 -->
+        <report-cover :reportType='reportType'  :suggestText='suggestText' titleName='凌图智慧日报' pageTotal='4'></report-cover>
+          <!-- 总览 -->
         <report-one title='客流总览' :enterData='enterData' :listTitle='oneListData'></report-one>
         <!--客流趋势  -->
-        <report-chart :chartHeight='600' title='客流趋势' page='2' :listTitle='trendTitle'  :dataList=trendChartData></report-chart>
+        <report-chart title='客流趋势' page='2' :listTitle='trendTitle'  :dataList=trendChartData></report-chart>
         <report-ratio-table
           title='客流趋势'
           page='3'
           :listTitle='trendTitle'
           :tableColumn='ratioTableColumn'
           :tableData ='ratioTableData'
-        ></report-ratio-table>
+        >
+        </report-ratio-table>
         <!-- 出入口 -->
-        <report-chart :chartHeight='600' title='出入口客流' page='4' :listTitle='gateTitle' :dataList='gateChartData'></report-chart>
-        <!-- <report-gate-table title='出入口客流' page='5' :tableData='gateTableData' :listTitle='gateTitle'></report-gate-table> -->
-
+        <!-- <report-chart title='出入口客流' page='4' :listTitle='gateTitle' :dataList='gateChartData'></report-chart> -->
         <!-- 店铺 -->
-        <report-chart :chartHeight='600' title='店铺客流' page='5' :listTitle='shopTitle' :dataList='shopChartData'></report-chart>
-        <!-- 楼层下的商铺 -->
-        <report-chart-multi title='店铺客流' page='6'  :listTitle='floorStoreTitle' :dataList='allFloorStore'></report-chart-multi>
-        <!-- 业态下的商铺 -->
-        <report-chart-multi title='店铺客流' page='7'  :listTitle='formatStoreTitle' :dataList='allFormatStore'></report-chart-multi>
-        <!-- 热力图 -->
-        <report-heat-map
-          :key="'heatMap'+index"
-          v-for="(item,index) in allHeatMap"
-          title='热力图'
-          :page='`${8+index}`'
-          :listTitle='item.title'
-          :dataList=item.data
-          :isRemark='false'
-          :chartHeight='600'
-          ></report-heat-map>
-        <!-- 店铺关联 有序-->
-        <report-table title='店铺关联' :listTitle='orderlyTitle' :tableData='orderlyData' :page='`${8+allHeatMap.length}`'></report-table>
-        <!-- 店铺关联 无序-->
-        <report-table title='店铺关联' :listTitle='disorderTitle' :tableData='disorderData' :page='`${9+allHeatMap.length}`'></report-table>
-        <!-- 停留时间 业态-->
-        <report-chart :chartHeight='600' :isRemark='false' title='停留时间' :page='`${10+allHeatMap.length}`'  :listTitle='dwellTitle' :dataList='dwellChartData' chartType='dwell'></report-chart>
-        <!-- 停留时间 业态下的商铺-->
-        <report-chart-multi chartType='dwell' title='停留时间' :page='`${11+allHeatMap.length}`'  :listTitle='formatDwellStoreTitle' :dataList='allDwellFormatStore'></report-chart-multi>
+        <report-chart title='店铺客流' page='4' :listTitle='shopTitle' :dataList='shopChartData'></report-chart>
         <report-back-cover></report-back-cover>
       </div>
 
@@ -81,14 +59,9 @@
 import reportCover from '@/components/report/newReport/report_cover'
 import reportOne from '@/components/report/newReport/report_one'
 import reportChart from '@/components/report/newReport/report_chart'
-import reportHeatMap from '@/components/report/newReport/report_heat_map'
 import reportRatioTable from '@/components/report/newReport/report_ratio_table'
 import reportSuggest from '@/components/report-public/report_suggest'
 import reportBackCover from '@/components/report/newReport/report_back_cover'
-import reportTable from '@/components/report/newReport/report_table'
-import reportChartMulti from '@/components/report/newReport/report_chart_multi'
-import reportRemark from '@/components/report/newReport/report_remark'
-import reportGateTable  from '@/components/report/newReport/report_gate_table'
 
 import moment from 'moment'
 import _ from 'lodash'
@@ -96,15 +69,6 @@ import Bus from '@/libs/bus.js'
 import mixins from './reportMixin.js'
 import { newReportEnter, newReportSuggest, newReportGate, newReportShop } from '@/api/report'
 import { getanalysiseeo } from '@/api/home'
-import {
-  newReportFloorStore,
-  newReportFormatStore,
-  newReportHeatMap,
-  newReportOrderly,
-  newReportDisorder,
-  newReportDwellStore,
-  newReportDwellFormat
-  } from '@/api/new_report'
 
 export default {
   name: 'report-day',
@@ -113,20 +77,14 @@ export default {
     reportCover,
     reportOne,
     reportChart,
-    reportHeatMap,
     reportRatioTable,
     reportSuggest,
-    reportBackCover,
-    reportTable,
-    reportChartMulti,
-    reportRemark,
-    reportGateTable
+    reportBackCover
   },
   data () {
-    let that = this
     return {
-      clickData:0,
       showPDF: false,
+      reportType: 'daily',
       selectDateTime: '',
       selectDateText: '',
       options3: {
@@ -135,19 +93,58 @@ export default {
         }
       },
       trendChartData: {
-        option:{},
+        seriesData: [
+          {
+            name: '客流',
+            color: '#745AEF',
+            type: 'line',
+            data: []
+          },
+          {
+            name: '集客量',
+            type: 'line',
+            color: '#00A0E9',
+            data: []
+          }
+        ],
+        xAxisData: [],
         remarkData: []
       },
       gateChartData: {
-		    option:{},
+        seriesData: [
+          {
+            name: '本日客流',
+            color: '#2081D4',
+            type: 'column',
+            data: []
+          },
+          {
+            name: '昨日客流',
+            color: '#2BD9CF',
+            type: 'column',
+            data: []
+          }
+        ],
+        xAxisData: [],
         remarkData: []
       },
-      gateTableData:{
-        column:[],
-        data:[]
-      },
       shopChartData: {
-		    option:{},
+        seriesData: [
+          {
+            name: '本日客流',
+            color: '#2081d4',
+            type: 'column',
+            data: []
+          },
+          {
+            name: '昨日客流',
+            type: 'column',
+            color: '#2BD9CF',
+            data: []
+
+          }
+        ],
+        xAxisData: [],
         remarkData: []
       },
       ratioTableColumn: {
@@ -155,127 +152,52 @@ export default {
         name2: ['环比分析'],
         name3: ['时间', '入客流', '增长率']
       },
-      ratioTableData: [],
-      allFloorStore:[],
-      allFormatStore:[],
-      allHeatMap:[],
-      orderlyData:{
-         relevancy:{
-          column: ['实体名称','实体名称','关联度'],
-          table:[]
-        },
-        inversion:{
-          column: ['实体名称','实体名称','转换量'],
-          table:[]
-        }
-      },
-      disorderData:{
-         relevancy:{
-          column: ['实体名称','实体名称','关联度'],
-          table:[]
-        },
-        inversion:{
-          column: ['实体名称','实体名称','转换量'],
-          table:[]
-        }
-      },
-      dwellChartData:{
-		optin:{},
-        remarkData: []
-      },
-      allDwellFormatStore:[]
+      ratioTableData: []
+
     }
   },
   computed: {
+
     oneListData () {
       return [
         {
           name: '当日客流总览',
-          text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
+          text: '客流时间:' + this.headerData.year + '.' + this.headerData.time
         },
         {
           name: '昨日客流总览',
-          text: '客流时间:' + this.saveHeaderData.yester
+          text: '客流时间:' + this.headerData.yester
         }
       ]
     },
     trendTitle () {
       return {
         name: '当日客流趋势',
-        text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
+        text: '客流时间:' + this.headerData.year + '.' + this.headerData.time
       }
     },
     gateTitle () {
       return {
         name: '当日出入口客流TOP10对比分析',
-        text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
+        text: '客流时间:' + this.headerData.year + '.' + this.headerData.time
       }
     },
     shopTitle () {
       return {
         name: '当日店铺客流TOP10对比分析',
-        text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
+        text: '客流时间:' + this.headerData.year + '.' + this.headerData.time
       }
-    },
-    floorStoreTitle(){
-      return {
-        name: '当日各楼层TOP10店铺客流分析',
-        text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
-      }
-    },
-    formatStoreTitle(){
-      return {
-        name: '当日各业态TOP10店铺客流分析',
-        text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
-      }
-    },
-    orderlyTitle () {
-      return {
-        relevancy:{
-          name: '当日无序关联度TOP10',
-          text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
-        },
-        inversion:{
-          name: '当日无序转换量TOP10',
-          text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
-        }
-      }
-    },
-    disorderTitle(){
-      return {
-        relevancy:{
-          name: '当日有序关联度TOP10',
-          text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
-        },
-        inversion:{
-          name: '当日有序转换量TOP10',
-          text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
-        }
-      }
-    },
-    dwellTitle(){
-      return {
-         name: '当日业态停留时间TOP10',
-         text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
-      }
-    },
-    formatDwellStoreTitle(){
-      return {
-         name: '当日业态中商铺停留时间TOP10',
-         text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
-      }
-    },
+    }
+
   },
   watch: {
 
   },
   activated () {
+    this.showPDF = false
+    this.selectDateTime = ''
   },
   mounted () {
-    let time = moment().subtract(1, 'days').format('YYYY-MM-DD')
-    this.selectDateTime = time
-    this.selectDateText = time + ',' + time
-    this.reportQuery()
   },
   methods: {
     selectTimeDate (value) {
@@ -288,99 +210,61 @@ export default {
     },
     reportQuery () {
       if (this.selectDateText === '') {
-        this.$alert({ content:'请选择时间' })
+        alert('请选择时间')
         return false
       }
+      this.point('日报分析页面', '数据分析')
+      this.showPDF = false
       this.headerDate(this.selectDateTime)
       let yesterday = moment(this.selectDateTime).subtract(1, 'days').format('YYYY-MM-DD')
-      this.showPDF = false
       Promise.all([
         // 建议
         newReportSuggest({ property_id: this.propertyId, date: this.selectDateText }),
         // 客流总览
-        newReportEnter({ property_id: this.propertyId, timeRange: this.selectDateText,report_type:'day' }),
+        newReportEnter({ property_id: this.propertyId, timeRange: this.selectDateText }),
         //  当前客流趋势
         getanalysiseeo({ bzid: this.bzid, type: 'enter', range: this.selectDateText, innerRange: '1h' }),
         // 当前集客量趋势
-        // getanalysiseeo({ bzid: this.bzid, type: 'occupancy', range: this.selectDateText, innerRange: '1h' }),
+        getanalysiseeo({ bzid: this.bzid, type: 'occupancy', range: this.selectDateText, innerRange: '1h' }),
         // 昨日客流趋势
         getanalysiseeo({ bzid: this.bzid, type: 'enter', range: yesterday + ',' + yesterday, innerRange: '1h' }),
         // 出入口
-        newReportGate({ timeRange1: this.selectDateText, timeRange2: yesterday + ',' + yesterday, report_type: 'day', property_id: this.propertyId }),
+        // newReportGate({ timeRange1: this.selectDateText, timeRange2: yesterday + ',' + yesterday, report_type: 'day', property_id: this.propertyId }),
         // 商铺
-        newReportShop({ time1: this.selectDateText, time2: yesterday + ',' + yesterday, report_type: 'day', property_id: this.propertyId }),
-        // 楼层下的商铺
-        newReportFloorStore({time:this.selectDateText,property_id:this.propertyId}),
-        // 业态下的商铺
-        newReportFormatStore({time:this.selectDateText,property_id:this.propertyId}),
-        // 热力图
-        newReportHeatMap({time:this.selectDateText,property_id:this.propertyId,}),
-        // 关联度 有序
-        newReportOrderly({time:this.selectDateText,property_id:this.propertyId,sort_parameter:'rate',report_type:'day'}),
-        newReportOrderly({time:this.selectDateText,property_id:this.propertyId,sort_parameter:'value',report_type:'day'}),
-         // 关联度 无序
-        newReportDisorder({time:this.selectDateText,property_id:this.propertyId,sort_parameter:'rate',report_type:'day'}),
-        newReportDisorder({time:this.selectDateText,property_id:this.propertyId,sort_parameter:'value',report_type:'day'}),
-        // 停留时间 业态
-        newReportDwellFormat({time:this.selectDateText,property_id:this.propertyId,}),
-        // 停留时间 业态下的商铺
-        newReportDwellStore({time:this.selectDateText,property_id:this.propertyId,}),
-       
-     ]).then(res => {
+        newReportShop({ time1: this.selectDateText, time2: yesterday + ',' + yesterday, report_type: 'day', property_id: this.propertyId })
+      ]).then(res => {
         this.showPDF = true
         // 建议
-        this.suggestText = res[0].data.data[0].property_suggest
+        if (res[0].data.code === 200) {
+          this.suggestText = res[0].data.data[0].property_suggest
+        }
         // 客流总览
-        this.reportOneData(res[1].data.data)
+        if (res[1].data.code === 200) {
+          this.reportOneData(res[1].data.data)
+        }
         // 客流趋势
-        this.trendDataList(res[2].data.data, res[3].data.data)
+        this.trendDataList(res[2].data.data, res[3].data.data, res[4].data.data)
         // 出入口
-        this.gateDataList(res[4].data.data)
+        // this.gateDataList(res[5].data.data)
         // 商铺
         this.shopDataList(res[5].data.data)
-        // 楼层下的商铺
-        this.floorDataList(res[6].data.data)
-        // 业态下的商铺
-        this.formatDataList(res[7].data.data)
-        // 热力图
-        this.heatMapData(res[8].data.data,'当日')
-        // 关联度 有序
-        this.relevanceTableData(res[9].data.data.matrixList,res[10].data.data.matrixList,'orderlyData')
-        // 关联度 无序
-        this.relevanceTableData(res[11].data.data,res[12].data.data,'disorderData')
-        // 停留时间 业态
-        this.dwellFormatData(res[13].data.data)
-        // 停留时间 业态 商铺
-        this.dwellFormatStoreData(res[14].data.data)
+        Bus.$emit('chartData')
       })
     },
     // 趋势数据
-    trendDataList (enterData,yesterdayData) {
+    trendDataList (enterData, occupancyData, yesterdayData) {
+      this.dataEmpty('trendChartData')
       this.ratioTableData = []
       let highest = {
         number: 0,
         time: ''
       }
-      this.trendChartData.option = _.cloneDeep(this.enterOption)
-      let enterObj = {
-			name: '客流',
-			color: '#745AEF',
-			type: 'line',
-			data: []
-		}
-		//let occupancyObj = {
-		// 	name: '集客量',
-		// 	color: '#00A0E9',
-		// 	type: 'line',
-		// 	data: []
-		// }
-	  
       enterData.forEach((list, index) => {
         let time = moment(list.begin).format('HH:mm')
-        this.trendChartData.option.xAxis.categories.push(time)
-     	  enterObj.data.push(list.enter)
-        // let occupancy = occupancyData[index].occupancy < 0 ? 0 : occupancyData[index].occupancy
-     	  // occupancyObj.data.push(occupancy)
+        this.trendChartData.xAxisData.push(time)
+        this.trendChartData.seriesData[0].data.push(list.enter)
+        let occupancy = occupancyData[index].occupancy < 0 ? 0 : occupancyData[index].occupancy
+        this.trendChartData.seriesData[1].data.push(occupancy)
         if (Number(list.enter) > highest.number) {
           highest.number = list.enter
           highest.time = Number(moment(list.begin).format('H'))
@@ -395,9 +279,7 @@ export default {
             this.sequential(list.enter, yesterdayData[index].enter) + '%'
           ]
         })
-	  })
-    //  this.trendChartData.option.series=[enterObj,occupancyObj]
-      this.trendChartData.option.series=[enterObj]
+      })
       let cuT = _.sumBy(enterData, (o) => { return o.enter })
       let yeT = _.sumBy(yesterdayData, (o) => { return o.enter })
       this.ratioTableData.push({
@@ -409,120 +291,52 @@ export default {
           this.sequential(cuT, yeT) + '%'
         ]
       })
-      let enterNumber = this.trendChartData.option.series[0].data
+      let enterNumber = this.trendChartData.seriesData[0].data
       this.trendChartData.remarkData = [
-        '当日开始营业后一小时间客流量' + enterNumber[0].toLocaleString() + '人次',
-        '当日结束营业前一小时间客流量' + enterNumber[enterNumber.length - 1].toLocaleString() + '人次',
+        '当日开始营业时间客流量' + enterNumber[0].toLocaleString() + '人次',
+        '当日结束营业时间客流量' + enterNumber[enterNumber.length - 1].toLocaleString() + '人次',
         '当日' + highest.time + '点到' + (highest.time + 1) + '点达到客流峰值' + highest.number.toLocaleString() + '人次'
       ]
     },
     gateDataList (gateData) {
-      this.gateChartData.option = _.cloneDeep(this.enterOption)
-      let time = moment(this.selectDateTime).format('YYYY-MM-DD')
-      let time2 = moment(this.selectDateTime).subtract(1, 'years').format('YYYY-MM-DD')
-      this.gateTableData.column = ['出入口名称','本期 ( '+time+' )','同期 ( '+time2+' )','同比']
-      let [ currentObj,yesterObj,lastObj ]=[
-        {
-          name: '本日客流',
-          color: '#2081D4',
-          type: 'column',
-          data: []
-        },
-        {
-          name: '昨日客流',
-          color: '#2BD9CF',
-          type: 'column',
-          data: []
-        },
-        {
-          name: '同期客流',
-          color: '#874bd9',
-          type: 'column',
-          data: []
-        }
-      ]
+      this.dataEmpty('gateChartData')
       if (gateData.data) {
         gateData.data.forEach(list => {
-        currentObj.data.push(list.enter)
-        let yesterEnter = _.find(gateData.contrast, o => o.bzid === list.bzid).enter
-        yesterObj.data.push(yesterEnter)
-        let lastEnter = _.find(gateData.period, o => o.bzid === list.bzid).enter
-        lastObj.data.push(lastEnter)
-        this.gateTableData.data.push({
-          name:list.name,
-          curr:list.enter.toLocaleString(),
-          last:lastEnter.toLocaleString(),
-          basis:this.sequential(list.enter,lastEnter)
-        })
-        this.gateChartData.option.xAxis.categories.push(list.name)
+          this.gateChartData.seriesData[0].data.push(list.enter)
+          let yesterEnter = _.find(gateData.contrast, o => o.bzid === list.bzid).enter
+          this.gateChartData.seriesData[1].data.push(yesterEnter)
+          this.gateChartData.xAxisData.push(list.name)
         })
       }
-      this.gateChartData.option.series=[currentObj,yesterObj,lastObj]
-      this.gateChartData.remarkData = gateData.comment?gateData.comment:[]
+
+      this.gateChartData.remarkData = gateData.comment
     },
     shopDataList (shopData) {
-      this.shopChartData.option = _.cloneDeep(this.enterOption)
-
-      let [currentObj, yesterObj] =  [
-        {
-          name: '本日客流',
-          color: '#2081d4',
-          type: 'column',
-          data: []
-        },
-        {
-          name: '昨日客流',
-          type: 'column',
-          color: '#2BD9CF',
-          data: []
-        }
-      ]
+      this.dataEmpty('shopChartData')
       if (shopData.current) {
         _.take(shopData.current, 10).forEach(list => {
-         currentObj.data.push(list.data)
-          if(shopData.contrast.length!==0){
-            let yesterEnter = _.find(shopData.contrast, o => o.id === list.id).data
-           yesterObj.data.push(yesterEnter)
-          }else{
-            yesterObj.data.push(0)
-          }
-          this.shopChartData.option.xAxis.categories.push(list.name)
+          this.shopChartData.seriesData[0].data.push(list.data)
+          let yesterEnter = _.find(shopData.contrast, o => o.id === list.id).data
+          this.shopChartData.seriesData[1].data.push(yesterEnter)
+          this.shopChartData.xAxisData.push(list.name)
         })
-	    }
-      this.shopChartData.option.series = [ currentObj,yesterObj ]
-      console.log(this.shopChartData.option)
-      this.shopChartData.remarkData = shopData.comment?shopData.comment:[]
+      }
+
+      this.shopChartData.remarkData = shopData.comment
     },
     headerDate (value) {
       let headerDate = {
         year: moment(value).format('YYYY'),
         time: moment(value).format('MM.DD'),
         period: '',
-        week: this.weekType(value),
+        week: this.weekType(),
         type: 'daily',
         yester: moment(value).subtract(1, 'days').format('YYYY.MM.DD'),
         reportDate: moment(value).format('YYYY.MM.DD')
       }
-      this.saveHeaderData = headerDate
-      this.$store.commit('dayReportHeader', headerDate)
-    },
-    floorDataList(data){
-      this.allFloorStore = []
-      this.multiChartData(data, 'allFloorStore','chart')
-    },
-    formatDataList(data){
-      this.allFormatStore = []
-      this.multiChartData(data, 'allFormatStore','chart')
-    },
-    dwellFormatStoreData(data){
-      this.allDwellFormatStore = []
-      this.multiChartData(data, 'allDwellFormatStore','dwell')
-      
-      this.$nextTick(()=>{
-        Bus.$emit('chartData')
-        this.clickData = this.clickData+1
-      })
-    },
+      this.$store.commit('reportHeader', headerDate)
+    }
+
   }
 }
 </script>
@@ -534,7 +348,10 @@ export default {
 .day-report-date{
   .ivu-input{
     width: 230px;
+    height: 43px;
     font-size: 16px;
+    border: 1px solid rgba(0, 0, 0, .2);
+    font-family: "source_han_sans_cn", "Roboto", sans-serif;
   }
   .ivu-input-suffix{
     i{
@@ -546,22 +363,36 @@ export default {
 }
 </style>
 <style lang="less" scoped>
+
+.demo-spin-icon-load{
+    animation: ani-demo-spin 1s linear infinite;
+}
+@keyframes ani-demo-spin {
+    from { transform: rotate(0deg);}
+    50%  { transform: rotate(180deg);}
+    to   { transform: rotate(360deg);}
+}
 .demo-spin-col{
     height: 300px;
     position: relative;
     border: 1px solid #eee;
 }
 
-
 .pdf-text-box{
     background-color: #fff;
-    margin: 0 auto;
-    height: auto;
+    height: 0;
+    overflow: hidden;
+}
+
+.pdfAction{
+    height: auto!important;
 }
 .day-report-type{
+  display: inline-block;
   float: left;
   margin-top: 7px;
   p{
+    display: inline-block;
     float: left;
     height: 45px;
     width: 120px;
@@ -616,14 +447,14 @@ export default {
     .report-query{
       float: left;
       height: 43px;
-      padding: .6rem 2rem;
+      padding: .75rem 2rem;
       border-radius: 6px;
       background: #37b5ed!important;
       border: 1px solid #37b5ed;
       color: #fff;
       font-size: 1rem;
       cursor: pointer;
-      margin-left: 20px;
+      margin-left: 30px;
     }
   }
     .icon-download{
@@ -645,11 +476,13 @@ export default {
     }
     #pdfDom{
         background-color: #fff;
-        overflow: auto;
+        margin: 0 auto;
+        overflow: hidden;
+        width: 1200px;
         .reportOneText{
           float: left;
-          width: 100%!important;
-          height: auto;
+          width: 100%;
+          // height: auto;
           padding-bottom: 150px;
           border-bottom: 2px solid #99abb4;
         }

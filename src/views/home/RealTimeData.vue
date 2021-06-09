@@ -16,7 +16,7 @@
           <icons type="shuaxin" :size="24"></icons>
         </a>
         <vs-dropdown class="hidden md:inline ml-8">
-          <span class="text-sm setingtext">{{$store.state.home.intervalTime}}刷新一次</span>
+          <span class="text-sm setingtext">{{currentInterVal}}刷新一次</span>
           <icons type="arrow_down" color="#626262" class="mx-4"></icons>
           <vs-dropdown-menu>
             <vs-dropdown-item
@@ -50,6 +50,7 @@ export default {
   data () {
     return {
       interVal: ['30秒', '5分钟', '10分钟', '20分钟', '30分钟'],
+      currentInterVal: '5分钟',
       date: '',
       time: ''
     }
@@ -66,7 +67,7 @@ export default {
   },
   methods: {
     clickInterVal (val) {
-      this.$store.commit('saveIntervalTime', val)
+      this.currentInterVal = val
       this.$emit('interValChange', val)
     },
     formatTime () {
@@ -107,18 +108,18 @@ export default {
       display grid
       grid-template-columns repeat(auto-fit,minmax(100px,max-content))
       grid-gap 1.5rem
-      font-size 1.15rem
+      font-size 1.35rem
       >span
         color:rgba(35,69,95,1);
 .data-zone
   display grid
   grid-template-columns 1fr 1.1fr
   grid-template-rows auto auto
-  grid-column-gap 29px
-  // @media (max-width 1200px) {
-  //   grid-template-columns  1fr
-  //   grid-template-rows 400px auto auto
-  // }
+  grid-column-gap 14px
+  @media (max-width 1200px) {
+    grid-template-columns  1fr
+    grid-template-rows 400px auto auto
+  }
   .mapCarousel
     grid-row 1/3
     padding-left 1px

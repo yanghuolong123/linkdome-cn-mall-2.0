@@ -2,7 +2,7 @@
 <div class="addDoorWay">
   <div class="dialogs-edit">
       <div class="dialogs-edit-bg" ></div>
-      <div class="dialogs-edit-text" :style="{height:heights,marginTop:marginTops}" style="  width: 500px;" id="addEntity">
+      <div class="dialogs-edit-text" :style="{height:heights,marginTop:marginTops}" id="addEntity">
           <div class="edit-title">
               {{editDoorWayTitle}}
           </div>
@@ -10,7 +10,7 @@
                 <Icon type="md-close" />
             </div>
           <div class="edit-text">
-                <Form :model="formData" label-position="right" :label-width="100" ref="formData" :rules="ruleInline">
+                <Form :model="formData" label-position="right" :label-width="85" ref="formData" :rules="ruleInline">
                     <FormItem label="出入口名称" prop="name">
                         <Input type ="text" v-model="formData.name" placeholder="请输入出入口名称"></Input>
                     </FormItem>
@@ -19,12 +19,7 @@
                             <i-option v-for="item in gateList" :value="item.value" :key="item.value">{{item.label}}</i-option>
                         </i-select>
                     </FormItem>
-                    <FormItem label="出入口类型" prop="gate_type_id">
-                        <i-select v-model="formData.gate_type_id">
-                            <i-option v-for="item in gateTypeList" :value="item.id" :key="item.id">{{item.name}}</i-option>
-                        </i-select>
-                    </FormItem>
-                    <FormItem label="描述" prop="description" :label-width="100">
+                    <FormItem label="描述" prop="description" :label-width="85">
                         <Input  type="textarea" v-model="formData.description" :rows="4"></Input>
                     </FormItem>
                 </Form>
@@ -43,7 +38,6 @@ import _ from "lodash";
 import axios from "axios";
 import {
    addGate,
-    getGateTypeList,
    updateFloorGate
 } from "@/api/manager.js";
 export default {
@@ -52,10 +46,10 @@ export default {
             type: String,
             default:"添加出入口"
         },
-        // zonelist: {
-        //     type: Array,
-        //     required: true
-        // },
+        zonelist: {
+            type: Array,
+            required: true
+        },
         floorInfo: {
             type: Array,
             required: true
@@ -73,7 +67,6 @@ export default {
         default: "admin"
         },
     },
-    inject: ['getGateTypeList'],
     data() {
         return {
             height:"360px",
@@ -84,7 +77,6 @@ export default {
                 name: '',
                 gate: 0,
                 description: '',
-                gate_type_id:''
             },
             gate_id : 0,
             ruleInline: {
@@ -98,34 +90,25 @@ export default {
                     message: '至少选择一项'
                 
                 }],
-                gate_type_id: [{
-                    required: true,
-                    message: '请选择出入口类型'
-                
-                }],
-            },
-            // gateTypeList:[]
+            }
         }
 
     },
     computed:{
-        gateTypeList(){
-            return this.getGateTypeList()
-        },
         marginTops(){
             if(this.userLvl=='common_admin'){
                 return "-154px"
             }
             else{
-                return"-190px"
+                return"-180px"
             }
         },
         heights(){
             if(this.userLvl=='common_admin'){
-                return "368px"
+                return "308px"
             }
             else{
-                return"440px"
+                return"360px"
             }
         }
     },
@@ -164,7 +147,7 @@ export default {
             data.gate_id = that.gate_id;
             data.type = 'gate';
             if(!that.isModify){
-                addGate(property_id, that.formData.name,parent_id, that.gate_id, that.formData.description,that.formData.gate_type_id).then(function (res) {
+                addGate(property_id, that.formData.name,parent_id, that.gate_id, that.formData.description).then(function (res) {
                     if (res.data.code == 200) {
                         data.id = res.data.data.bzid;
                         that.closeEdit();
@@ -182,7 +165,7 @@ export default {
                 that.gate_id = that.formData.gate;
                 data.gate_id = that.gate_id;
                 var bzid = that.formData.id;
-                updateFloorGate(property_id, that.formData.name,parent_id, that.gate_id, that.formData.description,bzid,that.formData.gate_type_id).then(function (res) {
+                updateFloorGate(property_id, that.formData.name,parent_id, that.gate_id, that.formData.description,bzid).then(function (res) {
                     if (res.data.code == 200) {
                         data.id = that.formData.id;
                         that.closeEdit();
@@ -198,11 +181,6 @@ export default {
             }
         },
     },
-    created () {
-        // getGateTypeList().then(res=>{
-        //     this.gateTypeList = res.data.data || [];
-        // })
-    }
 }
 </script>
 
@@ -226,7 +204,7 @@ export default {
             left: 50%;
             top: 50%;
             margin-left: -250px;
-          
+            width: 500px;
             background-color: #fff;
             background:rgba(255,255,255,1);
             border:1px solid rgba(215,223,227,1);

@@ -2,111 +2,20 @@ import moment from 'moment'
 import _ from 'lodash'
 import { getToken } from '@/libs/util'
 import axios from 'axios'
-import NP from 'number-precision'
-import config from '@/config/index'
-
-export default {
+export default{
   data () {
-    let that = this
     return {
-      saveHeaderData: {},
       enterData: [],
       suggestText: '',
-      enterOption: {
+      option: {
         title: { text: ' ' },
         subtitle: { text: '' },
         credits: { enabled: false },
         yAxis: {
-          min: 0,
-          minRange: 1,
-          title: { text: '' },
-          labels: {
-            enabled: false,
-            formatter () {
-              return this.value.toLocaleString()
-            }
-          }
+          title: { text: '' }
         },
         xAxis: {
-          categories: []
-        },
-        plotOptions: {
-          column: {
-            stacking: this.stacking,
-            dataLabels: {
-              enabled: true,
-              formatter: function () {
-                return this.y.toLocaleString()
-              },
-              allowOverlap: true,
-              style: {
-                color: '#000',
-                padding: 0
-              }
-            },
-            maxPointWidth: 20
-          },
-          bar: {
-            dataLabels: {
-              enabled: true,
-              formatter: function () {
-                return this.y.toLocaleString()
-              },
-              allowOverlap: true,
-              style: {
-                color: '#000',
-                padding: 0
-              }
-            },
-            maxPointWidth: 20
-          },
-          line: {
-            dataLabels: {
-              enabled: true,
-              formatter: function () {
-                return this.y.toLocaleString()
-              }
-            }
-          }
-        },
-        tooltip: {
-          formatter () {
-            return this.x + '<br>' + this.series.name + ': ' + this.y.toLocaleString() + '人次'
-          }
-        },
-        series: [],
-        responsive: {
-          rules: [{
-            condition: {
-              maxWidth: 500
-            },
-            chartOptions: {
-              legend: {
-                layout: 'horizontal',
-                align: 'center',
-                verticalAlign: 'bottom'
-              }
-            }
-          }]
-        }
-      },
-      dwellOption: {
-        title: { text: ' ' },
-        subtitle: { text: '' },
-        credits: { enabled: false },
-        yAxis: {
-          min: 0,
-          minRange: 1,
-          title: { text: '' },
-          labels: {
-            enabled: false,
-            formatter () {
-              return that.dateTiem(this.value)
-            }
-          }
-        },
-        xAxis: {
-          categories: [],
+          categories: ['name1', 'name2', 'name3', 'name4'],
           labels: {
             useHTML: true
           }
@@ -116,7 +25,7 @@ export default {
             dataLabels: {
               enabled: true,
               formatter: function () {
-                return that.dateTiem(this.y)
+                return this.y.toLocaleString()
               },
               allowOverlap: true,
               style: {
@@ -125,27 +34,14 @@ export default {
               }
             },
             maxPointWidth: 20
-          },
-          column: {
-            dataLabels: {
-              enabled: true,
-              formatter: function () {
-                return that.dateTiem(this.y)
-              },
-              allowOverlap: true,
-              style: {
-                color: '#000',
-                padding: 0
-              }
-            },
-            maxPointWidth: 20
+
           }
         },
         tooltip: {
           formatter () {
-            return this.x + '<br>' + this.series.name + ': ' + that.dateTiem(this.y)
-            // return this.x + '<br>' + this.series.name + ': ' + this.y.toLocaleString() + '人次'
+            return this.x + '<br>' + this.series.name + ': ' + this.y.toLocaleString() + '人次'
           }
+
         },
         series: [],
         responsive: {
@@ -162,98 +58,27 @@ export default {
             }
           }]
         }
-      },
+      }
     }
   },
   computed: {
     userRole () {
       return this.$store.state.user.role_name
     },
-    reportType () {
-      return this.$store.state.report.reportHeaderType
+    headerData () {
+      return this.$store.state.report.reportHeader
     },
+
     propertyId () {
       return this.$store.state.home.headerAction
     },
     bzid () {
-      let property = _.filter(this.$store.state.home.organizationData.property, o => {
-        return o.property_id === this.propertyId
-      })[0]
-      if (property) {
-        return property.bzid
-      } else {
-        return ''
-      }
-
-    }
-  },
-  watch: {
-    '$route.name' () { //监听路由 对相应的报告附相应的类型
-      let name = this.$route.name
-      switch (name) {
-        case 'StoreDailyReport':
-        case 'downloadStoreDayPdf':
-        case 'DailyReport':
-        case 'downloadDayPdf':
-          this.$store.commit('reportHeaderType', 'day')
-          break
-        case 'WeekReport':
-        case 'downloadWeekPdf':
-          this.$store.commit('reportHeaderType', 'week')
-          break
-        case 'MonthReport':
-        case 'downloadMonthPdf':
-          this.$store.commit('reportHeaderType', 'month')
-          break
-        case 'CustomizeReport':
-        case 'downloadCustomizePdf':
-          this.$store.commit('reportHeaderType', 'customize')
-          break
-
-      }
-    }
-  },
-  mounted () {
-    // 第一次加载对报告附相应的类型
-    let name = this.$route.name
-    switch (name) {
-      case 'StoreDailyReport':
-      case 'downloadStoreDayPdf':
-      case 'DailyReport':
-      case 'downloadDayPdf':
-        this.$store.commit('reportHeaderType', 'day')
-        break
-      case 'WeekReport':
-      case 'downloadWeekPdf':
-        this.$store.commit('reportHeaderType', 'week')
-        break
-      case 'MonthReport':
-      case 'downloadMonthPdf':
-        this.$store.commit('reportHeaderType', 'month')
-        break;
-      case 'CustomizeReport':
-      case 'downloadCustomizePdf':
-        this.$store.commit('reportHeaderType', 'customize')
-        break
-    }
-    //  根据类型获取数据
-    switch (this.reportType) {
-      case 'day':
-        this.saveHeaderData = this.$store.state.report.dayReportHeader
-        break
-      case 'week':
-        this.saveHeaderData = this.$store.state.report.weekReportHeader
-        break
-      case 'month':
-        this.saveHeaderData = this.$store.state.report.monthReportHeader
-        break;
-      case 'customize':
-        this.saveHeaderData = this.$store.state.report.customizeReportHeader;
-        break
+      let property = _.filter(this.$store.state.home.organizationData.property, o => { return o.property_id === this.propertyId })[0]
+      return property.bzid
     }
   },
   methods: {
-    reportOneData (data, data2) {
+    reportOneData (data) {
       this.enterData = []
       let currentData = data.current[0]
       let contrastData = data.contrast[0]
@@ -269,8 +94,7 @@ export default {
       let tOPDate = tOTime.split(' ')[0] + ' ' + tOTime.split(' ')[2]
 
       let textList = Object.values(data.comment)
-      let type = this.saveHeaderData.type === 'daily' ? '时' : '天'
-
+      let type = this.headerData.type === 'daily' ? '时' : '天'
       this.enterData = [
         { // 当前时间数据
           enter: currentData.enter.total.number.toLocaleString() + '人次',
@@ -288,27 +112,13 @@ export default {
           occupancyTime: this.timeTYpe(tOPDate, tOTime, '集客量'),
           average: contrastData.enter.avg.number.toLocaleString() + '人次/' + type
         },
+        textList // 评论
       ]
-      if (data2) {
-        let laData = data2.current[0]
-        let laEDate = laData.enter.highest.timeRange.split(' ')[0] + ' ' + laData.enter.highest.timeRange.split(' ')[2]
-        let laOPDate = laData.occupancy.highest.timeRange.split(' ')[0] + ' ' + laData.occupancy.highest.timeRange.split(' ')[2]
-        let obj = {
-          enter: laData.enter.total.number.toLocaleString() + '人次',
-          enterPeak: laData.enter.highest.number.toLocaleString() + '人次',
-          enterTime: this.timeTYpe(laEDate, laData.enter.highest.timeRange, '客流量'),
-          occupancyPeak: laData.occupancy.highest.number.toLocaleString() + '人次',
-          occupancyTime: this.timeTYpe(laOPDate, laData.occupancy.highest.timeRange, '集客量'),
-          average: laData.enter.avg.number.toLocaleString() + '人次/' + type
-        }
-        this.enterData.push(obj)
-      }
-      this.enterData.push(textList)
     },
     timeTYpe (time1, time2, type) {
       if (type === '集客量') {
         return moment(time1).format('YYYY-MM-DD HH') + ':00-' + time2.split(' ')[2]
-      } else if (this.saveHeaderData.type === 'daily') {
+      } else if (this.headerData.type === 'daily') {
         return moment(time1).format('YYYY-MM-DD HH') + ':00-' + time2.split(' ')[2]
       } else {
         return moment(time1).format('YYYY-MM-DD ')
@@ -317,57 +127,44 @@ export default {
     suggestSubmit (text) {
       this.suggestText = text
     },
-    downloadReport (type, time) {
-      if (time === '') {
-        this.$alert({ content: '请选择时间' })
-        return false
+    point (type, type2) {
+      let that = this
+      try {
+        window.TDAPP.onEvent(type, type2, {
+          时间段: that.newDate
+        })
+      } catch (error) {
+        console.log(type + '-' + type2 + '-埋点error:' + error)
       }
+    },
+    uploadReport (type, time) {
+      if (time === '') { alert('请选择时间'); return false }
       let pdfUrl = window.location.href.split('/#/')[0]
       let token = getToken()
       let objName = (pdfUrl.split('://')[1]).split('.')[0]
-      // let objName ='test'
       let ht = pdfUrl.split('://')[0]
       let download
       let name
-      switch (type) {
-        case 'storeDay':
-          download = 'downloadStoreDayPdf'
-          name = '门店日报'
-          break
-        case 'day':
-          download = 'downloadDayPdf'
-          name = '日报'
-          break
-        case 'week':
-          download = 'downloadWeekPdf'
-          name = '周报'
-          break
-        case 'month':
-          download = 'downloadMonthPdf'
-          name = '月报'
-          break;
-        case 'customize':
-          download = 'downloadCustomizePdf'
-          name = '自定义报告'
-          break
+      if (type === 'day') {
+        download = 'downloadDayPdf'
+        name = '日报'
+      } if (type === 'week') {
+        download = 'downloadWeekPdf'
+        name = '周报'
+      } else if (type === 'month') {
+        download = 'downloadMonthPdf'
+        name = '月报'
       }
       let url = pdfUrl + '/#/' + download + '?propertyId=' + this.propertyId + '&date=' + time + '&token=' + token
-      // let url = 'http://ship.linkdome.cn:8092' + '/#/' + download + '?propertyId=' + this.propertyId + '&date=' + time + '&token=' + token
       this.$vs.loading()
-      const datelist = time.split(',')
-      const filename = datelist[0] === datelist[1] ? datelist[0] : time
-      axios.post(ht + config.pdfBaseUrl + '/pdf/execute', {
-        filename: time,
-        project: objName,
-        url: url
-      }, { responseType: 'blob' })
+      axios.post(ht + '://pdfcenter.linkdome.cn/pdf/execute', { filename: time, project: objName, url: url }, { responseType: 'blob' })
         .then((response) => {
           this.$vs.loading.close()
           var blob = new Blob([response.data])
           var downloadElement = document.createElement('a')
           var href = window.URL.createObjectURL(blob) // 创建下载的链接
           downloadElement.href = href
-          downloadElement.download = filename + name + '.pdf' // 下载后文件名
+          downloadElement.download = time + name + '.pdf' // 下载后文件名
           document.body.appendChild(downloadElement)
           downloadElement.click() // 点击下载
           document.body.removeChild(downloadElement) // 下载完成移除元素
@@ -376,6 +173,7 @@ export default {
         .catch(function (error) {
           console.log(error)
         })
+      this.point(name + '分析页面', '下载')
     },
     // 计算同环比
     sequential (number1, number2) {
@@ -416,188 +214,6 @@ export default {
       if (this[type].seriesData[1]) this[type].seriesData[1].data = []
       if (this[type].seriesData[2]) this[type].seriesData[2].data = []
       this[type].xAxisData = []
-    },
-    // 商铺数据
-    storeTableData (data, name) {
-      this[name] = []
-      data.map(list => {
-        let obj = {
-          data: {
-            seriesData: [
-              {
-                name: '本日客流',
-                color: '#2081d4',
-                type: 'column',
-                data: []
-              },
-            ],
-            xAxisData: [],
-            remarkData: []
-          },
-          title: {
-            name: '当日' + Object.keys(list) + 'TOP10店铺客流分析',
-            text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
-          }
-        }
-        Object.values(list)[0].map(val => {
-          obj.data.seriesData[0].data.push(val.data)
-          obj.data.xAxisData.push(val.name)
-        })
-        this[name].push(obj)
-      })
-    },
-    // 热力图
-    heatMapData (data, type) {
-      this.allHeatMap = []
-      data.map(list => {
-        let obj = {
-          data: {
-            data: [],
-            maxAvg: '',
-            workingtime: [],
-          },
-          remarkData: [],
-          title: {
-            name: type + Object.keys(list)[0] + '客流分析',
-            text: ''
-          }
-        }
-        if(type === '本周'){
-          obj.title.text = '客流周期:' + this.saveHeaderData.year + '年第' + this.saveHeaderData.period + '周'
-        }else {
-          obj.title.text = '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
-        }
-        let allData = Object.values(list)[0]
-        if (allData && allData.length) {
-          allData[0].list.map(value => {
-            let newTiem = moment(new Date).format('YYYY-MM-DD') + ' ' + value.time
-            obj.data.workingtime.push(moment(newTiem).format('HH:mm'))
-          })
-          allData.reverse()
-          allData.forEach((week, weekIndex) => {
-            week.list.forEach((hour, hourIndex) => {
-              obj.data.data.push([weekIndex, hourIndex, Math.round(hour.avg)])
-            })
-          })
-        }
-        const singleArr = obj.data.data.map(o => {
-          return o[2]
-        })
-        obj.data.maxAvg = Math.max(...singleArr)
-        this.allHeatMap.push(obj)
-      })
-    },
-    relevanceTableData (data1, data2, name) {
-      this[name].relevancy.table = [] // 关联度
-      this[name].inversion.table = [] // 转换量
-      data1.map(list => {
-        this[name].relevancy.table.push({
-          source: list.source,
-          target: list.target,
-          rate: NP.times(list.rate, 100) + '%',
-        })
-      })
-      data2.map(list => {
-        this[name].inversion.table.push({
-          source: list.source,
-          target: list.target,
-          value: list.value,
-        })
-      })
-    },
-    dwellFormatData (data) {
-      data = _.take(_.orderBy(data, 'avg', 'desc'), 10)
-      this.dwellChartData.option = _.cloneDeep(this.dwellOption)
-      let obj = {
-        name: '平均停留时间',
-        color: '#2081d4',
-        type: 'column',
-        data: []
-      }
-      data.map(list => {
-        obj.data.push(list.avg)
-        this.dwellChartData.option.xAxis.categories.push(list.name)
-      })
-      this.dwellChartData.option.series.push(obj)
-    },
-    multiChartData (data, type, name) {
-      let colorArr = ['#745AEF', '#EE690B', '#4EDBDA', '#2081D4']
-      data.forEach((list, index) => {
-        let listObj = {
-          option: name === 'dwell' ? _.cloneDeep(this.dwellOption) : _.cloneDeep(this.enterOption)
-        }
-        listObj.option.xAxis.categories = []
-        listObj.option.series = [
-          {
-            name: Object.keys(list),
-            type: 'bar',
-            color: index > 4 ? colorArr[index - 4] : colorArr[index],
-            data: []
-          }
-        ]
-        Object.values(list)[0].map(value => {
-          if (!value.data && !value.avg) {
-            listObj.option.series[0].data.push(0)
-          } else {
-            listObj.option.series[0].data.push(value.data ? value.data : value.avg)
-          }
-          listObj.option.xAxis.categories.push(value.name)
-        })
-        this.switchHeight(data, listObj)
-        this[type].push(listObj)
-      })
-
-    },
-    dateTiem (value) {
-      var secondTime = parseInt(value), minuteTime, hourTime
-      if (secondTime >= 60) {
-        minuteTime = parseInt(secondTime / 60)
-        secondTime = parseInt(secondTime % 60)
-        if (minuteTime >= 60) {
-          hourTime = parseInt(minuteTime / 60)
-          minuteTime = parseInt(minuteTime % 60)
-        }
-      }
-      if (secondTime > 0) {
-        secondTime = secondTime < 10 ? '0' + parseInt(secondTime) : parseInt(secondTime)
-      } else {
-        secondTime = '00'
-      }
-      if (minuteTime > 0) {
-        minuteTime = minuteTime < 10 ? '0' + parseInt(minuteTime) : parseInt(minuteTime)
-      } else {
-        minuteTime = '00'
-      }
-      if (hourTime > 0) {
-        hourTime = hourTime < 10 ? '0' + parseInt(hourTime) : parseInt(hourTime)
-      } else {
-        hourTime = '00'
-      }
-      return hourTime + ':' + minuteTime + ':' + secondTime
-    },
-    switchHeight (data, listObj) {
-      switch (data.length) {
-        case 1 :
-        case 2:
-          listObj.span = 24
-          listObj.height = 500
-          break
-        case 3:
-        case 4:
-          listObj.span = 12
-          listObj.height = 500
-          break
-        case 5 :
-        case 6:
-          listObj.span = 8
-          listObj.height = 500
-          break
-        case 7 :
-        case 8:
-          listObj.span = 6
-          listObj.height = 500
-          break
-      }
-    },
+    }
   }
 }

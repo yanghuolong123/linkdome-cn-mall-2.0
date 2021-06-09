@@ -1,14 +1,14 @@
 // 定义全局map变量
 var map = null
 // 定义地图ID变量
-var fmapID = '1351434157796646914'
+var fmapID = '1310131084195823618'
 // 定义路径规划对象
 var naviAnalyser = null
 // 起终点坐标
 var coords = []
 // 定义滚动型楼层切换控件
 var scrollFloorControl
-let lastGroupID
+let thats
 
 /**
  * 打开地图
@@ -33,14 +33,13 @@ export const openMap = (that, data, option) => {
         var coord = {
           x: val.x,
           y: val.y,
-          groupID: val.id ? val.id : 1,
-          colorType:val.colorType
+          groupID: val.id ? val.id : 1
         }
         if (index === 0) {
           coords[0] = coord
         } else {
           coords[1] = coord
-          drawNaviLine(coord.colorType)
+          drawNaviLine()
         }
       })
     })
@@ -54,10 +53,11 @@ export const openMap = (that, data, option) => {
 /**
  * 画导航线
  * */
-function drawNaviLine (colorType) {
+function drawNaviLine () {
   // 根据已加载的fengmap.FMMap导航分析，判断路径规划是否成功
   var analyzeNaviResult = naviAnalyser.analyzeNavi(coords[0].groupID, coords[0], coords[1].groupID, coords[1],
     fengmap.FMNaviMode.MODULE_SHORTEST)
+
   if (fengmap.FMRouteCalcuResult.ROUTE_SUCCESS != analyzeNaviResult) {
     return
   }
@@ -85,20 +85,13 @@ function drawNaviLine (colorType) {
     seg.points = points3d
     line.addSegment(seg)
   }
-  const colorObj = {
-    front:'#FF0000',
-    mid:'#feb33d',
-    back:'#33b3ed'
-  }
 
   // 配置线型、线宽、透明度等
   var lineStyle = {
     lineWidth: 6,
     alpha: 0.8,
     lineType: fengmap.FMLineType.FMARROW,
-    noAnimate: false,
-    godEdgeColor:colorObj[colorType],
-    godColor: colorObj[colorType],
+    noAnimate: false
   }
   // 画线
   map.drawLineMark(line, lineStyle)
@@ -125,6 +118,6 @@ function loadScrollFloorCtrl () {
   scrollFloorControl = new fengmap.FMScrollGroupsControl(map, scrollFloorCtlOpt)
   // 楼层切换
   scrollFloorControl.onChange(function (groups, allLayer) {
-    // thats.floorId = groups[0]
+    thats.floorId = groups[0]
   })
 }

@@ -24,13 +24,11 @@ footFall:客流
           v-model="exportType"
           :xAxis="bizChartData.xAxis"
           :series="bizChartData.series"
+          tooltipUnit="人次"
           :type="chartTypes"
           :extraOptions="bizExtraOptions"
           :istotal='istotal'
           title="业态排行"
-          tooltipUnit='人次'
-          @getShopTableCoumn="leftTableCoumn"
-          @getShopTableData="letfTableData"
           key="bizTop"
         >
           <vs-select
@@ -53,15 +51,13 @@ footFall:客流
         <chart-tabs
           v-model="exportType"
           :xAxis="topShopData.xAxis"
+          tooltipUnit="人次"
           :series="topShopData.series"
           :type="chartTypes"
           :extraOptions="extraOptions"
           title="商铺排行"
           :isHome='true'
           :istotal='istotal'
-          tooltipUnit='人次'
-          @getShopTableCoumn="rightTableCoumn"
-          @getShopTableData="rightTableData"
           key="shopTop"
         >
           <export-menu slot="export" @onchange="exportShoptop"></export-menu>
@@ -90,10 +86,8 @@ import {
   getDrainageShop,
   getShopTopDrainage,
   flowexcel,
-  flowstoreexcel,
-  exportEx
+  flowstoreexcel
 } from '@/api/home.js'
-import { downloadEx } from '@/libs/util.js'
 import { getBussinessDict } from '@/api/home'
 import salesDict from '@/views/home/components/salesIndicatorDict.js'
 import exportMenu from './ExportMenu.vue'
@@ -161,20 +155,10 @@ export default {
     istotal: {
       type: Boolean,
       default: false
-    },
-    drainageType:{
-      type:String,
-      default:''
     }
   },
   data () {
     return {
-      tableList:{
-        coumnOne:'',
-        dataOne:'',
-         coumnTwo:'',
-         dataTwo:''
-      },
       bussinessList: [],
       showData: false,
       exportEx: 1,
@@ -196,6 +180,7 @@ export default {
         colors: ['#867bf0', '#fbab3e'],
         yaxis: {
           labels: {
+            offsetX: 10
           }
         }
       },
@@ -203,14 +188,6 @@ export default {
     }
   },
   watch: {
-    watch: {
-      '$store.state.home.headerAction' () {
-        let routerName = this.$router.currentRoute.name
-        if (routerName === 'Drainage') {
-          this.bizTopData = []
-        }
-      }
-    },
     time1: {
       immediate: true,
       handler: function (val, oldVal) {
@@ -242,6 +219,10 @@ export default {
       }
     },
     '$store.state.home.headerAction' () {
+      let routerName = this.$router.currentRoute.name
+      if (routerName === 'Drainage') {
+        this.bizTopData = []
+      }
       this.getDict()
     },
     // 监听业态变化
@@ -301,6 +282,7 @@ export default {
         })
       }
       let that = this
+
       return {
         xAxis: {
           name: '名称',
@@ -310,7 +292,7 @@ export default {
         series: Object.keys(tml).map(function (e, index) {
           if (index < 10) {
             let obj = {
-              name: e,
+              name: `${that.indicatorData[that.bizIndicator].name} ${e.split(',').join(' - ')}`,
               key: `data_${e}`,
               data: Object.values(tml[e]).map(o => o.data)
             }
@@ -349,9 +331,12 @@ export default {
       let kes = Object.keys(sortedObj)[0]
       let objs = sortedObj[kes]
       var newArr = []
-      objs.forEach(function (res, index) {
-        if (index < 10) newArr.push(res)
-      })
+      if (objs) {
+        objs.forEach(function (res, index) {
+          if (index < 10) newArr.push(res)
+        })
+      }
+
       return {
         xAxis: {
           name: '名称',
@@ -361,14 +346,11 @@ export default {
             else return e.name
           })
         },
-        series: Object.keys(sortedObj).map(e => (
-          {
-            // name: `${this.indicatorData[this.shopIndicator].name} ${e.split(',').join(' - ')}`,
-            name:e,
-            key: `data_${e}`,
-            data: Object.values(sortedObj[e]).map(e => { return e.data })// 因为排序后的数据是数组，所以需要判断
-          }
-        ))
+        series: Object.keys(sortedObj).map(e => ({
+          name: `${this.indicatorData[this.shopIndicator].name} ${e.split(',').join(' - ')}`,
+          key: `data_${e}`,
+          data: Object.values(sortedObj[e]).map(e => { return e.data })// 因为排序后的数据是数组，所以需要判断
+        }))
       }
     },
     bizExtraOptions () {
@@ -394,30 +376,24 @@ export default {
       let topShopOfBizType = []// 每种业态下各种销售指标店铺排名
 
       let salesTypesReqs = [ getDrainageShop({ time1: this.time1,
-        from_bzids:this.drainageType==='from'? this.bzid && this.bzid.toString():this.drainageId,
-        to_bzids: this.drainageType==='from'?this.drainageId:this.bzid && this.bzid.toString(),
-        type:this.drainageType==='from'?'from':'to',
+        from_bzids: this.bzid && this.bzid.toString(),
+        to_bzids: this.drainageId,
         industry_id: this.bussinessType
       })]
 
       let shopUrl
       let obj = {}
       obj.time1 = this.time1
-      obj.from_bzids = this.drainageType==='from'? this.bzid && this.bzid.toString():this.drainageId
-      obj.to_bzids = this.drainageType==='from'? this.drainageId:this.bzid && this.bzid.toString()
-      obj.type=this.drainageType==='from'?'from':'to'
+      obj.from_bzids = this.bzid && this.bzid.toString()
+      obj.to_bzids = this.drainageId
       shopUrl = getDrainageShop(obj)
-
       topShopOfAllBizType.push(shopUrl)
-
       topShopOfBizType.push(salesTypesReqs)// 销售店铺排名
-
       let url
       let obj2 = {}
       obj2.time1 = this.time1
-      obj2.from_bzids =this.drainageType==='from'? this.bzid && this.bzid.toString():this.drainageId
-      obj2.to_bzids = this.drainageType==='from'? this.drainageId:this.bzid && this.bzid.toString()
-      obj2.type=this.drainageType==='from'?'from':'to'
+      obj2.from_bzids = this.bzid && this.bzid.toString()
+      obj2.to_bzids = this.drainageId
       url = getShopTopDrainage(obj2)
       bizTypesTopReqs.push(url)
 
@@ -439,84 +415,79 @@ export default {
        *  @description 对api 返回的对象进行排序，如{a:{xxx:val,xxx2:val},b:{xxx:val,xxx2:val}},
        *  @returns {a:[{xxx,val},{xxx2,val}],b:[{xxx,val},{xxx2,val}]}
        */
-      const allVals = _.cloneDeep(Object.values(obj))
-      const sumValsByKey = allVals.reduce((a, b) => {
-        Object.keys(a).forEach(k => { a[k] = Number(a[k]) + Number(b[k]) })
-        return a
-      })
-      const orderVals = Object.entries(sumValsByKey).sort((a, b) => b[1] - a[1])
-      let sortedObj = {}
-
-      Object.keys(_.cloneDeep(obj)).forEach(key => {
-        const ele = obj[key]
-        sortedObj[key] = orderVals.map(([k, v]) => {
-          return { name: [k], data: ele[k] }
+      if (obj.length > 0) {
+        const allVals = _.cloneDeep(Object.values(obj))
+        const sumValsByKey = allVals.reduce((a, b) => {
+          Object.keys(a).forEach(k => { a[k] = Number(a[k]) + Number(b[k]) })
+          return a
         })
-      })
-      return sortedObj
+        const orderVals = Object.entries(sumValsByKey).sort((a, b) => b[1] - a[1])
+        let sortedObj = {}
+
+        Object.keys(_.cloneDeep(obj)).forEach(key => {
+          const ele = obj[key]
+          sortedObj[key] = orderVals.map(([k, v]) => {
+            return { name: [k], data: ele[k] }
+          })
+        })
+        return sortedObj
+      } else {
+        return {}
+      }
     },
-    leftTableCoumn(value){
-     value.map(list=>{
-        if(list.title!=='名称'){
-          let newTime =  list.title.split(',')
-          if(newTime[0]===newTime[1]){
-            list.title = newTime[0]
-          }else{
-             list.title = newTime[0] +' - ' +  newTime[1]
-          }
-        }
-      })
-      this.tableList.coumnOne = value
-    },
-    letfTableData(value){
-      this.tableList.dataOne = value
-    },
-    rightTableCoumn(value){
-      value.map(list=>{
-        if(list.title!=='名称'){
-          let newTime =  list.title.split(',')
-          if(newTime[0]===newTime[1]){
-            list.title = newTime[0]
-          }else{
-             list.title = newTime[0] +' - ' +  newTime[1]
-          }
-        }
-      })
-      this.tableList.coumnTwo = value
-    },
-    rightTableData(value){
-      this.tableList.dataTwo = value
+    dowloadXlsx (res) {
+      /**
+       * @description 下载文件
+       */
+      // const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/vnd.ms-excel' }))
+      // window.open(url)
+      let date = new Date()
+      const blob = new Blob([res.data])
+      var url = this.$router.currentRoute.name
+      var titleName = ''
+      if (url == 'drainage') {
+        titleName = '实体引流分析'
+      } else if (url == 'pathTrend') {
+        titleName = '路径动向分析'
+      } else if (url == 'sales') {
+        titleName = '销售分析'
+      }
+      let name = ''
+      this.exportEx == 1 ? name = '业态排行' : name = '商铺排行'
+      let fileName = titleName + name + moment(date).format('YYYYMMDDHHmmss') + '.xls'
+      const elink = document.createElement('a')
+      elink.download = fileName
+      elink.style.display = 'none'
+      elink.href = URL.createObjectURL(blob)
+      document.body.appendChild(elink)
+      elink.click()
+      URL.revokeObjectURL(elink.href)// 释放URL 对象
+      document.body.removeChild(elink)
+      // this.$vs.loading.close()
+      // this.$store.commit('loadingState', false)
     },
     exportBiztop (type) {
       if (type === 'current') {
-        // var url = this.$router.currentRoute.name
-        // var titleName = ''
-        // let name = ''
-        // if (url == 'Drainage') {
-        //   titleName = '实体引流分析'
-        // } else if (url == 'pathTrend') {
-        //   titleName = '路径动向分析'
-        // } else if (url == 'sales') {
-        //   titleName = '销售分析'
+        // if (this.$store.state.home.loadingState == false) {
+        //   this.$store.commit('loadingState', true)
+        //   this.$vs.loading()
         // }
-        // this.exportEx == 1 ? name = titleName+'业态排行' : name =titleName+ '商铺排行'
-        downloadEx(exportEx,'实体引流分析业态排行',[this.tableList.coumnOne,this.tableList.dataOne])
+        flowexcel(this.drainageApi).then(res => {
+          this.exportEx = 1
+          this.dowloadXlsx(res)
+        })
       }
     },
     exportShoptop (type) {
       if (type === 'current') {
-        // var url = this.$router.currentRoute.name
-        // var titleName = ''
-        // let name = ''
-        // if (url == 'Drainage') {
-        //   titleName = '实体引流分析'
-        // } else if (url == 'pathTrend') {
-        //   titleName = '路径动向分析'
-        // } else if (url == 'sales') {
-        //   titleName = '销售分析'
+        // if (this.$store.state.home.loadingState == false) {
+        //   this.$store.commit('loadingState', true)
+        //   this.$vs.loading()
         // }
-        // this.exportEx == 1 ? name = titleName+'业态排行' : name =titleName+ '商铺排行'
-        downloadEx(exportEx,'实体引流分析商铺排行',[this.tableList.coumnTwo,this.tableList.dataTwo])
+        flowstoreexcel(this.drainageApi).then(res => {
+          this.exportEx = 2
+          this.dowloadXlsx(res)
+        })
       }
     },
     // 请求业态数据传
@@ -546,12 +517,12 @@ box-border(w,r)
     width 50%
     &:nth-child(1)
         border-right 1px solid border-color
-  // @media (max-width:768px)
-  //   flex-wrap wrap
-  //   border none
-  //   >div
-  //     width 100%
-  //     box-border 1px,8px
-  //     &:nth-child(1)
-  //       margin-bottom 1.25rem
+  @media (max-width:768px)
+    flex-wrap wrap
+    border none
+    >div
+      width 100%
+      box-border 1px,8px
+      &:nth-child(1)
+        margin-bottom 1.25rem
 </style>

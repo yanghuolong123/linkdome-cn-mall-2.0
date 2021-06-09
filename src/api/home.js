@@ -3,9 +3,9 @@ import axios from 'axios'
 
 import qs from 'qs'
 // 获取集团组织架构
-export const getGroupOrganization = async(_this={}) => {
+export const getGroupOrganization = (_this={}) => {
   const CancelToken= axios.CancelToken
-  return await naxios.request({
+  return naxios.request({
     url: '/mananger/organization',
     method: 'get',
     cancelToken: new CancelToken(function executor(c) {
@@ -113,7 +113,7 @@ export const postEntitysCompare = params => {
   let { type, bzid, innerRange, range } = params
   return naxios.request({
     url: 'analysis/entityscompare',
-    data: params,
+    data: qs.stringify({ type, bzid, innerRange, range }),
     method: 'post'
   })
 }
@@ -137,7 +137,7 @@ export const getAgeandGender = params => {
 }
 export const getanalysiseeo = params => {
   return naxios.request({
-    url: 'report/eeo',
+    url: 'analysis/eeo',
     data: qs.stringify(params),
     method: 'post'
   })
@@ -219,10 +219,14 @@ export const getTopBussinessType = params => {
   })
 }
 // 店铺排行
-export const getTopShop = (params) => {
+export const getTopShop = (params,_this={}) => {
+  const CancelToken= axios.CancelToken
   return naxios.request({
     url: 'sale/topShop',
-    params
+    params,
+    cancelToken: new CancelToken(function executor(c) {
+      _this.cancelGetTopShopAjax = c
+    })
   })
 }
 // 实体引流 店铺排行
@@ -251,28 +255,36 @@ export const getShopTopDrainage = params => {
   })
 }
 // 客流商铺排行
-export const getShopTopFootFall = (params) => {
+export const getShopTopFootFall = (params,_this={}) => {
   /**
                       time1	string	Y		time1
                       property_id	string	N		购物中心id, 不传为全部购物中心
                       type	string	N		入客流：enter, 集客量:occupancy, 不传默认为 enter
                       industry_id	int	N		业态id,不传为全部业态
                      */
+  const CancelToken= axios.CancelToken
   return naxios.request({
     url: 'flow/topShop',
     params,
+    cancelToken: new CancelToken(function executor(c) {
+      _this.cancelGetShopTopFootFallAjax = c
+    })
   })
 }
 // 客流业态排行
-export const getBizTopFootFall = (params) => {
+export const getBizTopFootFall = (params,_this={}) => {
   /**
                       time1	string	Y		2019-05-19,2019-05-22
                       property_id	string	N		购物中心id, 不传为全部购物中心
                       type	string	N		入客流：enter, 集客量:occupancy, 不传默认为 enter
                      */
+  const CancelToken= axios.CancelToken
   return naxios.request({
     url: 'flow/topIndustry',
-    params
+    params,
+    cancelToken: new CancelToken(function executor(c) {
+      _this.cancelGetBizTopFootFallAjax = c
+    })
   })
 }
 // 商铺排行分析数据导出
@@ -380,10 +392,10 @@ export const userKpiList = () => {
   })
 }
 // 购物中心 首页 轮播图 图片 和 出入口数据
-export const homeImgGaet = (params) => {
+export const homeImgGaet = () => {
   return naxios.request({
     url: 'propertyGate',
-    params
+    method: 'get'
   })
 }
 
@@ -417,23 +429,10 @@ export const getUrl = () => {
     method: 'get'
   })
 }
+//首页当日销售&本月销售
 export const getSaleReach = (params) => {
   return naxios.request({
     url: 'sale/saleReach',
     params
   })
 }
-/*
-* @查询所有实体
-* params:type_id 50 store/502 gate/51 floor/ 52 property
-* */
-export const getEntity = (property_id,type_id) => {
-  return naxios.request({
-    url: 'bzone',
-    params:{
-      property_id,
-      type_id
-    }
-  })
-}
-

@@ -1,12 +1,8 @@
 export default {
   state: {
-    dayReportHeader: '',
-    weekReportHeader: '',
-    monthReportHeader: '',
-    customizeReportHeader: {},
-    reportHeaderType: '',
     reportYear: '',
     companyName: '',
+    companyLogo: '',
     companyDateTime: '',
     coverDateTime: '',
     leftWidth: false
@@ -24,23 +20,11 @@ export default {
     companyName (state, value) {
       state.companyName = value
     },
+    companyLogo (state, value) {
+      state.companyLogo = value
+    },
     companyDateTime (state, value) {
       state.companyDateTime = value
-    },
-    reportHeaderType (state, value) {
-      state.reportHeaderType = value
-    },
-    dayReportHeader (state, value) {
-      state.dayReportHeader = value
-    },
-    weekReportHeader (state, value) {
-      state.weekReportHeader = value
-    },
-    monthReportHeader (state, value) {
-      state.monthReportHeader = value
-    },
-    customizeReportHeader (state, value) {
-      state.customizeReportHeader = value
     }
   },
   actions: {}

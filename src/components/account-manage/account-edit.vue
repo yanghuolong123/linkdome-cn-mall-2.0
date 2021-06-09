@@ -95,6 +95,7 @@
                                   @change="changeBzid"
                                   v-model="userForm.bzidList"
                                   :disabled="disabledRole"
+                                  size="mini"
                                   collapse-tags
                                   :options="organization"
                                   :props="{ multiple: true,checkStrictly: true ,expandTrigger:'hover'}"
@@ -237,9 +238,9 @@ export default {
       },
       checklists: [],
       editTitle: '',
-      uploadImg: require('@/assets/images/fixation_img/rest/who.png'),
+      uploadImg: require('@/assets/images/fixation_img/rest/who.webp'),
       userForm: {
-        avatar: require('@/assets/images/fixation_img/rest/who.png'),
+        avatar: require('@/assets/images/fixation_img/rest/who.webp'),
         username: '',
         realname: '',
         mobile: '',
@@ -538,7 +539,7 @@ export default {
       user.business_zone_privilege = JSON.stringify(this.userForm.bzidList)
 
       if (!this.modify) {
-        if (user.avatar == require('@/assets/images/fixation_img/rest/who.png') || user.avatar == undefined) {
+        if (user.avatar == require('@/assets/images/fixation_img/rest/who.webp') || user.avatar == undefined) {
           user.avatar = ''
         }
         addUserData(user)
@@ -615,6 +616,7 @@ export default {
             margin-left: -414px;
             margin-top: -343px;
             width: 828px;
+            height: 686px;
             background-color: #fff;
             background:rgba(255,255,255,1);
             border:1px solid rgba(215,223,227,1);
@@ -632,8 +634,8 @@ export default {
                 color:rgba(91,89,89,1)
             }
             .edit-text{
-                display: flex;
-                padding: 24px 0;
+            display: flex;
+                padding-top: 24px;
                 width: 100%;
 
             .edit-left {

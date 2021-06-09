@@ -1,18 +1,18 @@
 <template>
-  <div class="go-shop">
-    <div class="selector-container bg-white box-card">
+  <div class="go-shop" v-if="isHtml">
+    <div class="go-time-selector" style="margin-top:40px;">
       <!-- <h1>趋势分析</h1> -->
-          <div class="flex-center">
+          <div class="tendency-picker">
               <DatePicker
                 type="daterange"
                 v-model="crossDate"
                 placement="bottom-end"
                 :options="disabledDate"
                 placeholder="选择日期"
-                class="w-select"
+                style='width:230px;float:left;'
               ></DatePicker>
               <vs-select
-                class="w-select m-l-20"
+                class="selectExample"
                 autocomplete
                 v-model="selectType"
               >
@@ -29,26 +29,25 @@
               placement="bottom-end"
               :options="disabledDate"
               placeholder="选择日期"
-              class="w-select m-l-20"
+              style='width:212px;float:left;margin-left:30px;'
               v-if="selectType == 1"
             ></DatePicker>
           </div>
-          <div class="flex-center">
+          <div class="go-shop-activities">
               <el-cascader
                collapse-tags
-               class="w-select"
                 v-model="activities"
                 :props="{ multiple: true,expandTrigger:'hover' }"
                 :options="activitiesType">
               </el-cascader>
-              <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">查询</Button>
-              <Button size="large" class="m-l-20" @click="resetData">重置</Button>
+              <div class="cross-submit" v-on:click="paramsPrepare">查询</div>
+              <div class="cross-reset" v-on:click="resetData">重置</div>
           </div>
     </div>
     <div class="go-shop-chart-list"  >
         <div class="go-shop-time-icon">
           <span>进店率趋势分析</span>
-          <p class="flex-center">
+          <p>
             <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(icon.value)">
               <icons
                 :title="iconTitle[icon.type]"
@@ -61,21 +60,22 @@
         </div>
          <div v-if="isData" class="noData">暂无数据</div>
          <vue-apex-charts
-          v-bind:class="{ lineAction: iconIndex == 1 }"
-            class=" tendencyBar"
+          v-bind:class="{ lineAction: iconIndex == 0 }"
+            class="tendencyLine"
             ref="graphLine"
-            height='90%'
+            height='428'
             width="100%"
             id='tendencyLine'
             type="line"
             :options="lineData.chartOptions"
             :series="lineData.series"
+            v-if="isList"
           ></vue-apex-charts>
           <vue-apex-charts
-          v-bind:class="{ barAction: iconIndex == 0 }"
-            class="tendencyLine"
+          v-bind:class="{ barAction: iconIndex == 1 }"
+            class="tendencyBar"
             ref="graphBar"
-            height='90%'
+            height='428'
             width="100%"
             type="bar"
             :options="graphData.chartOptions"
@@ -98,20 +98,22 @@
   </div>
 </template>
 <script>
+import flowSelector from '@/components/Passenger-analysis/flowSelector.vue'
 import TableDefault from '@/views/ui-elements/table/TableDefault.vue'
 import alert from '@/components/alert.vue'
 import VueApexCharts from 'vue-apexcharts'
 import { getBussinessTree, getBussinessCommon } from '@/api/passenger'
 import { getCascadeList } from '@/api/passenger.js'
 import { goShopTrend } from '@/api/analysis'
-import { goShowFlowTend ,exportEx} from '@/api/home.js'
-import { disabledDate,downloadEx } from '@/libs/util.js'
+import { goShowFlowTend } from '@/api/home.js'
+import { disabledDate } from '@/libs/util.js'
 import moment from 'moment'
 import NP from 'number-precision'
 import _ from 'lodash'
 export default {
   name: 'goShop',
   components: {
+    flowSelector,
     TableDefault,
     VueApexCharts,
     alert
@@ -140,16 +142,16 @@ export default {
         }
       ],
       iconList: [
-       
+        {
+          type: 'zhexiantu',
+          color: '#9D9D9DFF',
+          value: 0
+        },
         {
           type: '62',
           color: '#9D9D9DFF',
-          value: 0
-        }, {
-              type: 'zhexiantu',
-              color: '#9D9D9DFF',
-              value: 1
-          },
+          value: 1
+        },
         {
           type: 'biaoge-copy',
           color: '#9D9D9DFF',
@@ -190,7 +192,7 @@ export default {
           plotOptions: {
             bar: {
               horizontal: false,
-              columnWidth: '15%',
+              columnWidth: '45%',
               endingShape: 'rounded'
             }
           },
@@ -202,9 +204,6 @@ export default {
             width: 2,
             colors: ['transparent']
           },
-          legend:{
-              height:30
-          },
           xaxis: {
             categories: []
           },
@@ -215,7 +214,7 @@ export default {
             labels: {
               show: true,
               formatter: (value) => {
-                return parseInt(value) + '%'
+                return value + '%'
               }
             },
             tickAmount: 5
@@ -265,13 +264,10 @@ export default {
             labels: {
               show: true,
               formatter: (value) => {
-                return parseInt(value) + '%'
+                return value + '%'
               }
             }
           },
-           legend:{
-              height:30
-            },
           xaxis: {
             labels: {
               offsetX: 0 // 720
@@ -282,7 +278,6 @@ export default {
             categories: []
           },
           tooltip: {
-            shared:false,
             y: {
               formatter: function (val) {
                 return val + '%'
@@ -314,10 +309,10 @@ export default {
     }
   },
   activated () {
-    // this.isHtml = true
+    this.isHtml = true
   },
   deactivated () {
-    // this.isHtml = false
+    this.isHtml = false
   },
   watch: {
     '$store.state.home.headerAction' () {
@@ -393,15 +388,11 @@ export default {
       else range = 'Date'
       // 提示
       if (that.activities.length === 0) {
-        this.alertShow('商铺不能为空，请选择商铺')
-        return false
-      }
-      if (that.activities.length > 25) {
-        this.alertShow('商铺个数不能超过25个，请重新选择')
-        return false
-      }
-      if(time1===time2){
-        this.alertShow('对比时间相等,请重新选择时间')
+        that.isAlert = true
+        that.alertText.bg = '#00A0E9'
+        that.alertText.title = '趋势分析'
+        that.alertText.text = '商铺不能为空，请选择商铺'
+        that.alertText.confirm = false
         return false
       }
       var listId = _.clone(that.activities)
@@ -412,6 +403,8 @@ export default {
       that.loadingData.time2 = time2
       that.loadingData.id = bzid
       goShopTrend({ time1: time1, time2: time2, bzid: bzid, range: range }).then(res => {
+        // that.$vs.loading.close()
+        // that.$store.commit('loadingState', false)
         that.isList = true
         that.lineData.chartOptions.xaxis.categories = []
         that.lineData.series = []
@@ -422,15 +415,41 @@ export default {
         that.goTableList = []
         that.goName.push('时间')
         var data = res.data.data
-        setTimeout(() => {
-          if (that.selectType === 0) {
-            that.noComparison(data)
-          } else {
-            that.comparison(data, range)
-          }
-        });
-      
+        if (that.selectType === 0) {
+          that.noComparison(data)
+        } else {
+          that.comparison(data, range)
+        }
       })
+
+      try {
+        let date, type
+        if (that.selectType === 0) {
+          type = '无对比'
+          date = time1
+        } else {
+          type = '时间对比'
+          date = [time1, time2]
+        }
+
+        let arr = []
+        that.activities.map(list => {
+          that.activitiesType.map(val => {
+            val.children.map(name => {
+              if (name.value == list[1]) {
+                arr.push([list[0], name.label])
+              }
+            })
+          })
+        })
+        let arrs = []
+        arr.forEach(item => {
+          arrs.push(item[0] + '/' + item[1])
+        })
+        window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', '进店率趋势查询', { '对比方式': type, '时间段': date, '店铺选择': arrs.join(',') })
+      } catch (error) {
+        console.log(this.$route.meta.pageTitle + '页面-' + '进店率趋势查询' + '埋点error:' + error)
+      }
     },
     // 无时间对比 数据处理
     noComparison (data) {
@@ -448,26 +467,13 @@ export default {
         obj.name = shopData[0].name
         obj.data = []
         shopData.forEach(function (d) {
-          var size = d.rate === 0 ? 0: NP.times(d.rate, 100)
+          var size = d.rate === 0 ? '0' : NP.times(d.rate, 100)
           obj.data.push(Number(size))
         })
         allData.push(shopData)
         that.lineData.series.push(obj)
         that.graphData.series.push(obj)
       })
-      // let maxLenght = _.maxBy(that.lineData.series,(val=>{
-      //   return val.data.length
-      // })).data
-      // that.lineData.series.forEach((val,vindex)=>{
-      //   maxLenght.forEach((list,index)=>{
-      //     if(!val.data[index]&&val.data[index]!==0) val.data.push(10)
-      //   })
-      // })
-      // that.graphData.series.forEach((val,vindex)=>{
-      //    maxLenght.forEach((list,index)=>{
-      //     if(!val.data[index]&&val.data[index]!==0) val.data.push(10)
-      //   })
-      // })
       if (that.$refs.graphLine) {
         that.$refs.graphLine.updateOptions({
           xaxis: { categories: that.lineData.chartOptions.xaxis.categories }
@@ -488,14 +494,14 @@ export default {
       })
 
       // 表格数据
-      allData.forEach(function (n) { that.goName.push(n[0].name+' ( % ) ') })
+      allData.forEach(function (n) { that.goName.push(n[0].name) })
       allData[0].forEach(function (d, index) {
         var tableObj = {}
         tableObj.name = d.date
         tableObj.percentList = []
         allData.forEach(function (l, allIndex) {
           var d = allData[allIndex][index] ? allData[allIndex][index].rate : 0
-          var size = d === 0 ? '0' : NP.times(d, 100) + ''
+          var size = d === 0 ? '0%' : NP.times(d, 100) + '%'
           tableObj.percentList.push(size)
         })
         that.goTableList.push(tableObj)
@@ -530,19 +536,6 @@ export default {
           that.graphData.series.push(obj)
         })
       })
-      let maxLenght = _.maxBy(that.lineData.series,(val=>{
-        return val.data.length
-      })).data
-      that.lineData.series.forEach((val,vindex)=>{
-        maxLenght.forEach((list,index)=>{
-          if(!val.data[index]&&val.data[index]!==0) val.data.push(0)
-        })
-      })
-      that.graphData.series.forEach((val,vindex)=>{
-         maxLenght.forEach((list,index)=>{
-          if(!val.data[index]&&val.data[index]!==0) val.data.push(0)
-        })
-      })
       that.$refs.graphLine.updateOptions({
         xaxis: { categories: that.lineData.chartOptions.xaxis.categories }
       })
@@ -550,19 +543,18 @@ export default {
       var time2 = moment(that.crossDate[1]).format('YYYY-MM-DD')
       var time3 = moment(that.crossDateTwo[0]).format('YYYY-MM-DD')
       var time4 = moment(that.crossDateTwo[1]).format('YYYY-MM-DD')
-     
+      setTimeout(() => {
         var width = document.getElementById('tendencyLine').offsetWidth
         var number = (width / 2).toFixed(2) - 50
         // 更新 chart x 轴数据 以及控制柱状图大小
         if (time1 == time2 && time3 == time4) that.upDateLineX(number, false)
         else that.upDateLineX(0, true)
         if (that.$refs.graphBar) this.upDateBarX()
-      
+      })
       // 表格数据
       _.forIn(data, function (value, key) {
         _.forIn(value, function (listValue, listKey) {
-          let time = key.split(',')[0]===key.split(',')[1]?key.split(',')[0]:key
-          that.goName.push(listValue[0].name + time+' ( % ) ')
+          that.goName.push(listValue[0].name + key)
         })
       })
       if (value1 > value2) {
@@ -575,14 +567,14 @@ export default {
           tableObj.percentList = []
           list.map(function (all, allIdnex) {
             var d = list[allIdnex][listIndex].rate
-            var size = d === 0 ? '0' : NP.times(d, 100) + ''
+            var size = d === 0 ? '0%' : NP.times(d, 100) + '%'
             tableObj.percentList.push(size)
           })
           list.map(function (all, allIdnex) {
             var td = listTwo[allIdnex][listIndex]
             var sizeT
             if (td) {
-              sizeT = td === 0 ? '0' : NP.times(td.rate, 100) 
+              sizeT = td === 0 ? '0%' : NP.times(td.rate, 100) + '%'
             } else {
               sizeT = ' '
             }
@@ -602,7 +594,7 @@ export default {
             var td = listTwo[allIdnex][listIndex]
             var sizeT
             if (td) {
-              sizeT = td.rate === 0 ? '0' : NP.times(td.rate, 100)
+              sizeT = td.rate === 0 ? '0%' : NP.times(td.rate, 100) + '%'
             } else {
               sizeT = ' '
             }
@@ -610,7 +602,7 @@ export default {
           })
           list.map(function (all, allIdnex) {
             var d = list[allIdnex][listIndex].rate
-            var size = d === 0 ? '0' : NP.times(d, 100)
+            var size = d === 0 ? '0%' : NP.times(d, 100) + '%'
             tableObj.percentList.push(size)
           })
           that.goTableList.push(tableObj)
@@ -625,6 +617,11 @@ export default {
       this.crossDate = dateTime
       this.selectType = 0;
       this.activities = [];
+      try {
+        window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', '进店率趋势重置', {})
+      } catch (error) {
+        console.log(this.$route.meta.pageTitle + '页面-' + '进店率趋势重置-埋点error:' + error)
+      }
     },
     // 更新线 x 轴
     upDateLineX (number, state) {
@@ -646,44 +643,50 @@ export default {
       that.$refs.graphBar.updateOptions({
         xaxis: { categories: that.graphData.chartOptions.xaxis.categories }
       })
-      if (that.graphData.chartOptions.xaxis.categories.length < 3&&that.lineData.series.length<3) {
-        that.graphData.chartOptions.plotOptions.bar.columnWidth = '10%'
-      } else if (that.graphData.chartOptions.xaxis.categories.length < 5&&that.lineData.series.length<5) {
-        that.graphData.chartOptions.plotOptions.bar.columnWidth = '25%'
-      }  else if (that.graphData.chartOptions.xaxis.categories.length < 10&&that.lineData.series.length<10) {
-          that.graphData.chartOptions.plotOptions.bar.columnWidth = '55%'
-      } else if (that.graphData.chartOptions.xaxis.categories.length < 15&&that.lineData.series.length<15) {
-          that.graphData.chartOptions.plotOptions.bar.columnWidth = '65%'
-      }else {
-        that.graphData.chartOptions.plotOptions.bar.columnWidth = '70%'
-        
-      }
+      that.$refs.graphBar.updateOptions({ xaxis: that.graphData.chartOptions.xaxis })
+      if (that.graphData.chartOptions.xaxis.categories.length < 2) {
+        that.graphData.chartOptions.plotOptions.bar.columnWidth = '15%'
         that.$refs.graphBar.updateOptions({ plotOptions: that.graphData.chartOptions.plotOptions })
+      } else if (that.graphData.chartOptions.xaxis.categories.length < 5) {
+        that.graphData.chartOptions.plotOptions.bar.columnWidth = '20%'
+        that.$refs.graphBar.updateOptions({ plotOptions: that.graphData.chartOptions.plotOptions })
+      } else {
+        that.graphData.chartOptions.plotOptions.bar.columnWidth = '70%'
+        that.$refs.graphBar.updateOptions({ plotOptions: that.graphData.chartOptions.plotOptions })
+      }
     },
     // 图标点击
     iconClick (index) {
       // 下载文件
       if (index === 3) {
-          let columns = [], data = []
-          this.goName.forEach((list, index) => {
-              if (index === 0) {
-                  columns.push({ title: '时间', key: 'date' })
-              } else {
-                  columns.push({ title: list, key: 'type' + index })
-              }
-          })
-          this.goTableList.forEach((list, index) => {
-              let obj = {}
-              columns.forEach((value, vIndex) => {
-                  if (vIndex === 0) {
-                      obj[value.key] = list.name
-                  } else {
-                      obj[value.key] = list.percentList[vIndex - 1]
-                  }
-              })
-              data.push(obj)
-          })
-          downloadEx(exportEx,'进店率趋势分析',[columns,data])
+        var time1 = this.loadingData.time1
+        var time2 = this.loadingData.time2
+        var id = this.loadingData.id
+        // if (this.$store.state.home.loadingState == false) {
+        //   this.$store.commit('loadingState', true)
+        //   this.$vs.loading()
+        // }
+        goShowFlowTend({ time1: time1, time2: time2, bzid: id }).then(res => {
+          let date = new Date()
+          const blob = new Blob([res.data])
+          let name = '进店率分析趋势分析'
+          let fileName = name + moment(date).format('YYYYMMDDHHmmss') + '.xls'
+          const elink = document.createElement('a')
+          elink.download = fileName
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href)// 释放URL 对象
+          document.body.removeChild(elink)
+          // this.$vs.loading.close()
+          // this.$store.commit('loadingState', false)
+        })
+        try {
+          window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', '进店率趋势' + '下载', { })
+        } catch (error) {
+          console.log(this.$route.meta.pageTitle + '页面-' + '进店率趋势' + '下载-埋点error:' + error)
+        }
       } else {
         // 切换
         this.iconIndex = index
@@ -711,13 +714,6 @@ export default {
         this.selectAll = 1
         that.activities = arr
       }
-    },
-    alertShow(text){
-      this.isAlert = true
-      this.alertText.bg = '#00A0E9'
-      this.alertText.title = '趋势分析'
-      this.alertText.text = text
-      this.alertText.confirm = false
     },
     gotInnerRange (date) {
       const [start, end] = date
@@ -802,7 +798,7 @@ export default {
         }
         .cross-submit{
           display:inline-block;
-          padding: 0.55rem 2rem;
+          padding: 0.75rem 2rem;
           text-align:center;
           border-radius: 6px;
           background-color: #00A0E9;
@@ -817,7 +813,7 @@ export default {
         }
         .cross-reset{
           display:inline-block;
-          padding: 0.55rem 2rem;
+          padding: 0.75rem 2rem;
           text-align:center;
           border-radius: 6px;
           border:1px solid #00A0E9;
@@ -839,8 +835,7 @@ export default {
         position: relative;
         height: 490px;
         overflow: hidden;
-        padding-top: 40px;
-        padding-bottom:30px;
+        padding-top: 41px;
         .go-shop-time-icon{
           display: inline-block;
           position: absolute;
@@ -848,8 +843,11 @@ export default {
           top: 20px;
           right: 0;
           overflow: hidden;
-          z-index: 1;
-  			font-size: 18px;
+          z-index: 10;
+          span:nth-child(1){
+            width: 10%;
+            font-size:18px;
+          }
           p{
             float: right;
             margin-top: 20px;
@@ -870,7 +868,7 @@ export default {
           justify-content: center;
         }
         .tendencyLine,.tendencyBar,.tendencyTable{
-          transform: translateY(110%);
+          transform: translateY(100%);
           transition: none!important;
         }
         .tendencyTable{
@@ -879,13 +877,13 @@ export default {
           overflow: auto;
         }
         .lineAction{
-          transform: translateY(10%);
+          transform: translateY(0%);
         }
         .barAction{
-          transform: translateY(-90%);
+          transform: translateY(-100%);
         }
         .tableAction{
-          transform: translateY(-180%);
+          transform: translateY(-200%);
         }
     }
 }

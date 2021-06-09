@@ -29,7 +29,7 @@ export default {
   },
   data () {
     return {
-      empty: require('@/assets/images/pages/empty.png'),
+      empty: require('@/assets/images/pages/empty.webp'),
       showAddCompany: false,
       orgnaizationTree: []
     }

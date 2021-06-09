@@ -1,37 +1,37 @@
 <template>
-	<i-tabs
-			v-model="current"
-			ref="chartsTabs"
-			v-if="isTypeChange"
-	>
-		<slot slot="select"></slot>
-		<slot slot="export" name="export"></slot>
-		<tab-item
-				:icon="getIcon(item==='salesPie'?'pie':item)"
-				:titles="title"
-				v-for="(item,index) in type"
-				:key="index"
-				class="chart-tab-box"
-				:class="{times:item==='radialBar'}"
-		>
-			<div :style="item==='bar'?'':'margin-top:20px;'" class="graphStyle">
-				<vue-apex-charts
-						:type="item==='salesPie'?'pie':item"
-						:width="chartWidth"
-						:height="chartHeight(item)"
-						:options="getOpt(item)"
-						:series=" (item=== 'radialBar' ? radiabarSeries : cloneSeries())　|| []"
-            :class="{showOverFlow: isOver}"
-				>
-				</vue-apex-charts>
-			</div>
-			<custom-legend :data="lengendData" v-if="lengendData.length" :unit="unit"></custom-legend>
-			<div class="noDataStyle" v-if="isNoData" :class="'noDataStyle'+item"></div>
-		</tab-item>
-		<tab-item icon="biaoge-copy" :titles="tableTitle" id="table-item">
-			<i-table :columns="columns" :data="tableData"></i-table>
-		</tab-item>
-	</i-tabs>
+
+  <i-tabs
+    v-model="current"
+    ref="chartsTabs"
+    v-if="isTypeChange"
+  >
+    <slot slot="select"></slot>
+    <slot slot="export" name="export"></slot>
+    <tab-item
+      :icon="getIcon(item==='salesPie'?'pie':item)"
+      :titles="title"
+      v-for="(item,index) in type"
+      :key="index"
+      class="chart-tab-box"
+      :class="{times:item==='radialBar'}"
+    >
+      <div :style="item==='bar'?'':'margin-top:20px;'" class="graphStyle">
+        <vue-apex-charts
+          :type="item==='salesPie'?'pie':item"
+          :width="chartWidth"
+          :height="chartHeight(item)"
+          :options="getOpt(item)"
+          :series=" (item=== 'radialBar' ? radiabarSeries : cloneSeries())　|| []"
+        >
+        </vue-apex-charts>
+      </div>
+      <custom-legend :data="lengendData" v-if="lengendData.length" :unit="unit"></custom-legend>
+      <div class="noDataStyle" v-if="isNoData" :class="'noDataStyle'+item"></div>
+    </tab-item>
+    <tab-item icon="biaoge-copy" :titles="tableTitle" id="table-item">
+      <i-table :columns="columns" :data="tableData"></i-table>
+    </tab-item>
+  </i-tabs>
 </template>
 <script>
 import iTabs from '_c/I-Tabs/Itabs.vue'
@@ -43,7 +43,6 @@ import iTable from '@/views/footfall-analytics/components/iTable.vue'
 import opt from '@/views/home/components/apexChartoption.js'
 import _ from 'lodash'
 import customLegend from '@/views/home/components/legend.vue'
-import { isArray } from 'highcharts'
 export default {
   name: 'copyChartsTabs',
   components: {
@@ -56,7 +55,7 @@ export default {
   },
   props: {
     tooltipUnit: {
-      type: String || Array,
+      type: Array || String,
       default: () => {
         return ''
       }
@@ -141,9 +140,6 @@ export default {
     xaxisOrlabels () {
       return _.merge(this.xAxis, this.labels)
     },
-    isOver () {
-      return _.isNumber(this.chartWidth)
-    },
     megerSeries () {
       if (typeof (this.series[0]) === 'object') {
         // 柱状图，线图
@@ -167,22 +163,7 @@ export default {
       }
     },
     columns () {
-      let column = this.megerSeries.map((e,index) =>{
-        if(index!==0){
-          if(Array.isArray(this.tooltipUnit)){
-           return { title: e.name+' ( '+ this.tooltipUnit[index-1].name +' ) ', key: e.key }
-          }else{
-            if(this.tooltipUnit){
-               return { title: e.name+' ( '+ this.tooltipUnit +' ) ', key: e.key }
-            }else{
-               return { title: e.name, key: e.key }
-            }
-           
-          }
-        }else{
-         return { title: e.name, key: e.key }
-        }
-      })
+      let column = this.megerSeries.map(e => ({ title: e.name, key: e.key }))
       this.$emit('getShopTableCoumn', column)
       return column
     },
@@ -202,14 +183,13 @@ export default {
           }
           try {
             if (this.megerSeries[cindex].key) {
-              if (!_.isNumber(this.megerSeries[cindex].key)){
+              if (!_.isNumber(this.megerSeries[cindex].key)) {
                 if (this.megerSeries[cindex].key.match(/[A-Za-z]+/)) {
-                  if ([ 'RepeatPurchaseRate'].includes(this.megerSeries[cindex].key.match(/[A-Za-z]+/)[0])) {
+                  if (['RepeatPurchaseRate'].includes(this.megerSeries[cindex].key.match(/[A-Za-z]+/)[0])) {
                     itemData = `${parseInt(itemData)}%`
                   }
                 }
               }
-              
             }
           } catch (error) { // 客流分析中到店次数在上面的正则当中会出错
             console.log(error)
@@ -231,21 +211,29 @@ export default {
               tableList.map(list => {
                 totalNum += Object.values(list)[index]
               })
-              total[keys[index]] = totalNum.toLocaleString() 
+              total[keys[index]] = totalNum.toLocaleString() + this.tooltipUnit
             } else if (name2 === 'enter' || name2 === 'exit') {
               tableList.map(list => {
                 totalNum += Object.values(list)[index]
               })
-              total[keys[index]] = _.isNaN(totalNum) ? '' : totalNum.toLocaleString() 
+              total[keys[index]] = _.isNaN(totalNum) ? '' : totalNum.toLocaleString() + this.tooltipUnit
             } else total[keys[index]] = ''
           }
         })
+      }
+
+      if (this.istotal) { // 有传入的合计数据，就显示传入的
+        if (Object.keys(this.totalData).length) {
+          tableList.push(this.totalData)
+        } else {
+          tableList.push(total)
+        }
       }
       // 给表格数据加单位
       tableList.forEach(o => {
         _.forIn(o, (val, key) => {
           if (!Array.isArray(this.tooltipUnit) && typeof val === 'number') {
-            o[key] = val.toLocaleString() 
+            o[key] = val.toLocaleString() + this.tooltipUnit
           }
           // 首页购物中心趋势分析 数据指标是多选 tooltipUnit会传入多个
           if (Array.isArray(this.tooltipUnit)) {
@@ -255,25 +243,13 @@ export default {
                 return o.value === unitKey
               })
               if (tooltipUnit) {
-                o[key] = val.toLocaleString() 
+                o[key] = val.toLocaleString() + tooltipUnit.name
               }
             }
           }
         })
       })
-      if (this.istotal) { // 有传入的合计数据，就显示传入的
-        if (Object.keys(this.totalData).length) {
-          tableList.push(this.totalData)
-        } else {
-          tableList.push(total)
-        }
-      }
       this.$emit('getShopTableData', tableList)
-      var data = {
-        type: this.title,
-        data: [this.columns, tableList]
-      }
-      this.$emit('tableChage', data)
       return tableList
     },
     radiabarSeries () {
@@ -288,7 +264,7 @@ export default {
           title: e,
           icon: this.labels.icons[index],
           value: this.series[index],
-          color: this.type[0]?opt[this.type[0]].colors[index]:''
+          color: opt[this.type[0]].colors[index]
         }))
       } else return []
     }
@@ -304,40 +280,29 @@ export default {
         })
       }
     },
+    columns () {
+      var data = {
+        type: this.title,
+        data: [this.columns, this.tableData]
+      }
+      this.$emit('tableChage', data)
+    },
     current () {
       this.$emit('tableSwitchover', this.current)
     }
   },
   methods: {
-    
     getOpt (type) {
-      let tmlOptions = this.labels.data ? { ...opt[type], ...{ labels: this.labels.data } } :
-		  {
-		  ...opt[type],
-		  ...{
-		    xaxis: {
-		      categories: this.xAxis.data,
-          labels: {
-            formatter (value) {
-              if (typeof (value) === 'number') {
-                return value ? _.round(value, 0).toLocaleString() : ''
-              } else {
-                return value
-              }
-            },
-            show: type==='line'?this.xAxis.data &&this.xAxis.data.length>1:true
-          }
-			  },
-		  },
-		  ...{ markers: { size: 5, hover: { sizeOffset: 2 } } }
-		  }
+      let tmlOptions = this.labels.data ? { ...opt[type], ...{ labels: this.labels.data } } : { ...opt[type], ...{ xaxis: { categories: this.xAxis.data } }, ...{ markers: { size: 5, hover: { sizeOffset: 2 } } } }
       if (tmlOptions.tooltip) {
-        let unit = this.tooltipUnit
-        // 首页购物中心趋势分析会传入多个tooltipUnit
         tmlOptions.tooltip.y.formatter = (val, p) => {
-          if (Array.isArray(this.tooltipUnit)) unit = this.tooltipUnit[p.seriesIndex].name
-          if(val===0) return 0 + unit
-          if (val == undefined || val == null || val == '')  return ''
+          if (val == undefined || val == null || val == '') {
+            return ''
+          };
+          let unit = this.tooltipUnit
+          if (Array.isArray(this.tooltipUnit)) { // 首页购物中心趋势分析会传入多个tooltipUnit
+            unit = this.tooltipUnit[p.seriesIndex] ? this.tooltipUnit[p.seriesIndex].name : ''
+          }
           if (typeof val === 'number') {
             return val.toLocaleString() + unit
           } else {
@@ -361,11 +326,12 @@ export default {
         }
       }
       if (type === 'bar') { // 柱状图需要特殊处
-        const categoriesLen = this.xAxis.data ? this.xAxis.data.length : 6
+        const categoriesLen = this.xAxis.data ? this.xAxis.data.length : 0
         let barOpt = {
           yaxis: {
             labels: {
-              align:'center',
+              // offsetY: categoriesLen < 5 ? -0.5 * categoriesLen : 0
+              offsetY: 0
             }
           },
           plotOptions: {
@@ -381,7 +347,7 @@ export default {
         }
 
         if (this.extraOptions && this.extraOptions.plotOptions && this.extraOptions.plotOptions.bar.horizontal) {
-          barOpt.plotOptions.bar.barHeight = categoriesLen < 5 ? '30%' : '70%'
+          barOpt.plotOptions.bar.barHeight = categoriesLen < 5 ? '20%' : '70%'
         }
         var optionsData = _.merge(cloneOpt, _.merge(this.extraOptions, barOpt))
         var newX = []
@@ -391,13 +357,6 @@ export default {
           })
         }
         if (this.isHome) optionsData.xaxis.categories = newX
-        if(!optionsData.labels){
-          if(optionsData.xaxis.categories&&optionsData.xaxis.categories.length===0){
-            optionsData.yaxis.labels.show = false
-          }else{
-            optionsData.yaxis.labels.show = true
-          }
-        }
         return optionsData
       } else {
         var optionsData = _.merge(cloneOpt, this.extraOptions)
@@ -434,58 +393,55 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.showOverFlow{
-overflow-x: auto;overflow-y: hidden;
+.times {
+  top: 70px;
 }
-	.times {
-		top: 70px;
-	}
-	.noDataStyle {
-		position: absolute;
-		z-index: 20;
-	}
-	.noDataStyledonut {
-		width: 226px !important;
-		height: 226px;
-		left: 28%;
-		top: 5%;
-		margin-left: -100px;
-		background-color: rgba(235, 235, 235, 0.85);
-		border-radius: 50%;
-		margin-top:20px;
-	}
-	.noDataStylepie {
-		width: 226px !important;
-		height: 226px !important;
-		top: 5%;
-		left: 15%;
-		background-color: rgba(235, 235, 235, 0.85);
-		border-radius: 50%;
-		margin-top:20px;
-	}
-	.chart-tab-box .graphStyle{
-    width :100%;
-	}
+.noDataStyle {
+  position: absolute;
+  z-index: 20;
+}
+.noDataStyledonut {
+  width: 226px !important;
+  height: 226px;
+  left: 28%;
+  top: 5%;
+  margin-left: -100px;
+  background-color: rgba(235, 235, 235, 0.85);
+  border-radius: 50%;
+  margin-top:20px;
+}
+.noDataStylepie {
+  width: 226px !important;
+  height: 226px !important;
+  top: 5%;
+  left: 15%;
+  background-color: rgba(235, 235, 235, 0.85);
+  border-radius: 50%;
+  margin-top:20px;
+}
+.chart-tab-box .graphStyle{
+  width :100%;
+}
 </style>
 <style lang="stylus" scoped>
-	.chart-tab-box
-		display flex
-		justify-content space-between
-		align-items center
-		flex-direction column
-			grid-column-end span 2
-		>div:nth-child(1)
-			// min-height 280px!important
-			flex 1
-			width 100%
-		>div:nth-child(2)
-			flex 1
-			width 80%
-	.tooltipss
-		position relative
-		left -128px
-		top -38px
-	.entityTips
-		left -61px
-		top -38px
+.chart-tab-box
+  display flex
+  justify-content space-between
+  align-items center
+  flex-direction column
+    grid-column-end span 2
+  >div:nth-child(1)
+    // min-height 280px!important
+    flex 1
+    width 100%
+  >div:nth-child(2)
+    flex 1
+    width 80%
+.tooltipss
+  position relative
+  left -128px
+  top -38px
+.entityTips
+  left -61px
+  top -38px
 </style>

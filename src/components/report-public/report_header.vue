@@ -1,19 +1,10 @@
 
 <template>
-    <div class="report-header" style=" padding: 76px 80px 0 80px;
-        height: 184px;">
-        <img class="header-logo" style="  width: 318px;" :src="logo" alt="">
+    <div class="report-header">
+        <img class="header-logo" :src="logo" alt="">
         <div class="header-right">
-            <p class="text" style="font-size: 24px;
-                 line-height: 108px;">
-                 {{saveHeaderData}}
-                 </p>
-            <div style="width: 100px; height: 108px;margin-left: 30px;line-height: 108px;">
-              <p style="  height: 108px;line-height: 93px;font-size: 36px;">
-                {{year}}
-              </p>
-              <span style="bottom: 43px; width:100px; height: 12px;"></span>
-            </div>
+            <p class="text">{{headerData}}</p>
+            <div><p>{{year}}</p> <span></span></div>
         </div>
     </div>
 </template>
@@ -26,7 +17,6 @@ export default {
   },
   data () {
     return {
-      saveHeaderData:''
     }
   },
   watch: {
@@ -36,38 +26,20 @@ export default {
     logo () {
       return this.$store.state.home.headerData.img
     },
-    type(){
-     return this.$store.state.report.reportHeaderType
-    },
     year () {
-      switch(this.type){
-        case 'day':
-          return this.$store.state.report.dayReportHeader.year
-        case 'week':
-           return this.$store.state.report.weekReportHeader.year
-        case 'month':
-           return this.$store.state.report.monthReportHeader.year;
-        case 'customize':
-          return this.$store.state.report.customizeReportHeader.year
-      }
+      return this.$store.state.report.reportHeader.year
     },
     headerData () {
-      let header
-      switch(this.type){
-        case 'day':
-          header = this.$store.state.report.dayReportHeader
-          this.saveHeaderData = header.year + '.' + header.time + ' ' + header.week
-          break
-        case 'week':
-          header = this.$store.state.report.weekReportHeader
-          this.saveHeaderData =  header.year + '年第' + header.period + '周\xa0\xa0' + header.time
-          break
-        case 'month':
-          header = this.$store.state.report.monthReportHeader
-          this.saveHeaderData =  header.year + '年' + header.time + '月'
-          break
+      let header = this.$store.state.report.reportHeader
+      if (header.type === 'week') {
+        return header.year + '年第' + header.period + '周\xa0\xa0' + header.time
+      } else if (header.type === 'daily') {
+        return header.year + '.' + header.time + ' ' + header.week
+      } else {
+        return header.year + '年' + header.time + '月'
       }
     }
+
   },
   methods: {
 
@@ -83,37 +55,50 @@ export default {
 <style scoped lang="less">
     .report-header {
         width: 100%;
+        padding: 76px 80px 0 80px;
+        height: 184px;
         .header-logo{
             display: block;
+            width: 318px;
             height: 100%;
             float: left;
         }
         .header-right{
             float: right;
             .text{
+               font-size: 24px;
                color: #3b3b3b;
                height: 100%;
+               line-height: 108px;
                float: left;
             }
             div{
                 float: left;
+                margin-left: 30px;
                 position: relative;
+                width: 100px;
+                height: 108px;
                 z-index: 1;
-
+                line-height: 108px;
                 p{
                     width: 100%;
                     text-align: center;
+                    height: 108px;
+                    line-height: 93px;
+                    font-size: 36px;
                     color: #2081d4;
                     position: absolute;
                     left: 0;
                     top: 0;
-                    z-index: 1;
                 }
                 span{
                     display: inline-block;
+                    width:100px;
+                    height: 12px;
                     background-color: #35e9df;
                     position: absolute;
                     right: 0;
+                    bottom: 43px;
                 }
             }
         }

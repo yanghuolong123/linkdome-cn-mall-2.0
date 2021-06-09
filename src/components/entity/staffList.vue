@@ -338,18 +338,17 @@ export default {
           }
       }
       .stall-header-right{
-        position:absolute;
-        right:20px;
-        top:43px;
+          position:absolute;
+          right:20px;
+          top:43px;
         span{
+            display: inline-block;
             float: left;
             width: 24px;
             height: 24px;
-            display: flex;
-            align-items: center; 
-            justify-content: center;
             border-radius: 50%;
             text-align: center;
+            line-height: 19px;
             font-size: 16px;
             color: #fff;
             margin-left: 20px;

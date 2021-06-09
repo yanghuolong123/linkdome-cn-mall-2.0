@@ -156,7 +156,7 @@ export default {
         confirm: false
       },
       checklists: [],
-      uploadImg: require('@/assets/images/fixation_img/rest/who.png'),
+      uploadImg: require('@/assets/images/fixation_img/rest/who.webp'),
       whoImg: 'https://deepnorthdev.blob.core.windows.net/dev-public/China_Product_Dashboard_20190326/77984862cb7ef61a8107039b967a3ec2.png',
       /* 添加修改表单 */
       form: {

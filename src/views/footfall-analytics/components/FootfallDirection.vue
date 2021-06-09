@@ -6,7 +6,7 @@
     <drainage-tab v-model="drainageType" :tabs="tabsList"></drainage-tab>
     <div class="p-3 chart-container" v-if="chartData">
       <div class="trend-container">
-        <div class="left-chart-box" id="drainageChart">
+        <div class="left-chart-box">
           <chartTabs :xAxis="chartData.xAxis" :extraOptions="occpuancyOptions" title='趋势图' :series="chartData.series"></chartTabs>
         </div>
         <div class="right-card-box">
@@ -29,7 +29,6 @@
           :bzid="rankBzid"
           :isDrainage='true'
           :drainageId = 'bzid'
-          :drainageType='drainageType'
           :typeName='drainageName'
           :drainageApi='apiDifference'
         ></Rank>
@@ -46,6 +45,7 @@ import drainageTab from './components/DrainageTab'
 import Rank from '@/views/operation/components/RankingDrainage.vue'
 import ageGender from './AgeGenderChart.vue'
 import chartTabs from '@/components/common/CopyChartsTabs.vue'
+import { getFootfallTrend } from '@/api/passenger'
 import { gotInnerRange } from '@/libs/util'
 import hexToRgba from 'hex-to-rgba'
 import moment from 'moment'
@@ -140,7 +140,6 @@ export default {
           resData.map(list => {
             xAxis.data.push(list.date)
           })
-
           let obj = {}
           obj.name = this.drainageType === 'to' ? '目的流量' : `${this.entityType[e]}${this.direction[this.drainageType]}`
           obj.key = ''
@@ -189,17 +188,6 @@ export default {
       }
       this.occpuancyOptions.yaxis = []
       this.occpuancyOptions.yaxis.push(yObj)
-      // if(this.formatDate[0]===this.formatDate[1]){
-      //   setTimeout(() => {
-      //       var div = document.getElementById('drainageChart')
-      //       var width
-      //       if (div) width = div.offsetWidth
-      //       var number = (width / 2).toFixed(2) - 50
-      //       this.occpuancyOptions.xaxis.labels.offsetX = number
-      //   });
-      // }else{
-      //   this.occpuancyOptions.xaxis.labels.offsetX = 0
-      // }
       return { series, xAxis }
     },
     cardData () {
@@ -257,12 +245,7 @@ export default {
   data () {
     return {
       occpuancyOptions: {
-        yaxis: [],
-        xaxis: {
-          labels: {
-            offsetX: 0
-          },
-        },
+        yaxis: []
       },
       drainageType: '',
       apiDifference: '',
@@ -321,8 +304,8 @@ export default {
           let params = {
             time1: time1.toString(),
             range: dateType,
-            from_bzids: e.value === 'from' ? this[`${e.value}${type}Ids`].toString() : this.bzid,
-            to_bzids: e.value === 'from' ? this.bzid : this[`${e.value}${type}Ids`].toString()
+            from_bzids: e.value == 'from' ? this[`${e.value}${type}Ids`].toString() : this.bzid,
+            to_bzids: e.value == 'from' ? this.bzid : this[`${e.value}${type}Ids`].toString()
           }
           this.apiDifference = params
           reqs.push(getEntityDrainage(params))

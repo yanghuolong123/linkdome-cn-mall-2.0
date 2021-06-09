@@ -1,5 +1,5 @@
 <template>
-    <div class="box-card bg-white transaction"  v-if="isHtml">
+    <div class="box-card bg-white transaction" v-if="isHtml">
         <p>异动分析</p>
         <div class="transaction-left" >
             <header>{{topTen.title}}</header>
@@ -8,7 +8,7 @@
                     <p :key="index" v-for="(name,index) in topTen.name">{{name}}</p>
                 </li>
             </ul>
-            <div class="transaction-list" style=" height: 345px;" v-if="!topTable">
+            <div class="transaction-list" v-if="!topTable">
                 <p :key="index" v-for="(state,index) in topTen.state" :style='{height:topHeight}'>
                     <span>{{state.number}}</span>
                     <span v-if="state.float===1"><icons style="color:#E75759 !important" type="31xiajiang"/></span>
@@ -59,7 +59,7 @@
                     <p :key="index" v-for="(name,index) in afterTen.name">{{name}}</p>
                 </li>
             </ul>
-            <div class="transaction-list" style=" height: 345px;" v-if="!afterTable">
+            <div class="transaction-list" v-if="!afterTable">
                 <p :key="index" v-for="(state,index) in afterTen.state" :style='{height:afterHeight}'>
                     <span>{{state.number}}</span>
                     <span v-if="state.float===1"><icons style="color:#E75759 !important" type="31xiajiang"/></span>
@@ -111,7 +111,6 @@ import chartTabs from '_c/common/CopyChartsTabs.vue'
 import exportMenu from '@/views/operation/components/ExportMenu.vue'
 import { getchange } from '@/api/newSales.js'
 import { exportEx } from '@/api/home.js'
-import {downloadEx} from '@/libs/util.js'
 import moment from 'moment'
 export default {
   name: 'salse',
@@ -167,33 +166,7 @@ export default {
           'tickAmount': 2
         }
       },
-      options2: {
-        'plotOptions': {
-          'bar': {
-            'horizontal': true,
-            'columnWidth': '70%',
-            'dataLabels': {
-              'position': 'center',
-              'maxItems': 100,
-              'hideOverflowingLabels': true
-            },
-            'barHeight': '70%'
-          }
-        },
-        'colors': [
-          '#00a1ea',
-          '#16dad2'
-        ],
-        'chart': {
-          'events': {}
-        },
-        'yaxis': {
-          'labels': {
-            'offsetY': 0
-          },
-          'tickAmount': 2
-        }
-      },
+      options2: _.cloneDeep(this.options),
       brandType: ['bar'],
       topHeight: '20%',
       topTen: {
@@ -369,20 +342,16 @@ export default {
         key: this.topParameter.type,
         data: []
       }
-      switch (this.topParameter.type) {
-        case 'SaleAmount':
-          seriesObj.name = '销售额'
-          break;
-        case 'SquaerMetre':
-           seriesObj.name = '坪效'
-          break;
-          case 'CloseRate':
-          seriesObj.name = '成交率'
-          break;
-          case 'UnitPrice':
-           seriesObj.name = '客单价'
-          break;
+      if (this.topParameter.type === 'SaleAmount') {
+        seriesObj.name = '销售额'
+      } else if (this.topParameter.type === 'SquaerMetre') {
+        seriesObj.name = '坪效'
+      } else if (this.topParameter.type === 'CloseRate') {
+        seriesObj.name = '成交率'
+      } else if (this.topParameter.type === 'UnitPrice') {
+        seriesObj.name = '客单价'
       }
+
       data.forEach(list => {
         let stateObj = {
           number: list.last_rank,
@@ -461,17 +430,25 @@ export default {
     },
 
     ExportBiztop (type) {
+      try {
+        if (type === 'after') {
+          window.TDAPP.onEvent('销售分析', '后10名排行下载', { })
+        } else {
+          window.TDAPP.onEvent('销售分析', '前10名排行下载', { })
+        }
+      } catch (error) {
+        if (type === 'after') {
+          console.log('销售分析-后10名排行下载-埋点error:' + error)
+        } else {
+          console.log('销售分析-前10名排行下载-埋点error:' + error)
+        }
+      }
       let time = this.afterParameter.time.split(',')
       let newAll
-      let name
       if (type === 'after') {
         newAll = [this.afterTableTitle, this.afterTableData]
-        let typeName = this.afterTen.AfterRadio=== 'AfterFloor'?'楼层':'业态'
-        name = '销售分析_异动分析后10排行_'+typeName
       } else {
         newAll = [this.topTableTitle, this.topTableData]
-        let typeName = this.topTen.topRadio=== 'topFloor'?'楼层':'业态'
-        name = '销售分析_异动分析前10排行_'+typeName
       }
       let newTableData = _.cloneDeep(newAll)
       if (time[0] == time[1]) {
@@ -479,7 +456,20 @@ export default {
           list.time = time[0] + '  ' + list.time
         })
       }
-      downloadEx(exportEx,name,newTableData)
+      exportEx(newTableData).then(res => {
+        let date = new Date()
+        const blob = new Blob([res.data])
+        let name = '销售分析'
+        let fileName = name + moment(date).format('YYYYMMDDHHmmss') + '.xls'
+        const elink = document.createElement('a')
+        elink.download = fileName
+        elink.style.display = 'none'
+        elink.href = URL.createObjectURL(blob)
+        document.body.appendChild(elink)
+        elink.click()
+        URL.revokeObjectURL(elink.href)// 释放URL 对象
+        document.body.removeChild(elink)
+      })
     },
     afterTableTitles (val) {
       this.afterTableTitle = val
@@ -501,7 +491,7 @@ export default {
   overflow: hidden;
   margin-top: 20px;
   padding: 35px;
-  
+  height: 648px;
   p{
     font-size:18px;
     font-weight:400;
@@ -543,7 +533,7 @@ export default {
       left: 10px;
       top:119px;
       width: 90px;
-     
+      height: 345px;
       p{
         width: 100%;
         padding-left: 15px;
@@ -560,11 +550,10 @@ export default {
           line-height: 100%;
           &:nth-child(1){
           float: left;
-          width: 20px;
           margin-right: 30%;
           }
           &:nth-child(2){
-            width: 16px;
+            width: 14px;
             float: right;
             margin-left: 20%;
           }
@@ -582,21 +571,6 @@ export default {
       padding-left: 90px;
       margin-top: -40px;
     }
-  }
-}
-@media screen and (max-width: 1700px) {
-  .transaction .transaction-left .transaction-list{
-    top:129px;
-  }
-}
-@media screen and (max-width: 1400px) {
-  .transaction .transaction-left .transaction-list{
-    top:139px;
-  }
-}
-@media screen and (max-width: 1250px) {
-  .transaction .transaction-left .transaction-list{
-    top:145px;
   }
 }
 </style>

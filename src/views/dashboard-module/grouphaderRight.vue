@@ -4,6 +4,7 @@
       <div class="bg-white dashboard-box">
         <vs-row type="flex">
           <vs-col vs-lg="6" vs-xs="12" class="vs-list">
+            <!-- <h1 class="header-title">{{item.name}}</h1> -->
             <p class="fontSize">当日累积客流（人次）</p>
             <p class="dayEnter  font-number font-semibold">{{rightShoppingList.currentDay}}</p>
             <div class="month-data">
@@ -11,23 +12,22 @@
               <p class="font-number ">{{ rightShoppingList.currentMonthly}}</p>
             </div>
           </vs-col>
-          <vs-col vs-lg="6" vs-xs="12" class="vs-list radial-bar">
-            <div class="flex">
-              <vue-apex-charts
-                      type="radialBar"
-                      height="100%"
-                      :options="chartOptions"
-                      :series="rightShoppingList.achievingRate"
-              />
-            </div>
-            <div>
-              <p class="text-base text-grey font-normal" style="text-align: center">月达标值（人次）</p>
-              <p class="text-lg text-grey font-number font-normal" style="text-align: center">{{ rightShoppingList.monthlyGoal}}</p>
+          <vs-col vs-lg="6" vs-xs="12" class="vs-list" style="position:relative">
+            <vue-apex-charts
+            type="radialBar"
+            height="250"
+            :options="chartOptions"
+            :series="rightShoppingList.achievingRate"
+            />
+            <div class="month-values">
+              <p class="text-base text-grey font-normal">月达标值(人次)</p>
+              <p class="text-lg text-grey font-number font-normal">{{ rightShoppingList.monthlyGoal|tenthousandFormat}}</p>
             </div>
           </vs-col>
         </vs-row>
       </div>
     </div>
+    <!-- <img class="right-img" v-on:click="rightImgClick" :src="isheight?pullUpImg:pullDownImg"> -->
   </div>
 </template>
 <script>
@@ -48,6 +48,8 @@ export default {
   data () {
     return {
       isheight: false,
+      // pullDownImg: require('@/assets/images/fixation_img/logo/pullDown.webp'),
+      // pullUpImg: require('@/assets/images/fixation_img/logo/pullUp.webp'),
       shopData: {
         currentDay: 0,
         currentMonthly: 0,
@@ -69,7 +71,6 @@ export default {
               size: '65%'
             },
             track: {
-              background: '#fff',
               strokeWidth: '100%'
             },
             dataLabels: {
@@ -107,32 +108,26 @@ export default {
         labels: ['本月客流达成率'],
         responsive: [
           {
-            breakpoint: 1600,
+            breakpoint: 1576,
             options: {
               plotOptions: {
                 radialBar: {
                   size: 80
                 }
-              },
-              grid:{
-                padding: {
-                  top: 10,
-                  right: 0,
-                  bottom: 0,
-                  left: 0
-                },
+              }
+            }
+          },
+          {
+            breakpoint: 1200,
+            options: {
+              plotOptions: {
+                radialBar: {
+                  size: 100
+                }
               }
             }
           }
-        ],
-        grid:{
-          padding: {
-            top: 20,
-            right: 0,
-            bottom: 0,
-            left: 0
-          },
-        }
+        ]
       }
     }
   },
@@ -194,18 +189,8 @@ export default {
       }
       .vs-list{
         padding: 0 5px;
-
       }
     }
-}
-.radial-bar{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  .flex{
-    flex: 1;
-  }
 }
 .comportAction{
    height: 441px;
@@ -243,5 +228,6 @@ export default {
 .dashboard-box
   box-shadow:0px 0px 8px 1px rgba(166,167,167,0.3);
   border-radius:6px;
+  height:300px;
   padding :20px;
 </style>

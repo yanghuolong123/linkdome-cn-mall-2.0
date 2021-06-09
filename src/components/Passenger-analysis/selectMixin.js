@@ -109,7 +109,7 @@ export default {
             }
             if (this.$store.state.home.headerAction && !copySelect) {
                 alert('请选择实体')
-                    return
+                return
             }
             let entitys = []
             copySelect.forEach(e => {

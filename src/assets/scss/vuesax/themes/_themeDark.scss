@@ -39,7 +39,7 @@
 		color: $white;
 	}
 
-	h1,	h2,	h3,	h4,	h5,	h6 {
+	h1,	h2,	h3,	h4,	h5,	h6 { 
 		color: $white;
 	}
 	// Notification
@@ -123,14 +123,14 @@
 			}
 		}
 	}
-
-	.vx-navbar-wrapper {
+	
+	.vx-navbar-wrapper { 
 		background: linear-gradient(to bottom, rgba(44,48,60,0.9) 44%, rgba(44,48,60,0.43) 73%, rgba(44,48,60,0) 100%);
 
 		.vx-navbar {
 			.search-full-container {
 				background-color: $dark-card-color !important;
-
+				
 				.vx-auto-suggest {
 					input {
 						background: $dark-card-color;
@@ -386,11 +386,11 @@
 			background-color: $dark-card-color;
 		}
 	}
-
+	
 
 	// Badge
 	#badge-demo{
-		h1,	h2,	h3,	h4,	h5,	h6 {
+		h1,	h2,	h3,	h4,	h5,	h6 { 
 			color: $white;
 		}
 	}
@@ -421,7 +421,7 @@
 			border-color: $grey;
 		}
 		.vs-button--text, .vs-icon{
-			color: $grey;
+			color: $grey;	
 		}
 	}
 
@@ -486,7 +486,7 @@
 			}
 		}
 	}
-
+	
 	// Dropdown
 	 .vs-dropdown--menu, .vs-dropdown--menu--after{
 		background: $content-dark-bg;
@@ -498,8 +498,8 @@
 				color: $grey !important;
 			}
 		}
-	}
-
+	} 
+	
 	// Loading
 	.con-vs-loading{
 		background: $dark-card-color;
@@ -631,7 +631,7 @@
 		&.vs-tooltip-dark{
 			background: $content-dark-bg;
 		}
-	}
+	} 
 
 	// Upload
 	.con-upload{
@@ -884,7 +884,7 @@
 		}
 	}
 	.v-select{
-		.dropdown-toggle{
+		.dropdown-toggle{			
 			background: $content-dark-bg;
 			.clear{
 				color: $white;
@@ -908,7 +908,7 @@
 			background: $content-dark-bg;
 			li{
 				a{
-					color: $white;
+					color: $white;			
 				}
 			}
 		}
@@ -982,7 +982,7 @@
 			padding: 10px;
 		}
 	}
-
+	
 	// Collapse
 	.vs-collapse{
 		&.shadow{

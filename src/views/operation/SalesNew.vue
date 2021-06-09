@@ -1,19 +1,29 @@
 <template>
   <div class="sales-new">
-    <div class="selector-container common-card">
+    <div class="box-card bg-white pb-5" style="padding:15px;overflow: hidden">
       <!-- 类型选择 -->
-       <div class="flex-center">
-          <i-date-picker class="w-select" :value='date1Array' :dType="1" @selectDate="dateSelect"></i-date-picker>
-          <Select v-model="compareType"  class="w-select m-l-20" >
-            <Option v-for="(item,index) in typeOptions"
-                :value="item.value"
-                :key="index">{{ item.label }}</Option>
-          </Select>
-          <Button size="large" type="primary" class="m-l-20"  @click="handleClick" >查询</Button>
-        </div>   
+        <vs-row>
+            <vs-col  style="width:250px;" :vs-xs="12">
+                <i-date-picker :value='date1Array' :dType="1" @selectDate="dateSelect"></i-date-picker>
+            </vs-col>
+             <vs-col  style="width:150px;padding:0;margin-left:15px;" :vs-xs="12"  >
+                 <vs-select v-model="compareType" width="100%;" autocomplete>
+                    <vs-select-item
+                        v-for="(item,index) in typeOptions"
+                        :key="index"
+                        :value="item.value"
+                        :text="item.label"
+                    />
+                </vs-select>
+            </vs-col>
+            <vs-col style="width:230px;padding:0;margin-left:25px;" :vs-xs="12">
+                <vs-button color="primary" style="float:left;" @click="handleClick" class="btn">查询</vs-button>
+                <!-- <vs-button color=""  class="btn ml-4 comparison">对比</vs-button> -->
+            </vs-col>
+        </vs-row>
     </div>
     <!-- 销售 -->
-    <market ref="market" :chartTitle = 'chartTitle' :parameter = marketParameter> </market>
+    <market ref="market" :parameter=marketParameter> </market>
     <!-- 楼层和品牌 -->
     <floor-brand ref="floor_brand" :floorParameter=floorParameter :brandParameter=brandParameter></floor-brand>
     <!-- 异动分析 -->
@@ -65,8 +75,7 @@ export default {
       floorParameter: {},
       brandParameter: {},
       afterParameter: {},
-      topParameter: {},
-      chartTitle:'',
+      topParameter: {}
 
     }
   },
@@ -100,20 +109,6 @@ export default {
       this.marketParameter = marketParameter
       getNewbusiness(marketParameter).then(res => {
         if (res.data.code === 200) {
-           switch(this.compareType){
-            case 'SaleAmount':
-              this.chartTitle = '销售分析'
-              break
-            case 'SquaerMetre':
-               this.chartTitle = '坪效分析'
-              break
-            case 'UnitPrice':
-                this.chartTitle = '客单价分析'
-              break
-            case 'CloseRate':
-                this.chartTitle = '成交率分析'
-              break
-          }
           this.$refs.market.dataList(res.data.data)
         }
       })

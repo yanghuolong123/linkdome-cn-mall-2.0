@@ -5,24 +5,23 @@
       <div>
         <slot name="title"></slot>
       </div>
-      <slot name="dateSelector"></slot>
-      <!-- <div class="flex">
-        <slot name="dateSelector"></slot> -->
+      <div class="flex">
+        <slot name="dateSelector"></slot>
           <!-- 添加 -->
-         <!-- <Dropdown @on-click="handleAddcards" transfer>
+         <Dropdown @on-click="handleAddcards" transfer>
           <icons type="htmal5icon18" :size="24" :color="addList.length?'#2BD9CF':'#ccc'"></icons>
           <DropdownMenu slot="list"  v-show="addList.length">
             <DropdownItem v-for="(item,index) in addList" :key="index" :name="item.id">{{item.name}}</DropdownItem>
           </DropdownMenu>
-        </Dropdown> -->
+        </Dropdown>
         <!-- 删除 -->
-        <!-- <Dropdown @on-click="handleDelcards" transfer>
+        <Dropdown @on-click="handleDelcards" transfer>
           <icons type="shanchu-tianchong" :size="24" :color="delList.length?'#FEB33D':'#ccc'" class="mr-1"></icons>
           <DropdownMenu slot="list" v-show="delList.length">
             <DropdownItem v-for="(item,index) in delList" :key="index" :name="item.id">{{item.name}}</DropdownItem>
           </DropdownMenu>
         </Dropdown>
-      </div> -->
+      </div>
     </div>
     <div class="infocard" ref="infocard">
       <span @click="scrollRight" v-show="indicatorList.length > defaultCountsOfCards">
@@ -31,11 +30,7 @@
       <div
         class="scrollBody"
         ref="scrollBody"
-        :style="{
-          transform:`translateX(${bodyScroll}px)`,
-          gridTemplateColumns:`repeat(${cardsList.length},
-          minmax(calc((100% - 20 * ${defaultCountsOfCards - 1}px) / ${defaultCountsOfCards}),1fr))`,
-          }"
+        :style="{transform:`translateX(${bodyScroll}px)`,gridTemplateColumns:`repeat(${cardsList.length},minmax(calc((100% - 20 * ${defaultCountsOfCards - 1}px) / ${defaultCountsOfCards}),1fr))`}"
       >
         <div v-for="(item,index) in cardsList" :key="index" :class="{scaleCard:scaleCards}">
           <slot :item="item"></slot>
@@ -81,10 +76,6 @@ export default {
     scaleCards: {
       type: Boolean,
       default: false
-    },
-    moveWidth:{
-      type:Number,
-      default:0
     }
   },
   data () {
@@ -104,8 +95,7 @@ export default {
       return this.propertyId === null ? 'company' : this.propertyId
     },
     cardOffsetWidth () {
-      let bodyW = this.$refs.scrollBody.getBoundingClientRect().width
-      return this.$refs.scrollBody.firstChild.getBoundingClientRect().width +(bodyW*this.moveWidth)
+      return this.$refs.scrollBody.firstChild.getBoundingClientRect().width + 20
     },
     cardsList () {
       return this.isSaveLocale ? this.delList : this.indicatorList
@@ -124,8 +114,6 @@ export default {
     }
 
   },
-  mounted () {
-  },
   methods: {
     // 删除
     handleDelcards (type) {
@@ -137,6 +125,21 @@ export default {
       }
       this.listdata(newTypeList)
       this.scrollRight()
+      try {
+        let eventName = ''
+        if (this.textName == 'shop-center-histrry') {
+          eventName = '购物中心首页'
+        } else {
+          eventName = '集团页面'
+        }
+        if (eventName) {
+          let find = _.find(this.cardsList, ['id', type])
+          find = find && find.name ? find.name : ''
+          window.TDAPP.onEvent(eventName, '历史数据删除指标', { '指标': find })
+        }
+      } catch (error) {
+        console.log(eventName + '-历史数据删除指标-埋点error:' + error)
+      }
     },
     // 添加
     handleAddcards (type) {
@@ -146,6 +149,22 @@ export default {
       newTypeList.push(name)
       this.listdata(newTypeList)
       if (this.delList.length > this.defaultCountsOfCards) this.scrollLeft()
+      try {
+        let eventName = ''
+        if (this.textName == 'shop-center-histrry') {
+          eventName = '购物中心首页'
+        } else {
+          eventName = '集团页面'
+        }
+        if (eventName) {
+          let eventName = this.$store.state.home.headerAction === 0 ? '集团页面' : '购物中心首页'
+          let find = _.find(this.addList, ['id', type])
+          find = find && find.name ? find.name : ''
+          window.TDAPP.onEvent(eventName, '历史数据增加指标', { '指标': find })
+        }
+      } catch (error) {
+        console.log(eventName + '-历史数据增加指标-埋点error:' + error)
+      }
     },
     // 更改 处理
     listdata (data) {
@@ -169,15 +188,11 @@ export default {
           obj.company_history = data
           break
       }
-      this.typeList()
-      // postKpiList(obj).then(res => {
-      //   userKpiList().then(res => {
-      //     if (res.data.code == 200) {
-      //       let data = res.data.data
-      //       this.typeList(data)
-      //     }
-      //   })
-      // })
+      postKpiList(obj).then(res => {
+        userKpiList().then(res => {
+          this.typeList(res.data.data)
+        })
+      })
     },
     scrollLeft () {
       this.$nextTick(() => {
@@ -218,30 +233,26 @@ export default {
       }
     },
     // 请求数据
-    typeList () {
-      // if (data) {
-      this.delList = []
-      this.addList = []
-      // 根据不同的位置传不同的参数
-      switch (this.textName) {
-        case 'shop-center-current': // 购物中心当前位置
-          // if (data.property) this.listClassify(data.property[0].current)
-          this.listClassify('平均客流量,集客量峰值,集客量,客流峰值')
-          break
-        case 'shop-center-histrry':// 购物中心历史位置
-          // if (data.property) this.listClassify(data.property[0].history)
-          this.listClassify('平均客流量,客流峰值,总客流,集客量峰值,有效客流,成交率,坪效（元/平方米）,客单价（元）,销售额（元）')
-          break
-        case 'group-current': // 集团当前位置
-          // if (data.company) this.listClassify(data.company[0].current)
-          this.listClassify('客流峰值,集客量峰值,集客量,平均客流量')
-          break
-        case 'group-histrry':// 集团历史位置
-          // if (data.company) this.listClassify(data.company[0].history)
-          this.listClassify('平均客流量,客流峰值,总客流,集客量峰值,有效客流,成交率,坪效（元/平方米）,客单价（元）,销售额（元）')
-          break
+    typeList (data) {
+      if (data) {
+        this.delList = []
+        this.addList = []
+        // 根据不同的位置传不同的参数
+        switch (this.textName) {
+          case 'shop-center-current': // 购物中心当前位置
+            if (data.property) this.listClassify(data.property[0].current)
+            break
+          case 'shop-center-histrry':// 购物中心历史位置
+            if (data.property) this.listClassify(data.property[0].history)
+            break
+          case 'group-current': // 集团当前位置
+            if (data.company) this.listClassify(data.company[0].current)
+            break
+          case 'group-histrry':// 集团历史位置
+            if (data.company) this.listClassify(data.company[0].history)
+            break
+        }
       }
-      // }
     },
     // 处理数据
     listClassify (data) {
@@ -253,39 +264,3 @@ export default {
   }
 }
 </script>
- <style lang="less">
-   .groupStyle{
-     .scrollBody{
-     grid-gap: 2.4%!important;
-     }
-   }
-    @media screen and (max-width: 1550px){
-        .groupStyle{
-          .scrollBody{
-          grid-gap: 2.7%!important;
-          }
-        }
-    }
-     @media screen and (max-width: 1390px){
-        .groupStyle{
-          .scrollBody{
-          grid-gap: 2.9%!important;
-          }
-        }
-    }
-    @media screen and (max-width: 1720px){
-       .scrollBody{
-          grid-gap: 1.5%!important
-       }
-    }
-    @media screen and (max-width: 1430px){
-       .scrollBody{
-          grid-gap: 1.7%!important
-       }
-    }
-     @media screen and (max-width: 1270px){
-       .scrollBody{
-          grid-gap: 1.9%!important
-       }
-    }
- </style>

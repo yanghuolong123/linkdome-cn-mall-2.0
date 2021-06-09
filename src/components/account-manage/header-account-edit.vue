@@ -221,9 +221,9 @@ export default {
         confirm: false
       },
       marginTop: 0,
-      uploadImg: require('@/assets/images/fixation_img/rest/who.png'),
+      uploadImg: require('@/assets/images/fixation_img/rest/who.webp'),
       userForm: {
-        avatar: require('@/assets/images/fixation_img/rest/who.png'),
+        avatar: require('@/assets/images/fixation_img/rest/who.webp'),
         username: '',
         realname: '',
         mobile: '',
@@ -412,7 +412,7 @@ export default {
       updateUserData(user)
         .then(res => {
           if (res.data.code === 200) {
-            if (user.avatar === require('@/assets/images/fixation_img/rest/who.png')) user.avatar = ''
+            if (user.avatar === require('@/assets/images/fixation_img/rest/who.webp')) user.avatar = ''
             that.$store.commit('setAvator', user.avatar)
             user.checklist = user.checklist.split(',')
             user.checklist.forEach(function (e, index) {

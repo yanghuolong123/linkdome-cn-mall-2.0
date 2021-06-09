@@ -76,7 +76,7 @@ import {
   getStoreByDefaultEntity,
   saveFormateRelatedStore
 } from '@/api/formats.js'
-
+import { getBussinessDict } from '@/api/home'
 export default {
   components: {
     TableMultipleSelected,
@@ -219,6 +219,9 @@ export default {
       this.isAddAndEdit = false
       this.dataList()
       this.$store.commit('isGetDict', true)
+      getBussinessDict({ property_id: this.propertyId }).then(res => {
+        this.$store.commit('saveBussinessType', res.data.data)
+      })
       this.formatsName = ''
     },
     addFormats () {
@@ -275,6 +278,9 @@ export default {
               this.alertList('删除业态', '删除成功', '#00A0E9', false)
               this.dataList()
               this.$store.commit('isGetDict', true)
+              getBussinessDict({ property_id: this.propertyId }).then(res => {
+                this.$store.commit('saveBussinessType', res.data.data)
+              })
             }
           })
         } else {
@@ -289,6 +295,9 @@ export default {
                   this.alertList('删除业态', '删除成功', '#00A0E9', false)
                   this.dataList()
                   this.$store.commit('isGetDict', true)
+                  getBussinessDict({ property_id: this.propertyId }).then(res => {
+                    this.$store.commit('saveBussinessType', res.data.data)
+                  })
                 }
               }
             })
@@ -367,22 +376,29 @@ export default {
             position: absolute;
             top:26px;
             right:20px;
-            z-index:1;
+            z-index:99;
             span {
-              float: left;
-              display: flex;
+              display: inline-block;
               width: 24px;
               height: 24px;
               border-radius: 50%;
+              text-align: center;
               font-size: 16px;
               color: #fff;
-              align-items: center;
-              justify-content: center;
               cursor: pointer;
               background-color: #00A0E9;
+              position: relative;
+                i{
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%,-50%);
+                }
+
               &:nth-child(1) {
                   background-color: #2BD9CF;
               }
+
               &:nth-child(2) {
                   margin-left: 20px;
                   background-color: #FEB33D;
@@ -390,6 +406,7 @@ export default {
             }
           }
         }
+
         .add-edit-formats {
             position: fixed;
             left: 0;
@@ -453,14 +470,14 @@ export default {
                 }
 
                 .form-data {
-                    padding: 30px 40px;
+                    padding: 30px 20px;
 
                     .form-item {
                         display: flex;
                         align-content: center;
 
                         span {
-                            width: 90px;
+                            width: 70px;
                             text-align: right;
                             line-height: 32px;
                         }

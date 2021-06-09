@@ -41,11 +41,12 @@ import i18n from './i18n/i18n'
 
 // Vuesax Admin Filters
 import './filters/filters'
-import '@/assets/utils/prototype'
+
 // VeeValidate
 import VeeValidate from 'vee-validate'
-
-import 'view-design/dist/styles/iview.css';
+// import { Carousel, DatePicker, Tooltip, Icon, Badge, CarouselItem, Card, Row, Col, Button, Form, FormItem, Input, Radio, Checkbox, Select, Option, Upload, Cascader, Dropdown, TimePicker, DropdownItem, DropdownMenu } from 'iview'
+// import 'view-design/dist/styles/iview.css'
+import 'iview/dist/styles/iview.css'
 // 全局过滤器
 import * as custom from '@/filters/custom'
 import VueAMap from 'vue-amap'
@@ -53,30 +54,28 @@ import icons from '_c/icons'
 // PrismJS
 import 'prismjs'
 import 'prismjs/themes/prism.css'
-import '@/assets/css/sundry.css'
-import '@/assets/css/components-style.less'
-
-import ViewUI  from 'view-design'
+// iview
+// import ViewUI from 'view-design'
+// Vue.use(ViewUI)
+import iview from 'iview'
+import htmlToPdf from '@/router/htmlToPdf'
 
 import 'element-ui/lib/theme-chalk/index.css'
-import { Cascader,Select,DatePicker,Option } from 'element-ui'
-import heatmapjsVue from 'heatmapjs-vue'
-Vue.use(ViewUI)
-import './my-theme/index.less';
-Vue.use(Cascader)
-Vue.use(Option)
-Vue.use(Select)
-Vue.use(DatePicker)
-import Alert from '@/components/alert/index'
-Vue.prototype.$alert = Alert.install;
+import elementUi from 'element-ui'
+import vuescroll from 'vuescroll';
+Vue.use(vuescroll);
+Vue.use(iview)
+Vue.use(elementUi)
+
+
+
 Vue.component('icons', icons)
 Vue.use(Vuesax)
 Object.keys(custom).forEach(key => {
   Vue.filter(key, custom[key])
 })
-// 连接线插件
-import jsPlumb from 'jsplumb'
-Vue.prototype.$jsPlumb = jsPlumb.jsPlumb
+
+Vue.use(htmlToPdf)
 // 高德地图
 Vue.use(VueAMap)
 VueAMap.initAMapApiLoader({
@@ -95,7 +94,7 @@ VueAMap.initAMapApiLoader({
   v: '1.4.4'
 })
 // Feather font icon
-
+require('./assets/css/iconfont.css')
 // 思源宋体
 // require('./assets/fonts/Roboto/style.css')
 // require('./assets/fonts/soucehasfont/style.css')
@@ -106,12 +105,9 @@ const config = {
   fieldsBagName: 'fieldBags'
 }
 Vue.use(VeeValidate, config)
-Vue.use(heatmapjsVue)
-import './libs/rem'
-require('./assets/css/iconfont.css')
 // 控制是否显示遮罩层
 Vue.prototype.hasCover = process.env.NODE_ENV === 'development' ? '' : ''
-require('./assets/css/common.css')
+require('./assets/css/config.css')
 new Vue({
   router,
   store,

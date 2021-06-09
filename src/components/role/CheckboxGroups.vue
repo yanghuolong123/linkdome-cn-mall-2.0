@@ -89,10 +89,6 @@ export default {
       if (data.length == 0) {
         this.indeterminate = false
         this.checkAll = false
-        this.checkData.enable = 0
-        this.checkData.subpagesList.map(value=>{
-          value.enable = 0
-        })
       } else {
         if (this.checkData.subpagesList) {
           length = this.checkData.subpagesList.length

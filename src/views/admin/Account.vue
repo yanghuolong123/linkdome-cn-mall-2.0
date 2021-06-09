@@ -59,7 +59,7 @@
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import alert from '@/components/alert.vue'
 import accountEdit from '@/components/account-manage/account-edit.vue'
-import photoImg from '@/assets/images/fixation_img/rest/who.png'
+import photoImg from '@/assets/images/fixation_img/rest/who.webp'
 import { getUserData, deleteUserData, getbusinessDate } from '@/api/manager.js'
 import { getRolesList } from '@/api/custom.js'
 import _ from 'lodash'
@@ -362,14 +362,13 @@ export default {
                     float:right;
                     margin-right: 10px;
                     span{
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
+                        display: inline-block;
                         float: left;
                         width: 24px;
                         height: 24px;
                         border-radius: 50%;
                         text-align: center;
+                        line-height: 19px;
                         font-size: 16px;
                         color: #fff;
                         margin-left: 20px;
@@ -381,6 +380,9 @@ export default {
                          &:nth-child(2){
                           margin-top: 9px;
                           background-color: #FEB33D;
+                        }
+                        i{
+                          margin-top:3px;
                         }
                     }
                 }

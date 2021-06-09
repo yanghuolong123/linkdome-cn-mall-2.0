@@ -1,43 +1,16 @@
 
 <template>
     <div>
-      <div v-if="isSuggestText" class="report-suggest" style=" right: 50px;
-      top: 100px;
-      width: 316px;
-          padding: 9px;
-      z-index: 99;
-      box-shadow: 0px 2px 8px 8px rgba(215,220,223,0.5);">
-        <h2 style=" height: 56px;
-        line-height: 56px;
-          font-size: 20px;
-        padding-left: 34px;"> <img class="icon" style="   width: 14px;
-          margin-right: 8px;" :src="suggestIcon" alt=""> <span>报告建议</span> </h2>
-        <textarea style="  height:332px;
-        font-size: 16px;
-        padding: 30px;"  v-model="suggestContent"></textarea>
-        <div class="suggest-button" style="   height: 40px;
-        margin-top: 10px;">
-            <button style=" width: 80px;
-          height: 29px;
-          line-height: 29px;
-           font-size: 16px;
-          border-radius: 4px;
-          box-shadow: 0px 4px 5px 5px rgba(51,131,202,0.55);" v-on:click="suggestSubmit">确定</button>
-            <button style=" width: 80px;
-          height: 29px;
-          line-height: 29px;
-           font-size: 16px;
-          border-radius: 4px;
-          box-shadow: 0px 4px 5px 5px rgba(51,131,202,0.55);" v-on:click="suggestReset">清空</button>
+      <div v-if="isSuggestText" class="report-suggest">
+        <h2> <img class="icon" :src="suggestIcon" alt=""> <span>报告建议</span> </h2>
+        <textarea  v-model="suggestContent"></textarea>
+        <div class="suggest-button">
+            <button v-on:click="suggestSubmit">确定</button>
+            <button v-on:click="suggestReset">清空</button>
         </div>
-        <img :src="suggestStore" class="store" style="  width: 26px;
-          margin: 0px auto 13px auto;" v-on:click='suggestHide' alt="">
+        <img :src="suggestStore" class="store" v-on:click='suggestHide' alt="">
       </div>
-      <div class="suggest-img" style="  right: 50px;
-  top: 260px;
-  width: 80px;
-   box-shadow: 0px 5px 13px 10px rgba(215,220,223,0.5);
-     padding: 19px;" v-else>
+      <div class="suggest-img" v-else>
         <img  :src="suggestUnfold"  v-on:click='suggestShow'  alt="">
       </div>
 
@@ -65,7 +38,7 @@ export default {
       suggestUnfold: require('@/assets/images/fixation_img/rest/suggest-unfold.png'),
       suggestStore: require('@/assets/images/fixation_img/rest/suggest-store.png'),
       suggestContent: '',
-      isSuggestText: false
+      isSuggestText: true
     }
   },
   watch: {
@@ -107,12 +80,14 @@ export default {
 <style scoped lang="less">
 .suggest-img{
   position: fixed;
-
+  right: 50px;
+  top: 260px;
+  width: 80px;
   height: auto;
-
+  padding: 19px;
   background-color: #fff;
   z-index: 99;
- 
+  box-shadow: 0px 5px 13px 10px rgba(215,220,223,0.5);
   img{
     display: block;
     width: 100%;
@@ -126,36 +101,55 @@ export default {
 }
   .report-suggest{
       position: fixed;
+      right: 50px;
+      top: 100px;
+      width: 316px;
       height: auto;
       background-color: #fff;
+      padding: 9px;
+      z-index: 99;
+      box-shadow: 0px 2px 8px 8px rgba(215,220,223,0.5);
+
       h2{
         width: 100%;
+        height: 56px;
+        line-height: 56px;
         background-color: #1361A8;
         color: #fff;
-      
+        font-size: 20px;
+        padding-left: 34px;
         .icon{
           display: inline-block;
+          width: 14px;
           height: auto;
-        
+          margin-right: 8px;
         }
       }
       textarea{
         display: block;
         resize: none;
         width: 100%;
+        height:332px;
         background-color: #1361A8;
         opacity: 0.61;
         color: #fff;
-        
+        font-size: 16px;
+        padding: 30px;
       }
       .suggest-button{
         display: block;
         width: 100%;
+        height: 40px;
+        margin-top: 10px;
         button{
-         
+          width: 80px;
+          height: 29px;
+          line-height: 29px;
           text-align: center;
           color: #186CB8;
-         
+          font-size: 16px;
+          border-radius: 4px;
+          box-shadow: 0px 4px 5px 5px rgba(51,131,202,0.55);
           border: none;
           background-color: #fff;
           float: left;
@@ -178,9 +172,9 @@ export default {
       }
       .store{
         display: block;
-      
+        width: 26px;
         height: auto;
-      
+        margin: 0px auto 13px auto;
         cursor: pointer;
         opacity: 0.9;
         &:hover{

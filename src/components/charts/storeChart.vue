@@ -24,7 +24,7 @@
                 <div class="circle"
                      :style="{backgroundColor:colors[index]}"></div>
                 <span class="names">&nbsp;{{labels[index]}}&nbsp;</span>
-                <span class="number">{{series[index]?Number(series[index]).toLocaleString():''}}</span>
+                <span class="number">{{Number(series[index]).toLocaleString()}}</span>
               </div>
               <div class="noData"
                    v-if="isNoData"></div>
@@ -35,9 +35,7 @@
         <tab-item :icon="icon2"
                   :titles="title2">
           <i-table :columns="columns"
-                   :data="tableList"
-                   maxHeight='309px'
-          ></i-table>
+                   :data="tableList"></i-table>
         </tab-item>
       </i-tabs>
     </div>
@@ -76,7 +74,7 @@ export default {
     },
     allHeight: {
       type: String,
-      default: '365px'
+      default: '350px'
     },
     icon1: {
       type: String,
@@ -151,7 +149,6 @@ export default {
   .chartsTable {
     background-color: #fff;
     border-radius: 6px;
-    margin-bottom:20px;
   }
   .storedatass {
     position: relative;

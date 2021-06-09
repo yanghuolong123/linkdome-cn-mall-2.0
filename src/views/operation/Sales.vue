@@ -1,7 +1,17 @@
 <template>
   <div class="sales">
-    <flow-selector @paramsPrepare="paramsPrepare"></flow-selector>
-  
+    <div class="box-card bg-white pb-5" style="padding-left:15px">
+      <!-- 类型选择 -->
+      <sales-selector
+      :footFall='false'
+      :isShop='true'
+      :isReset='true'
+      routName = 'sales'
+      typeText='sales'
+      @on-change="handleSelect"
+      ></sales-selector>
+    </div>
+    <!-- <div class="my-6 px-3 overflow-hidden py-2 -mx-3"> -->
     <div class="px-3 -mx-3 overflow-hidden" style="padding-bottom:20px">
       <!-- 销售列表 -->
       <indicator-cards
@@ -16,6 +26,7 @@
       </indicator-cards>
     </div>
     <!-- 趋势分析 -->
+
     <Trend
       :time1="outrange"
       :time2="outrange2"
@@ -30,23 +41,23 @@
 </template>
 
 <script>
-  import singleCard from '@/views/home/components/singleCard.vue'
+import singleCard from '@/views/home/components/singleCard.vue'
+import salesSelector from '@/components/Passenger-analysis/flowSelector.vue'
 import indicatorCards from '@/views/home/components/IndicatorCards.vue'
 import mixins from './salseMixin.js'
 import Trend from '@/views/home/Trend.vue'
 import Ranking from './components/RankingGroup.vue'
-import { gotInnerRange} from '@/libs/util'
+import { gotInnerRange } from '@/libs/util'
 import salesDict from '@/views/home/components/salesIndicatorDict.js'
-  import FlowSelector from '_c/flow-selector/sale-flow-selector'
-  export default {
+export default {
   name: 'salse',
   mixins: [mixins],
   components: {
+    salesSelector,
     indicatorCards,
-    FlowSelector,
     Ranking,
     Trend,
-    singleCard,
+    singleCard
   },
   data () {
     return {
@@ -54,13 +65,12 @@ import salesDict from '@/views/home/components/salesIndicatorDict.js'
       indicatorData: [],
       outrange: '',
       outrange2: '',
-      innerRange: '',
+      innerRange: ''
     }
   },
   computed: {
- 
     propertyId () {
-      return  this.$store.state.home.headerAction
+      return this.entitys[0] ? this.entitys[0].property_id : null
     },
     indicators () {
       let enterIndicator = {
@@ -83,14 +93,14 @@ import salesDict from '@/views/home/components/salesIndicatorDict.js'
     }
   },
   methods: {
-    async paramsPrepare (val) {
+    async handleSelect (val) {
       if (this.$store.state.home.headerAction && val.entitys.length == 0) {
-        this.$alert({ content:'请选择实体' })
+        alert('请选择实体')
         return false
       }
       this.entitys = val.entitys
       let innerRange1 = gotInnerRange(val.date1Array)
-      if (['time','onYear','onChain'].includes(val.compareType)) {
+      if (['time', 'onYear', 'onMonth'].includes(val.compareType)) {
         this.outrange2 = val.date2Array.toString()
         this.outrange = val.date1Array.toString()
         let innerRange2 = gotInnerRange(val.date2Array)
@@ -108,11 +118,14 @@ import salesDict from '@/views/home/components/salesIndicatorDict.js'
         isCompare: 0,
         propertyId: this.propertyId
       }
+      // if (this.$store.state.home.loadingState == false) {
+      //   this.$store.commit('loadingState', true)
+      //   this.$vs.loading()
+      // }
       const res = await this.getSalesData(salesParams)
       this.indicatorData = res
     }
-  },
-
+  }
 }
 </script>
 <style lang="less" scoped>

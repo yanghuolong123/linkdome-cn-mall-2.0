@@ -1,8 +1,10 @@
 
 <template>
-  <div>
-      <div class="selector-container bg-white box-card">
-          <div class="flex-center">
+  <div style="position:relative">
+     <template>
+      <Card class="selectorbox">
+        <div>
+          <div class="cross-picker">
               <DatePicker
                 type="daterange"
                 @on-change="dateChange"
@@ -10,10 +12,10 @@
                 placement="bottom-end"
                 :options="disabledDate"
                 placeholder="选择日期"
-                class="w-select"
+                style='width:230px;float:left;'
               ></DatePicker>
               <vs-select
-                class="w-select m-l-20"
+                class="selectExample"
                 autocomplete
                 @change="selectTypeChange"
                 v-model="selectType"
@@ -32,48 +34,56 @@
               placeholder="选择日期"
               :options="disabledDate"
               :disabled="[2,3].includes(selectType)"
-              class="w-select m-l-20"
+              style='width:230px;float:left;margin-left:30px;'
               v-if="selectType !== 0"
             ></DatePicker>
 
           </div>
-          <div class="flex-center">
+          <div style="display: flex;align-items: center">
 
+            <div class="cascade">
               <el-cascader v-model="startValue"
                            placeholder="选择起点"
                            popper-class="cascade-dom"
-                           class="w-select"
+                           class="cascade-dom"
                            collapse-tags
-                           @change="selectStart()"
+                           @change="cascaderChange('startValue')"
                            :props="{ multiple: true, checkStrictly: true,expandTrigger:'hover'}"
                            :options="startList">
               </el-cascader>
+            </div>
+            <div class="cascade">
               <el-cascader v-model="endValue"
                            popper-class="cascade-dom"
                            placeholder="选择终点"
-                           @change="selectEnd('endValue')"
-                           class="w-select m-l-20"
+                           @change="cascaderChange('endValue')"
+                           class="cascade-dom"
                            collapse-tags
                            :props="{ multiple: true, checkStrictly: true,expandTrigger:'hover'}"
                            :options="endList">
               </el-cascader>
+            </div>
 
-          <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">查询</Button>
-          <Button size="large" class="m-l-20" @click="resetData">重置</Button>
+          <div class="cross-submit" v-on:click="paramsPrepare">查询</div>
+          <div class="cross-reset" v-on:click="resetData">重置</div>
           </div>
         </div>
+      </Card>
+    </template>
     <!-- 标题数据 -->
     <div class="cross_analysis_time">
       <div :key="index" v-for="(item,index) in timeList">
         <img :src="item.icon" alt="">
         <div class="tootipsTitle">
-            <span class="cross_time_name">{{item.name}}</span>
-              <Tooltip class="m-l-20"  :content="item.tootipText"  placement="bottom" theme="light" transfer max-width="600">
+            <p class="cross_time_name">{{item.name}}</p>
+            <p class="titles">
+              <Tooltip  :content="item.tootipText"  placement="bottom" theme="light" transfer max-width="600">
                 <icons type="wenhao"/>
               </Tooltip>
+            </p>
         </div>
         <p class="cross_time_data"><span>{{showTimeOne}}</span> {{item.data}}</p>
-        <p class="scale-data" v-if="selectTyepConfirm !==0" v-bind:class="{ scaleAction: item.isActive }">
+        <p class="scale-data" v-if="selectType !==0" v-bind:class="{ scaleAction: item.isActive }">
           <span>{{showTimeTwo}}</span>
           <Icon type="md-arrow-dropup" v-if="item.isActive"/>
           <Icon type="md-arrow-dropdown"  v-else />
@@ -81,7 +91,7 @@
         </p>
       </div>
     </div>
-    <div v-if="selectTyepConfirm == 0" class="cross_analysis">
+    <div v-if="selectType == 0" class="cross_analysis">
       <p v-if="noData" class="noData">暂无数据</p>
       <div class="cross_analysis_title"><p>交叉客流路径</p></div>
         <!-- 最大客流 -->
@@ -103,7 +113,7 @@
       </div>
       <vs-progress :percent="percentData" :height="10" color="#A2DAF4"></vs-progress>
       <!-- 交叉客流图形 -->
-      <vChart v-if="isGraph" style="width:115%!important;height:600px;"   ref="graphChart" :options="polar"/>
+      <vChart v-if="isGraph" style="width:115%!important;height:600px"  ref="graphChart" :options="polar"/>
     </div>
     <div class="cross_analysis">
       <div class="cross_analysis_title">
@@ -132,7 +142,7 @@
           ></icons>
         </span>
       </div>
-      <div style="height:415px;overflow: hidden;position:relative">
+      <div style="height:415px;overflow: hidden;">
         <div class="line-show" v-bind:class="{ crossLineActive: iconIndex ==0 }">
         <p v-if="lineNoData" class="noData">暂无数据</p>
         <vue-apex-charts
@@ -158,7 +168,7 @@
           :series="siteTrafficAvg.series">
         </vue-apex-charts>
       </div>
-      <div class="cross-table-line" style="height: 400px;" v-bind:class="{ crossTableActive: iconIndex ==1 }">
+      <div class="cross-table-line" v-bind:class="{ crossTableActive: iconIndex ==1 }">
         <table-default :tableName='tableName'  :tableList='tableList'></table-default>
       </div>
       </div>
@@ -172,18 +182,20 @@
   </div>
 </template>
 <script>
+import flowSelector from '_c/Passenger-analysis/flowSelector'
 import VueApexCharts from 'vue-apexcharts'
-import { getBussinessTree } from '@/api/passenger.js'
+import { getBussinessTree, getBussinessCommon } from '@/api/passenger.js'
 import { crossData } from '@/api/analysis'
 import TableDefault from '../ui-elements/table/TableDefault.vue'
 import alert from '@/components/alert.vue'
 import moment from 'moment'
 import NP from 'number-precision'
 import _ from 'lodash'
-import { disabledDate, formatEntityData,initTimes } from '@/libs/util.js'
+import { disabledDate, formatEntityData, deepTraversal } from '@/libs/util.js'
 export default {
   name: 'Cross',
   components: {
+    flowSelector,
     VueApexCharts,
     TableDefault,
     alert,
@@ -193,7 +205,6 @@ export default {
     let that = this
     return {
       selectType: 0,
-	  selectTyepConfirm:0,
       noData: true,
       lineNoData: true,
       showTimeOne: '',
@@ -259,7 +270,7 @@ export default {
       ],
       timeList: [
         {
-          icon: require('@/assets/images/fixation_img/rest/total.png'),
+          icon: require('@/assets/images/fixation_img/rest/total.webp'),
           name: '起点累计客流',
           data: '',
           contrast: '',
@@ -267,7 +278,7 @@ export default {
           tootipText: '为起点所有实体的客流之和'
         },
         {
-          icon: require('@/assets/images/fixation_img/rest/cross-enter.png'),
+          icon: require('@/assets/images/fixation_img/rest/cross-enter.webp'),
           name: '客流转化深度',
           data: '',
           contrast: '',
@@ -275,21 +286,21 @@ export default {
           tootipText: '进入起点的人去目的实体的平均游逛深度'
         },
         {
-          icon: require('@/assets/images/fixation_img/rest/cross-enter1.png'),
+          icon: require('@/assets/images/fixation_img/rest/cross-enter1.webp'),
           name: '转化客流量',
           data: '',
           contrast: '',
           isActive: true,
           tootipText: '所有从起点实体到终点实体的客流总和'
+        },
+        {
+          icon: require('@/assets/images/fixation_img/rest/cross-enter3.webp'),
+          name: '平均客流转化时长',
+          data: '',
+          contrast: '',
+          isActive: true,
+          tootipText: '顾客从起点到终点的滞留时长'
         }
-        // {
-        //   icon: require('@/assets/images/fixation_img/rest/cross-enter3.webp'),
-        //   name: '平均客流转化时长',
-        //   data: '',
-        //   contrast: '',
-        //   isActive: true,
-        //   tootipText: '顾客从起点到终点的滞留时长'
-        // }
       ],
       polar: {
         title: {},
@@ -344,7 +355,6 @@ export default {
         animationDuration: 2000
       },
       siteTraffic: {
-        
         series: [
           {
             name: '客流转化深度',
@@ -352,87 +362,50 @@ export default {
           }
         ],
         chartOptions: {
-          colors: ['#897FF0', '#00A0E9', '#EA5455', '#FF9F43', '#1E1E1E'],
-        plotOptions: {
-          bar: {
-            horizontal: true,
-            endingShape: 'rounded',
-            columnWidth: '20%'
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          show: true,
-          width: 2
-        },
-        grid: {
-          row: {
-            colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-            opacity: 0.5
-          }
-        },
-        markers: {
-          size: [4]
-        },
-        
-        xaxis: {
-          categories: [],
-          labels: {
-                    offsetX: 0 // 720
+          chart: {
+            toolbar: { show: false },
+            type: 'line'
           },
-          axisBorder: {
-            show: false
-          }
-        },
-        yaxis: {
-          title: {
-            text: ''
+          stroke: {
+            curve: 'straight',
+            width: 2
           },
-          min: 0,
-          labels: {
-            show: true,
-            formatter: (value) => {
-            
-              // if(val===0) return 0
-              if (typeof (value) === 'number') {
-              return Number(Math.ceil(value)).toLocaleString()
-              } else {
-                return value
-              }
+          // legend: {
+          //   show: false
+          // },
+          markers: {
+            size: 4,
+            hover: {
+              size: 5
             }
-          }
-        },
-        // noData: {
-        //   text: '暂无数据',
-        //   align: 'center',
-        //   verticalAlign: 'middle',
-        //   offsetX: 0,
-        //   offsetY: 0,
-        //   style: {
-        //     color: undefined,
-        //     fontSize: '14px',
-        //     fontFamily: undefined
-        //   }
-        // },
-        fill: {
-          opacity: 1
-        },
-        chart: {
-          toolbar: {
-            show: false
-          }
-        },
-        tooltip: {
-          y: {
+          },
+          xaxis: {
+            labels: {
+              style: {
+                cssClass: 'text-grey fill-current'
+              },
+              offsetX: 0 // 720
+            },
+            axisTicks: {
+              show: false
+            },
+            categories: [],
+            axisBorder: {
+              show: false
+            }
+          },
+          yaxis: {
+            title: {
+              text: '客流转化深度(%)'
+            }
+          },
+          tooltip: {
+            y: {
               formatter: function (val) {
                 return val + '%'
               }
             }
-        }
-        
-          
+          }
         }
       },
       siteTrafficAvg: {
@@ -483,14 +456,14 @@ export default {
             labels: {
               show: true,
               formatter: (value) => {
-                return initTimes(value)
+                return that.dateTiem(value)
               }
             }
           },
           tooltip: {
             y: {
               formatter: function (val) {
-                return initTimes(val)
+                return that.dateTiem(val)
               }
             }
           }
@@ -552,8 +525,7 @@ export default {
         this.crossDateTwo = [moment(date[0]).add(-1, 'y').format('YYYY-MM-DD'), moment(date[1]).add(-1, 'y').format('YYYY-MM-DD')]
       }
       if (this.selectType === 3) { // 环比
-        const size = moment(date[0]).diff(moment(date[1]), 'days') - 1
-        this.crossDateTwo = [moment(date[0]).add(size, 'd').format('YYYY-MM-DD'), moment(date[1]).add(size, 'd').format('YYYY-MM-DD')]
+        this.crossDateTwo = [moment(date[0]).add(-1, 'M').format('YYYY-MM-DD'), moment(date[1]).add(-1, 'M').format('YYYY-MM-DD')]
       }
     },
     // 起点终点相互禁用对方选项
@@ -565,17 +537,15 @@ export default {
         else node.disabled = that.toBzid.includes(node.id)
       }
       if (value === 'startValue') {
-        this.endList
-        this.fromBzid.forEach
-        // deepTraversal(this.endList, 'children', conversionEndlistNodeStatus)
+        deepTraversal(this.endList, 'children', conversionEndlistNodeStatus)
       } else {
-        // deepTraversal(this.startList, 'children', conversionEndlistNodeStatus)
+        deepTraversal(this.startList, 'children', conversionEndlistNodeStatus)
       }
     },
     onResize () {
       if (this.isGraph) this.$refs.graphChart.resize()
-      if( this.$refs.lineChart) this.$refs.lineChart.resize()
-      if(this.$refs.lineChartAvg) this.$refs.lineChartAvg.resize()
+      this.$refs.lineChart.resize()
+      this.$refs.lineChartAvg.resize()
     },
     paramsPrepare () { // 点击查询
       var time1, time2
@@ -612,6 +582,15 @@ export default {
 
       this.crossDataList(time1, time2, this.fromBzid.join(','), this.toBzid.join(','), range)
 
+      try {
+        let type = this.selectType === 0 ? '无对比' : '时间对比'
+        let date = time2 ? [time1, time2] : time1
+        let startEntity = this.getCascadeData(this.startValue, this.startList)
+        let endEntity = this.getCascadeData(this.endValue, this.endList)
+        window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', '数据查询', { '时间段': date, '对比方式': type, '起点实体': startEntity.join(','), '终点实体': endEntity.join(',') })
+      } catch (error) {
+        console.log(this.$route.meta.pageTitle + '页面-' + '数据查询' + '埋点error:' + error)
+      }
     },
     getCascadeData (cascadeValue, cascadeList) {
       let arr = []
@@ -632,7 +611,6 @@ export default {
       var that = this
       crossData({ time1, time2, from_bzid, to_bzid, range })
         .then(res => {
-          this.selectTyepConfirm = this.selectType
           var data = res.data.data
           that.crossTitleData(data)
           // 画交叉客流
@@ -658,7 +636,13 @@ export default {
       this.endList = _.cloneDeep(this.startList)
     },
     allZoneList () { // 所有 商铺 楼层 出入口 数据
+      // if (this.$store.state.home.loadingState == false) {
+      //   this.$store.commit('loadingState', true)
+      //   this.$vs.loading()
+      // }
       getBussinessTree({ entity: 52 }).then(res => {
+        // this.$vs.loading.close()
+        // this.$store.commit('loadingState', false)
         const cascadeAuthData = res.data.data.filter(o => { return o.property_id === this.$store.state.home.headerAction })// 找到当前购物中心的treeData
         this.formatCascadeAuthData(cascadeAuthData)
       }).catch(err => {
@@ -686,10 +670,10 @@ export default {
       cpf >= 0 ? that.timeList[2].isActive = true : that.timeList[2].isActive = false
 
       // 平均时长转换率
-      // that.timeList[3].data = that.dateTiem(data.avgTranTime)
-      // var att = data.compareRateATT ? data.compareRateATT : 0
-      // that.timeList[3].contrast = NP.times(Number(att), 100)
-      // att >= 0 ? that.timeList[3].isActive = true : that.timeList[3].isActive = false
+      that.timeList[3].data = that.dateTiem(data.avgTranTime)
+      var att = data.compareRateATT ? data.compareRateATT : 0
+      that.timeList[3].contrast = NP.times(Number(att), 100)
+      att >= 0 ? that.timeList[3].isActive = true : that.timeList[3].isActive = false
     },
     crossGraphData (data) { // 交叉客流
       var that = this
@@ -770,16 +754,17 @@ export default {
     // 选择 线 类型
     selectLineType (value) {
       var that = this
+      // this.isLine = false
       this.iconIndex = 0
       var dataList = this.allData
       if (value === 0) {
         that.tableList = []
-        that.tableName = ['时间', '客流转化深度 ( % )']
+        that.tableName = ['时间', '客流转化深度']
         dataList.everyDateConvrRate.map(function (m) {
           m.data.map(function (d) {
             var table = {}
             table.time = m.name + ' ( ' + d.date + ' )'
-            table.avg = NP.times(Number(d.convetRate), 100)
+            table.avg = NP.times(Number(d.convetRate), 100) + '%'
             that.tableList.push(table)
           })
         })
@@ -790,7 +775,7 @@ export default {
           m.data.map(function (d) {
             var table = {}
             table.time = m.name + ' ( ' + d.date + ' )'
-            table.avg = that.initTimes(d.avgConverTime)
+            table.avg = that.dateTiem(d.avgConverTime)
             that.tableList.push(table)
           })
         })
@@ -802,7 +787,7 @@ export default {
       that.siteTraffic.series = []
       that.siteTraffic.chartOptions.xaxis.categories = []
       that.tableList = []
-      that.tableName = ['时间', '客流转化深度 ( % )']
+      that.tableName = ['时间', '客流转化深度']
       data.everyDateConvrRate.map(function (m, kIndexs) {
         var obj = {}
         obj.name = m.name
@@ -827,29 +812,12 @@ export default {
               table.time = m.name + '(' + d.date + ')'
             }
           }
-          table.avg = NP.times(Number(d.convetRate), 100) 
+          table.avg = NP.times(Number(d.convetRate), 100) + '%'
           that.tableList.push(table)
         })
         that.siteTraffic.series.push(obj)
         that.lineNoData = false
       })
-      if(that.siteTraffic.series[1]){
-        let maxLength 
-        if(that.siteTraffic.series[0].data.length> that.siteTraffic.series[1].data.length){
-          maxLength = that.siteTraffic.series[0].data
-        }else{
-          maxLength = that.siteTraffic.series[1].data
-        }
-        maxLength.forEach((list,index)=>{
-          if(!that.siteTraffic.series[0].data[index]&&that.siteTraffic.series[0].data[index]!==0){
-            that.siteTraffic.series[0].data.push(0)
-          }
-          if(!that.siteTraffic.series[1].data[index]&&that.siteTraffic.series[1].data[index]!==0){
-            that.siteTraffic.series[1].data.push(0)
-          }
-        })
-      }
-    
       var type = that.selectType
       var data1 = data.everyDateConvrRate[0].data
       var data2
@@ -905,7 +873,6 @@ export default {
         })
         that.siteTrafficAvg.series.push(obj)
       })
-      
       that.lineNoData = false
       var type = that.selectType
       var data1 = data.everyDateConvrRate[0].data
@@ -949,19 +916,14 @@ export default {
       }
     },
     // 选择起点
-    selectStart () {
+    selectStart (value) {
       var that = this
       that.endList.map(function (d) {
-         d.children.map(l=>{
-             l.disabled = false
-          })
+        d.action = false
       })
-      this.startValue.map(function (v) {
+      value.map(function (v) {
         that.endList.map(function (d) {
-          d.children.map(l=>{
-            if(v[1]===l.id) l.disabled = true
-          })
-          // if (v[1] === d.value) d.action = true
+          if (v === d.value) d.action = true
         })
       })
     },
@@ -969,15 +931,11 @@ export default {
     selectEnd (value) {
       var that = this
       that.startList.map(function (d) {
-          d.children.map(l=>{
-             l.disabled = false
-          })
+        d.action = false
       })
-      this.endValue.map(function (v) {
+      value.map(function (v) {
         that.startList.map(function (d) {
-          d.children.map(l=>{
-            if(v[1]===l.id) l.disabled = true
-          })
+          if (v === d.value) d.action = true
         })
       })
     },
@@ -990,6 +948,34 @@ export default {
       this.alertText.title = '交叉客流'
       this.alertText.text = text
       this.alertText.confirm = false
+    },
+    // 秒转换为时分秒
+    dateTiem (value) {
+      var secondTime = parseInt(value), minuteTime, hourTime
+      if (secondTime >= 60) {
+        minuteTime = parseInt(secondTime / 60)
+        secondTime = parseInt(secondTime % 60)
+        if (minuteTime >= 60) {
+          hourTime = parseInt(minuteTime / 60)
+          minuteTime = parseInt(minuteTime % 60)
+        }
+      }
+      if (secondTime > 0) {
+        secondTime = secondTime < 10 ? '0' + parseInt(secondTime) : parseInt(secondTime)
+      } else {
+        secondTime = '00'
+      }
+      if (minuteTime > 0) {
+        minuteTime = minuteTime < 10 ? '0' + parseInt(minuteTime) : parseInt(minuteTime)
+      } else {
+        minuteTime = '00'
+      }
+      if (hourTime > 0) {
+        hourTime = hourTime < 10 ? '0' + parseInt(hourTime) : parseInt(hourTime)
+      } else {
+        hourTime = '00'
+      }
+      return hourTime + ':' + minuteTime + ':' + secondTime
     },
     //  更新 线的  x 轴 位置
     avgLineXaxisType (size, type) {
@@ -1009,7 +995,7 @@ export default {
       that.$refs.lineChart.updateOptions({
         xaxis: { offsetX: that.siteTraffic.chartOptions.xaxis.labels.offsetX }
       })
-       that.siteTraffic.chartOptions.xaxis.axisBorder.show = type
+      that.siteTraffic.chartOptions.xaxis.axisBorder.show = type
       that.$refs.lineChart.updateOptions({
         xaxis: { show: that.siteTraffic.chartOptions.xaxis.axisBorder.show }
       })
@@ -1045,37 +1031,49 @@ export default {
       // 重置已禁用的节点
       this.cascaderChange('startValue')
       this.cascaderChange('endValue')
+
+      try {
+        window.TDAPP.onEvent(this.$route.meta.pageTitle + '页面', '重置', {})
+      } catch (error) {
+        console.log(this.$route.meta.pageTitle + '页面-' + '重置-埋点error:' + error)
+      }
     }
   }
 }
 </script>
 <style lang="scss" scoped>
+.selectorbox{
+  padding:2px 14px;
+  box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
+  border-radius: 6px;
+}
 .crossLineChart,.crossTableActive{
-  transform: translateX(0%)!important;
+  transform: translateY(0%)!important;
 }
 .chartLine,.crossLineChartAvg,.crossTableActive{
-  transform: translateX(100%);
+  transform: translateY(100%);
 }
 .crossLineChartAvg{
-  transform: translateX(-100%)!important;
+  transform: translateY(-100%)!important;
 }
 .cross-table-line{
   margin-top:40px;
+  height: 400px;
   overflow: auto;
-  transform: translateX(100%);
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
+  transform: translateY(100%);
+}
+.crossTableActive{
+  transform: translateY(-108%)!important;
 }
 .crossLineActive{
-  transform: translateX(0%)!important;
+  transform: translateY(0%)!important;
 }
+
 .line-show{
   margin-top:20px;
-  height:100%;
+  height:399px;
   overflow: hidden;
-  transform: translateX(100%);
+  transform: translateY(100%);
 
 }
 
@@ -1089,11 +1087,20 @@ export default {
       width: 100%!important;
       box-shadow: none;
       padding: 0;
-      align-items: center;
-      margin-top:14px;
+      .titles{
+        position: relative;
+        margin-left: 4px;
+        .ivu-tooltip{
+          height: 20px;
+          padding: 0px;
+          position: absolute;
+          top: -2px;
+        }
+      }
+
     }
-    >div{
-      width:32.3%;
+    div{
+      width:23.9%;
       float: left;
       background:rgba(255,255,255,1);
       box-shadow:0px 0px 9px 0px rgba(166,168,169,0.4);
@@ -1108,11 +1115,14 @@ export default {
       }
       .cross_time_name{
         font-size:19px;
+        font-family:SourceHanSansCN-Regular;
         font-weight:400;
         color:rgba(62,60,60,1);
+        margin-top: 5px;
       }
       .cross_time_data{
         font-size:24px;
+        font-family:Roboto-Bold;
         font-weight:bold;
         color:rgba(37,36,36,1);
         margin-top: 5px;
@@ -1158,7 +1168,7 @@ export default {
     position: absolute;
     left: 50%;
     top: 50%;
-    z-index: 1;
+    z-index: 10;
     font-size: 24px;
   }
   .cross_analysis_title{
@@ -1235,10 +1245,118 @@ export default {
   border-radius:6px;
   margin-top: 20px;
 }
+.cross-select{
+  display: inline-block;
+  &:nth-child(2){
+    margin-left: 30px;
+  }
+  .con-select{
+    width: 230px!important;
+  }
+
+}
+.cross-submit{
+  display: inline-block;
+  padding: .75rem 2rem;
+  border-radius: 6px;
+  background: #37b5ed !important;
+  border: 1px solid #37b5ed;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-left: 30px;
+  margin-top: 4px;
+  &:hover{
+   box-shadow: 0 8px 25px -8px #00a0e9;
+  }
+}
+.cross-reset{
+  display: inline-block;
+  padding: .75rem 2rem;
+  border-radius: 6px;
+  background: #fff !important;
+  border: 1px solid #37b5ed;
+  color: #37b5ed;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-left: 30px;
+  margin-top: 4px;
+  &:hover{
+   box-shadow: 0 8px 25px -8px #00a0e9;
+  }
+}
 
 </style>
 <style lang="less">
-  //隐藏第一栏被禁用的checkbox
+.cross-select{
+  .vs-select--input{
+    height: 43px;
+  }
+}
+.cross-picker{
+  margin-bottom: 20px;
+  overflow: hidden;
+  .con-select{
+    clear: none;
+  }
+  .selectExample{
+    float: left;
+    width: 230px;
+    margin-left: 30px;
+  }
+  .vs-select--input{
+    height: 43px;
+  }
+  .ivu-input{
+    height:43px;
+    font-size: 14px;
+    border: 1px solid rgba(0, 0, 0, .2);
+    font-family: "source_han_sans_cn", "Roboto", sans-serif;
+  }
+  .ivu-input-suffix {
+    i{
+    height: 43px;
+    width: 40px;
+    line-height: 43px;
+    }
+    input{
+      border: 1px solid rgba(0, 0, 0, .2);
+    }
+  }
+  .ivu-date-picker .ivu-select-dropdown{
+    z-index:90000
+  }
+}
+.cascade{
+  width: 230px;
+  height: 43px;
+  overflow: hidden;
+  .cascade-dom{
+    width: 100%;
+    background-color: #fff;
+    height: 43px;
+    overflow: hidden;
+    border-radius: 5px;
+    border: 1px solid rgba(0,0,0,.2);
+    .el-cascader__tags {
+      top: 10px;
+      transform: translateY(0%);
+      .el-tag{
+        margin-bottom:10px;
+      }
+
+    }
+    input {
+      border: none;
+      font-size: 1rem;
+      background-color: #fff;
+      height:43px!important;
+    }
+  }
+}
+.cascade+.cascade{
+  margin-left: 30px;
+}
   .cascade-dom /deep/ .el-scrollbar:nth-child(1) .is-disabled {
     display: none;
   }

@@ -33,7 +33,7 @@ export default {
       enabled: true,
       custom: ({ series, seriesIndex, dataPointIndex, w }) => {
         let number = series[seriesIndex] / _.sum(series) * 100
-        return `<p style=background-color:${w.common.colors[seriesIndex]} class='p-2'><span class='pr-4'>${w.common.labels[seriesIndex]}:</span>${_.round(number, 2)}%</p>`
+        return `<p style=background-color:${w.config.colors[seriesIndex]} class='p-2'><span class='pr-4'>${w.config.labels[seriesIndex]}:</span>${_.round(number, 2)}%</p>`
       }
     }
   },
@@ -148,24 +148,14 @@ export default {
       enabled: true,
       custom: ({ series, seriesIndex, dataPointIndex, w }) => {
         let sumArr = _.sum(series)
-        return `<p style=background-color:${w.common.colors[seriesIndex]} class='p-2'><span class='pr-4'>${w.common.labels[seriesIndex]}:</span>${NP.times(NP.round(series[seriesIndex] / sumArr, 3), 100)}%</p>`
+        return `<p style=background-color:${w.config.colors[seriesIndex]} class='p-2'><span class='pr-4'>${w.config.labels[seriesIndex]}:</span>${NP.times(NP.round(series[seriesIndex] / sumArr, 3), 100)}%</p>`
       }
     }
   },
   bar: {
-    legend:{
-      height:30
-    },
     xaxis: {
       categories: [],
       labels: {
-        formatter (value) {
-          if (typeof (value) === 'number') {
-            return value ? _.round(value, 0).toLocaleString() : ''
-          } else {
-            return value
-          }
-        },
         show: true,
         style: {
           fontFamily: 'Roboto,sans-serif'
@@ -174,7 +164,6 @@ export default {
     },
     yaxis: {
       labels: {
-        show:true,
         formatter (value) {
           if (typeof (value) === 'number') {
             return value ? _.round(value, 0).toLocaleString() : ''
@@ -241,9 +230,6 @@ export default {
     }]
   },
   line: {
-    legend:{
-      height:30
-    },
     xaxis: {
       categories: [],
       labels: {
@@ -290,12 +276,13 @@ export default {
     },
     tooltip: {
       y:{},
+      shared: false
     },
     stroke: {
       curve: 'straight',
       width: 2
     },
-    colors: ['#00A0E9', 'rgb(231, 88, 91)', '#94e2ff', '#fbab40', '#e8585a', '#8d82f0'],
+    colors: ['#00A0E9', 'rgb(231, 88, 91)', '#94e2ff', '#fbab40', '#8d82f0'],
     dataLabels: {
       enabled: false
     }

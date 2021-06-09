@@ -118,18 +118,18 @@
 	}
 }
 
-// @media (max-width: 576px) {
-// 	.full-calendar-header {
-// 		display: flex;
-// 		flex-direction: column;
+@media (max-width: 576px) {
+	.full-calendar-header {
+		display: flex;
+		flex-direction: column;
 
-// 		.header-center {
-// 			order: 1;
-// 		}
+		.header-center {
+			order: 1;
+		}
 
-// 		.header-right {
-// 			margin: 1rem 0;
-// 		}
-// 	}
+		.header-right {
+			margin: 1rem 0;
+		}
+	}
 
-// }
+}
