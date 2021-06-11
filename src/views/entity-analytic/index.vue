@@ -271,6 +271,7 @@
         })
         option.legend.data.forEach((d, dIndex) => {
           const data = option.series[dIndex].data
+					if(!data.length) return;
           const entityName = d.split('|')[0]
           const highestIndex = getMaxIndex(data)
           const total = _.sum(data).toLocaleString() + '人次'

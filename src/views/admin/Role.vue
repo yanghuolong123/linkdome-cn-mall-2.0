@@ -93,8 +93,8 @@ export default {
     
     getMenuList().then(res => {
       if (res.data.code == 200) {
-        that.menuListData = res.data.data.main
-        that.menuListData.forEach(function (m) {
+        let menuListData = res.data.data.main
+        menuListData.forEach(function (m) {
           m.enable = 0
           m.subpagesList.forEach(function (k) {
             k.enable = 0
@@ -102,6 +102,7 @@ export default {
           let list = _.remove(m.subpagesList, val => { return val.name != 'VIPRecode' })
           m.subpagesList = _.remove(list, val => { return val.name != 'VipCustom' })
         })
+        that.menuListData = menuListData
         that.allMenuData = _.cloneDeep(that.menuListData)
       }
     })
@@ -113,7 +114,7 @@ export default {
     menuListDatas () {
       let that = this
       return _.filter(this.menuListData, function (e) {
-        if(that.$store.state.user.sale_feature!==1){  
+        if(that.$store.state.user.sale_feature!==1){
           e.subpagesList = _.filter(e.subpagesList,(s)=>{
             return s.id !==37 && s.id!==36 && s.id!==35 && s.id!==34
           })
