@@ -13,6 +13,7 @@ const LOGIN_PAGE_NAME = 'Login'
 const NoLoginPages = ['Login', 'pageForgotPassword', 'pageResetPassword']
 const pdfDownloadPages = ['downloadDayPdf', 'downloadWeekPdf', 'downloadMonthPdf', 'downloadStoreDayPdf','downloadCustomizePdf']
 const whitelistPages = [...NoLoginPages, ...pdfDownloadPages]
+
 router.beforeEach((to, from, next) => {
   let token = getToken() === 'undefined' ? undefined : getToken()// token 读出来的值会是字符类型的'undefined'
   if (!token && !whitelistPages.includes(to.name)) {

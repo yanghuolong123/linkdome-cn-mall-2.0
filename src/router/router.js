@@ -135,6 +135,20 @@ export default [
           pageTitle: '有效客流分析'
         }
       },
+      { // 排队货架分析
+        path: 'queue',
+        name: 'Queue',
+        component: () =>
+          import ('@/views/footfall-analytics/queue.vue'),
+        meta: {
+          breadcrumb: [
+            { title: '客流分析', url: '/' },
+            { title: '客流分析', url: '/footfall' },
+            { title: '排队货架分析', active: false },
+          ],
+          pageTitle: '排队货架分析'
+        }
+      }
     ]
 
   },

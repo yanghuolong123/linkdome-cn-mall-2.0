@@ -1,7 +1,7 @@
 <template>
   <div class="go-shop">
     <div class="selector-container bg-white box-card">
-      <!-- <h1>趋势分析</h1> -->
+      <!-- <h1>货架分析</h1> -->
           <div class="flex-center">
               <DatePicker
                 type="daterange"
@@ -11,27 +11,6 @@
                 placeholder="选择日期"
                 class="w-select"
               ></DatePicker>
-              <vs-select
-                class="w-select m-l-20"
-                autocomplete
-                v-model="selectType"
-              >
-                <vs-select-item
-                  :value="item.value"
-                  :text="item.text"
-                  :key="index"
-                  v-for="(item,index) in typeList"
-                />
-              </vs-select>
-            <DatePicker
-              type="daterange"
-              v-model="crossDateTwo"
-              placement="bottom-end"
-              :options="disabledDate"
-              placeholder="选择日期"
-              class="w-select m-l-20"
-              v-if="selectType == 1"
-            ></DatePicker>
           </div>
           <div class="flex-center">
               <el-cascader
@@ -47,7 +26,7 @@
     </div>
     <div class="go-shop-chart-list"  >
         <div class="go-shop-time-icon">
-          <span>进店率趋势分析</span>
+          <span>货架触摸分析</span>
           <p class="flex-center">
             <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(icon.value)">
               <icons
@@ -61,7 +40,7 @@
         </div>
          <div v-if="isData" class="noData">暂无数据</div>
          <vue-apex-charts
-          v-bind:class="{ lineAction: iconIndex == 1 }"
+          v-bind:class="{ lineAction: iconIndex == 0 }"
             class=" tendencyBar"
             ref="graphLine"
             height='90%'
@@ -71,18 +50,8 @@
             :options="lineData.chartOptions"
             :series="lineData.series"
           ></vue-apex-charts>
-          <vue-apex-charts
-          v-bind:class="{ barAction: iconIndex == 0 }"
-            class="tendencyLine"
-            ref="graphBar"
-            height='90%'
-            width="100%"
-            type="bar"
-            :options="graphData.chartOptions"
-            :series="graphData.series"
-          ></vue-apex-charts>
           <table-default
-          v-bind:class="{ tableAction: iconIndex == 2 }"
+          v-bind:class="{ tableAction: iconIndex == 1 }"
           class="tendencyTable"
             :tableTitle='goTitle'
             :tableName='goName'
@@ -102,7 +71,7 @@ import TableDefault from '@/views/ui-elements/table/TableDefault.vue'
 import alert from '@/components/alert.vue'
 import VueApexCharts from 'vue-apexcharts'
 import { getBussinessTree, getBussinessCommon } from '@/api/passenger'
-import { getCascadeList } from '@/api/passenger.js'
+import { getHuojiaList , getHuojiaAnalysis } from '@/api/passenger.js'
 import { goShopTrend } from '@/api/analysis'
 import { goShowFlowTend ,exportEx} from '@/api/home.js'
 import { disabledDate,downloadEx } from '@/libs/util.js'
@@ -140,25 +109,21 @@ export default {
         }
       ],
       iconList: [
-       
-        {
-          type: '62',
-          color: '#9D9D9DFF',
-          value: 0
-        }, {
+      
+      {
               type: 'zhexiantu',
               color: '#9D9D9DFF',
-              value: 1
+              value: 0
           },
         {
           type: 'biaoge-copy',
           color: '#9D9D9DFF',
-          value: 2
+          value: 1
         },
         {
           type: 'daoru',
           color: '#9D9D9DFF',
-          value: 3
+          value: 2
         }
       ],
       iconTitle: {
@@ -210,12 +175,12 @@ export default {
           },
           yaxis: {
             title: {
-              text: '百分比（%）'
+              text: "次数"
             },
             labels: {
               show: true,
               formatter: (value) => {
-                return parseInt(value) + '%'
+                return value
               }
             },
             tickAmount: 5
@@ -227,7 +192,7 @@ export default {
           tooltip: {
             y: {
               formatter: function (val) {
-                return val + '%'
+                return val
               }
             }
           }
@@ -258,18 +223,19 @@ export default {
           colors: ['#33B3ED', '#2BD9CF', '#94E2FF', '#FBAB40', '#8D82F0', '#E8585A'],
           yaxis: {
             title: {
-              text: '百分比（%）'
+              text: '次数'
             },
             tickAmount: 5,
             // min: 0,
             labels: {
               show: true,
               formatter: (value) => {
-                return parseInt(value) + '%'
+                return value
               }
             }
           },
            legend:{
+              data:[],
               height:30
             },
           xaxis: {
@@ -280,14 +246,6 @@ export default {
               show: false
             },
             categories: []
-          },
-          tooltip: {
-            shared:false,
-            y: {
-              formatter: function (val) {
-                return val + '%'
-              }
-            }
           },
           markers: {
             size: 5,
@@ -346,24 +304,19 @@ export default {
     // 获取 所有 商铺 楼层 出入口 数据
     allZoneList () {
       let propertyId = this.$store.state.home.headerAction
-      getCascadeList({ property_id: propertyId }).then(res => {
+      //加载 货架数据
+      getHuojiaList({ property_id: propertyId }).then(res => {
+  
+   
         if (res.data.code == 200) {
           let data = res.data.data
-            this.activitiesType = []
-            let newData = Object.keys(data)
-            newData.forEach(list => {
-                let obj = {}
-                obj.value = list
-                obj.label = list
-                obj.children = []
-                data[list].forEach(shop => {
-                    let shopObj = {}
-                    shopObj.value = shop.id
-                    shopObj.label = shop.name
-                    shopObj.name = shop.name
-                    obj.children.push(shopObj)
-                })
-                this.activitiesType.push(obj)
+          //加载 货架数据
+            this.activitiesType = data.map((ele)=>{
+              let eobj = {}
+              eobj.value = ele.id
+              eobj.label = ele.name
+              eobj.name = ele.name
+              return eobj;
             })
         }
       }).catch(err => {
@@ -373,58 +326,46 @@ export default {
     // 点击查询
     paramsPrepare () {
       var that = this
-      let range, rangeOne, rangeTwo, time2
-
+      let propertyId = this.$store.state.home.headerAction
       var time1 = moment(that.crossDate[0]).format('YYYY-MM-DD') + ',' +
       moment(that.crossDate[1]).format('YYYY-MM-DD')
-      rangeOne = this.gotInnerRange(that.crossDate)
-      // 判断是否是时间对比
-      if (that.selectType == 0) {
-        time2 = ''
-        rangeTwo = ''
-      } else {
-        time2 = moment(that.crossDateTwo[0]).format('YYYY-MM-DD') + ',' +
-        moment(that.crossDateTwo[1]).format('YYYY-MM-DD')
-        rangeTwo = this.gotInnerRange(that.crossDateTwo)
-      }
-      // 时间类型判断
-      if (rangeTwo == '') range = rangeOne
-      else if (rangeTwo == 'Month' || rangeOne == 'Month') range = 'Month'
-      else range = 'Date'
+      let range = this.gotInnerRange(that.crossDate)
+      console.log(time1)
       // 提示
       if (that.activities.length === 0) {
-        this.alertShow('商铺不能为空，请选择商铺')
+        this.alertShow('货架不能为空，请选择货架')
         return false
       }
       if (that.activities.length > 25) {
-        this.alertShow('商铺个数不能超过25个，请重新选择')
+        this.alertShow('货架个数不能超过25个，请重新选择')
         return false
       }
-      if(time1===time2){
-        this.alertShow('对比时间相等,请重新选择时间')
-        return false
-      }
-      var listId = _.clone(that.activities)
-      let allId = []
-      listId.map(val => { allId.push(val[1]) })
-      var bzid = allId.join(',')
-      that.loadingData.time1 = time1
-      that.loadingData.time2 = time2
-      that.loadingData.id = bzid
-      goShopTrend({ time1: time1, time2: time2, bzid: bzid, range: range }).then(res => {
+      // var bzid = "1,2,3"
+      // that.loadingData.time1 = time1
+      // that.loadingData.id = bzid
+      // that.lineData.chartOptions.xaxis.categories = [1,2,3,4,5,6,7]
+      // that.lineData.series =[{data: [10,20,35,67,34,18,69]}]
+      // that.graphData.chartOptions.xaxis.categories = [1,2,3,4,5,6,7]
+      // that.graphData.series = [{data: [10,20,35,67,34,18,69]}]
+      // that.isData = false
+      // that.goName = []
+      // that.goTableList = []
+      // that.goName.push('时间')
+      console.log(this.activities)
+      let selectedIds = this.activities.join(',')
+      getHuojiaAnalysis({property_id:propertyId, time1: time1, queue_id: selectedIds, type: range }).then(res => {
         that.isList = true
         that.lineData.chartOptions.xaxis.categories = []
         that.lineData.series = []
-        that.graphData.chartOptions.xaxis.categories = []
-        that.graphData.series = []
         that.isData = false
         that.goName = []
         that.goTableList = []
         that.goName.push('时间')
         var data = res.data.data
+        console.log(data)
         setTimeout(() => {
           if (that.selectType === 0) {
-            that.noComparison(data)
+            that.noComparison(data,range)
           } else {
             that.comparison(data, range)
           }
@@ -433,28 +374,61 @@ export default {
       })
     },
     // 无时间对比 数据处理
-    noComparison (data) {
+    noComparison (data,range) {
       let that = this
       if (data.length == 0) return
-      let date1data = data[Object.keys(data)[0]]// 时间1，时间2
-      let date1Val = Object.values(date1data)[0]// 店铺1 店铺2
-      date1Val.map(e => {
-        that.lineData.chartOptions.xaxis.categories.push(e.date)
-        that.graphData.chartOptions.xaxis.categories.push(e.date)
+      let xArray = []
+      let xDataArray = []
+      let legend =  data.map((d)=>{
+        return  d.name
       })
-      var allData = []
-      Object.values(date1data).forEach(function (shopData) {
-        var obj = {}
-        obj.name = shopData[0].name
-        obj.data = []
-        shopData.forEach(function (d) {
-          var size = d.rate === 0 ? 0: NP.times(d.rate, 100)
-          obj.data.push(Number(size))
+      for(let i = 0 ; i < this.activities.length; i++){
+        let txArray = []
+        let txDataArray = []
+        _.mapKeys(data[i].list.time1 ,(value,key)=>{
+          if(range == "Hour") {
+            txArray.push(key.split(' ')[1])
+          }else {
+            txArray.push(key)
+          }
+          txDataArray.push(value.touch_num)
+          return key
+        } )
+        xArray = txArray;
+        xDataArray.push({
+          name: data[i].name,
+          data : txDataArray
         })
-        allData.push(shopData)
-        that.lineData.series.push(obj)
-        that.graphData.series.push(obj)
+      }
+      console.log(xArray)
+      that.lineData.chartOptions.xaxis.categories = xArray
+      that.lineData.chartOptions.legend.data = legend
+      that.lineData.series = xDataArray
+      that.$refs.graphLine.updateOptions({
+        xaxis: { categories: that.lineData.chartOptions.xaxis.categories }
       })
+      console.log(legend)
+      _.forEach(data,(ele)=>{
+        that.goName.push(ele.name)
+      })
+      console.log(that.goName)
+      let timeArray = _.keys(data[0].list.time1)
+      let resultArray = []
+      for(let j = 0 ; j < timeArray.length ; j ++){
+        let obj = {
+          name : timeArray[j],
+          percentList:[]
+        }
+        for(let k = 0 ; k < data.length ; k++){
+          let item = data[k].list.time1
+          obj.percentList.push(item[timeArray[j]].touch_num)
+        }
+        resultArray.push(obj)
+      }
+ 
+      that.goTableList = resultArray
+      return
+      
       // let maxLenght = _.maxBy(that.lineData.series,(val=>{
       //   return val.data.length
       // })).data
@@ -500,8 +474,6 @@ export default {
         })
         that.goTableList.push(tableObj)
       })
-      
-      console.log(that.goTableList)
     },
     // 时间对比 数据处理
     comparison (data, type) {
@@ -664,8 +636,9 @@ export default {
     },
     // 图标点击
     iconClick (index) {
+      console.log(index)
       // 下载文件
-      if (index === 3) {
+      if (index === 2) {
           let columns = [], data = []
           this.goName.forEach((list, index) => {
               if (index === 0) {
@@ -685,7 +658,7 @@ export default {
               })
               data.push(obj)
           })
-          downloadEx(exportEx,'进店率趋势分析',[columns,data])
+          downloadEx(exportEx,'货架触摸分析',[columns,data])
       } else {
         // 切换
         this.iconIndex = index
@@ -727,8 +700,9 @@ export default {
       let endTime = moment(end)
       let diffDays = moment.duration(endTime.diff(startTime)).asDays()
       let innerRange = ''
-      if (diffDays < 60) innerRange = 'Date'
-      else innerRange = 'Month'
+      if(diffDays == 0) innerRange = "Hour"
+      if (diffDays < 60 && diffDays > 0) innerRange = 'Date'
+      if(diffDays > 60 ) innerRange = 'Month'
       return innerRange
     }
   }
@@ -883,11 +857,8 @@ export default {
         .lineAction{
           transform: translateY(10%);
         }
-        .barAction{
-          transform: translateY(-90%);
-        }
         .tableAction{
-          transform: translateY(-180%);
+          transform: translateY(-90%);
         }
     }
 }

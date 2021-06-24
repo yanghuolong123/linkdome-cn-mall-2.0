@@ -98,7 +98,8 @@ export default {
         Support: 'Support',
         Documentation: 'Documentation',
         RaiseSupport: 'Raise Support',
-        Relevance: 'Relevance'
+        Relevance: 'Relevance',
+        Queue:'Queue'
     },
     cn: {
         Dashboard: '首页',
@@ -224,6 +225,7 @@ export default {
         DisabledMenu: 'Disabled Menu',
         Support: 'Support',
         Documentation: 'Documentation',
-        RaiseSupport: 'Raise Support'
+        RaiseSupport: 'Raise Support',
+        Queue:'排队货架分析'
     }
 }
