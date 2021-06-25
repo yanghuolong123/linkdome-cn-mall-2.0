@@ -173,7 +173,7 @@
               labels: {
                 show: true,
                 formatter: (value) => {
-                  return value
+                  return value.toFixed(2);
                 }
               }
             },
@@ -188,7 +188,8 @@
             tooltip: {
               y: {
                 formatter: function (val) {
-                  return val
+                  
+                  return  val
                 }
               }
             }
@@ -316,12 +317,41 @@
           that.graphData.chartOptions.legend.data = legend
           that.graphData.series = xDataArray
 					let yTitle = dataTypeEle == 0 ? "人数":"平均等待时长(秒)"
-          that.$refs.graphLine.updateOptions({
-            xaxis: { categories: that.graphData.chartOptions.xaxis.categories },
-					  yaxis:{
-              title:{ text: yTitle}
-						}
+					if (that.$refs.graphLine){
+            that.$refs.graphLine.updateOptions({
+              xaxis: { categories: that.graphData.chartOptions.xaxis.categories },
+              yaxis:{
+                title:{ text: yTitle}
+              }
+            })
+					}
+    
+
+          _.forEach(data,(ele)=>{
+            that.goName.push(ele.name)
           })
+          console.log(that.goName)
+          let timeArray = _.keys(data[0].list.time1)
+          let resultArray = []
+          for(let j = 0 ; j < timeArray.length ; j ++){
+            let obj = {
+              name : timeArray[j],
+              percentList:[]
+            }
+            for(let k = 0 ; k < data.length ; k++){
+              let item = data[k].list.time1
+              if(dataTypeEle == 0){
+                obj.percentList.push(item[timeArray[j]].queue_len)
+              }else{
+                obj.percentList.push(item[timeArray[j]].avg_waittime)
+              }
+             
+            }
+            resultArray.push(obj)
+          }
+
+          that.goTableList = resultArray
+					
         })
       },
       // 重置数据
@@ -357,7 +387,7 @@
                   })
                   data.push(obj)
              })
-            downloadEx(exportEx,'进店率TOP10排行分析',[columns,data])
+            downloadEx(exportEx,'排队队列分析',[columns,data])
           }
         } else {
           this.iconIndex = index

@@ -407,7 +407,7 @@ export default {
       that.$refs.graphLine.updateOptions({
         xaxis: { categories: that.lineData.chartOptions.xaxis.categories }
       })
-      console.log(legend)
+     
       _.forEach(data,(ele)=>{
         that.goName.push(ele.name)
       })

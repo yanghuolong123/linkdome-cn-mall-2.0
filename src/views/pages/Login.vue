@@ -25,7 +25,7 @@
 			<Button class="login-btn" :loading="loading" type="primary" @click="handleLogin('formValidate')">立即登录</Button>
 		</div>
 		<div class="bottom">
-			浙ICP备20009188号-1 浙江凌图科技有限公司 Copyright 2019-{{currentYear}}
+			画外空间数字科技（山东）有限公司 Copyright 2019-{{currentYear}}
 		</div>
 		<vs-alert :active="isalert" color="danger" icon-pack="feather" icon="icon-info">
 			<span>{{alertText}}</span>
@@ -61,7 +61,7 @@ export default {
       //   id: 1
       // },
 		{
-        name: '凌图智慧商业综合分析平台',
+        name: '智慧商业综合分析平台',
         id: 2
       }
       ],
