@@ -13,13 +13,28 @@
               ></DatePicker>
           </div>
           <div class="flex-center">
-              <el-cascader
-               collapse-tags
-               class="w-select"
-                v-model="activities"
-                :props="{ multiple: true,expandTrigger:'hover' }"
-                :options="activitiesType">
-              </el-cascader>
+<!--              <el-cascader-->
+<!--               collapse-tags-->
+<!--               class="w-select"-->
+<!--                v-model="activities"-->
+<!--                :props="{ multiple: true,expandTrigger:'hover' }"-->
+<!--                :options="activitiesType">-->
+<!--              </el-cascader>-->
+            <vs-select
+              class="w-select"
+              autocomplete
+              v-model="activities"
+              placeholder="选择排队名"
+              style="width:14.375rem;"
+              multiple
+            >
+              <vs-select-item
+                :value="item.value"
+                :text="item.text"
+                :key="index"
+                v-for="(item,index) in activitiesType"
+              />
+            </vs-select>
               <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">查询</Button>
               <Button size="large" class="m-l-20" @click="resetData">重置</Button>
           </div>
@@ -214,7 +229,7 @@ export default {
             text: ''
           },
           stroke: {
-            // curve: 'smooth',
+            //curve: 'smooth',
             width: 2
           },
           dataLabels: {
@@ -226,11 +241,11 @@ export default {
               text: '次数'
             },
             tickAmount: 5,
-            // min: 0,
+            min: 0,
             labels: {
               show: true,
               formatter: (value) => {
-                return value
+                return parseInt(value)
               }
             }
           },
@@ -314,8 +329,7 @@ export default {
             this.activitiesType = data.map((ele)=>{
               let eobj = {}
               eobj.value = ele.id
-              eobj.label = ele.name
-              eobj.name = ele.name
+              eobj.text = ele.name
               return eobj;
             })
         }

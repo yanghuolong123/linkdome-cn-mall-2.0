@@ -170,10 +170,11 @@
               title: {
                 text: '人数'
               },
+              min: 0,
               labels: {
                 show: true,
                 formatter: (value) => {
-                  return value.toFixed(2);
+                  return parseInt(value)
                 }
               }
             },
@@ -321,7 +322,14 @@
             that.$refs.graphLine.updateOptions({
               xaxis: { categories: that.graphData.chartOptions.xaxis.categories },
               yaxis:{
-                title:{ text: yTitle}
+                title:{ text: yTitle},
+                min: 0,
+                labels: {
+                  show: true,
+                  formatter: (value) => {
+                    return parseInt(value)
+                  }
+                }
               }
             })
 					}
