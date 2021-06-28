@@ -61,7 +61,7 @@
             </span>
 				</p>
 			</div>
-			<div v-if="isData" class="noData">暂无数据</div>
+			<div v-show="isData" class="noData">暂无数据</div>
 			<vue-apex-charts
 					v-bind:class="{ lineAction: iconIndex == 0 }"
 					class="shop-line"
@@ -69,7 +69,7 @@
 					height='95%'
 					width="100%"
 					type="line"
-					v-if="isList"
+					v-show="isList"
 					:options="graphData.chartOptions"
 					:series="graphData.series"
 			></vue-apex-charts>
@@ -241,8 +241,6 @@
           })
           //that.paramsPrepare()
         })
-				
-				console.log(that.activitiesType)
       },
       gotInnerRange (date) {
         const [start, end] = date
@@ -260,20 +258,12 @@
         var that = this
         var time1 = moment(that.crossDate[0]).format('YYYY-MM-DD') + ',' +
           moment(that.crossDate[1]).format('YYYY-MM-DD')
-        var time2
-        if (that.selectType === 0) {
-          time2 = ''
-        } else {
-          time2 = moment(that.crossDateTwo[0]).format('YYYY-MM-DD') + ',' +
-            moment(that.crossDateTwo[1]).format('YYYY-MM-DD')
-        }
+
         var id = that.activities === 0 ? '' : that.activities
         that.loadingData.time1 = time1
-        that.loadingData.time2 = time2
         that.loadingData.id = id
         let propertyId = this.$store.state.home.headerAction
 				let type = this.gotInnerRange(that.crossDate)
-        console.log(this.dataType)
 				let dataTypeEle = this.dataType
         getQueueAnalysis({ time1: time1, property_id: propertyId,queue_id:this.activities.join(","),type:type }).then(res => {
           that.isList = true
@@ -313,23 +303,38 @@
               data : txDataArray
             })
           }
-          console.log(xArray)
           that.graphData.chartOptions.xaxis.categories = xArray
           that.graphData.chartOptions.legend.data = legend
           that.graphData.series = xDataArray
 					let yTitle = dataTypeEle == 0 ? "人数":"平均等待时长(秒)"
+          console.log(2222)
+          let labelsObj = {}
+          if(dataTypeEle == 0) {
+            labelsObj = {
+              show: true,
+              formatter: (value) => {
+                return value.toFixed(2)
+              }
+            }
+          }else{
+            labelsObj = {
+              show: true,
+              formatter: (value) => {
+                return parseInt(value)
+              }
+            }
+          }
+          console.log(that.$refs.graphLine)
 					if (that.$refs.graphLine){
+            console.log(1111111)
+
+					  console.log(dataTypeEle)
             that.$refs.graphLine.updateOptions({
               xaxis: { categories: that.graphData.chartOptions.xaxis.categories },
               yaxis:{
                 title:{ text: yTitle},
                 min: 0,
-                labels: {
-                  show: true,
-                  formatter: (value) => {
-                    return parseInt(value)
-                  }
-                }
+                labels: labelsObj
               }
             })
 					}
@@ -338,7 +343,6 @@
           _.forEach(data,(ele)=>{
             that.goName.push(ele.name)
           })
-          console.log(that.goName)
           let timeArray = _.keys(data[0].list.time1)
           let resultArray = []
           for(let j = 0 ; j < timeArray.length ; j ++){
