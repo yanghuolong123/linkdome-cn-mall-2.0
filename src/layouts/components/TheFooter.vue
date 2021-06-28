@@ -12,7 +12,7 @@
 <template>
   <footer class="the-footer flex-wrap justify-between" :class="classes">
     <span>
-      © 凌图科技有限公司 Copyright <span class="font-number text-grey-light">{{new Date().getFullYear()}} V2.5</span>
+      © 画外空间数字科技（山东）有限公司 Copyright <span class="font-number text-grey-light">{{new Date().getFullYear()}} V2.5</span>
     </span>
     <span class="md:flex hidden items-center">
     </span>

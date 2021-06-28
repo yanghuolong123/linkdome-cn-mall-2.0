@@ -28,7 +28,7 @@
         <!-- 封面 -->
         <report-cover
           :suggestText='suggestText'
-          titleName='凌图智慧日报'
+          titleName='智慧日报'
           :pageTotal='`${11+allHeatMap.length}`'
         ></report-cover>
         <!-- 总览 -->

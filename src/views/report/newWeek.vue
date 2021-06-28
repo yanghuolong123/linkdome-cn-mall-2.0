@@ -29,7 +29,7 @@
       <!-- 封面 -->
       <report-cover
       :pageTotal='`${13+allHeatMap.length}`'
-      titleName='凌图智慧周报'
+      titleName='智慧周报'
       :suggestText='suggestText'
       ></report-cover>
       <!-- 总览 -->

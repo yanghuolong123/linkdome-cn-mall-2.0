@@ -5,7 +5,7 @@
 				<!-- 封面 -->
 				<report-cover
 					:suggestText='suggestText'
-					titleName='凌图智慧报告'
+					titleName='智慧报告'
 					:pageTotal='`${10}`'
 				></report-cover>
 				<!-- 总览 -->

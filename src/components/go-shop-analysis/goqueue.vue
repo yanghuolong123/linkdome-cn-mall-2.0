@@ -95,7 +95,7 @@
   import _ from 'lodash'
 
   export default {
-    name: 'goShop',
+    name: 'goQueue',
     components: {
       TableDefault,
       VueApexCharts
@@ -209,7 +209,7 @@
       '$store.state.home.headerAction' () {
         this.resetData()
         let routerName = this.$router.currentRoute.name
-        if (routerName === 'GoShop') {
+        if (routerName === 'goQueue') {
           this.activitiesDataList()
         }
       }
@@ -360,8 +360,9 @@
         date = date.setDate(date.getDate() - 1)
         var dateTime = [moment(date).format('YYYY-MM-DD'), moment(date).format('YYYY-MM-DD')]
         this.crossDate = dateTime
-        this.selectType = 0
-        this.activities = this.activitiesType[0].value
+        this.dataType = 0
+        this.activities = []
+				
       },
       // 点击图标
       iconClick (index) {

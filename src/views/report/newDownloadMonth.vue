@@ -3,7 +3,7 @@
   <div class="pdf-text-box">
     <div id="pdfDom" v-if="showPDF" style=" width: 1200px;">
       <!-- 封面 -->
-      <report-cover :pageTotal='`${14+allHeatMap.length}`' :suggestText='suggestText' titleName='凌图智慧月报' ></report-cover>
+      <report-cover :pageTotal='`${14+allHeatMap.length}`' :suggestText='suggestText' titleName='智慧月报' ></report-cover>
       <!-- 总览 -->
       <report-one title='客流总览'  :enterData='enterData' :listTitle='oneListData' ></report-one>
       <report-remark title='客流总览'  page='2' :remarkData='enterData[3]'></report-remark>

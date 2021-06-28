@@ -23,7 +23,7 @@
 		<div class="pdf-text-box" v-if="showReport">
 			<!-- 封面 -->
 			<report-cover
-				titleName='凌图智慧日报'
+				titleName='智慧日报'
 				:pageTotal="`${validStoreSelectedList.length*14}`"
 			></report-cover>
 			<!--			&lt;!&ndash; 总览 &ndash;&gt;

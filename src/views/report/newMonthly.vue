@@ -32,7 +32,7 @@
 				<report-cover
 					:pageTotal='`${14+allHeatMap.length}`'
 					:suggestText='suggestText'
-					titleName='凌图智慧月报'
+					titleName='智慧月报'
 				></report-cover>
 				<!-- 总览 -->
 				<report-one title='客流总览' :enterData='enterData' :listTitle='oneListData'></report-one>
