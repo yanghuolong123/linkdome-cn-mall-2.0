@@ -61,3 +61,36 @@ export const getFootfallTrend = params => {
     params
   })
 }
+
+export const getQueueAnalysis = property => {
+  return naxios.request({
+    url: '/queuecheckout/analysis',
+    method: 'get',
+    params: property
+  })
+}
+
+export const getQueueList = property => {
+  return naxios.request({
+    url: '/queuecheckout/list',
+    method: 'get',
+    params: property
+  })
+}
+
+export const getHuojiaAnalysis = payload => {
+
+  return naxios.request({
+    url: '/queuetouch/analysis',
+    method: 'get',
+    params: payload
+  })
+}
+
+export const getHuojiaList = property => {
+  return naxios.request({
+    url: '/queuetouch/list',
+    method: 'get',
+    params: property
+  })
+}
