@@ -382,33 +382,35 @@ export default [
       icon: 'PrinterIcon'
     },
     name: 'Report',
-    children: [{ // 门店日报
-      path: 'storeDaily',
-      name: 'StoreDailyReport',
-      component: () =>
-        import ('@/views/report/storeReport/storeDaily.vue'),
-      meta: {
-        breadcrumb: [
-          { title: 'Analytics', url: '/dashboard/analytics' },
-          { title: '报告详情' },
-          { title: '门店日报', active: true },
-        ],
-        pageTitle: '门店日报',
-      }
-    }, { // 日报
-      path: 'daily',
-      name: 'DailyReport',
-      component: () =>
-        import ('@/views/report/newDaily.vue'),
-      meta: {
-        breadcrumb: [
-          { title: 'Analytics', url: '/dashboard/analytics' },
-          { title: '报告详情' },
-          { title: '日报', active: true },
-        ],
-        pageTitle: '日报',
-      }
-    },
+    children: [
+			{ // 门店日报
+				path: 'storeDaily',
+				name: 'StoreDailyReport',
+				component: () =>
+					import ('@/views/report/storeReport/storeDaily.vue'),
+				meta: {
+					breadcrumb: [
+						{ title: 'Analytics', url: '/dashboard/analytics' },
+						{ title: '报告详情' },
+						{ title: '门店日报', active: true },
+					],
+					pageTitle: '门店日报',
+				}
+			},
+			{ // 日报
+				path: 'daily',
+				name: 'DailyReport',
+				component: () =>
+					import ('@/views/report/newDaily.vue'),
+				meta: {
+					breadcrumb: [
+						{ title: 'Analytics', url: '/dashboard/analytics' },
+						{ title: '报告详情' },
+						{ title: '日报', active: true },
+					],
+					pageTitle: '日报',
+				}
+			},
       { // 周报
         path: 'weekly',
         name: 'WeekReport',
@@ -462,23 +464,23 @@ export default [
     meta: {
       icon: 'SettingsIcon'
     },
-    children: [{ //实体管理
-      path: 'entiy',
-      name: 'EntityManage',
-      component: () =>
-        import ('@/views/admin/Entity.vue'),
-      meta: {
-        breadcrumb: [
-          { title: 'Analytics', url: '/dashboard/analytics' },
-          { title: '后台管理' },
-          { title: '实体管理', active: true },
-        ],
-        pageTitle: '实体管理',
-        notCache: true,
-        access: ['admin', 'common_admin']
-      }
-    },
-
+    children: [
+			{ //实体管理
+				path: 'entiy',
+				name: 'EntityManage',
+				component: () =>
+					import ('@/views/admin/Entity.vue'),
+				meta: {
+					breadcrumb: [
+						{ title: 'Analytics', url: '/dashboard/analytics' },
+						{ title: '后台管理' },
+						{ title: '实体管理', active: true },
+					],
+					pageTitle: '实体管理',
+					notCache: true,
+					access: ['admin', 'common_admin']
+				}
+			},
       { // 节假日活动管理
         path: 'holiday',
         name: 'HolidayManage',

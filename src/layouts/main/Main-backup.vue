@@ -10,6 +10,17 @@
 
 <template>
   <div class="layout--main" :class="[navbarClasses, footerClasses, {'app-page': isAppPage}]">
+    <!-- <the-customizer
+      @updateNavbar="updateNavbar"
+      @updateNavbarColor="updateNavbarColor"
+      :navbarType="navbarType"
+      :navbarColor="navbarColor"
+      :footerType="footerType"
+      @updateFooter="updateFooter"
+      :routerTransition="routerTransition"
+      @updateRouterTransition="updateRouterTransition"
+      v-if="!disableCustomizer"
+    /> -->
     <vx-sidebar
       :sidebarItems="menuList"
       :logo="require('@/assets/images/fixation_img/logo/logo.png')"
@@ -45,7 +56,45 @@
                 >
                   <h2 class="mb-1">{{ routeTitle }}</h2>
                 </div>
+                <!-- {{$store.state.sidebarItemsMin}} -->
                 <vx-breadcrumb class="ml-4 md:block hidden" v-if="$route.meta.breadcrumb"/>
+                <!-- <vs-dropdown class="ml-auto md:block hidden" vs-trigger-click>
+                  <vs-button radius icon="icon-settings" icon-pack="feather"></vs-button>
+
+                  <vs-dropdown-menu class="w-32">
+                    <vs-dropdown-item>
+                      <router-link to="/pages/profile" class="flex items-center">
+                        <feather-icon
+                          icon="UserIcon"
+                          class="inline-block mr-2"
+                          svgClasses="w-4 h-4"
+                        />
+                        <span>Profile</span>
+                      </router-link>
+                    </vs-dropdown-item>
+                    <vs-dropdown-item>
+                      <router-link to="/apps/todo" class="flex items-center">
+                        <feather-icon
+                          icon="CheckSquareIcon"
+                          class="inline-block mr-2"
+                          svgClasses="w-4 h-4"
+                        />
+                        <span>Tasks</span>
+                      </router-link>
+                    </vs-dropdown-item>
+                    <vs-dropdown-item>
+                      <router-link to="/apps/email" class="flex items-center">
+                        <feather-icon
+                          icon="MailIcon"
+                          
+                          class="inline-block mr-2"
+                          svgClasses="w-4 h-4"
+                        />
+                        <span>Inbox</span>
+                      </router-link>
+                    </vs-dropdown-item>
+                  </vs-dropdown-menu>
+                </vs-dropdown> -->
               </div>
             </transition>
             <div class="content-area__content">
@@ -58,6 +107,8 @@
           </div>
         </div>
       </div>
+
+      <!-- <the-footer></the-footer> -->
     </div>
   </div>
 </template>

@@ -11,11 +11,17 @@
 
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import i18nData from './i18nData'
+import zh from './lang/zh'
+import en from './lang/en'
+import ivuZh from 'view-design/dist/locale/zh-CN';
+import ivuEn from 'view-design/dist/locale/en-US';
 
 Vue.use(VueI18n)
 
 export default new VueI18n({
-  locale: 'cn', // set default locale
-  messages: i18nData,
+  locale: 'zh-CN', // set default locale
+  messages: {
+		'zh-CN': Object.assign(zh, ivuZh),
+		'en-US': Object.assign(en, ivuEn)
+	}
 })

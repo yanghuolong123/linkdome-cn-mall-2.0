@@ -137,7 +137,86 @@ export default {
     }
   },
   mounted () {
-    let data = { 'code': 200, 'message': '', 'data': { 'main': [{ 'name': 'Dashboard', 'router': '\/', 'id': 1, 'cname': '\u9996\u9875', 'subpagesList': [{ 'name': 'GroupCompany', 'router': '', 'id': 8, 'cname': '\u96c6\u56e2\u9875\u9762' }, { 'name': 'Shopping', 'router': null, 'id': 9, 'cname': '\u8d2d\u7269\u4e2d\u5fc3\u9875\u9762' }, { 'name': 'VIPRecode', 'router': null, 'id': 10, 'cname': 'VIP\u987e\u5ba2\u63d0\u9192' }] }, { 'name': 'Analytics', 'router': '\/footfall', 'id': 2, 'cname': '\u5ba2\u6d41\u5206\u6790', 'subpagesList': [{ 'name': 'Entity', 'router': null, 'id': 11, 'cname': '\u5b9e\u4f53\u5ba2\u6d41\u5206\u6790' }, { 'name': 'DwellTime', 'router': null, 'id': 12, 'cname': '\u505c\u7559\u65f6\u95f4\u5206\u6790' }, { 'name': 'AgeGender', 'router': null, 'id': 13, 'cname': '\u6027\u522b\u5e74\u9f84\u5206\u6790' }, { 'name': 'Ranking', 'router': null, 'id': 14, 'cname': '\u6392\u884c\u5360\u6bd4\u5206\u6790' }, { 'name': 'GoShop', 'router': null, 'id': 15, 'cname': '\u8fdb\u5e97\u7387\u5206\u6790' }, { 'name': 'HeatMap', 'router': null, 'id': 16, 'cname': '\u70ed\u529b\u56fe\u5206\u6790' }, { 'name': 'Effective', 'router': null, 'id': 17, 'cname': '\u6709\u6548\u5ba2\u6d41\u5206\u6790' }] }, { 'name': 'Generatrix', 'router': '\/generatrix', 'id': 3, 'cname': '\u52a8\u7ebf\u5206\u6790', 'subpagesList': [{ 'name': 'Relevance', 'router': null, 'id': 18, 'cname': '\u5173\u8054\u5206\u6790' }, { 'name': 'Cross', 'router': null, 'id': 19, 'cname': '\u4ea4\u53c9\u5ba2\u6d41\u5206\u6790' }, { 'name': 'PathTrend', 'router': null, 'id': 20, 'cname': '\u8def\u5f84\u52a8\u5411\u5206\u6790' }, { 'name': 'Drainage', 'router': null, 'id': 21, 'cname': '\u5b9e\u4f53\u5f15\u6d41\u5206\u6790' }, { 'name': 'OldPath', 'router': null, 'id': 33, 'cname': '\u8def\u5f84\u52a8\u5411\u5206\u6790(\u65e7)' }] }, { 'name': 'Operation', 'router': '\/operation', 'id': 4, 'cname': '\u8fd0\u8425\u5206\u6790', 'subpagesList': [{ 'name': 'Goal', 'router': null, 'id': 22, 'cname': '\u76ee\u6807\u8fbe\u6210\u5206\u6790' }, { 'name': 'HolidayAnalysis', 'router': null, 'id': 23, 'cname': '\u8282\u5047\u65e5\u6d3b\u52a8\u5206\u6790' }, { 'name': 'SalesAnalytics', 'router': null, 'id': 24, 'cname': '\u9500\u552e\u5206\u6790' }] }, { 'name': 'Report', 'router': '\/report', 'id': 5, 'cname': '\u62a5\u544a\u8be6\u60c5', 'subpagesList': [{ 'name': 'DailyReport', 'router': null, 'id': 25, 'cname': '\u65e5\u62a5' }, { 'name': 'WeekReport', 'router': null, 'id': 26, 'cname': '\u5468\u62a5' }, { 'name': 'MonthReport', 'router': null, 'id': 27, 'cname': '\u6708\u62a5' }] }, { 'name': 'Admin', 'router': '\/admin', 'id': 6, 'cname': '\u540e\u53f0\u7ba1\u7406', 'subpagesList': [{ 'name': 'EntityManage', 'router': null, 'id': 28, 'cname': '\u5b9e\u4f53\u7ba1\u7406' }, { 'name': 'Account', 'router': null, 'id': 29, 'cname': '\u8d26\u6237\u7ba1\u7406' }, { 'name': 'HolidayManage', 'router': null, 'id': 30, 'cname': '\u8282\u5047\u65e5\u6d3b\u52a8\u7ba1\u7406' }, { 'name': 'VipCustom', 'router': null, 'id': 31, 'cname': 'VIP\u5ba2\u6237\u7ba1\u7406' }, { 'name': 'Role', 'router': null, 'id': 32, 'cname': '\u6743\u9650\u7ba1\u7406' }] }] } }
+    let data = {
+			'code': 200,
+			'message': '',
+			'data': {
+				'main': [
+					{ 
+						'name': 'Dashboard',
+						'router': '\/',
+						'id': 1,
+						'cname': '\u9996\u9875',
+						'subpagesList': [
+							{ 'name': 'GroupCompany', 'router': '', 'id': 8, 'cname': '\u96c6\u56e2\u9875\u9762' },
+							{ 'name': 'Shopping', 'router': null, 'id': 9, 'cname': '\u8d2d\u7269\u4e2d\u5fc3\u9875\u9762' },
+							{ 'name': 'VIPRecode', 'router': null, 'id': 10, 'cname': 'VIP\u987e\u5ba2\u63d0\u9192' }
+						]
+					},
+					{
+						'name': 'Analytics',
+						'router': '\/footfall',
+						'id': 2,
+						'cname': '\u5ba2\u6d41\u5206\u6790',
+						'subpagesList': [
+							{ 'name': 'Entity', 'router': null, 'id': 11, 'cname': '\u5b9e\u4f53\u5ba2\u6d41\u5206\u6790' },
+							{ 'name': 'DwellTime', 'router': null, 'id': 12, 'cname': '\u505c\u7559\u65f6\u95f4\u5206\u6790' },
+							{ 'name': 'AgeGender', 'router': null, 'id': 13, 'cname': '\u6027\u522b\u5e74\u9f84\u5206\u6790' },
+							{ 'name': 'Ranking', 'router': null, 'id': 14, 'cname': '\u6392\u884c\u5360\u6bd4\u5206\u6790' },
+							{ 'name': 'GoShop', 'router': null, 'id': 15, 'cname': '\u8fdb\u5e97\u7387\u5206\u6790' },
+							{ 'name': 'HeatMap', 'router': null, 'id': 16, 'cname': '\u70ed\u529b\u56fe\u5206\u6790' },
+							{ 'name': 'Effective', 'router': null, 'id': 17, 'cname': '\u6709\u6548\u5ba2\u6d41\u5206\u6790' }
+						]
+					},
+					{
+						'name': 'Generatrix',
+						'router': '\/generatrix',
+						'id': 3, 'cname': '\u52a8\u7ebf\u5206\u6790',
+						'subpagesList': [
+							{ 'name': 'Relevance', 'router': null, 'id': 18, 'cname': '\u5173\u8054\u5206\u6790' },
+							{ 'name': 'Cross', 'router': null, 'id': 19, 'cname': '\u4ea4\u53c9\u5ba2\u6d41\u5206\u6790' },
+							{ 'name': 'PathTrend', 'router': null, 'id': 20, 'cname': '\u8def\u5f84\u52a8\u5411\u5206\u6790' },
+							{ 'name': 'Drainage', 'router': null, 'id': 21, 'cname': '\u5b9e\u4f53\u5f15\u6d41\u5206\u6790' },
+							{ 'name': 'OldPath', 'router': null, 'id': 33, 'cname': '\u8def\u5f84\u52a8\u5411\u5206\u6790(\u65e7)' }
+						]
+					},
+					{
+						'name': 'Operation',
+						'router': '\/operation',
+						'id': 4, 'cname': '\u8fd0\u8425\u5206\u6790',
+						'subpagesList': [
+							{ 'name': 'Goal','router': null, 'id': 22, 'cname': '\u76ee\u6807\u8fbe\u6210\u5206\u6790' },
+							{ 'name': 'HolidayAnalysis', 'router': null, 'id': 23, 'cname': '\u8282\u5047\u65e5\u6d3b\u52a8\u5206\u6790' },
+							{ 'name': 'SalesAnalytics', 'router': null, 'id': 24, 'cname': '\u9500\u552e\u5206\u6790' }
+						]
+					},
+					{
+						'name': 'Report',
+						'router': '\/report',
+						'id': 5,
+						'cname': '\u62a5\u544a\u8be6\u60c5',
+						'subpagesList': [
+							{ 'name': 'DailyReport', 'router': null, 'id': 25, 'cname': '\u65e5\u62a5' },
+							{ 'name': 'WeekReport', 'router': null, 'id': 26, 'cname': '\u5468\u62a5' },
+							{ 'name': 'MonthReport', 'router': null, 'id': 27, 'cname': '\u6708\u62a5' }
+						]
+					},
+					{
+						'name': 'Admin',
+						'router': '\/admin',
+						'id': 6,
+						'cname': '\u540e\u53f0\u7ba1\u7406',
+						'subpagesList': [
+							{'name': 'EntityManage', 'router': null, 'id': 28, 'cname': '\u5b9e\u4f53\u7ba1\u7406' },
+							{ 'name': 'Account', 'router': null, 'id': 29, 'cname': '\u8d26\u6237\u7ba1\u7406' },
+							{ 'name': 'HolidayManage', 'router': null, 'id': 30, 'cname': '\u8282\u5047\u65e5\u6d3b\u52a8\u7ba1\u7406' },
+							{ 'name': 'VipCustom', 'router': null, 'id': 31, 'cname': 'VIP\u5ba2\u6237\u7ba1\u7406' },
+							{ 'name': 'Role', 'router': null, 'id': 32, 'cname': '\u6743\u9650\u7ba1\u7406' }
+						]
+					}
+				]
+			} 
+		}
     let list = data.data.main
     let valData = list.map(val => {
       let obj = {

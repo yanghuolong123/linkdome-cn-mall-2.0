@@ -60,10 +60,10 @@ export default {
       //   name: '凌图智慧商业BI大屏',
       //   id: 1
       // },
-		{
-        name: '凌图智慧商业综合分析平台',
-        id: 2
-      }
+				{
+					name: '凌图智慧商业综合分析平台',
+					id: 2
+				}
       ],
       selectBoxShow: false,
       validateRules: {
