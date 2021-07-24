@@ -3,7 +3,8 @@
     <!-- 实时数据区域 -->
     <real-time-data 
 			@interValChange="intervalClick"
-			@refresh="updateRealTimezone">
+			@refresh="updateRealTimezone"
+		>
 			<template slot="map">
 				<map-carousel 
 					:center="center"
@@ -14,14 +15,18 @@
 					:window="window"
 					:timingValue='$store.state.home.intervalTime'
 					:id="currentMenuName"
-					@markClick="selectMenuByName"></map-carousel>
+					@markClick="selectMenuByName"
+				></map-carousel>
       </template>
+
       <template slot="dashboard">
         <right-data 
 					@isRightImg='isRightImg'
 					:rightShoppingList='rightShoppingList'
-					ref="dashBoard"></right-data>
+					ref="dashBoard"
+				></right-data>
       </template>
+
 			<template slot="cards" v-if="isKipShow == false" class="">
 				<indicator-cards
 					:indicatorList="kpiData"
@@ -36,6 +41,7 @@
 					</template>
 				</indicator-cards>
 			</template>
+
     </real-time-data>
     <!-- 历史数据区域 -->
     <template>

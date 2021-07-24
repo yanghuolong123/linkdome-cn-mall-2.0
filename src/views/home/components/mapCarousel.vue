@@ -1,25 +1,24 @@
 <template>
   <div class="map-carousel-box box-card">
     <div v-if="id ==='company'" class="amap-box">
-      <img src="@/assets/images/fixation_img/bg/map.png" alt="">
-        <div  class="company-property"
-          :key="index" v-for="(item,index) in markers"
-          :style="{left:item.position[0],top:item.position[1]}"
-          >
-            <div class="property-list"  v-on:mouseout="showData(index,'hide')" v-on:mouseover="showData(index,'show')" v-show='item.isText'>
-              <img  :src="item.img?item.img:floorImage" alt="">
-              <div class="list-right">
-                <p class="ellipsis-1">{{item.name}}</p>
-                <p class="enter ellipsis-1" :title="'实时客流: '+Number(item.enter).toLocaleString()">实时客流: {{Number(item.enter).toLocaleString()}}</p>
-              </div>
-            </div>
-
-        <img class="map-icon"
-          v-on:mouseover="showData(index,'show')"
-          v-on:mouseout="showData(index,'hide')"
-          v-on:click="handleclick(item.id)"
-          src="@/assets/images/fixation_img/rest/map-icon.png" alt=""
-        >
+      <img src="@/assets/images/fixation_img/bg/map.png" alt=""/>
+			<div  class="company-property"
+				:key="index" v-for="(item,index) in markers"
+				:style="{left:item.position[0],top:item.position[1]}"
+				>
+					<div class="property-list"  v-on:mouseout="showData(index,'hide')" v-on:mouseover="showData(index,'show')" v-show='item.isText'>
+						<img  :src="item.img?item.img:floorImage" alt="">
+						<div class="list-right">
+							<p class="ellipsis-1">{{item.name}}</p>
+							<p class="enter ellipsis-1" :title="$t('realTimePassengerFlow')+': '+Number(item.enter).toLocaleString()">{{$t('realTimePassengerFlow')+": "+Number(item.enter).toLocaleString()}}</p>
+						</div>
+					</div>
+					<img class="map-icon"
+						v-on:mouseover="showData(index,'show')"
+						v-on:mouseout="showData(index,'hide')"
+						v-on:click="handleclick(item.id)"
+						src="@/assets/images/fixation_img/rest/map-icon.png" alt=""
+					>
         </div>
       </div>
     <div v-if="id!=='company'" style="width:100%;height:100%;">
@@ -35,7 +34,7 @@
           >
             {{pos.name}}
             <br>
-            实时客流:{{pos.enter ? pos.enter.toLocaleString() : 0}}
+            {{$t('realTimePassengerFlow') + ":" + pos.enter ? pos.enter.toLocaleString() : 0}}
           </div>
         </div>
       </template>

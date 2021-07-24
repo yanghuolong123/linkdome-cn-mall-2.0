@@ -4,10 +4,10 @@
       <div class="bg-white dashboard-box">
         <vs-row type="flex">
           <vs-col vs-lg="6" vs-xs="12" class="vs-list">
-            <p class="fontSize">当日累积客流（人次）</p>
+            <p class="fontSize">{{ $t('cumulativePassengerFlowOfTheDay') }}</p>
             <p class="dayEnter  font-number font-semibold">{{rightShoppingList.currentDay}}</p>
             <div class="month-data">
-              <p class="font-normal"> 当月累积客流（人次）</p>
+              <p class="font-normal">{{ $t('cumulativePassengerFlowOfTheMonth') }}</p>
               <p class="font-number ">{{ rightShoppingList.currentMonthly}}</p>
             </div>
           </vs-col>
@@ -21,7 +21,7 @@
               />
             </div>
             <div>
-              <p class="text-base text-grey font-normal" style="text-align: center">月达标值（人次）</p>
+              <p class="text-base text-grey font-normal" style="text-align: center">{{ $t('monthlyStandardValue') }}</p>
               <p class="text-lg text-grey font-number font-normal" style="text-align: center">{{ rightShoppingList.monthlyGoal}}</p>
             </div>
           </vs-col>
@@ -104,7 +104,7 @@ export default {
           },
           fontFamily: 'source_han_sans_cn'
         },
-        labels: ['本月客流达成率'],
+        labels: [this.$t('passengerFlowachievementRateOfThisMonth')],
         responsive: [
           {
             breakpoint: 1600,

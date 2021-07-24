@@ -23,12 +23,18 @@ module.exports =  {
   login: "登录",
 	jumpPath: "跳转路径",
 	realTimeDataToday: "今日实时数据",
+	realTimePassengerFlow: "实时客流",
+	cumulativePassengerFlowOfTheDay: "当日累积客流（人次）",
+	cumulativePassengerFlowOfTheMonth: "当月累积客流（人次）",
+	monthlyStandardValue: "月达标值（人次）",
+	passengerFlowachievementRateOfThisMonth: "本月客流达成率",
 	minute: "分钟",
 	second: "秒",
 	
 	fx: {
 		minute: "分钟",
 		second: "秒",
+		// .replace("分钟", $t('fx.minute')).replace("秒", $t('fx.second'))
 	},
 
 	

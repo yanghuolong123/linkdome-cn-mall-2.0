@@ -1,41 +1,50 @@
 <template>
   <div >
     <!-- 实时数据区域 -->
-    <real-time-data @interValChange="intervalClick"
-                    @refresh="updateRealTimezone">
+    <real-time-data 
+			@interValChange="intervalClick"
+			@refresh="updateRealTimezone"
+		>
       <template slot="map">
-        <map-carousel :center="center"
-                      :zooms="zooms"
-                      :markers="markers"
-                      :shopData="shopData"
-                      :gateData="gateData"
-                      :window="window"
-                      :timingValue="$store.state.home.intervalTime"
-                      :id="currentMenuName"
-                      @markClick="selectMenuByName"></map-carousel>
+        <map-carousel
+					:center="center"
+					:zooms="zooms"
+					:markers="markers"
+					:shopData="shopData"
+					:gateData="gateData"
+					:window="window"
+					:timingValue="$store.state.home.intervalTime"
+					:id="currentMenuName"
+					@markClick="selectMenuByName"
+				></map-carousel>
       </template>
+			
       <template slot="dashboard">
-        
-        <dashBoard :target="monthTargetVal"
-                   :saleData="saleData"
-                   :todayEnter="todayEnter"
-                   :monthEnter="monthEnter"
-                   :dayTotalEnter='dayTotalEnter'
-                   ref="dashBoard"></dashBoard>
+        <dashBoard 
+					:target="monthTargetVal"
+					:saleData="saleData"
+					:todayEnter="todayEnter"
+					:monthEnter="monthEnter"
+					:dayTotalEnter='dayTotalEnter'
+					ref="dashBoard"
+				></dashBoard>
       </template>
 
       <template slot="cards">
-        <indicator-cards :indicatorList="kpiData"
-                         textName='shop-center-current'
-                         :propertyId="currentPropertyId"
-                         ref="currentKpi"
-                         class="groupStyle"
-                          :moveWidth='0.024'
-                        >
+        <indicator-cards
+					:indicatorList="kpiData"
+					textName='shop-center-current'
+					:propertyId="currentPropertyId"
+					ref="currentKpi"
+					class="groupStyle"
+					:moveWidth='0.024'
+				>
           <template slot-scope="{item}">
-            <singleCard :isShowText='true'
-                        :item="item"
-                        :innerRange="innerRange"></singleCard>
+            <singleCard
+							:isShowText='true'
+							:item="item"
+							:innerRange="innerRange"
+						></singleCard>
           </template>
         </indicator-cards>
       </template>
@@ -44,70 +53,83 @@
     <template>
       <!-- 历史数据指标 -->
       <div class="-mx-3 px-3 py-2">
-        <indicator-cards :indicatorList="historyIndicators"
-                         :propertyId="currentPropertyId"
-                         ref="historyKpi"
-                         indicatorType="historyIndicator"
-                         textName='shop-center-histrry'
-                         scaleCards
-                         :defaultCountsOfCards="4"
-                         :moveWidth='0.013'
-                        >
+        <indicator-cards 
+					:indicatorList="historyIndicators"
+					:propertyId="currentPropertyId"
+					ref="historyKpi"
+					indicatorType="historyIndicator"
+					textName='shop-center-histrry'
+					scaleCards
+					:defaultCountsOfCards="4"
+					:moveWidth='0.013'
+				>
           <template slot-scope="{item}">
             <!-- 历史数据 卡片 列表  -->
             <!-- 平均客流量 客流峰值 总客流 集客量峰值 销售额 有效客流 -->
-            <singleCard :isShowText='false'
-                        :item="item"
-                        :innerRange="innerRange"
-                        :isLiveData="false"></singleCard>
+            <singleCard 
+							:isShowText='false'
+							:item="item"
+							:innerRange="innerRange"
+							:isLiveData="false"
+						></singleCard>
           </template>
           <template>
             <template slot="title">
               <span class="text-xl text-black font-medium hidden sm:block" style="padding-left:18px">
                 历史数据查询
-                <Tooltip :content="tootipText"
-                         placement="right"
-                         theme="light"
-                         transfer
-                         max-width="500">
+                <Tooltip
+									:content="tootipText"
+									placement="right"
+									theme="light"
+									transfer
+									max-width="500"
+								>
                   <icons type="wenhao" />
                 </Tooltip>
               </span>
             </template>
             <template slot="dateSelector">
-              <i-date-picker @selectDate="selectDate"
-                             :value="historyDate"
-                             class="mr-8 history-date-picker"></i-date-picker>
+              <i-date-picker
+								@selectDate="selectDate"
+								:value="historyDate"
+								class="mr-8 history-date-picker"></i-date-picker>
             </template>
           </template>
         </indicator-cards>
       </div>
       <!-- 趋势对比 -->
-      <Trend style="margin-top:20px"
-             :time1="outRange"
-             @curretIndicatorChange="val=>{showTotal = !val}"
-             :innerRange="innerRange"
-             :propertyId="currentPropertyId"
-             :indicatorData="trendIndicators"
-             :istotal='showTotal'></Trend>
+      <Trend 
+				style="margin-top:20px"
+				:time1="outRange"
+				@curretIndicatorChange="val=>{showTotal = !val}"
+				:innerRange="innerRange"
+				:propertyId="currentPropertyId"
+				:indicatorData="trendIndicators"
+				:istotal='showTotal'
+			></Trend>
       <!-- 排行占比 -->
-      <Ranking :time1="outRange"
-               :propertyId="currentPropertyId"
-               :indicatorData="rankingIndicators"
-               :defaultBizIndicator='rankingDataShowType'
-               :defaultShopIndicator='rankingDataShowType' />
+      <Ranking 
+				:time1="outRange"
+				:propertyId="currentPropertyId"
+				:indicatorData="rankingIndicators"
+				:defaultBizIndicator='rankingDataShowType'
+				:defaultShopIndicator='rankingDataShowType'
+			/>
       <!-- 顾客类型数据 -->
       <customer-analytics :data="customAnalytics">
         <template slot-scope="{item}">
-          <customer-charts :labels="item.labels"
-                           :series="item.series"
-                           :type="item.type"
-                           :title="item.title"
-						   tooltipUnit='人'
-                           :height="item.height"
-                           @tableChage="shopTabChange">
-            <export-menu  slot="export"
-                         @onchange="genderExportBiztop(item.title)"></export-menu>
+          <customer-charts 
+						:labels="item.labels"
+						:series="item.series"
+						:type="item.type"
+						:title="item.title"
+						tooltipUnit='人'
+						:height="item.height"
+						@tableChage="shopTabChange"
+					>
+            <export-menu 
+							slot="export"
+							@onchange="genderExportBiztop(item.title)"></export-menu>
           </customer-charts>
         </template>
       </customer-analytics>

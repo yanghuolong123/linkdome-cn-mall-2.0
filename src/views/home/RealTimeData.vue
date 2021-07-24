@@ -27,7 +27,9 @@
               :key="item"
               :name="item"
               @click="clickInterVal(item)"
-            >{{item.replace("分钟", $t('fx.minute')).replace("秒", $t('fx.second'))}}</vs-dropdown-item>
+            >
+							{{ item.replace("分钟", $t('fx.minute')).replace("秒", $t('fx.second')) }}
+						</vs-dropdown-item>
           </vs-dropdown-menu>
         </vs-dropdown>
       </p>

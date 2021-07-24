@@ -23,12 +23,18 @@ module.exports =  {
   login: "Login",
 	jumpPath: "Jump path",
 	realTimeDataToday: "Real time data today",
+	realTimePassengerFlow: "Real time passenger flow",
+	cumulativePassengerFlowOfTheDay: "Cumulative passenger flow of the day (person time)",
+	cumulativePassengerFlowOfTheMonth: "Cumulative passenger flow of the month (person time)",
+	monthlyStandardValue: "Monthly standard value (person time)",
+	passengerFlowachievementRateOfThisMonth: "Passenger flow achievement rate of this month",
 	minute: "minute",
 	second: "second",
 	
 	fx: {
 		minute: "min",
 		second: "s",
+		// .replace("分钟", $t('fx.minute')).replace("秒", $t('fx.second'))
 	},
 	passages: {
 		tootipText1: "Average passenger flow: the sum of the real-time cumulative passenger flow of all shopping centers divided by the number of shopping centers \npeak passenger flow: the maximum value of the peak passenger flow in all shopping centers \npeak passenger volume: the maximum value of the peak passenger volume in all shopping centers \nToday's passenger volume: the sum of the passenger volume in all shopping centers",
