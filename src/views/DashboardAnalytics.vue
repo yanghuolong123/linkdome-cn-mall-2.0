@@ -1,7 +1,7 @@
 <template>
   <div v-if="showData">
-    <shopping-dashboard v-if="headerType"></shopping-dashboard>
-    <group-dashboard v-else></group-dashboard>
+    <shopping-dashboard v-if="headerType"/>
+    <group-dashboard v-else/>
   </div>
 </template>
 <script>

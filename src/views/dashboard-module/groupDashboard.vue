@@ -1,39 +1,41 @@
 <template>
   <div>
     <!-- 实时数据区域 -->
-    <real-time-data @interValChange="intervalClick"
-                    @refresh="updateRealTimezone">
-      <template slot="map">
-        <map-carousel :center="center"
-                      :zooms="zooms"
-                      :markers="markers"
-                      :shopData="shopData"
-                      :gateData="gateData"
-                      :window="window"
-                      :timingValue='$store.state.home.intervalTime'
-                      :id="currentMenuName"
-                      @markClick="selectMenuByName"></map-carousel>
+    <real-time-data 
+			@interValChange="intervalClick"
+			@refresh="updateRealTimezone">
+			<template slot="map">
+				<map-carousel 
+					:center="center"
+					:zooms="zooms"
+					:markers="markers"
+					:shopData="shopData"
+					:gateData="gateData"
+					:window="window"
+					:timingValue='$store.state.home.intervalTime'
+					:id="currentMenuName"
+					@markClick="selectMenuByName"></map-carousel>
       </template>
       <template slot="dashboard">
-        <right-data @isRightImg='isRightImg'
-                    :rightShoppingList='rightShoppingList'
-                    ref="dashBoard"></right-data>
+        <right-data 
+					@isRightImg='isRightImg'
+					:rightShoppingList='rightShoppingList'
+					ref="dashBoard"></right-data>
       </template>
-
-        <template slot="cards" v-if="isKipShow == false" class="">
-            <indicator-cards
-              :indicatorList="kpiData"
-              :propertyId="currentPropertyId"
-              ref="currentKpi"
-              textName='group-current'
-              class='group-right-list groupStyle'
-              :moveWidth='0.024'
-            >
-            <template slot-scope="{item}">
-                <singleCard :isShowText='true' :item="item" :innerRange="innerRange"></singleCard>
-            </template>
-            </indicator-cards>
-        </template>
+			<template slot="cards" v-if="isKipShow == false" class="">
+				<indicator-cards
+					:indicatorList="kpiData"
+					:propertyId="currentPropertyId"
+					ref="currentKpi"
+					textName='group-current'
+					class='group-right-list groupStyle'
+					:moveWidth='0.024'
+				>
+					<template slot-scope="{item}">
+						<singleCard :isShowText='true' :item="item" :innerRange="innerRange"></singleCard>
+					</template>
+				</indicator-cards>
+			</template>
     </real-time-data>
     <!-- 历史数据区域 -->
     <template>
@@ -52,46 +54,53 @@
           <template slot-scope="{item}">
             <!-- 历史数据 卡片 列表  -->
             <!-- 平均客流量 客流峰值 总客流 集客量峰值 销售额 有效客流 -->
-            <singleCard :isShowText='false'
-                        :item="item"
-                        :innerRange="innerRange"
-                        :isLiveData="false"></singleCard>
+            <singleCard 
+							:isShowText='false'
+							:item="item"
+							:innerRange="innerRange"
+							:isLiveData="false"
+						></singleCard>
           </template>
           <template>
             <template slot="title">
               <span class="text-xl text-black font-medium hidden sm:block" style="padding-left:18px;">
                 历史数据查询
-                <Tooltip :content="tootipText"
-                         placement="right"
-                         theme="light"
-                         transfer
-                         max-width="500">
+                <Tooltip 
+									:content="tootipText"
+									placement="right"
+									theme="light"
+									transfer
+									max-width="500">
                   <icons type="wenhao" />
                 </Tooltip>
               </span>
             </template>
             <template slot="dateSelector">
-              <i-date-picker @selectDate="selectDate"
-                             :value="historyDate"
-                             class="mr-8 history-date-picker"></i-date-picker>
+              <i-date-picker 
+								@selectDate="selectDate"
+								:value="historyDate"
+								class="mr-8 history-date-picker"
+							></i-date-picker>
             </template>
           </template>
         </indicator-cards>
       </div>
       <!-- 趋势对比 -->
-      <group-trend style="margin-top:20px"
-                   :time1="outRange"
-                   :innerRange="innerRange"
-                   :companyId="companyId"
-                   :indicatorData="trendIndicators">
-      </group-trend>
+      <group-trend 
+				style="margin-top:20px"
+				:time1="outRange"
+				:innerRange="innerRange"
+				:companyId="companyId"
+				:indicatorData="trendIndicators"
+			></group-trend>
       <!-- 排行占比 -->
-      <Ranking :time1="outRange"
-               :propertyId="currentPropertyId"
-               :indicatorData="rankingIndicators"
-               :defaultBizIndicator='rankingDataShowType'
-               :defaultShopIndicator='rankingDataShowType'>
-      </Ranking>
+      <Ranking 
+				:time1="outRange"
+				:propertyId="currentPropertyId"
+				:indicatorData="rankingIndicators"
+				:defaultBizIndicator='rankingDataShowType'
+				:defaultShopIndicator='rankingDataShowType'
+			></Ranking>
       <!-- 顾客类型数据 -->
       <group-age-gender :outRange='outRange'></group-age-gender>
     </template>
@@ -700,11 +709,11 @@ export default {
     updateRealTimezone () {
       let companyId = this.companyId // 公司id
       getCurrent({ time: this.today, companyId, offset: 60 }).then(res => {
-          this.$set(this.initRes, 0, res)
-          this.mapDataInit(this.initRes)
-        }).catch(err => {
-          console.log(err)
-        })
+				this.$set(this.initRes, 0, res)
+				this.mapDataInit(this.initRes)
+			}).catch(err => {
+				console.log(err)
+			})
     },
     async initRequest () {
       // in 1.0 version has 'company'

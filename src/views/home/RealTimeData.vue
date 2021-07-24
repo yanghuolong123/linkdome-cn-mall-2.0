@@ -3,7 +3,7 @@
     <div class="info-seting-zone">
       <p class="time-box">
         <span class="text-xl text-black font-medium">
-          今日实时数据
+          {{ $t('realTimeDataToday') }}
           <Tooltip :content="tootipText" placement="right" theme="light" transfer max-width="500">
             <icons type="wenhao"/>
           </Tooltip>
@@ -16,7 +16,9 @@
           <icons type="shuaxin" :size="24"></icons>
         </a>
         <vs-dropdown class="hidden md:inline ml-8">
-          <span class="text-sm setingtext">{{$store.state.home.intervalTime}}刷新一次</span>
+          <span class="text-sm setingtext">
+						{{ $t('fn.refreshTime', [$store.state.home.intervalTime]).replace("分钟", $t('fx.minute')).replace("秒", $t('fx.second')) }}
+					</span>
           <icons type="arrow_down" color="#626262" class="mx-4"></icons>
           <vs-dropdown-menu>
             <vs-dropdown-item
@@ -25,7 +27,7 @@
               :key="item"
               :name="item"
               @click="clickInterVal(item)"
-            >{{item}}</vs-dropdown-item>
+            >{{item.replace("分钟", $t('fx.minute')).replace("秒", $t('fx.second'))}}</vs-dropdown-item>
           </vs-dropdown-menu>
         </vs-dropdown>
       </p>
@@ -56,7 +58,9 @@ export default {
   },
   computed: {
     tootipText () {
-      return this.$store.state.home.headerAction === 0 ? '平均客流量：所有购物中心实时累计客流之和除以购物中心个数\n客流峰值：所有购物中心当中客流峰值的最大值\n集客量峰值：所有购物中心当中集客量峰值的最大值\n今日集客量：所有购物中心集客量之和' : '今日平均客流量：累计客流量除以营业小时数\n今日客流峰值：从开始营业时间到目前时刻客流最大值\n今日集客量峰值：从开始营业时间到目前时刻购物中心中驻留人数的最大值和时间点\n今日集客量：从开始营业时间到目前时刻的进入总客流与离开总客流之差'
+      return this.$store.state.home.headerAction === 0 
+			? this.$t('passages.tootipText1') 
+			: this.$t('passages.tootipText2') 
     }
   },
   mounted () {

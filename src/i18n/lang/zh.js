@@ -10,6 +10,7 @@ module.exports =  {
 		successTo: "{0}成功！",
 		failedTo: "{0}失败。",
 		askConfirm: "确定要{0}？",
+		refreshTime: "{0}刷新一次",
 	},
 
 
@@ -21,12 +22,24 @@ module.exports =  {
   rememberPassword: "记住密码",
   login: "登录",
 	jumpPath: "跳转路径",
+	realTimeDataToday: "今日实时数据",
+	minute: "分钟",
+	second: "秒",
+	
+	fx: {
+		minute: "分钟",
+		second: "秒",
+	},
 
 	
 	notices: {
 		wrongPassword: "您的账号或密码输入错误",
 		NoPermission: "抱歉，你没有权限",
 		systemException: "System exception!",
+	},
+	passages: {
+		tootipText1: "平均客流量：所有购物中心实时累计客流之和除以购物中心个数\n客流峰值：所有购物中心当中客流峰值的最大值\n集客量峰值：所有购物中心当中集客量峰值的最大值\n今日集客量：所有购物中心集客量之和",
+		tootipText2: "今日平均客流量：累计客流量除以营业小时数\n今日客流峰值：从开始营业时间到目前时刻客流最大值\n今日集客量峰值：从开始营业时间到目前时刻购物中心中驻留人数的最大值和时间点\n今日集客量：从开始营业时间到目前时刻的进入总客流与离开总客流之差",
 	},
 
 	// router
