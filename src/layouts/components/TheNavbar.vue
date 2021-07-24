@@ -33,6 +33,7 @@
               </Badge>
           </div> -->
           <!-- <div class="BIButton" v-show="showBI" v-on:click="openBILarge">点击开启BI大屏</div> -->
+					<LanguageBtn style="margin:0 16px 0 0;"/>
           <div class="text-right leading-tight hidden sm:block">
             <p class="font-semibold">{{user.userName}}</p>
           </div>
@@ -120,12 +121,14 @@ import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import { getGroupOrganization, getUrl } from '@/api/home.js'
 import _ from 'lodash'
 import Cookies from 'js-cookie'
+import LanguageBtn from '@/components/LanguageBtn.vue'
 export default {
   name: 'the-navbar',
   components: {
     VxAutoSuggest,
     VuePerfectScrollbar,
-    headerAccount
+    headerAccount,
+		LanguageBtn
   },
 
   props: {

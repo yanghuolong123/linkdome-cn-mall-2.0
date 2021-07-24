@@ -1,5 +1,7 @@
 module.exports =  {
-	Dashboard: 'Dashboard',
+  changeLang: "简体中文",
+	
+
 	eCommerce: 'eCommerce',
 	Apps: 'Apps',
 	Todo: 'Todo',
@@ -14,7 +16,6 @@ module.exports =  {
 	Card: 'Card',
 	Basic: 'Basic',
 	Statistics: 'Statistics',
-	Analytics: 'Analytics',
 	CardActions: 'Card Actions',
 	Table: 'Table',
 	Components: 'Components',
@@ -68,12 +69,6 @@ module.exports =  {
 	Invoice: 'Invoice',
 	FAQ: 'FAQ',
 	Search: 'Search',
-	Drainage: 'Drainage',
-	Effective: 'Effective',
-	Role: 'Role',
-	OldPath: 'OldPath',
-	PathTrend: 'PathTrend',
-	HeatMap: 'HeatMap',
 	KnowledgeBase: 'Knowledge Base',
 	ChartsAndMaps: 'Charts & Maps',
 	Charts: 'Charts',
@@ -96,6 +91,4 @@ module.exports =  {
 	Support: 'Support',
 	Documentation: 'Documentation',
 	RaiseSupport: 'Raise Support',
-	Relevance: 'Relevance',
-	Queue:'Queue'
 }

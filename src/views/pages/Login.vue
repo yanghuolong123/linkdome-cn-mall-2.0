@@ -1,5 +1,6 @@
 <template>
 	<div class="login-container" :class="themeClass">
+		<LanguageBtn style="margin:8px 16px 0 auto;"/>
 		<div class="login">
 			<img src="@/assets/images/fixation_img/logo/logo.png" width="150" alt="">
 <!--			<div class="system-select" @click="selectBoxShow=true">{{systemSelectName}} <Icon type="md-arrow-dropdown" />-->
@@ -40,17 +41,11 @@ import moment from 'moment'
 import md5 from 'md5'
 import _ from 'lodash'
 import Cookies from 'js-cookie'
+import LanguageBtn from '@/components/LanguageBtn.vue'
 export default {
-  computed: {
-    systemSelectName () {
-      return this.systemList.find(o => {
-        return o.id === this.systemSelect
-      }).name
-    },
-    themeClass () {
-      return this.systemSelect === 1 ? 'dark' : 'light'
-    }
-  },
+	components: {
+		LanguageBtn
+	},
   data () {
     return {
       systemSelect: 2,
@@ -80,6 +75,16 @@ export default {
       isRememberMe: false,
       Biurl: '',
       homeUrl: ''
+    }
+  },
+  computed: {
+    systemSelectName () {
+      return this.systemList.find(o => {
+        return o.id === this.systemSelect
+      }).name
+    },
+    themeClass () {
+      return this.systemSelect === 1 ? 'dark' : 'light'
     }
   },
   activated () {},
