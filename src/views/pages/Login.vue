@@ -1,29 +1,29 @@
 <template>
 	<div class="login-container" :class="themeClass">
-		<LanguageBtn style="margin:8px 16px 0 auto;"/>
+		<LanguageBtn style="margin: 8px 16px 0 auto;"/>
 		<div class="login">
 			<img src="@/assets/images/fixation_img/logo/logo.png" width="150" alt="">
-<!--			<div class="system-select" @click="selectBoxShow=true">{{systemSelectName}} <Icon type="md-arrow-dropdown" />-->
+			<!--			<div class="system-select" @click="selectBoxShow=true">{{systemSelectName}} <Icon type="md-arrow-dropdown" />-->
 			<div class="system-select">{{systemSelectName}}
 				<div class="select-box" v-show="selectBoxShow">
-					<div class="sys-item" :class="{active:systemSelect===sys.id}" @click.stop="handleSystemSwitch(sys.id)" v-for="(sys,i) in systemList" :key="i">{{sys.name}}</div>
+					<div class="sys-item" :class="{active:systemSelect===sys.id}" @click.stop="handleSystemSwitch(sys.id)" v-for="(sys,i) in systemListCom" :key="i">{{sys.name}}</div>
 				</div>
 			</div>
-			<Form  @keydown.enter.native="handleLogin('formValidate')" ref="formValidate" class="form-data" :model="loginForm" :rules="validateRules" >
+			<Form  @keydown.enter.native="handleLogin('formValidate')" ref="formValidate" class="form-data" :model="loginForm" :rules="validateRulesCom" >
 				<FormItem prop="username">
-					<input placeholder="请输入账号" v-model="loginForm.username"></input>
+					<input :placeholder="$t('fn.inputHolder', [$t('accountNum')])" v-model="loginForm.username"></input>
 				</FormItem>
 				<FormItem prop="password">
-					<input placeholder="请输入密码" type="password" v-model="loginForm.password"></input>
+					<input :placeholder="$t('fn.inputHolder', [$t('password')])" type="password" v-model="loginForm.password"></input>
 				</FormItem>
 			</Form>
 			<div class="flex-between">
 				<label for="remember" class="remember flex-box">
-					<input id="remember" type="checkbox" v-model="isRememberMe">记住密码
+					<input id="remember" type="checkbox" v-model="isRememberMe">{{ $t('rememberPassword') }}
 				</label>
-				<router-link to="/pages/forgot-password" ><span class="forget">忘记密码?</span></router-link>
+				<router-link to="/pages/forgot-password" ><span class="forget">{{ $t('forgetPassword') }}</span></router-link>
 			</div>
-			<Button class="login-btn" :loading="loading" type="primary" @click="handleLogin('formValidate')">立即登录</Button>
+			<Button class="login-btn" :loading="loading" type="primary" @click="handleLogin('formValidate')">{{ $t('login') }}</Button>
 		</div>
 		<div class="bottom">
 			浙ICP备20009188号-1 浙江凌图科技有限公司 Copyright 2019-{{currentYear}}
@@ -49,22 +49,10 @@ export default {
   data () {
     return {
       systemSelect: 2,
-			currentYear:moment().format('YYYY'),
-      systemList: [
-      //   {
-      //   name: '凌图智慧商业BI大屏',
-      //   id: 1
-      // },
-				{
-					name: '凌图智慧商业综合分析平台',
-					id: 2
-				}
-      ],
+			currentYear: moment().format('YYYY'),
+      systemList: [],
       selectBoxShow: false,
-      validateRules: {
-        username: { required: true, message: '请输入账号', trigger: 'blur' },
-        password: { required: true, message: '请输入密码', trigger: 'blur' }
-      },
+      validateRules: {},
       loginForm: {
         username: '',
         password: ''
@@ -79,13 +67,34 @@ export default {
   },
   computed: {
     systemSelectName () {
-      return this.systemList.find(o => {
+      return this.systemListCom.find(o => {
         return o.id === this.systemSelect
       }).name
     },
     themeClass () {
       return this.systemSelect === 1 ? 'dark' : 'light'
-    }
+    },
+		systemListCom () {
+			
+			this.systemList = [
+			//   {
+			//   name: '凌图智慧商业BI大屏',
+			//   id: 1
+			// },
+				{
+					name: this.$t('analysisPlatform'),
+					id: 2
+				}
+			]
+			return this.systemList
+		},
+		validateRulesCom () {
+			this.validateRules = {
+				username: { required: true, message: this.$t('fn.require', [this.$t('accountNum')]), trigger: 'blur' },
+				password: { required: true, message: this.$t('fn.require', [this.$t('password')]), trigger: 'blur' }
+			}
+			return this.validateRules
+		},
   },
   activated () {},
   mounted () {
@@ -111,11 +120,13 @@ export default {
               if (this.systemSelect === 1) {
                 if (this.showBI()) {
                   that.openBILarge()
-                } else {
-                  that.showHint('抱歉，你没有权限')
+                }
+								else {
+                  that.showHint(this.$t('notices.noPermission'))
                   this.loading = false
                 }
-              } else {
+              }
+							else {
                 //  store list
                 that.commitStoreData(data)
                 // 处理当前账户菜单数据为键值对数组类型
@@ -185,26 +196,29 @@ export default {
                     this.$store.commit('saveOrganizationData', orgData.data.data);
                     if(this.isRememberMe){
                       Cookies.set('userInfo',this.loginForm)
-					}else {
+										}
+										else{
                       Cookies.remove('userInfo')
-					}
+										}
                     that.$router.push(names);
-                  } else {
-                    that.showHint('抱歉，你没有权限')
                   }
-                } else {
-                  that.showHint('抱歉，你没有权限')
+									else {
+                    that.showHint(this.$t('notices.noPermission'))
+                  }
+                }
+								else {
+                  that.showHint(this.$t('notices.noPermission'))
                 }
                 this.loading = false
               }
             } else if (res.data.code === 305 || res.data.code === 304) {
-              that.showHint('账号或密码错误')
+              that.showHint(this.$t('notices.wrongPassword'))
               this.loading = false
             }
           }).catch(err => {
             this.loading = false
             console.log(err)
-            this.$Message.error('系统异常！')
+            this.$Message.error(this.$t('notices.systemException'))
           })
         }
       })
@@ -229,11 +243,12 @@ export default {
             this.Biurl = res.data.data.BI
             this.homeUrl = res.data.data.Dashboard
             resolve()
-          } else {
-            reject('获取跳转路径失败')
+          }
+					else {
+            reject( this.$t('fn.failedTo', [this.$t('fn.get', [this.$t('jumpPath')])]) )
           }
         }).catch(() => {
-          reject('获取跳转路径失败')
+          reject( this.$t('fn.failedTo', [this.$t('fn.get', [this.$t('jumpPath')])]) )
         })
       })
     },
@@ -333,7 +348,6 @@ export default {
 			width: 500px;
 			height: 620px;
 			padding: 60px 60px;
-			letter-spacing: 3px;
 			.system-select{
 				color: #216199;
 				font-weight: bold;

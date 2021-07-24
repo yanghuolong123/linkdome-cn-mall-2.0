@@ -1,0 +1,8 @@
+/*
+	src\router\router.js
+	src\libs\util.js
+	src\store\getters.js
+	src\layouts\main\Main.vue
+	src\layouts\components\vx-sidebar\VxSidebar.vue
+	src\layouts\components\vx-sidebar\VxSidebarGroup.vue
+	src\layouts\components\vx-sidebar\VxSidebarItem.vue
