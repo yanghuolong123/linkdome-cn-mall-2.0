@@ -55,8 +55,28 @@
           textName='group-histrry'
           scaleCards
           :defaultCountsOfCards="4"
-           :moveWidth='0.013'
+					:moveWidth='0.013'
         >
+					<template slot="title">
+						<span class="text-xl text-black font-medium hidden sm:block" style="padding-left:18px;">
+							{{ $t('historicalDataQuery') }}
+							<Tooltip 
+								:content="tootipText"
+								placement="right"
+								theme="light"
+								transfer
+								max-width="500">
+								<icons type="wenhao" />
+							</Tooltip>
+						</span>
+					</template>
+					<template slot="dateSelector">
+						<i-date-picker 
+							@selectDate="selectDate"
+							:value="historyDate"
+							class="mr-8 history-date-picker"
+						></i-date-picker>
+					</template>
           <template slot-scope="{item}">
             <!-- 历史数据 卡片 列表  -->
             <!-- 平均客流量 客流峰值 总客流 集客量峰值 销售额 有效客流 -->
@@ -66,28 +86,6 @@
 							:innerRange="innerRange"
 							:isLiveData="false"
 						></singleCard>
-          </template>
-          <template>
-            <template slot="title">
-              <span class="text-xl text-black font-medium hidden sm:block" style="padding-left:18px;">
-                历史数据查询
-                <Tooltip 
-									:content="tootipText"
-									placement="right"
-									theme="light"
-									transfer
-									max-width="500">
-                  <icons type="wenhao" />
-                </Tooltip>
-              </span>
-            </template>
-            <template slot="dateSelector">
-              <i-date-picker 
-								@selectDate="selectDate"
-								:value="historyDate"
-								class="mr-8 history-date-picker"
-							></i-date-picker>
-            </template>
           </template>
         </indicator-cards>
       </div>
@@ -193,7 +191,7 @@ export default {
         {
           data: 0,
           id: 'enteravg',
-          name: '平均客流量',
+          name: this.$t('fn.average', [this.$t('customerTraffic')]),
           type: {
             icon: 'avg',
             color: '#1dd9d1'
@@ -206,7 +204,7 @@ export default {
             timeRange: '00:00-00:59'
           },
           id: 'enterhighest',
-          name: '客流峰值',
+          name: this.$t('fn.peak', [this.$t('customerTraffic')]),
           type: {
             icon: 'highest',
             color: '#e8585a'
@@ -219,7 +217,7 @@ export default {
             timeRange: '00:00-00:59'
           },
           id: 'occupancyhighest',
-          name: '集客量峰值',
+          name: this.$t('fn.peak', [this.$t('occupancy')]),
           type: {
             icon: 'occu_highest',
             color: '#e8585a'
@@ -228,7 +226,7 @@ export default {
         {
           data: 0,
           id: 'occupancytotal',
-          name: '集客量',
+          name: this.$t('occupancy'),
           type: {
             icon: 'liuliang',
             color: '#857aef'
@@ -337,7 +335,7 @@ export default {
       if (this.clickTimeName === 'y') return _.dropRight([...tmlEnterKPI, ...tmlOccuKPI])
       let validObj = {
         id: 'entervalid',
-        name: '有效客流',
+        name: this.$t('fn.effective', [this.$t('customerTraffic')]),
         data: Number(enter.unique) < 0 ? 0 : enter.unique,
         type: {
           icon: 'youxiaokeliu',
@@ -363,7 +361,7 @@ export default {
           }
         },
         occupancy: {
-          name: '集客量',
+          name: this.$t('occupancy'),
           yaxis: {
             title: {
               text: '集客量（人次）'
@@ -550,7 +548,7 @@ export default {
       let companyKpi = [
         {
           id: 'enteravg',
-          name: '平均客流量',
+          name: this.$t('fn.average', [this.$t('customerTraffic')]),
           data: currentCompany ? currentCompany.avg : 0,
           type: {
             icon: 'avg',
@@ -559,7 +557,7 @@ export default {
         },
         {
           id: 'enterhighest',
-          name: '客流峰值',
+          name: this.$t('fn.peak', [this.$t('customerTraffic')]),
           data: {
             number: currentCompany ? Number(currentCompany.highest.number) < 0 ? 0 : currentCompany.highest.number : 0,
             timeRange: currentCompany ? currentCompany.highest.timeRange : '',
@@ -572,7 +570,7 @@ export default {
         },
         {
           id: 'occupancyhighest',
-          name: '集客量峰值',
+          name: this.$t('fn.peak', [this.$t('occupancy')]),
           data: {
             number: currentCompany ? Number(currentCompany.occupancy_highest.number) < 0 ? 0 : currentCompany.occupancy_highest.number : 0,
             timeRange: currentCompany ? currentCompany.occupancy_highest.timeRange : '',
@@ -585,7 +583,7 @@ export default {
         },
         {
           id: 'occupancytotal',
-          name: '集客量',
+          name: this.$t('occupancy'),
           data: currentCompany ? Number(currentCompany.occupancy_total) < 0 ? 0 : currentCompany.occupancy_total : 0,
           type: {
             icon: 'liuliang',
@@ -610,13 +608,13 @@ export default {
       // data.isexist ? pic = '今日' : pic = ''
       let checkNameObj = {
         enter: {
-          avg: pic + '平均客流量',
-          highest: pic + '客流峰值',
-          total: pic + '总客流'
+          avg: pic + this.$t('fn.average', [this.$t('customerTraffic')]),
+          highest: pic + this.$t('fn.peak', [this.$t('customerTraffic')]),
+          total: pic + this.$t('fn.total', [this.$t('customerTraffic')])
         },
         occupancy: {
-          highest: pic + '集客量峰值',
-          total: pic + '集客量'
+          highest: pic + this.$t('fn.peak', [this.$t('occupancy')]),
+          total: pic + this.$t('occupancy')
 
         }
       }

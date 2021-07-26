@@ -1,6 +1,8 @@
 module.exports =  {
   changeLang: "English",
 	fn: {
+		_: "{0}{1}",
+		Parentheses: "（{0}）",//this.$t('fn._', [this.$t('sales'), this.$t('fn.Parentheses', [this.$t('yuan')])])
 		require: "请输入{0}",
 		inputHolder: "请输入{0}",
 		get: "获取{0}",
@@ -9,6 +11,10 @@ module.exports =  {
 		failedTo: "{0}失败。",
 		askConfirm: "确定要{0}？",
 		refreshTime: "{0}刷新一次",
+		average: "平均{0}",//this.$t('fn.average', [this.$t('customerTraffic')])
+		peak: "{0}峰值",//this.$t('fn.peak', [this.$t('occupancy')])
+		total: "总{0}",//this.$t('fn.total', [this.$t('customerTraffic')])
+		effective: "有效{0}"//this.$t('fn.effective', [this.$t('customerTraffic')])
 	},
 
 
@@ -28,11 +34,20 @@ module.exports =  {
 	passengerFlowachievementRateOfThisMonth: "本月客流达成率",
 	minute: "分钟",
 	second: "秒",
+	customerTraffic: "客流量",
+	occupancy: "集客量",
+	sales: "销售额",
+	yuan: "元",
+	tongbi: "同比",
+	huanbi: "环比",
+	historicalDataQuery: "历史数据查询",
 	
 	fx: {
 		minute: "分钟",
 		second: "秒",
 		// .replace("分钟", $t('fx.minute')).replace("秒", $t('fx.second'))
+		day: "天",
+		sales_yuan: "@:(sales)（@:(yuan)）",
 	},
 
 	
