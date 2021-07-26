@@ -37,7 +37,7 @@
           minmax(calc((100% - 20 * ${defaultCountsOfCards - 1}px) / ${defaultCountsOfCards}),1fr))`,
           }"
       >
-        <div v-for="(item,index) in cardsList" :key="index" :class="{scaleCard:scaleCards}">
+       <div v-for="(item,index) in cardsList" :key="index" :class="{scaleCard:scaleCards}">
           <slot :item="item"></slot>
         </div>
       </div>
@@ -226,28 +226,27 @@ export default {
       switch (this.textName) {
         case 'shop-center-current': // 购物中心当前位置
           // if (data.property) this.listClassify(data.property[0].current)
-          this.listClassify('平均客流量,集客量峰值,集客量,客流峰值')
+          this.listClassify(['平均客流量', '集客量峰值', '集客量', '客流峰值'])
           break
         case 'shop-center-histrry':// 购物中心历史位置
           // if (data.property) this.listClassify(data.property[0].history)
-          this.listClassify('平均客流量,客流峰值,总客流,集客量峰值,有效客流,成交率,坪效（元/平方米）,客单价（元）,销售额（元）')
+          this.listClassify(['平均客流量','客流峰值','总客流','集客量峰值','有效客流','成交率','坪效（元/平方米）','客单价（元）','销售额（元）'])
           break
         case 'group-current': // 集团当前位置
           // if (data.company) this.listClassify(data.company[0].current)
-          this.listClassify('客流峰值,集客量峰值,集客量,平均客流量')
+          this.listClassify(['客流峰值','集客量峰值','集客量','平均客流量'])
           break
         case 'group-histrry':// 集团历史位置
           // if (data.company) this.listClassify(data.company[0].history)
-          this.listClassify('平均客流量,客流峰值,总客流,集客量峰值,有效客流,成交率,坪效（元/平方米）,客单价（元）,销售额（元）')
+          this.listClassify(['平均客流量','客流峰值','总客流','集客量峰值','有效客流','成交率','坪效（元/平方米）','客单价（元）','销售额（元）'])
           break
       }
       // }
     },
     // 处理数据
     listClassify (data) {
-      let historyList = _.split(data, ',')
       this.indicatorList.forEach(list => {
-        historyList.indexOf(list.name) > -1 ? this.delList.push(list) : this.addList.push(list)
+        data.indexOf(list.name) > -1 ? this.delList.push(list) : this.addList.push(list)
       })
     }
   }

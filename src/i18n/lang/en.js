@@ -1,8 +1,6 @@
 module.exports =  {
   changeLang: "简体中文",
 	fn: {
-		and: "{0} and {1}",
-		or: "{0} or {1}",
 		require: "{0} is required",
 		inputHolder: "{0}",
 		get: "get {0}",

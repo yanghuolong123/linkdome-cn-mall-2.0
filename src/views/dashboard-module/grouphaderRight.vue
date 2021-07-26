@@ -14,10 +14,10 @@
           <vs-col vs-lg="6" vs-xs="12" class="vs-list radial-bar">
             <div class="flex">
               <vue-apex-charts
-                      type="radialBar"
-                      height="100%"
-                      :options="chartOptions"
-                      :series="rightShoppingList.achievingRate"
+								type="radialBar"
+								height="100%"
+								:options="chartOptions"
+								:series="rightShoppingList.achievingRate"
               />
             </div>
             <div>
@@ -53,7 +53,6 @@ export default {
         currentMonthly: 0,
         monthlyGoal: 0,
         achievingRate: [30]
-
       }
     }
   },

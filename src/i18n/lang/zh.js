@@ -1,8 +1,6 @@
 module.exports =  {
   changeLang: "English",
 	fn: {
-		and: "{0}和{1}",
-		or: "{0}或{1}",
 		require: "请输入{0}",
 		inputHolder: "请输入{0}",
 		get: "获取{0}",

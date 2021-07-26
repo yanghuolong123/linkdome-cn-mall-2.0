@@ -62,7 +62,7 @@
             <icons type="xiala"
               :style="{
               transform:parseInt(item.compareRate)>=0 ? `rotate(180deg)` :`rotate(0deg)`}"
-              :color="parseInt(item.compareRate)>=0 ? '#26B465' :'#F64F61' ">
+              :color="(parseInt(item.compareRate)>=0 ? '#26B465' :'#F64F61' )">
             </icons>
             {{item.compareRate}}
           </span>
