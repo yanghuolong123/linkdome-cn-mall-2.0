@@ -14,7 +14,8 @@ module.exports =  {
 		average: "平均{0}",//this.$t('fn.average', [this.$t('customerTraffic')])
 		peak: "{0}峰值",//this.$t('fn.peak', [this.$t('occupancy')])
 		total: "总{0}",//this.$t('fn.total', [this.$t('customerTraffic')])
-		effective: "有效{0}"//this.$t('fn.effective', [this.$t('customerTraffic')])
+		effective: "有效{0}",//this.$t('fn.effective', [this.$t('customerTraffic')])
+		trend: "{0}趋势",
 	},
 
 
@@ -41,6 +42,7 @@ module.exports =  {
 	tongbi: "同比",
 	huanbi: "环比",
 	historicalDataQuery: "历史数据查询",
+	客流量趋势: "客流量趋势",
 	
 	fx: {
 		minute: "分钟",
@@ -48,6 +50,8 @@ module.exports =  {
 		// .replace("分钟", $t('fx.minute')).replace("秒", $t('fx.second'))
 		day: "天",
 		sales_yuan: "@:(sales)（@:(yuan)）",
+		Data_indicators: "数据指标：",
+		enter_trend: "客流量趋势",
 	},
 
 	
@@ -59,6 +63,7 @@ module.exports =  {
 	passages: {
 		tootipText1: "平均客流量：所有购物中心实时累计客流之和除以购物中心个数\n客流峰值：所有购物中心当中客流峰值的最大值\n集客量峰值：所有购物中心当中集客量峰值的最大值\n今日集客量：所有购物中心集客量之和",
 		tootipText2: "今日平均客流量：累计客流量除以营业小时数\n今日客流峰值：从开始营业时间到目前时刻客流最大值\n今日集客量峰值：从开始营业时间到目前时刻购物中心中驻留人数的最大值和时间点\n今日集客量：从开始营业时间到目前时刻的进入总客流与离开总客流之差",
+		tootipText3: "平均客流量：所选时间段内所有购物中心累计客流量除以购物中心个数\n总客流： 所选时间段内的所有购物中心客流之和\n客流峰值：所选时间段内的所有购物中心当中客流峰值的最大值\n集客量峰值：所选时间段内所有购物中心当中集客量峰值的最大值\n有效客流：所选时间段内所有购物中心的唯一客流人数之和\n销售额：所选时间段内所有购物中心销售额之和",
 	},
 
 	// router

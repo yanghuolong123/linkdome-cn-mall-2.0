@@ -98,13 +98,13 @@
 				:indicatorData="trendIndicators"
 			></group-trend>
       <!-- 排行占比 -->
-      <Ranking 
+      <ranking-group 
 				:time1="outRange"
 				:propertyId="currentPropertyId"
 				:indicatorData="rankingIndicators"
 				:defaultBizIndicator='rankingDataShowType'
 				:defaultShopIndicator='rankingDataShowType'
-			></Ranking>
+			></ranking-group>
       <!-- 顾客类型数据 -->
       <group-age-gender :outRange='outRange'></group-age-gender>
     </template>
@@ -126,7 +126,7 @@ import {
 } from '@/api/home.js'
 import groupTrend from '@/views/group/groupTrend'
 import groupAgeGender from '@/views/group/groupAgeGender'
-import Ranking from '@/views/operation/components/RankingGroup.vue'
+import RankingGroup from '@/views/operation/components/RankingGroup.vue'
 import singleCard from '@/views/home/components/singleCard.vue'
 import CustomerCharts from '_c/common/CopyChartsTabs'
 import { getBussinessTree } from '@/api/passenger'
@@ -145,7 +145,7 @@ export default {
   components: {
     realTimeData,
     mapCarousel,
-    Ranking,
+    RankingGroup,
     indicatorCards,
     rightData,
     iDatePicker,
@@ -272,7 +272,7 @@ export default {
 
   computed: {
     tootipText () {
-      return '平均客流量：所选时间段内所有购物中心累计客流量除以购物中心个数\n总客流： 所选时间段内的所有购物中心客流之和\n客流峰值：所选时间段内的所有购物中心当中客流峰值的最大值\n集客量峰值：所选时间段内所有购物中心当中集客量峰值的最大值\n有效客流：所选时间段内所有购物中心的唯一客流人数之和\n销售额：所选时间段内所有购物中心销售额之和'
+      return this.$t('passages.tootipText3')
     },
     companyId () {
       return this.$store.state.user.companyId

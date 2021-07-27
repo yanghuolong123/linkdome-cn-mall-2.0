@@ -33,7 +33,7 @@ footFall:客流
           @getShopTableCoumn="leftTableCoumn"
           @getShopTableData="letfTableData"
         >
-          <span class="mx-4 text-sm" style="line-height:37px">数据指标:</span>
+          <span class="mx-4 text-sm" style="line-height:37px">:</span>
           <vs-select
             autocomplete
             v-model="bizIndicator"
@@ -66,7 +66,7 @@ footFall:客流
           key="shopTop"
         >
           <export-menu slot="export" @onchange="exportShoptop"></export-menu>
-          <span class="mx-4 text-sm"  style="line-height:37px">数据指标:</span>
+          <span class="mx-4 text-sm"  style="line-height:37px">{{ $t('fx.Data_indicators') }}</span>
           <vs-select
             autocomplete
             v-model="shopIndicator"

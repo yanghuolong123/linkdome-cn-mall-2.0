@@ -1,12 +1,11 @@
 <template>
   <i-tabs v-model="current" v-if="canshow" >
-     <slot slot="select"></slot>
+		<slot slot="select"></slot>
     <tab-item
       :icon="iconCheck[item.type]"
       :titles="item.title"
       v-for="(item,index) in tabsInfo"
-      :key="index"
-    >
+      :key="index">
       <vue-apex-charts
         :type="item.type"
         height="400"
@@ -30,8 +29,7 @@
       v-if="showChakan"
       :title="item.title"
       v-for="(item,index) in tabsInfo"
-      :key="index"
-    >
+      :key="index">
       <div style="height:400px; width:100%; overflow-y: auto;overflow-x: hidden" >
         <!-- <div class="allTable"></div> -->
         <vue-apex-charts

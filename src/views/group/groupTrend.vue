@@ -10,12 +10,11 @@
       :tooltipUnit="tooltipUnit(curretIndicator)"
       class="bg-white box-card"
       :totalData="totalData"
-      id='trendLine'
-    >
+      id='trendLine'>
       <export-menu slot="export" @onchange="exportBiztop"></export-menu>
       <template>
         <div class="flex justify-between items-center mr-10">
-          <span class="whitespace-no-wrap mx-4 text-sm">数据指标:</span>
+          <span class="whitespace-no-wrap mx-4 text-sm">{{ $t('fx.Data_indicators') }}</span>
           <!-- multiple -->
           <vs-select autocomplete   v-model="curretIndicator" @change="curretIndicatorChange" :max-selected="2" id="chartSelect">
             <vs-select-item
@@ -27,7 +26,6 @@
           </vs-select>
         </div>
       </template>
-
     </chart-tabs>
   </div>
 </template>

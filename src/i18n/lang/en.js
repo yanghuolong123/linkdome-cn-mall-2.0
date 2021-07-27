@@ -14,7 +14,8 @@ module.exports =  {
 		average: "average {0}",
 		peak: "peak {0}",
 		total: "total {0}",
-		effective: "effective {0}"
+		effective: "effective {0}",
+		trend: "{0} trend",
 	},
 
 	
@@ -41,6 +42,7 @@ module.exports =  {
 	tongbi: "over the previous year",
 	huanbi: "chain",
 	historicalDataQuery: "Historical data query",
+	客流量趋势: "Enter Trend",
 
 	fx: {
 		minute: "min",
@@ -48,10 +50,13 @@ module.exports =  {
 		// .replace("分钟", $t('fx.minute')).replace("秒", $t('fx.second'))
 		day: "day",
 		sales_yuan: "@:(sales) (@:(yuan))",
+		Data_indicators: "Data indicators:",
+		enter_trend: "Enter Trend",
 	},
 	passages: {
 		tootipText1: "Average @:(customerTraffic): the sum of the real-time cumulative @:(customerTraffic) of all shopping centers divided by the number of shopping centers \npeak @:(customerTraffic): the maximum value of the peak @:(customerTraffic) in all shopping centers \npeak @:(occupancy): the maximum value of the peak @:(occupancy) in all shopping centers \nToday's @:(occupancy): the sum of the @:(occupancy) in all shopping centers",
 		tootipText2: "Average @:(customerTraffic) today: the cumulative @:(customerTraffic) divided by the number of business hours \npeak @:(customerTraffic) today: the maximum @:(customerTraffic) from the start of business hours to the current time \npeak @:(occupancy) today: the maximum number of people staying in the shopping center and the time point from the start of business hours to the current time \npeak @:(occupancy) today: the difference between the total incoming @:(customerTraffic) and the total outgoing @:(customerTraffic) from the start of business hours to the current time",
+		tootipText3: "Average passenger flow: the cumulative passenger flow of all shopping centers in the selected time period divided by the number of shopping centers \nTotal passenger flow: the sum of passenger flow of all shopping centers in the selected time period \nPeak passenger flow: the maximum value of peak passenger flow in all shopping centers in the selected time period \nPeak passenger volume: the maximum value of peak passenger flow in all shopping centers in the selected time period \nEffective passenger flow : the sum of the unique number of passengers in all shopping centers in the selected time period \nSales: the sum of the sales in all shopping centers in the selected time period",
 	},
 
 	notices: {
