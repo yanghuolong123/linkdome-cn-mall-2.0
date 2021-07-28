@@ -8,7 +8,7 @@
 				   class="common-card m-t-20 chart-1"
 				   :toolList="toolList">
 			<div class="flex-center quota">
-				<span>数据指标：</span>
+				<span>{{ $t('fx.Data_indicators') }}</span>
 				<Select v-model="enterSelect" multiple :max-tag-count="1" @on-change="enterSelectChange">
 					<Option v-for="item in enterFlowList" :value="item.value" :key="item.value">{{ item.name }}</Option>
 				</Select>
@@ -24,7 +24,7 @@
 			</div>
 		</chart-box>
 		<div class="common-card m-t-20" ref="enterTable" v-show="enterSelect.length === 1">
-			<div class="detail-title">客流量详细数据信息</div>
+			<div class="detail-title">{{ $t('fn.detailData', [$t('客流量')]) }}</div>
 			<Table stripe height="400" :columns="enterTable.columns" :data="enterTable.tableData">
 				<template slot-scope="{row}" slot="entityType">
 					<span>{{getItype(row.entityName)}}</span>
@@ -36,7 +36,7 @@
 				   ref="chartOccu" class="common-card m-t-20 chart-1"
 				   :toolList="occuTool"></chart-box>
 		<div class="common-card m-t-20" ref="occuTable" v-show="showOccu">
-			<div class="detail-title">集客量详细数据信息</div>
+			<div class="detail-title">{{ $t('fn.detailData', [$t('occupancy')]) }}</div>
 			<Table stripe height="400" :columns="occuTable.columns" :data="occuTable.tableData">
 				<template slot-scope="{row}" slot="entityType">
 					<span>{{getItype(row.entityName)}}</span>

@@ -8,8 +8,8 @@ footFall:客流
 <template>
   <div class="mt-6 p-6 bg-white box-card">
     <div class="ranking-selector-box flex items-center">
-      <span class="mr-3">{{selectTitle}}</span>
-      <vs-select v-model="bussinessType" autocomplete placeholder="请选择" noDataText="暂无数据">
+      <span class="mr-3">{{$t(selectTitle)}}</span>
+      <vs-select v-model="bussinessType" autocomplete :placeholder="$t(请选择)" :noDataText="$t(暂无数据)">
         <vs-select-item
           v-for="item in withAllOptions"
           :value="item.value"

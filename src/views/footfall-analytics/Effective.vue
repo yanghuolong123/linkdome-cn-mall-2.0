@@ -3,13 +3,20 @@
     <flow-selector ref="selectData" @paramsPrepare="paramsPrepare"></flow-selector>
     <div class="chartContent" v-if="isShowChart">
       <div ref="effCahrt" class="eff-box">
-        <goalCharts   class="charts" id='tendencyLine' :height1="chartheight" :height3="chartheight" title1="有效客流趋势"
-        :options1="trendAndAvg.trendLineOption" :series1="trendAndAvg.trendLineSeries"
-        :options2="trendAndAvg.trendBarOption" :series2="trendAndAvg.trendBarSeries" :columns="trendAndAvg.trendColumn"
-        :tableList="trendAndAvg.trendTable"></goalCharts>
-       
+        <goalCharts
+          class="charts"
+          id='tendencyLine'
+          title1="有效客流趋势"
+          :height1="chartheight"
+          :height3="chartheight"
+          :options1="trendAndAvg.trendLineOption"
+          :options2="trendAndAvg.trendBarOption"
+          :series1="trendAndAvg.trendLineSeries"
+          :series2="trendAndAvg.trendBarSeries"
+          :columns="trendAndAvg.trendColumn"
+          :tableList="trendAndAvg.trendTable"
+        ></goalCharts>
       </div>
-      
       <div class="cardContent">
         <Cards style="height: 165px;" :isTime="isTime" :isUp="isUp1" :item="effective"></Cards>
         <Cards style="height: 165px;" :isTime="isTime" :isUp="isUp2" :item="repeat" margin="20px 0px"></Cards>

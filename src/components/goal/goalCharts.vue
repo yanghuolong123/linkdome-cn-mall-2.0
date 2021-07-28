@@ -2,32 +2,32 @@
   <div class="bg-white box-card box-cardss">
     <i-tabs  class="chartsTable" v-model="current">
       <tab-item :icon="icon1" class="chart-div" >
-				<div class="left-title">
-					<p class="title">{{title1}}</p>
-					<span v-if="isText">
-						<hr v-if="dataType"></hr><p>{{dataType}}</p>
-					</span>
-				</div>
-				<vue-apex-charts v-if="isChart"  :height="height1" :options="options1" :series="series1"></vue-apex-charts>
+        <div class="left-title">
+          <p class="title">{{ $t(title1) }}</p>
+          <span v-if="isText">
+            <hr v-if="dataType"></hr><p>{{dataType}}</p>
+          </span>
+        </div>
+        <vue-apex-charts v-if="isChart"  :height="height1" :options="options1" :series="series1"></vue-apex-charts>
       </tab-item>
       <tab-item :icon="icon2" class="chart-div" >
         <div class="left-title">
-            <p class="title">{{title1}}</p>
-            <span v-if="isText">
-              <hr v-if="dataType"></hr><p>{{dataType}}</p>
-            </span>
-          </div>
-          <vue-apex-charts ref="graphBar" :type="type2" :height="height1" :options="options2" :series="series2"></vue-apex-charts>
+          <p class="title">{{ $t(title1) }}</p>
+          <span v-if="isText">
+            <hr v-if="dataType"></hr><p>{{dataType}}</p>
+          </span>
+        </div>
+        <vue-apex-charts ref="graphBar" :type="type2" :height="height1" :options="options2" :series="series2"></vue-apex-charts>
       </tab-item>
       <tab-item :icon="icon3" class="chart-div">
         <div class="left-title">
-					<p class="title">{{title1}}</p>
-					<span v-if="isText">
-						<hr v-if="dataType"></hr>
-						<p>{{dataType}}</p>
-					</span>
-				</div>
-          <TableMultipleSelected  style="overflow-y:scroll;" :style="{height:height3}" :tableName="columns" :tableList="tableList"></TableMultipleSelected>
+          <p class="title">{{ $t(title1) }}</p>
+          <span v-if="isText">
+            <hr v-if="dataType"></hr>
+            <p>{{dataType}}</p>
+          </span>
+        </div>
+        <TableMultipleSelected  style="overflow-y:scroll;" :style="{height:height3}" :tableName="columns" :tableList="tableList"></TableMultipleSelected>
       </tab-item>
     </i-tabs>
   </div>

@@ -8,7 +8,7 @@
           <chart-tabs :title="formatTitle" :xAxis="rightXaxis" :series="rightValue" :type="['bar']" horizonta></chart-tabs>
         </template>
         <template v-else>
-          <div class= "pieTitle">客流占比</div>
+          <div class= "pieTitle">{{$t('客流占比')}}</div>
           <div class="pieNoData" v-if="isNodata"></div>
           <vue-apex-charts
             ref='pieCharts'
@@ -17,8 +17,7 @@
             type='pie'
             :options="peiOptions"
             :series="pieSeries"
-          >
-          </vue-apex-charts>
+          ></vue-apex-charts>
         </template>
      </div>
   </div>

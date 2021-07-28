@@ -11,11 +11,12 @@ module.exports =  {
 		failedTo: "{0}失败。",
 		askConfirm: "确定要{0}？",
 		refreshTime: "{0}刷新一次",
-		average: "平均{0}",//this.$t('fn.average', [this.$t('customerTraffic')])
+		average: "平均{0}",//this.$t('fn.average', [this.$t('客流量')])
 		peak: "{0}峰值",//this.$t('fn.peak', [this.$t('occupancy')])
-		total: "总{0}",//this.$t('fn.total', [this.$t('customerTraffic')])
-		effective: "有效{0}",//this.$t('fn.effective', [this.$t('customerTraffic')])
+		total: "总{0}",//this.$t('fn.total', [this.$t('客流量')])
+		effective: "有效{0}",//this.$t('fn.effective', [this.$t('客流量')])
 		trend: "{0}趋势",
+    detailData: "{0}详细数据信息",
 	},
 
 
@@ -35,15 +36,57 @@ module.exports =  {
 	passengerFlowachievementRateOfThisMonth: "本月客流达成率",
 	minute: "分钟",
 	second: "秒",
-	customerTraffic: "客流量",
+	客流量: "客流量",
 	occupancy: "集客量",
 	sales: "销售额",
 	yuan: "元",
-	tongbi: "同比",
-	huanbi: "环比",
+	同比: "同比",
+	环比: "环比",
+  客流占比: "客流占比",
+  有效客流趋势: "有效客流趋势",
+
+
 	historicalDataQuery: "历史数据查询",
+  // Itabs.vue => titleList[value]
 	客流量趋势: "客流量趋势",
-	
+	集团业态排行: "集团业态排行",
+	详细数据: "详细数据",
+	购物中心业态排行: "购物中心业态排行",
+	请选择: "请选择",
+  排行分析: "排行分析",
+  年龄分布: "年龄分布",
+  性别分布: "性别分布",
+  新老顾客占比: "新老顾客占比",
+  到店次数占比: "到店次数占比",
+  客流排行: "客流排行",
+  到店次数: "到店次数",
+
+  //Main.vue => routeTitle
+  实体客流分析: "实体客流分析",
+  年龄性别分析: "年龄性别分析",
+  排行占比分析: "排行占比分析",
+  进店率分析: "进店率分析",
+  热力图分析: "热力图分析",
+  有效客流分析: "进店率分析",
+  排队货架分析: "进店率分析",
+  // src\views\entity-analytic\index.vue
+
+  // Chart-box.vue => toolList[tool]&&toolList[tool].name
+  集客量趋势: "集客量趋势",
+  // class="go-shop-time-icon"
+  进店率TOP10排行分析: "进店率TOP10排行分析",
+  结账排队分析: "结账排队分析",
+  货架触摸分析: "货架触摸分析",
+  进店率趋势分析: "进店率趋势分析",
+
+  // Cards.vue
+  有效客流: "有效客流",
+  重复客流: "重复客流",
+  平均到访次数: "平均到访次数",
+  
+	// goalCharts.vue => title1
+  平均到访频次趋势: "平均到访频次趋势",
+
 	fx: {
 		minute: "分钟",
 		second: "秒",
@@ -53,12 +96,16 @@ module.exports =  {
 		Data_indicators: "数据指标：",
 		enter_trend: "客流量趋势",
 	},
+	holder: {
+		请选择: "请选择",
+    暂无数据:"暂无数据"
+	},
 
 	
 	notices: {
 		wrongPassword: "您的账号或密码输入错误",
 		NoPermission: "抱歉，你没有权限",
-		systemException: "System exception!",
+		systemException: "系统异常！",
 	},
 	passages: {
 		tootipText1: "平均客流量：所有购物中心实时累计客流之和除以购物中心个数\n客流峰值：所有购物中心当中客流峰值的最大值\n集客量峰值：所有购物中心当中集客量峰值的最大值\n今日集客量：所有购物中心集客量之和",

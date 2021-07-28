@@ -1,70 +1,74 @@
-<style  lang="less" scoped>
-@import "./groupAgeGender.less";
-</style>
 <template>
   <div>
     <div class="group-client">
       <div class="box-card left">
         <div class="title">
-          <p>年龄分布</p>
+          <p>{{$t('年龄分布')}}</p>
           <ul>
             <li
-                    :title="iconTitle[icon.type]"
-                    :key="index"
-                    v-for="(icon,index) in iconList"
-                    v-on:click='iconClick(index,"age")'
-            >
+              :title="iconTitle[icon.type]"
+              :key="index"
+              v-for="(icon,index) in iconList"
+              v-on:click='iconClick(index,"age")'>
               <icons
-                      :type="icon.type"
-                      :size="20"
-                      :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
-              >
-              </icons>
+                :type="icon.type"
+                :size="20"
+                :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
+              ></icons>
             </li>
 
           </ul>
         </div>
         <div class="flex-cell">
-          <vue-apex-charts v-if="iconIndex == 0"
-                           ref="ageGenderBar"
-                           type=bar
-                           :options="ageOptions"
-                           :series="ageSeries"></vue-apex-charts>
-          <table-default v-else
-                         class="groupTable"
-                         :tableName='ageName'
-                         :tableList='ageTableList'></table-default>
+          <vue-apex-charts
+            v-if="iconIndex == 0"
+            ref="ageGenderBar"
+            type=bar
+            :options="ageOptions"
+            :series="ageSeries"
+            ></vue-apex-charts>
+          <table-default
+            v-else
+            class="groupTable"
+            :tableName='ageName'
+            :tableList='ageTableList'
+          ></table-default>
         </div>
        
       </div>
 
       <div class=" box-card center">
         <div class="title">
-          <p>性别分布</p>
+          <p>{{$t('性别分布')}}</p>
           <ul>
             <li
               :title="iconTitle[icon.type]"
               :key="index"
               v-for="(icon,index) in iconList"
-              v-on:click='iconClick(index,"gender")'
-            >
-              <icons :type="icon.type"
-                     :size="20"
-                     :color="genderIconIndex === icon.value ? iconColor :'#9D9D9DFF'"></icons>
+              v-on:click='iconClick(index,"gender")'>
+              <icons 
+                :type="icon.type"
+                :size="20"
+                :color="genderIconIndex === icon.value ? iconColor :'#9D9D9DFF'"
+              ></icons>
             </li>
 
           </ul>
         </div>
         <div class="flex-cell">
-          <vue-apex-charts v-if="genderIconIndex == 0"
-                           ref="genderBar"
-                           type=bar
-                           :options="genderChartOptions"
-                           :series="genderSeries"></vue-apex-charts>
-          <table-default v-else
-                         class="groupTable"
-                         :tableName='genderName'
-                         :tableList='genderTableList'></table-default>
+          <vue-apex-charts
+            v-if="genderIconIndex == 0"
+            ref="genderBar"
+            type=bar
+            :options="genderChartOptions"
+            :series="genderSeries"
+          ></vue-apex-charts>
+          <table-default
+            v-else
+            class="groupTable"
+            :tableName='genderName'
+            :tableList='genderTableList'
+          ></table-default>
         </div>
        
       </div>
@@ -72,70 +76,81 @@
     <div class=" group-age-gender">
       <div class=" box-card left">
         <div class="title">
-          <p>新老顾客占比
-            <Tooltip :content="tootipText"
-                     placement="bottom"
-                     theme="light"
-                     transfer
-                     max-width="600">
+          <p>{{$t('新老顾客占比')}}
+            <Tooltip
+              :content="tootipText"
+              placement="bottom"
+              theme="light"
+              transfer
+              max-width="600">
               <icons type="wenhao" />
             </Tooltip>
           </p>
           <ul>
-            <li :key="index"
-                v-for="(icon,index) in iconList"
-                v-on:click='iconClick(index,"client")'
-                :title="iconTitle[icon.type]"
+            <li
+              :key="index"
+              v-for="(icon,index) in iconList"
+              v-on:click='iconClick(index,"client")'
+              :title="iconTitle[icon.type]"
             >
-              <icons :type="icon.type"
-                     :size="20"
-                     :color="clientIconIndex === icon.value ? iconColor :'#9D9D9DFF'"
+              <icons 
+                :type="icon.type"
+                :size="20"
+                :color="clientIconIndex === icon.value ? iconColor :'#9D9D9DFF'"
               ></icons>
             </li>
           </ul>
 
         </div>
         <div class="flex-cell">
-          <vue-apex-charts v-if="clientIconIndex == 0"
-                           ref="clientBar"
-                           type=bar
-                           :options="clientOptions"
-                           :series="clientSeries"></vue-apex-charts>
-          <table-default v-else
-                         class="groupTable"
-                         :tableName='clientName'
-                         :tableList='clientTableList'>
-          </table-default>
+          <vue-apex-charts
+            v-if="clientIconIndex == 0"
+            ref="clientBar"
+            type=bar
+            :options="clientOptions"
+            :series="clientSeries"
+          ></vue-apex-charts>
+          <table-default
+            v-else
+            class="groupTable"
+            :tableName='clientName'
+            :tableList='clientTableList'
+          ></table-default>
         </div>
        
       </div>
       <div class=" box-card right">
         <div class="title">
-          <p>到店次数占比</p>
+          <p>{{$t('到店次数占比')}}</p>
           <ul>
-            <li :key="index"
-                v-for="(icon,index) in iconList"
-                v-on:click='iconClick(index,"frequency")'
-                :title="iconTitle[icon.type]"
-            >
-              <icons :type="icon.type"
-                    :size="20"
-                    :color="frequencyIconIndex === icon.value ? iconColor :'#9D9D9DFF'"
-                    ></icons>
+            <li
+              :key="index"
+              v-for="(icon,index) in iconList"
+              v-on:click='iconClick(index,"frequency")'
+              :title="iconTitle[icon.type]">
+              <icons
+                :type="icon.type"
+                :size="20"
+                :color="frequencyIconIndex === icon.value ? iconColor :'#9D9D9DFF'"
+              ></icons>
             </li>
 
           </ul>
         </div>
         <div class="flex-cell">
-          <vue-apex-charts v-if="frequencyIconIndex == 0"
-                           ref="frequencyBar"
-                           type=bar
-                           :options="frequencyOptions"
-                           :series="frequencySeries"></vue-apex-charts>
-          <table-default v-else
-                         class="groupTable"
-                         :tableName='frequencyName'
-                         :tableList='frequencyTableList'></table-default>
+          <vue-apex-charts
+            v-if="frequencyIconIndex == 0"
+            ref="frequencyBar"
+            type=bar
+            :options="frequencyOptions"
+            :series="frequencySeries"
+          ></vue-apex-charts>
+          <table-default 
+            v-else
+            class="groupTable"
+            :tableName='frequencyName'
+            :tableList='frequencyTableList'
+          ></table-default>
         </div>
       </div>
     </div>
@@ -762,3 +777,6 @@ export default {
   deactivated () { } // 离开页面使用时调用
 }
 </script>
+<style  lang="less" scoped>
+@import "./groupAgeGender.less";
+</style>

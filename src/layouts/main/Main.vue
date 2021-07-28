@@ -43,7 +43,7 @@
                   class="content-area__heading"
                   :class="{'pr-4 border-0 md:border-r border-t-0 border-b-0 border-l-0 border-solid border-grey-light' : $route.meta.breadcrumb}"
                 >
-                  <h2 class="mb-1">{{ routeTitle }}</h2>
+                  <h2 class="mb-1">{{ $t(routeTitle) }}</h2>
                 </div>
                 <vx-breadcrumb class="ml-4 md:block hidden" v-if="$route.meta.breadcrumb"/>
               </div>

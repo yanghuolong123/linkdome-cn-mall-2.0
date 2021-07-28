@@ -4,64 +4,62 @@
 			<!-- <h1>店铺TOP10排行分析</h1> -->
 			<div class="flex-center">
 				<DatePicker
-						class="w-select"
-						type="daterange"
-						v-model="crossDate"
-						placement="bottom-end"
-						:options="disabledDate"
-						placeholder="选择日期"
+          class="w-select"
+          type="daterange"
+          v-model="crossDate"
+          placement="bottom-end"
+          :options="disabledDate"
+          placeholder="选择日期"
 				></DatePicker>
 				<vs-select
-						class="w-select m-l-20"
-						autocomplete
-						v-model="activities"
-						placeholder="选择业态"
-						style="width:14.375rem;"
-				>
+          class="w-select m-l-20"
+          autocomplete
+          v-model="activities"
+          placeholder="选择业态"
+          style="width:14.375rem;">
 					<vs-select-item
-							:value="item.value"
-							:text="item.text"
-							:key="index"
-							v-for="(item,index) in activitiesType"
+            :value="item.value"
+            :text="item.text"
+            :key="index"
+            v-for="(item,index) in activitiesType"
 					/>
 				</vs-select>
 				<Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">查询</Button>
 				<Button size="large" class="m-l-20" @click="resetData">重置</Button>
-			
 			</div>
 		</div>
 		<div class="go-shop-chart-list">
 			<div class="go-shop-time-icon">
-				<span>进店率TOP10排行分析</span>
+				<span>{{ $t('进店率TOP10排行分析') }}</span>
 				<p class="flex-center">
-            <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(icon.value)">
-              <icons
-					  :title="iconTitle[icon.type]"
-					  :type="icon.type"
-					  :size="20"
-					  :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
-			  ></icons>
-            </span>
+          <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(icon.value)">
+            <icons
+              :title="iconTitle[icon.type]"
+              :type="icon.type"
+              :size="20"
+              :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
+            ></icons>
+          </span>
 				</p>
 			</div>
-			<div v-if="isData" class="noData">暂无数据</div>
+			<div v-if="isData" class="noData">{{ $t('holder.暂无数据') }}</div>
 			<vue-apex-charts
-					v-bind:class="{ lineAction: iconIndex == 0 }"
-					class="shop-line"
-					ref="graphLine"
-					height='95%'
-					width="100%"
-					type="bar"
-					v-if="isList"
-					:options="graphData.chartOptions"
-					:series="graphData.series"
+        v-bind:class="{ lineAction: iconIndex == 0 }"
+        class="shop-line"
+        ref="graphLine"
+        height='95%'
+        width="100%"
+        type="bar"
+        v-if="isList"
+        :options="graphData.chartOptions"
+        :series="graphData.series"
 			></vue-apex-charts>
 			<table-default
-					v-bind:class="{ tableAction: iconIndex ==1}"
-					class="shop-table"
-					:tableTitle='goTitle'
-					:tableName='goName'
-					:tableList='goTableList'
+        v-bind:class="{ tableAction: iconIndex ==1}"
+        class="shop-table"
+        :tableTitle='goTitle'
+        :tableName='goName'
+        :tableList='goTableList'
 			></table-default>
 		</div>
 	</div>

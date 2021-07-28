@@ -1,7 +1,7 @@
 <template>
 	<div class="chart-box flex-column">
 		<div class="flex-between chart-title">
-			<span>{{toolList[tool]&&toolList[tool].name}}</span>
+			<span>{{ $t(toolList[tool]&&toolList[tool].name) }}</span>
 			<div class="flex-center">
 				<slot></slot>
 				<span class="icon" @click="changeTab(index)" v-for="(item,index) in toolList" :key="index">

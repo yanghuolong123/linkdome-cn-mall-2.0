@@ -5,12 +5,12 @@
         <span v-if="!isNowTime">
           {{ $t(titleList[value]) }}
           <Tooltip
-						v-if="titleList[0]=='新老顾客占比'"
-						:content="tootipText"
-						placement="bottom"
-						theme="light"
-						transfer
-						max-width="600">
+            v-if="titleList[0]=='新老顾客占比'"
+            :content="tootipText"
+            placement="bottom"
+            theme="light"
+            transfer
+            max-width="600">
             <icons type="wenhao" />
           </Tooltip>
         </span>
@@ -41,7 +41,7 @@
       </div>
     </div>
     <div class="tab-con"
-			:style="contentStyle">
+      :style="contentStyle">
       <slot></slot>
     </div>
   </div>

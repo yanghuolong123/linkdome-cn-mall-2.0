@@ -367,7 +367,7 @@ export default {
       if (this.clickTimeName === 'y') return _.dropRight([...tmlEnterKPI, ...tmlOccuKPI])
       let validObj = {
         id: 'entervalid',
-        name: this.$t('fn.effective', [this.$t('customerTraffic')]),
+        name: this.$t('fn.effective', [this.$t('客流量')]),
         data: Number(valid) < 0 ? 0 : valid,
         type: {
           icon: 'youxiaokeliu',
@@ -381,7 +381,7 @@ export default {
       if (newDate == selectDate && newDate == selectDateTwo) {
         tmlEnterKPI.forEach(val => {
           if (val.name == '平均客流量') val.data = this.currentDayData.enter.avg
-          if (val.name == this.$t('fn.total', [this.$t('customerTraffic')])) val.data = val.data.number
+          if (val.name == this.$t('fn.total', [this.$t('客流量')])) val.data = val.data.number
         })
       }
       tmlOccuKPI.map((list, index) => {
@@ -593,8 +593,8 @@ export default {
       let checkNameObj = {
         enter: {
           avg: pic + '平均客流量',
-          highest: pic + this.$t('fn.peak', [this.$t('customerTraffic')]),
-          total: pic + this.$t('fn.total', [this.$t('customerTraffic')])
+          highest: pic + this.$t('fn.peak', [this.$t('客流量')]),
+          total: pic + this.$t('fn.total', [this.$t('客流量')])
         },
         occupancy: {
           highest: pic + this.$t('fn.peak', [this.$t('occupancy')]),

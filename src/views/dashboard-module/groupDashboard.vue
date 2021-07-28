@@ -191,7 +191,7 @@ export default {
         {
           data: 0,
           id: 'enteravg',
-          name: this.$t('fn.average', [this.$t('customerTraffic')]),
+          name: this.$t('fn.average', [this.$t('客流量')]),
           type: {
             icon: 'avg',
             color: '#1dd9d1'
@@ -204,7 +204,7 @@ export default {
             timeRange: '00:00-00:59'
           },
           id: 'enterhighest',
-          name: this.$t('fn.peak', [this.$t('customerTraffic')]),
+          name: this.$t('fn.peak', [this.$t('客流量')]),
           type: {
             icon: 'highest',
             color: '#e8585a'
@@ -335,7 +335,7 @@ export default {
       if (this.clickTimeName === 'y') return _.dropRight([...tmlEnterKPI, ...tmlOccuKPI])
       let validObj = {
         id: 'entervalid',
-        name: this.$t('fn.effective', [this.$t('customerTraffic')]),
+        name: this.$t('fn.effective', [this.$t('客流量')]),
         data: Number(enter.unique) < 0 ? 0 : enter.unique,
         type: {
           icon: 'youxiaokeliu',
@@ -548,7 +548,7 @@ export default {
       let companyKpi = [
         {
           id: 'enteravg',
-          name: this.$t('fn.average', [this.$t('customerTraffic')]),
+          name: this.$t('fn.average', [this.$t('客流量')]),
           data: currentCompany ? currentCompany.avg : 0,
           type: {
             icon: 'avg',
@@ -557,7 +557,7 @@ export default {
         },
         {
           id: 'enterhighest',
-          name: this.$t('fn.peak', [this.$t('customerTraffic')]),
+          name: this.$t('fn.peak', [this.$t('客流量')]),
           data: {
             number: currentCompany ? Number(currentCompany.highest.number) < 0 ? 0 : currentCompany.highest.number : 0,
             timeRange: currentCompany ? currentCompany.highest.timeRange : '',
@@ -608,9 +608,9 @@ export default {
       // data.isexist ? pic = '今日' : pic = ''
       let checkNameObj = {
         enter: {
-          avg: pic + this.$t('fn.average', [this.$t('customerTraffic')]),
-          highest: pic + this.$t('fn.peak', [this.$t('customerTraffic')]),
-          total: pic + this.$t('fn.total', [this.$t('customerTraffic')])
+          avg: pic + this.$t('fn.average', [this.$t('客流量')]),
+          highest: pic + this.$t('fn.peak', [this.$t('客流量')]),
+          total: pic + this.$t('fn.total', [this.$t('客流量')])
         },
         occupancy: {
           highest: pic + this.$t('fn.peak', [this.$t('occupancy')]),

@@ -12,14 +12,15 @@
           ></DatePicker>
         </div>
         <div class="flex-center">
-            <el-cascader v-model="relevanceValue"
-                         v-if="isSelected"
-                         class="cascade-dom w-select"
-                         collapse-tags
-                         popper-class="relevance-cascade-dom"
-                         :props="{ multiple: true,expandTrigger:'hover'}"
-                         :options="relevanceList">
-            </el-cascader>
+            <el-cascader
+              v-if="isSelected"
+              v-model="relevanceValue"
+              class="cascade-dom w-select"
+              collapse-tags
+              popper-class="relevance-cascade-dom"
+              :props="{ multiple: true,expandTrigger:'hover'}"
+              :options="relevanceList"
+            ></el-cascader>
             <div class="cascade" v-else></div>
             <Button size="large" class="m-l-20" type="primary" @click="relevanceDataClick">查询 </Button>
             <Button size="large" class="m-l-20" @click="resetData">重置 </Button>

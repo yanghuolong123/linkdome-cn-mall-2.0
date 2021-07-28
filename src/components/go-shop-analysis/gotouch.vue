@@ -2,76 +2,75 @@
   <div class="go-shop">
     <div class="selector-container bg-white box-card">
       <!-- <h1>货架分析</h1> -->
-          <div class="flex-center">
-              <DatePicker
-                type="daterange"
-                v-model="crossDate"
-                placement="bottom-end"
-                :options="disabledDate"
-                placeholder="选择日期"
-                class="w-select"
-              ></DatePicker>
-          </div>
-          <div class="flex-center">
-<!--              <el-cascader-->
-<!--               collapse-tags-->
-<!--               class="w-select"-->
-<!--                v-model="activities"-->
-<!--                :props="{ multiple: true,expandTrigger:'hover' }"-->
-<!--                :options="activitiesType">-->
-<!--              </el-cascader>-->
-            <vs-select
-              class="w-select"
-              autocomplete
-              v-model="activities"
-              placeholder="选择排队名"
-              style="width:14.375rem;"
-              multiple
-            >
-              <vs-select-item
-                :value="item.value"
-                :text="item.text"
-                :key="index"
-                v-for="(item,index) in activitiesType"
-              />
-            </vs-select>
-              <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">查询</Button>
-              <Button size="large" class="m-l-20" @click="resetData">重置</Button>
-          </div>
+      <div class="flex-center">
+        <DatePicker
+          type="daterange"
+          v-model="crossDate"
+          placement="bottom-end"
+          :options="disabledDate"
+          placeholder="选择日期"
+          class="w-select"
+        ></DatePicker>
+      </div>
+      <div class="flex-center">
+        <!-- <el-cascader
+        collapse-tags
+        class="w-select"
+          v-model="activities"
+          :props="{ multiple: true,expandTrigger:'hover' }"
+          :options="activitiesType">
+        </el-cascader> -->
+        <vs-select
+          class="w-select"
+          autocomplete
+          v-model="activities"
+          placeholder="选择排队名"
+          style="width:14.375rem;"
+          multiple>
+          <vs-select-item
+            :value="item.value"
+            :text="item.text"
+            :key="index"
+            v-for="(item,index) in activitiesType"
+          />
+        </vs-select>
+        <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">查询</Button>
+        <Button size="large" class="m-l-20" @click="resetData">重置</Button>
+      </div>
     </div>
     <div class="go-shop-chart-list"  >
-        <div class="go-shop-time-icon">
-          <span>货架触摸分析</span>
-          <p class="flex-center">
-            <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(icon.value)">
-              <icons
-                :title="iconTitle[icon.type]"
-                :type="icon.type"
-                :size="20"
-                :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
-              ></icons>
-            </span>
-          </p>
-        </div>
-         <div v-if="isData" class="noData">暂无数据</div>
-         <vue-apex-charts
-          v-bind:class="{ lineAction: iconIndex == 0 }"
-            class=" tendencyBar"
-            ref="graphLine"
-            height='90%'
-            width="100%"
-            id='tendencyLine'
-            type="line"
-            :options="lineData.chartOptions"
-            :series="lineData.series"
-          ></vue-apex-charts>
-          <table-default
-          v-bind:class="{ tableAction: iconIndex == 1 }"
-          class="tendencyTable"
-            :tableTitle='goTitle'
-            :tableName='goName'
-            :tableList='goTableList'
-          ></table-default>
+      <div class="go-shop-time-icon">
+        <span>{{ $t('货架触摸分析') }}</span>
+        <p class="flex-center">
+          <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(icon.value)">
+            <icons
+              :title="iconTitle[icon.type]"
+              :type="icon.type"
+              :size="20"
+              :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
+            ></icons>
+          </span>
+        </p>
+      </div>
+      <div v-if="isData" class="noData">{{ $t('holder.暂无数据') }}</div>
+      <vue-apex-charts
+        v-bind:class="{ lineAction: iconIndex == 0 }"
+        class=" tendencyBar"
+        ref="graphLine"
+        height='90%'
+        width="100%"
+        id='tendencyLine'
+        type="line"
+        :options="lineData.chartOptions"
+        :series="lineData.series"
+      ></vue-apex-charts>
+      <table-default
+        v-bind:class="{ tableAction: iconIndex == 1 }"
+        class="tendencyTable"
+        :tableTitle='goTitle'
+        :tableName='goName'
+        :tableList='goTableList'
+      ></table-default>
     </div>
     <alert
       v-if="isAlert"

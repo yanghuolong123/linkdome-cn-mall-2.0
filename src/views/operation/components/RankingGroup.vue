@@ -8,8 +8,8 @@ footFall:客流
 <template>
   <div class="p-6 bg-white box-card" style="margin-top:20px">
     <div class="ranking-selector-box flex items-center">
-      <span class="mr-3">{{selectTitle}}</span>
-      <vs-select v-model="bussinessType" autocomplete placeholder="请选择" noDataText="暂无数据">
+      <span class="mr-3">{{$t(selectTitle)}}</span>
+      <vs-select v-model="bussinessType" autocomplete :placeholder="$t(请选择)" :noDataText="$t(暂无数据)">
         <vs-select-item
           v-for="item in withAllOptions"
           :value="item.value"
@@ -33,7 +33,7 @@ footFall:客流
           @getShopTableCoumn="leftTableCoumn"
           @getShopTableData="letfTableData"
         >
-          <span class="mx-4 text-sm" style="line-height:37px">:</span>
+          <span class="mx-4 text-sm" style="line-height:37px">{{ $t('fx.Data_indicators') }}</span>
           <vs-select
             autocomplete
             v-model="bizIndicator"

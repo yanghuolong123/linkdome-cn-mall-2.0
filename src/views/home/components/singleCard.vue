@@ -35,14 +35,14 @@
     <p class="text-base type-name" v-if="!item.data.hasOwnProperty('name1')">{{item.name}}</p>
     <p v-if="item.data.hasOwnProperty('ringRatio')" class="numberrate text-grey-lighter">
       <span class="mr-2">
-        {{$t('tongbi')}}
+        {{$t('同比')}}
         <span :class="{iconRotate:item.data.lastRatio >= 0}">
           <icons type="xiala" color="#F64F61"></icons>
         </span>
         <span class="font-number font-bold text-base">{{item.data.lastRatio*100 | numberFormat}}%</span>
       </span>
       <span>
-        {{$t('huanbi')}}
+        {{$t('环比')}}
         <span :class="{iconRotate:item.data.ringRatio >= 0}">
           <icons type="xiala" color="#F64F61"></icons>
         </span>
