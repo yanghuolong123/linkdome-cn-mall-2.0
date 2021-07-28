@@ -24,7 +24,7 @@
 			</div>
 		</chart-box>
 		<div class="common-card m-t-20" ref="enterTable" v-show="enterSelect.length === 1">
-			<div class="detail-title">{{ $t('fn.detailData', [$t('客流量')]) }}</div>
+			<div class="detail-title">{{ $t('fn.detailData', [$t('enter')]) }}</div>
 			<Table stripe height="400" :columns="enterTable.columns" :data="enterTable.tableData">
 				<template slot-scope="{row}" slot="entityType">
 					<span>{{getItype(row.entityName)}}</span>

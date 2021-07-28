@@ -11,10 +11,10 @@ module.exports =  {
 		failedTo: "{0}失败。",
 		askConfirm: "确定要{0}？",
 		refreshTime: "{0}刷新一次",
-		average: "平均{0}",//this.$t('fn.average', [this.$t('客流量')])
+		average: "平均{0}",//this.$t('fn.average', [this.$t('enter')])
 		peak: "{0}峰值",//this.$t('fn.peak', [this.$t('occupancy')])
-		total: "总{0}",//this.$t('fn.total', [this.$t('客流量')])
-		effective: "有效{0}",//this.$t('fn.effective', [this.$t('客流量')])
+		total: "总{0}",//this.$t('fn.total', [this.$t('enter')])
+		effective: "有效{0}",//this.$t('fn.effective', [this.$t('enter')])
 		trend: "{0}趋势",
     detailData: "{0}详细数据信息",
 	},
@@ -36,7 +36,7 @@ module.exports =  {
 	passengerFlowachievementRateOfThisMonth: "本月客流达成率",
 	minute: "分钟",
 	second: "秒",
-	客流量: "客流量",
+	enter: "客流量",
 	occupancy: "集客量",
 	sales: "销售额",
 	yuan: "元",
@@ -69,6 +69,23 @@ module.exports =  {
   热力图分析: "热力图分析",
   有效客流分析: "进店率分析",
   排队货架分析: "进店率分析",
+  关联分析: "关联分析",
+  交叉客流分析: "交叉客流分析",
+  路径动向分析: "路径动向分析",
+  实体引流分析: "实体引流分析",
+  停留时间分析: "停留时间分析",
+  目标达成分析: "目标达成分析",
+  节假日活动分析: "节假日活动分析",
+  销售分析: "销售分析",
+  门店日报: "门店日报",
+  日报: "日报",
+  周报: "周报",
+  月报: "月报",
+  自定义报告: "自定义报告",
+  实体管理: "实体管理",
+  节假日活动管理: "节假日活动管理",
+  账户管理: "账户管理",
+  权限管理: "权限管理",
   // src\views\entity-analytic\index.vue
 
   // Chart-box.vue => toolList[tool]&&toolList[tool].name
@@ -86,6 +103,15 @@ module.exports =  {
   
 	// goalCharts.vue => title1
   平均到访频次趋势: "平均到访频次趋势",
+  
+  // RelavanceTab.vue =>item.label
+  关联关系无序图: "关联关系无序图",
+  关联关系有序图: "关联关系有序图",
+  // RElavance.vue
+  '关联度TOP3：': "关联度TOP3：",
+  // VxCard.vue => title
+  关联度排行: "关联度排行",
+  转化量排行: "转化量排行",
 
 	fx: {
 		minute: "分钟",
@@ -98,7 +124,8 @@ module.exports =  {
 	},
 	holder: {
 		请选择: "请选择",
-    暂无数据:"暂无数据"
+    暂无数据: "暂无数据",// $t('holder.暂无数据')
+    //{{ $t('holder.暂无数据') }}
 	},
 
 	

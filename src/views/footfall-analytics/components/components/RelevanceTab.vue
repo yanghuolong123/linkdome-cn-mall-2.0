@@ -1,16 +1,12 @@
 <template>
-    <div class="tab-container">
-      <div v-for="(item,index) in tabs" :key="index">
-        <input type="radio" name="footfall" :id="item.value" :value="item.value" v-model="flowType">
-        <label :for="item.value">
-          <div>{{item.label}}
-              <!-- <Tooltip  :content="item.tootipText"  placement="bottom" theme="light" transfer max-width="350">
-                <icons type="wenhao"/>
-              </Tooltip> -->
-          </div>
-        </label>
-      </div>
+  <div class="tab-container">
+    <div v-for="(item,index) in tabs" :key="index">
+      <input type="radio" name="footfall" :id="item.value" :value="item.value" v-model="flowType">
+      <label :for="item.value">
+        <div>{{ $t(item.label) }}</div>
+      </label>
     </div>
+  </div>
 </template>
 
 <script>

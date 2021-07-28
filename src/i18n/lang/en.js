@@ -29,14 +29,14 @@ module.exports =  {
   login: "Login",
 	jumpPath: "Jump path",
 	realTimeDataToday: "Real time data today",
-	realTimePassengerFlow: "Real time @:(客流量)",
-	cumulativePassengerFlowOfTheDay: "Cumulative @:(客流量) of the day (person time)",
-	cumulativePassengerFlowOfTheMonth: "Cumulative @:(客流量) of the month (person time)",
+	realTimePassengerFlow: "Real time @:(enter)",
+	cumulativePassengerFlowOfTheDay: "Cumulative @:(enter) of the day (person time)",
+	cumulativePassengerFlowOfTheMonth: "Cumulative @:(enter) of the month (person time)",
 	monthlyStandardValue: "Monthly standard value (person time)",
-	passengerFlowachievementRateOfThisMonth: "@:(客流量) achievement rate of this month",
+	passengerFlowachievementRateOfThisMonth: "@:(enter) achievement rate of this month",
 	minute: "minute",
 	second: "second",
-	客流量: "enter",
+	enter: "enter",
 	occupancy: "occupancy",
 	sales: "sales",
 	yuan: "yuan",
@@ -67,6 +67,23 @@ module.exports =  {
   热力图分析: "Thermodynamic diagram analysis",
   有效客流分析: "Effective enter flow analysis",
   排队货架分析: "Queuing shelf analysis",
+  关联分析: "Relevance",
+  交叉客流分析: "Cross",
+  路径动向分析: "Path",
+  实体引流分析: "Drainage",
+  停留时间分析: "Dwell Time",
+  目标达成分析: "Goal",
+  节假日活动分析: "Holiday Analysis",
+  销售分析: "Sales Analytics",
+  门店日报: "Store Daily Report",
+  日报: "Daily Report",
+  周报: "Week Report",
+  月报: "Month Report",
+  自定义报告: "Costomize Report",
+  实体管理: "Entity Manage",
+  节假日活动管理: "Holiday Manage",
+  账户管理: "Account",
+  权限管理: "Role",
   // src\views\entity-analytic\index.vue
 
   // Chart-box.vue => toolList[tool]&&toolList[tool].name
@@ -84,6 +101,16 @@ module.exports =  {
   
 	// goalCharts.vue => title1
   平均到访频次趋势: "Average visits trend",
+  
+  // RelavanceTab.vue =>item.label
+  关联关系无序图: "Association unordered graph",
+  关联关系有序图: "Association ordered graph",
+  // RElavance.vue
+  '关联度TOP3：': "Top 3 relevance:",
+  // VxCard.vue => title
+  关联度排行: "Relevance ranking",
+  转化量排行: "Conversion ranking",
+
 
 	fx: {
 		minute: "min",
@@ -101,8 +128,8 @@ module.exports =  {
 
 
 	passages: {
-		tootipText1: "Average @:(客流量): the sum of the real-time cumulative @:(客流量) of all shopping centers divided by the number of shopping centers \npeak @:(客流量): the maximum value of the peak @:(客流量) in all shopping centers \npeak @:(occupancy): the maximum value of the peak @:(occupancy) in all shopping centers \nToday's @:(occupancy): the sum of the @:(occupancy) in all shopping centers",
-		tootipText2: "Average @:(客流量) today: the cumulative @:(客流量) divided by the number of business hours \npeak @:(客流量) today: the maximum @:(客流量) from the start of business hours to the current time \npeak @:(occupancy) today: the maximum number of people staying in the shopping center and the time point from the start of business hours to the current time \npeak @:(occupancy) today: the difference between the total incoming @:(客流量) and the total outgoing @:(客流量) from the start of business hours to the current time",
+		tootipText1: "Average @:(enter): the sum of the real-time cumulative @:(enter) of all shopping centers divided by the number of shopping centers \npeak @:(enter): the maximum value of the peak @:(enter) in all shopping centers \npeak @:(occupancy): the maximum value of the peak @:(occupancy) in all shopping centers \nToday's @:(occupancy): the sum of the @:(occupancy) in all shopping centers",
+		tootipText2: "Average @:(enter) today: the cumulative @:(enter) divided by the number of business hours \npeak @:(enter) today: the maximum @:(enter) from the start of business hours to the current time \npeak @:(occupancy) today: the maximum number of people staying in the shopping center and the time point from the start of business hours to the current time \npeak @:(occupancy) today: the difference between the total incoming @:(enter) and the total outgoing @:(enter) from the start of business hours to the current time",
 		tootipText3: "Average passenger flow: the cumulative passenger flow of all shopping centers in the selected time period divided by the number of shopping centers \nTotal passenger flow: the sum of passenger flow of all shopping centers in the selected time period \nPeak passenger flow: the maximum value of peak passenger flow in all shopping centers in the selected time period \nPeak passenger volume: the maximum value of peak passenger flow in all shopping centers in the selected time period \nEffective enter flow : the sum of the unique number of passengers in all shopping centers in the selected time period \nSales: the sum of the sales in all shopping centers in the selected time period",
 	},
 

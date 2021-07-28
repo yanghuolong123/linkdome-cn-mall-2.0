@@ -228,10 +228,10 @@ export default {
           // if (data.property) this.listClassify(data.property[0].current)
           this.listClassify(
 						[
-							this.$t('fn.average', [this.$t('客流量')]), 
+							this.$t('fn.average', [this.$t('enter')]), 
 							this.$t('fn.peak', [this.$t('occupancy')]), 
 							this.$t('occupancy'), 
-							this.$t('fn.peak', [this.$t('客流量')])
+							this.$t('fn.peak', [this.$t('enter')])
 						]
 					)
           break
@@ -239,11 +239,11 @@ export default {
           // if (data.property) this.listClassify(data.property[0].history)
           this.listClassify(
 						[
-							this.$t('fn.average', [this.$t('客流量')]),
-							this.$t('fn.peak', [this.$t('客流量')]),
-							this.$t('fn.total', [this.$t('客流量')]),
+							this.$t('fn.average', [this.$t('enter')]),
+							this.$t('fn.peak', [this.$t('enter')]),
+							this.$t('fn.total', [this.$t('enter')]),
 							this.$t('fn.peak', [this.$t('occupancy')]),
-							this.$t('fn.effective', [this.$t('客流量')]),
+							this.$t('fn.effective', [this.$t('enter')]),
 							'成交率',
 							'坪效（元/平方米）',
 							'客单价（元）',
@@ -255,10 +255,10 @@ export default {
           // if (data.company) this.listClassify(data.company[0].current)
           this.listClassify(
 						[
-							this.$t('fn.peak', [this.$t('客流量')]),
+							this.$t('fn.peak', [this.$t('enter')]),
 							this.$t('fn.peak', [this.$t('occupancy')]),
 							this.$t('occupancy'),
-							this.$t('fn.average', [this.$t('客流量')])
+							this.$t('fn.average', [this.$t('enter')])
 						]
 					)
           break
@@ -266,11 +266,11 @@ export default {
           // if (data.company) this.listClassify(data.company[0].history)
           this.listClassify(
 						[
-							this.$t('fn.average', [this.$t('客流量')]),
-							this.$t('fn.peak', [this.$t('客流量')]),
-							this.$t('fn.total', [this.$t('客流量')]),
+							this.$t('fn.average', [this.$t('enter')]),
+							this.$t('fn.peak', [this.$t('enter')]),
+							this.$t('fn.total', [this.$t('enter')]),
 							this.$t('fn.peak', [this.$t('occupancy')]),
-							this.$t('fn.effective', [this.$t('客流量')]),
+							this.$t('fn.effective', [this.$t('enter')]),
 							'成交率',
 							'坪效（元/平方米）',
 							'客单价（元）',
