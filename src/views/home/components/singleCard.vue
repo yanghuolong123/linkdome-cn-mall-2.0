@@ -32,7 +32,7 @@
         
       </template>
     </p>
-    <p class="text-base type-name" v-if="!item.data.hasOwnProperty('name1')">{{item.name}}</p>
+    <p class="text-base type-name" v-if="!item.data.hasOwnProperty('name1')">{{ $t(item.name) }}</p>
     <p v-if="item.data.hasOwnProperty('ringRatio')" class="numberrate text-grey-lighter">
       <span class="mr-2">
         {{$t('同比')}}

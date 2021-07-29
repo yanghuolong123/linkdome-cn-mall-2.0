@@ -1,27 +1,27 @@
 <template>
   <div v-if="canshow">
-    <chart-tabs ref="charts"
-                :xAxis="xAxisObj"
-                :series="finnalSeries"
-                :extraOptions="extraOptWithYaxis"
-                :istotal='istotal'
-                :tooltipUnit="tooltipUnit(curretIndicator)"
-                :totalData="totalData"
-                @tableChage='TableChageList'
-                class="bg-white box-card"
-                id='trendLine'
-                title="购物中心趋势分析"
-    >
+    <chart-tabs
+      ref="charts"
+      :xAxis="xAxisObj"
+      :series="finnalSeries"
+      :extraOptions="extraOptWithYaxis"
+      :istotal='istotal'
+      :tooltipUnit="tooltipUnit(curretIndicator)"
+      :totalData="totalData"
+      @tableChage='TableChageList'
+      class="bg-white box-card"
+      id='trendLine'
+      title="购物中心趋势分析">
       <export-menu  slot="export" @onchange="enterExportBiztop"></export-menu>
       <template>
         <div class="flex justify-between items-center mr-10">
-          <span class="whitespace-no-wrap mx-4 text-sm">数据指标:</span>
+          <span class="whitespace-no-wrap mx-4 text-sm">{{ $t('fx.Data_indicators') }}</span>
           <vs-select autocomplete :multiple='canSelectMulti' v-model="curretIndicator" :max-selected="2" id="chartSelect" @change="curretIndicatorChange">
             <vs-select-item
-                    v-for="(item,index) in filteredSelectList "
-                    :text="item.name"
-                    :key="index"
-                    :value="item.value"
+              v-for="(item,index) in filteredSelectList"
+              :text="item.name"
+              :key="index"
+              :value="item.value"
             />
           </vs-select>
         </div>

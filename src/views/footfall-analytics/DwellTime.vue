@@ -3,16 +3,16 @@
       <flow-selector @paramsPrepare="paramsPrepare"></flow-selector>
       <div class="dewll_graph flex-column">
         <div class="dewll_graph_title">
-          <span>停留时间分布</span>
+          <span>{{ $t('停留时间分布') }}</span>
           <div class="dwell-time-icon" @click="iconClick">
             <icons
-                     v-for="(icon,index) in iconList"
-                     :key="index"
-                     :data-value="icon.value"
-                    :title="iconTitle[icon.type]"
-                    :type="icon.type"
-                    :size="20"
-                    :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
+              v-for="(icon,index) in iconList"
+              :key="index"
+              :data-value="icon.value"
+              :title="iconTitle[icon.type]"
+              :type="icon.type"
+              :size="20"
+              :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
             ></icons>
           </div>
         </div>

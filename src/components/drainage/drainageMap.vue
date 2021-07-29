@@ -1,7 +1,7 @@
 <template>
   <div class="drainage-map">
-    <h1>引流图
-      <Tooltip  :content="tootipText"  placement="right" theme="light" transfer max-width="500">
+    <h1>{{ $t('引流图') }}
+      <Tooltip  :content="$t('passages.tootipText4')"  placement="right" theme="light" transfer max-width="500">
         <icons type="wenhao"/>
       </Tooltip>
     </h1>
@@ -11,7 +11,7 @@
           <ul>
             <li  :key="index" v-for="(item,index) in dataList.direct">
               <div class="drainage-enter">
-                <p>客流占比：{{item.value}}%</p>
+                <p>{{ $t('fn.客流占比', [item.value]) }}</p>
                 <p>
                   {{ $t('环比') }}
                   <Icon type="md-arrow-dropdown" v-if="item.action" />
@@ -30,7 +30,7 @@
           <ul>
             <li :key="index" v-for="(item,index) in dataList.radiation">
               <div class="drainage-enter">
-                <p>客流占比：{{item.value}}%</p>
+                <p>{{ $t('fn.客流占比', [item.value]) }}</p>
                 <p>
                   {{ $t('环比') }}
                   <Icon type="md-arrow-dropdown" v-if="item.action" />
@@ -55,7 +55,7 @@
           </div>
         </div>
         <div class="text-location" v-for="item in centerData" >
-          <p>{{item.text}}：{{item.value}}%</p>
+          <p>{{ $t(item.text) }}：{{ item.value }}%</p>
           <p>
             {{ $t('环比') }}
             <Icon type="md-arrow-dropdown" v-if="item.action" />
@@ -73,7 +73,7 @@
               </div>
               <div class="drainage-name" style="padding-right:10%;">{{item.name}}</div>
               <div class="drainage-enter">
-                <p>客流占比：{{item.value}}%</p>
+                <p>{{ $t('fn.客流占比', [item.value]) }}</p>
                 <p>
                   {{ $t('环比') }}
                   <Icon type="md-arrow-dropdown" v-if="item.action" />
@@ -92,7 +92,7 @@
                 </div>
                 <div class="drainage-name" style="padding-right:10%;">{{item.name}}</div>
                 <div class="drainage-enter">
-                  <p>客流占比：{{item.value}}%</p>
+                  <p>{{ $t('fn.客流占比', [item.value]) }}</p>
                   <p>
                     {{ $t('环比') }}
                     <Icon type="md-arrow-dropdown" v-if="item.action" />
@@ -177,7 +177,7 @@ export default {
       centerImg: require('@/assets/images/fixation_img/bg/draniage_center.png'),
       shopImg: require('@/assets/images/fixation_img/rest/shop.png'),
       accessImg: require('@/assets/images/fixation_img/rest/access.png'),
-      tootipText: '该引流图包括出入口引入客流、店铺引入客流、辐射店铺客流和离场客流，其中：\n出入口引入客流：从出入口直接进入所选店铺的转化客流\n店铺引入客流：从其他店铺到所选店铺的转化客流\n辐射店铺客流：从所选店铺到其他店铺转化客流\n离场客流：从所选店铺直接离开购物中心的客流'
+      tootipText: 'tootipText4'
     }
   },
   mounted () {

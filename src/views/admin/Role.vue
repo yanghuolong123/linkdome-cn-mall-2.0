@@ -1,45 +1,44 @@
 <template>
   <div class="roles">
     <div class="left">
-        <Menu :accordion="accordion" @on-open-change="changeOpenChange" style="z-index:1;">
-            <Submenu name="1" v-if="showSuperAdmin" v-bind:class="{'ivu-menu-opened':theRoleId==1}">
-                <template slot="title">
-                    <p>超级管理员</p>
-                </template>
-            </Submenu>
-            <Submenu name="2" v-if="showCompanyAdmin||showSuperAdmin" v-bind:class="{'ivu-menu-opened':theRoleId==2}">
-                <template slot="title">
-                    集团管理员
-                </template>
-            </Submenu>
-            <!-- <Submenu name="3" v-if="showShoppingAdmin" v-bind:class="{'ivu-menu-opened':theRoleId==3}">
-                <template slot="title">
-                    购物中心管理员
-                </template>
-            </Submenu> -->
-            <Submenu :name="(item.id)" v-for="(item,index) in roleList" v-bind:class="{'ivu-menu-opened':theRoleId==item.id}">
-                <template slot="title">
-                    {{item.name}}
-                    <icons type="weibiaoti520" v-if="showSuperAdmin" @click.native="upldateRole(item.id)"></icons>
-                    <icons type="weibiaoti544" v-if="showSuperAdmin" @click.native="delRole(item.id)"></icons>
-                </template>
-            </Submenu>
-        </Menu>
-       <Button type="primary" ghost v-if="showSuperAdmin" @click="openAddRole">新建角色+</Button>
+      <Menu :accordion="accordion" @on-open-change="changeOpenChange" style="z-index:1;">
+        <Submenu name="1" v-if="showSuperAdmin" v-bind:class="{'ivu-menu-opened':theRoleId==1}">
+          <template slot="title">
+            <p>{{ $t('超级管理员') }}</p>
+          </template>
+        </Submenu>
+        <Submenu name="2" v-if="showCompanyAdmin||showSuperAdmin" v-bind:class="{'ivu-menu-opened':theRoleId==2}">
+          <template slot="title">
+            {{ $t('集团管理员') }}
+          </template>
+        </Submenu>
+        <!-- <Submenu name="3" v-if="showShoppingAdmin" v-bind:class="{'ivu-menu-opened':theRoleId==3}">
+          <template slot="title">
+            购物中心管理员
+          </template>
+        </Submenu> -->
+        <Submenu :name="(item.id)" v-for="(item,index) in roleList" v-bind:class="{'ivu-menu-opened':theRoleId==item.id}">
+          <template slot="title">
+            {{item.name}}
+            <icons type="weibiaoti520" v-if="showSuperAdmin" @click.native="upldateRole(item.id)"></icons>
+            <icons type="weibiaoti544" v-if="showSuperAdmin" @click.native="delRole(item.id)"></icons>
+          </template>
+        </Submenu>
+      </Menu>
+      <Button type="primary" ghost v-if="showSuperAdmin" @click="openAddRole">{{ $t('新建角色') }}+</Button>
     </div>
     <div class="right">
       <Tabs :value="tabValue" :animated="false">
-          <TabPane label="菜单权限" name="menu">
-              <CheckboxGroups v-for ="item in menuListDatas" :disabled="disabled" :checkData="item" @changeCheckData = "changeCheckData"></CheckboxGroups>
-          </TabPane>
-          <TabPane label="管理权限" name="manage">
-              <CheckboxGroups v-for ="item in manageListDatas" :disabled="disabled" :checkData="item"></CheckboxGroups>
-          </TabPane>
+        <TabPane :label="$t('菜单权限')" name="menu">
+          <CheckboxGroups v-for ="item in menuListDatas" :disabled="disabled" :checkData="item" @changeCheckData = "changeCheckData"></CheckboxGroups>
+        </TabPane>
+        <TabPane :label="$t('管理权限')" name="manage">
+          <CheckboxGroups v-for ="item in manageListDatas" :disabled="disabled" :checkData="item"></CheckboxGroups>
+        </TabPane>
       </Tabs>
       <div class="controls" v-if="theRoleId>=3">
-        <Button type="primary" @click="savePageConfig" v-if="showSuperAdmin">保存</Button>
-        <Button @click="defaltSelect" v-if="showSuperAdmin">默认选择</Button>
-
+        <Button type="primary" @click="savePageConfig" v-if="showSuperAdmin">{{ $t('保存') }}</Button>
+        <Button @click="defaltSelect" v-if="showSuperAdmin">{{ $t('默认选择') }}</Button>
       </div>
     </div>
     <addRole  ref="addRole" :roleList="roleList" :menuListData="menuListData" v-show="showAddRole" @closeEdit="closeEdit" @alertMessage="alertMessage"></addRole>

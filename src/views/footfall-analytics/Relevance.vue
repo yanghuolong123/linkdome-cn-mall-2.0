@@ -22,8 +22,8 @@
           :options="relevanceList"
         ></el-cascader>
         <div class="cascade" v-else></div>
-        <Button size="large" class="m-l-20" type="primary" @click="relevanceDataClick">查询 </Button>
-        <Button size="large" class="m-l-20" @click="resetData">重置 </Button>
+        <Button size="large" class="m-l-20" type="primary" @click="relevanceDataClick">{{ $t('查询') }}</Button>
+        <Button size="large" class="m-l-20" @click="resetData">{{ $t('重置') }}</Button>
       </div>
     </div>
     <div class="relevance-container">
@@ -31,7 +31,7 @@
       <vs-row style="margin:20px 0;padding:0 10px">
         <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="8">
           <div class="relevance-graph">
-            <h3 v-show="isData == true"> 暂无数据</h3>
+            <h3 v-show="isData == true">{{ $t('holder.暂无数据') }}</h3>
             <h3 v-show="isTotalData == true">
               实体客流无关联
             </h3>

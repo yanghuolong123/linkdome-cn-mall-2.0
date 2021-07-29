@@ -19,6 +19,7 @@ module.exports =  {
     detailData: "Detailed data of {0}",
     累计客流: "Total enter: {0}",
     转化率: "Conversion rate: {0}%",
+    客流占比: "Proportion of enter: {0}%",
 	},
 
 	
@@ -49,6 +50,9 @@ module.exports =  {
 	historicalDataQuery: "Historical data query",
   客流占比: "Proportion of enter",
   有效客流趋势: "Effective enter flow trend",
+  停留时间分布: "residence time distribution",
+  详细数据信息: "Detailed data information",
+  销售额总览: "Sales overview",
 
   // Itabs.vue => titleList[value]
 	客流量趋势: "Enter Trend",
@@ -63,6 +67,13 @@ module.exports =  {
   到店次数占比: "Proportion of store visits",
   客流排行: "ranking of enter",
   到店次数: "Number of visits",
+  趋势图: "Trend chart",
+	业态排行: "Business ranking",
+	商铺排行: "Shop ranking",
+  趋势分析: "trend analysis",
+  节假日活动对比分析: "Comparative analysis of holiday activities",
+  购物中心趋势分析: "Shopping center trend analysis",
+
   //Main.vue => routeTitle
   实体客流分析: "Physical enter analysis",
   年龄性别分析: "Age and gender analysis",
@@ -109,11 +120,18 @@ module.exports =  {
   // RelavanceTab.vue =>item.label
   关联关系无序图: "Association unordered graph",
   关联关系有序图: "Association ordered graph",
+  // DrainageTab.vue =>item.label
+  来源流量分析: "Source flow analysis",
+  目的流量分析: "Objective flow analysis",
   // RElavance.vue
   '关联度TOP3：': "Top 3 relevance:",
   // VxCard.vue => title
   关联度排行: "Relevance ranking",
   转化量排行: "Conversion ranking",
+  基本信息: "Basic information",
+  业态列表: "List of business types",
+  活动管理: "Activity management",
+  用户信息列表: "User information list",
   // Cross.vue
   起点累计客流: "Starting point cumulative enter",
   客流转化深度: "Enter transformation depth",
@@ -128,7 +146,32 @@ module.exports =  {
   // pathTrendBackup.vue
   路径动向图: "Path trend chart",
   "游逛深度（个）": "Wandering depth (PCs.)",
-
+  // drainageMap.vue
+  引流图: "drainage map",
+  出入口引入占比: "Inlet and outlet",
+  辐射店铺占比: "Radiation stores",
+  店铺引入占比: "Store introduction",
+  离场客流占比: "Departure enter",
+  // FootfallDirection.vue
+  导入总客流: "Import total enter",
+  出入口个数: "Number of gates",
+  店铺个数: "Number of stores",
+  // goalEnter.vue =>enterTypeList
+  年度趋势: "Annual trend",
+  月度趋势: "Monthly trend",
+  // singleCard.vue
+  成交率: "成交率",
+  "坪效（元/平方米）": "Floor efficiency (yuan / m2)",
+  "客单价（元）" :"Customer unit price (yuan)",
+  "销售额（元）": "Sales (yuan)",
+  // Role.vue
+  超级管理员: "Super administrator",
+  集团管理员: "Group administrator",
+  新建角色: "New role",
+  菜单权限: "Menu permission",
+  管理权限: "Management permission",
+  保存: "Save",
+  默认选择: "Default selection",
 
 
 
@@ -155,6 +198,9 @@ module.exports =  {
 		tootipText1: "Average @:(enter): the sum of the real-time cumulative @:(enter) of all shopping centers divided by the number of shopping centers \npeak @:(enter): the maximum value of the peak @:(enter) in all shopping centers \npeak @:(occupancy): the maximum value of the peak @:(occupancy) in all shopping centers \nToday's @:(occupancy): the sum of the @:(occupancy) in all shopping centers",
 		tootipText2: "Average @:(enter) today: the cumulative @:(enter) divided by the number of business hours \npeak @:(enter) today: the maximum @:(enter) from the start of business hours to the current time \npeak @:(occupancy) today: the maximum number of people staying in the shopping center and the time point from the start of business hours to the current time \npeak @:(occupancy) today: the difference between the total incoming @:(enter) and the total outgoing @:(enter) from the start of business hours to the current time",
 		tootipText3: "Average enter: the cumulative enter of all shopping centers in the selected time period divided by the number of shopping centers \nTotal enter: the sum of enter of all shopping centers in the selected time period \nPeak enter: the maximum value of peak enter in all shopping centers in the selected time period \nPeak passenger volume: the maximum value of peak enter in all shopping centers in the selected time period \nEffective enter flow : the sum of the unique number of passengers in all shopping centers in the selected time period \nSales: the sum of the sales in all shopping centers in the selected time period",
+    tootipText4: "The drainage map includes entrance and exit introduction passenger flow, store introduction passenger flow, radiation store passenger flow and departure passenger flow, Among them: \n incoming passenger flow at the entrance and exit: the transformed passenger flow directly entering the selected store from the entrance and exit \n incoming passenger flow at the store: the transformed passenger flow from other stores to the selected store \n radiating store passenger flow: the transformed passenger flow from the selected store to other stores \n departure passenger flow: the passenger flow directly leaving the shopping center from the selected store",
+    tootipText5: "1. Trend chart: shows the passenger flow trend of entrances and exits and shops respectively \n2. Import total passenger flow: the sum of passenger flow from entrances and exits and shops \n3. Number of entrances and exits: the total number of entrances and exits entities \n4. Number of stores: the total number of store entities",
+    tootipText6: "1. Trend chart: shows the trend of passenger flow converted from the selected entity to other stores \n2. Radiated total passenger flow: the sum of passenger flow radiated from the selected store to other stores \n3. Radiated stores: the total number of selected stores radiated to other stores",
 	},
 
 	notices: {

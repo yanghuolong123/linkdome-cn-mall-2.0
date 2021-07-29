@@ -11,8 +11,8 @@
                 v-for="(item,index) in activityList"
               />
             </vs-select>
-            <Button size="large" class="m-l-20" type="primary" @click="handleSearch">查询 </Button>
-            <Button size="large" class="m-l-20" @click="reset">重置 </Button>
+            <Button size="large" class="m-l-20" type="primary" @click="handleSearch">{{ $t('查询') }}</Button>
+            <Button size="large" class="m-l-20" @click="reset">{{ $t('重置') }}</Button>
         </div>
         <!-- 客流量趋势 -->
         <goalCharts

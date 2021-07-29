@@ -3,10 +3,11 @@
       <div v-for="(item,index) in tabs" :key="index">
         <input type="radio" name="footfall" :id="item.value" :value="item.value" v-model="flowType">
         <label :for="item.value">
-          <div>{{item.label}}
-              <Tooltip  :content="item.tootipText"  placement="bottom" theme="light" transfer max-width="350">
-                <icons type="wenhao"/>
-              </Tooltip>
+          <div>
+            {{ $t(item.label) }}
+            <Tooltip  :content="$t(item.tootipText)"  placement="bottom" theme="light" transfer max-width="350">
+              <icons type="wenhao"/>
+            </Tooltip>
           </div>
         </label>
       </div>

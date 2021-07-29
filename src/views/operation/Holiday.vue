@@ -8,8 +8,8 @@
             <vs-select class="w-select m-l-20" autocomplete v-model="selectHoliday" >
               <vs-select-item  :value="item.value" :text="item.key" :key="index" v-for="(item,index) in holidays" />
             </vs-select>
-            <Button size="large" class="m-l-20" type="primary" @click="handleSearch">查询 </Button>
-            <Button size="large" class="m-l-20" @click="trendResetData">重置 </Button>
+            <Button size="large" class="m-l-20" type="primary" @click="handleSearch">{{ $t('查询') }}</Button>
+            <Button size="large" class="m-l-20" @click="trendResetData">{{ $t('重置') }}</Button>
             </div>
         </div>
         <HolidayAnalysis
@@ -43,8 +43,8 @@
                 <vs-select   class="w-select m-l-20" autocomplete v-model="compareHoliday2" >
                     <vs-select-item  :value="item.value" :text="item.key" v-for="(item,index) in holidayActives2" />
                 </vs-select>
-                <Button size="large" class="m-l-20" type="primary" @click="handleSearchCompare">查询 </Button>
-                <Button size="large" class="m-l-20" @click="HolidaysResetData">重置 </Button>
+                <Button size="large" class="m-l-20" type="primary" @click="handleSearchCompare">{{ $t('查询') }}</Button>
+                <Button size="large" class="m-l-20" @click="HolidaysResetData">{{ $t('重置') }}</Button>
             </div>
         </div>
         <HolidayAnalysis

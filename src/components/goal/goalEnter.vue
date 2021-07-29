@@ -2,12 +2,11 @@
   <div class="bg-white box-card box-cardss" style=" position: relative;">
     <div class="enterType">
       <div class="enterYear"
-        v-bind:class="{selectAction:typeAction==index}"
+        v-for="(item,index) in enterTypeList"
         :key="index"
-        v-for="(iten,index) in enterTypeList"
-        v-on:click='enterTypeClick(index)'
-        >
-        {{iten}}
+        v-bind:class="{selectAction:typeAction==index}"
+        v-on:click='enterTypeClick(index)'>
+        {{ $t(item) }}
       </div>
       <div class="lineBox"></div>
     </div>
@@ -22,21 +21,21 @@
         </li>
       </ul>
     <i-tabs  class="chartsTable" v-model="current">
-      <tab-item  class="chart-div" v-if="typeAction==0"  >
+      <tab-item  class="chart-div" v-if="typeAction==0">
         <div class="left-title">
-          <p class="title">{{titleText}}</p>
+          <p class="title">{{ $t(titleText) }}</p>
         </div>
         <vue-apex-charts type="line" height="530" :options="options1" :series="series1" class="ape-chart"></vue-apex-charts>
       </tab-item>
-      <tab-item  class="chart-div" v-if="typeAction==1" >
+      <tab-item  class="chart-div" v-if="typeAction==1">
         <div class="left-title">
-          <p class="title">{{titleText}}</p>
+          <p class="title">{{ $t(titleText) }}</p>
         </div>
         <gola-enter-analysis :xAxis='options2.xaxis.categories' :options="options2" :series='series2'></gola-enter-analysis>
       </tab-item>
       <tab-item  class="chart-div">
         <div class="left-title">
-          <p class="title">{{titleText}}</p>
+          <p class="title">{{ $t(titleText) }}</p>
         </div>
         <TableMultipleSelected style="height:530px" class="table-chart" :tableName="columns" :tableList="tableList"></TableMultipleSelected>
       </tab-item>
