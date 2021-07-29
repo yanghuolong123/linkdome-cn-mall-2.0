@@ -1,76 +1,74 @@
-
 <template>
   <div>
-      <div class="selector-container bg-white box-card">
-          <div class="flex-center">
-              <DatePicker
-                type="daterange"
-                @on-change="dateChange"
-                v-model="crossDate"
-                placement="bottom-end"
-                :options="disabledDate"
-                placeholder="选择日期"
-                class="w-select"
-              ></DatePicker>
-              <vs-select
-                class="w-select m-l-20"
-                autocomplete
-                @change="selectTypeChange"
-                v-model="selectType"
-              >
-                <vs-select-item
-                  :value="item.value"
-                  :text="item.text"
-                  :key="index"
-                  v-for="(item,index) in typeList"
-                />
-              </vs-select>
-            <DatePicker
-              type="daterange"
-              v-model="crossDateTwo"
-              placement="bottom-end"
-              placeholder="选择日期"
-              :options="disabledDate"
-              :disabled="[2,3].includes(selectType)"
-              class="w-select m-l-20"
-              v-if="selectType !== 0"
-            ></DatePicker>
-
-          </div>
-          <div class="flex-center">
-
-              <el-cascader v-model="startValue"
-                           placeholder="选择起点"
-                           popper-class="cascade-dom"
-                           class="w-select"
-                           collapse-tags
-                           @change="selectStart()"
-                           :props="{ multiple: true, checkStrictly: true,expandTrigger:'hover'}"
-                           :options="startList">
-              </el-cascader>
-              <el-cascader v-model="endValue"
-                           popper-class="cascade-dom"
-                           placeholder="选择终点"
-                           @change="selectEnd('endValue')"
-                           class="w-select m-l-20"
-                           collapse-tags
-                           :props="{ multiple: true, checkStrictly: true,expandTrigger:'hover'}"
-                           :options="endList">
-              </el-cascader>
-
-          <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">查询</Button>
-          <Button size="large" class="m-l-20" @click="resetData">重置</Button>
-          </div>
-        </div>
+    <div class="selector-container bg-white box-card">
+      <div class="flex-center">
+        <DatePicker
+          type="daterange"
+          @on-change="dateChange"
+          v-model="crossDate"
+          placement="bottom-end"
+          :options="disabledDate"
+          :placeholder="$t('holder.选择日期')"
+          class="w-select"
+        ></DatePicker>
+        <vs-select
+          class="w-select m-l-20"
+          autocomplete
+          @change="selectTypeChange"
+          v-model="selectType"
+        >
+        <vs-select-item
+          v-for="(item,index) in typeList"
+          :value="item.value"
+          :text="$t(item.text)"
+          :key="index"
+        />
+        </vs-select>
+        <DatePicker
+          type="daterange"
+          v-model="crossDateTwo"
+          placement="bottom-end"
+          :placeholder="$t('holder.选择日期')"
+          :options="disabledDate"
+          :disabled="[2,3].includes(selectType)"
+          class="w-select m-l-20"
+          v-if="selectType !== 0"
+        ></DatePicker>
+      </div>
+      <div class="flex-center">
+        <el-cascader 
+          v-model="startValue"
+          :placeholder="$t('holder.选择起点')"
+          popper-class="cascade-dom"
+          class="w-select"
+          collapse-tags
+          @change="selectStart()"
+          :props="{ multiple: true, checkStrictly: true,expandTrigger:'hover'}"
+          :options="startList">
+        </el-cascader>
+        <el-cascader
+          v-model="endValue"
+          popper-class="cascade-dom"
+          :placeholder="$t('holder.选择终点')"
+          @change="selectEnd('endValue')"
+          class="w-select m-l-20"
+          collapse-tags
+          :props="{ multiple: true, checkStrictly: true,expandTrigger:'hover'}"
+          :options="endList">
+        </el-cascader>
+        <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('查询') }}</Button>
+        <Button size="large" class="m-l-20" @click="resetData">{{ $t('重置') }}</Button>
+      </div>
+    </div>
     <!-- 标题数据 -->
     <div class="cross_analysis_time">
       <div :key="index" v-for="(item,index) in timeList">
         <img :src="item.icon" alt="">
         <div class="tootipsTitle">
-            <span class="cross_time_name">{{item.name}}</span>
-              <Tooltip class="m-l-20"  :content="item.tootipText"  placement="bottom" theme="light" transfer max-width="600">
-                <icons type="wenhao"/>
-              </Tooltip>
+          <span class="cross_time_name">{{ $t(item.name) }}</span>
+          <Tooltip class="m-l-20"  :content="item.tootipText"  placement="bottom" theme="light" transfer max-width="600">
+            <icons type="wenhao"/>
+          </Tooltip>
         </div>
         <p class="cross_time_data"><span>{{showTimeOne}}</span> {{item.data}}</p>
         <p class="scale-data" v-if="selectTyepConfirm !==0" v-bind:class="{ scaleAction: item.isActive }">
@@ -82,20 +80,20 @@
       </div>
     </div>
     <div v-if="selectTyepConfirm == 0" class="cross_analysis">
-      <p v-if="noData" class="noData">暂无数据</p>
-      <div class="cross_analysis_title"><p>交叉客流路径</p></div>
-        <!-- 最大客流 -->
+      <p v-if="noData" class="noData">{{ $t('holder.暂无数据') }}</p>
+      <div class="cross_analysis_title"><p>{{ $t('交叉客流路径') }}</p></div>
+      <!-- 最大客流 -->
       <div class="cross_analysis_title" style="margin-top:30px;">
-        <p>最大客流路径</p>
+        <p>{{ $t('最大客流路径') }}</p>
       </div>
       <div class="progress-title">
         <div class="progress-text" :key="index" v-for="(item,index)  in maxEnterList">
-          <p>{{item.name}}</p>
-          <span>累计客流{{item.data}}人</span>
+          <p>{{ $t(item.name) }}</p>
+          <span>{{ $t('fn.累计客流', [item.data]) }}</span>
         </div>
         <div style='clear:both;'></div>
         <div class="progress-center" :style='{left:marginLeft+"%"}'>
-          转化率{{percentData}}%
+          {{ $t('fn.转化率', [percentData]) }}
         </div>
         <div class="arrows">
 
@@ -107,7 +105,7 @@
     </div>
     <div class="cross_analysis">
       <div class="cross_analysis_title">
-        <p>数据指标趋势</p>
+        <p>{{ $t('数据指标趋势') }}</p>
       </div>
       <div class="dwell-time-icon">
         <vs-select
@@ -117,10 +115,10 @@
           @change="selectLineType"
         >
           <vs-select-item
-            :value="item.value"
-            :text="item.text"
-            :key="index"
             v-for="(item,index) in lineTypeList"
+            :value="item.value"
+            :text="$t(item.text)"
+            :key="index"
           />
         </vs-select>
         <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(index)">
@@ -134,7 +132,7 @@
       </div>
       <div style="height:415px;overflow: hidden;position:relative">
         <div class="line-show" v-bind:class="{ crossLineActive: iconIndex ==0 }">
-        <p v-if="lineNoData" class="noData">暂无数据</p>
+        <p v-if="lineNoData" class="noData">{{ $t('holder.暂无数据') }}</p>
         <vue-apex-charts
           v-bind:class="{ crossLineChart: lineType ==0 }"
           class="chartLine"
@@ -204,7 +202,7 @@ export default {
           value: 0
         },
         {
-          text: '自定义时间对比',
+          text: '自定义对比',
           value: 1
         }, {
           text: '同比',

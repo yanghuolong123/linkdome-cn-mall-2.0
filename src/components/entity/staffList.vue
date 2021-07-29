@@ -5,7 +5,7 @@
         <div class="staff-seach-text">
             <input type='text' class='vie-model-text'  v-model="searchName" placeholder='姓名'>
             <input type='text' class='vie-model-text' v-model="searchTel" placeholder='手机号'>
-            <div class='button' @click="initData(0)">查询</div>
+            <div class='button' @click="initData(0)">{{ $t('查询') }}</div>
         </div>
         <div class="stall-header-right">
             <span class="stall-add" title="添加" @click="addVIP">

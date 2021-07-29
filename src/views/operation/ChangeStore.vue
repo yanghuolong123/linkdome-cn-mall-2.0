@@ -55,7 +55,7 @@
 						:value="item.value"
 						:key="index">{{ item.name }}</Option>
 			</Select>
-      <Button size="large" type="primary" class="m-l-20"  @click="handleSearch" >查询</Button>
+      <Button size="large" type="primary" class="m-l-20"  @click="handleSearch" >{{ $t('查询') }}</Button>
 		</div>
 		<div class="box-card bg-white detail" v-if="showCharts">
 			<div class="chart-box">

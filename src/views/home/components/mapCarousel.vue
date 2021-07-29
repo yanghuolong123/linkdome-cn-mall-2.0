@@ -39,7 +39,7 @@
         </div>
       </template>
       <!-- <template v-else>
-        <p class="noData">暂无数据</p>
+        <p class="noData">{{ $t('holder.暂无数据') }}</p>
       </template> -->
     </div>
   </div>

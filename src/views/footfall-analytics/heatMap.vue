@@ -48,8 +48,8 @@
                     type="daterange"
                     :placeholder="datePlaceholder">
             </el-date-picker>
-            <Button size="large" class="m-l-20" type="primary" @click="handleClick" >查询</Button>
-            <Button size="large" @click="resetClick" class="m-l-20">重置</Button>
+            <Button size="large" class="m-l-20" type="primary" @click="handleClick" >{{ $t('查询') }}</Button>
+            <Button size="large" @click="resetClick" class="m-l-20">{{ $t('重置') }}</Button>
         </div>
         <div v-show="drainageType===1" class="path-picker">
 
@@ -76,8 +76,8 @@
                 <Option v-for="item in floorList" :value="item.value" :key="item.label">{{ item.label }}
                 </Option>
             </Select>
-            <Button size="large" class="m-l-20" type="primary" @click="searchData();initHeatMapGrid()" >查询</Button>
-            <Button size="large" @click="reset" class="m-l-20">重置</Button>
+            <Button size="large" class="m-l-20" type="primary" @click="searchData();initHeatMapGrid()" >{{ $t('查询') }}</Button>
+            <Button size="large" @click="reset" class="m-l-20">{{ $t('重置') }}</Button>
         </div>
         <div class="content">
             <!--时段客流分布-->
@@ -96,7 +96,7 @@
                     <!--热力分布图-->
                     <heatmapjs-vue id="heat-grid" :max="maxValue" :min="minValue" :options='mapOptions' :data="heatMapDataList"></heatmapjs-vue>
                     <img  @load="imgLoad" :src="map.url" v-if="map.url" id="mapImg"/>
-                    <div class="noData" v-else>暂无数据</div>
+                    <div class="noData" v-else>{{ $t('holder.暂无数据') }}</div>
                 </div>
                 <div class="time-frame" v-if="hourTime==='0'">
                     <Slider v-model="timeFrame" :min='minTime'  :max='maxTime' @on-input='changeInput'   :marks='timeMarks' show-stops></Slider>

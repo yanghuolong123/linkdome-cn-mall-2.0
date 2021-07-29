@@ -40,8 +40,8 @@
           :props="{ multiple: true,expandTrigger:'hover' }"
           :options="activitiesType">
         </el-cascader>
-        <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">查询</Button>
-        <Button size="large" class="m-l-20" @click="resetData">重置</Button>
+        <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('查询') }}</Button>
+        <Button size="large" class="m-l-20" @click="resetData">{{ $t('重置') }}</Button>
       </div>
     </div>
     <div class="go-shop-chart-list"  >

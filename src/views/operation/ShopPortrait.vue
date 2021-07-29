@@ -12,7 +12,7 @@
                         :value="item.value"
                         :key="index">{{ item.text }}</Option>
                 </Select>
-                <Button size="large" type="primary" class="m-l-20"  @click="getTableList" >查询</Button>
+                <Button size="large" type="primary" class="m-l-20"  @click="getTableList" >{{ $t('查询') }}</Button>
                 <Button size="large" class="m-l-20 goal-reset"  @click="handleCompare" >查看详情</Button>
             </div>
         </div>

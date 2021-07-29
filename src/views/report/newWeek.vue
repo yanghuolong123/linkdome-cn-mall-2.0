@@ -11,7 +11,7 @@
               :picker-options="{'firstDayOfWeek': 1,'disabledDate':disabledDate}"
               placeholder="选择周">
             </el-date-picker>
-        <div class="report-query" v-on:click="reportQuery">查询</div>
+        <div class="report-query" v-on:click="reportQuery">{{ $t('查询') }}</div>
         <div class="icon-download" v-on:click="downloadReport('week',callData)" title="下载报告">
           <icons type="daoru" color="#2a7dc1" :size = 20 ></icons>
         </div>

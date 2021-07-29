@@ -10,46 +10,44 @@
 <template>
   <vx-card :title="tableTitle" class="headline">
 
-    <vs-table :data="tableList"
-              :noDataText="name">
+    <vs-table
+      :data="tableList"
+      :noDataText="name">
       <!-- table title -->
       <template slot="thead" #thead>
-        <vs-th :key="index"
-               class="table-title"
-               v-for="(item,index) in tableName">{{item}}</vs-th>
+        <vs-th
+          :key="index"
+          class="table-title"
+          v-for="(item,index) in tableName">
+          {{ $t(item) }}
+        </vs-th>
       </template>
       <!-- table list -->
       <template slot-scope="{data}" #tbody>
-        <vs-tr :key="indextr"
-               v-for="(tr, indextr) in data">
-          <vs-td :data="data[indextr].name"
-                 v-if="data[indextr].name">
+        <vs-tr v-for="(tr, indextr) in data" :key="indextr">
+          <vs-td v-if="data[indextr].name" :data="data[indextr].name">
             {{data[indextr].name}}
           </vs-td>
-          <vs-td :data="data[indextr].type"
-                 v-if="data[indextr].type">
+          <vs-td v-if="data[indextr].type" :data="data[indextr].type">
             {{data[indextr].type}}
           </vs-td>
-          <vs-td :data="data[indextr].time"
-                 v-if="data[indextr].time">
+          <vs-td v-if="data[indextr].time" :data="data[indextr].time">
             {{data[indextr].time}}
           </vs-td>
-          <vs-td :data="data[indextr].avg"
-                 v-if="data[indextr].avg">
+          <vs-td v-if="data[indextr].avg" :data="data[indextr].avg">
             {{data[indextr].avg}}
           </vs-td>
-          <vs-td :data="data[indextr].enter"
-                 v-if="data[indextr].enter">
+          <vs-td v-if="data[indextr].enter" :data="data[indextr].enter">
             {{data[indextr].enter}}
           </vs-td>
-          <vs-td :data="data[indextr].percent"
-                 v-if="data[indextr].percent">
+          <vs-td v-if="data[indextr].percent" :data="data[indextr].percent">
             {{data[indextr].percent}}%
           </vs-td>
-          <vs-td :data="data[indextr].percentList"
-                 v-if="data[indextr].percentList"
-                 :key="allIndex"
-                 v-for="(item,allIndex) in data[indextr].percentList">
+          <vs-td
+            v-for="(item,allIndex) in data[indextr].percentList"
+            v-if="data[indextr].percentList"
+            :data="data[indextr].percentList"
+            :key="allIndex">
             {{item}}
           </vs-td>
         </vs-tr>

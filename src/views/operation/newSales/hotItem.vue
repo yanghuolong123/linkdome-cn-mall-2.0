@@ -12,7 +12,7 @@
                 :value="item.value"
                 :key="index">{{ item.label }}</Option>
           </Select>
-          <Button style="margin-left:15px;" size="large" type="primary"  @click="handleClick" >查询</Button>
+          <Button style="margin-left:15px;" size="large" type="primary"  @click="handleClick" >{{ $t('查询') }}</Button>
         </div>
         <div class="box-card bg-white hotItem" style="margin-top: 20px">
             <div class="hotItem-chart" v-if="isChart">

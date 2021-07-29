@@ -14,7 +14,7 @@
 			<Select v-model="storeSelected" class="m-l-20" style="width: 200px"  filterable>
 				<Option v-for="item in storeListOptions" :value="item.id" :key="item.id">{{ item.name }}</Option>
 			</Select>
-			<Button type="primary" :disabled="!storeSelected" class="m-l-20" @click="reportQuery" size="large">查询</Button>
+			<Button type="primary" :disabled="!storeSelected" class="m-l-20" @click="reportQuery" size="large">{{ $t('查询') }}</Button>
 			<div class="icon-download" v-on:click="downloadReport('storeDay',`${selectDateTime},${selectDateTime}`)"
 					 title="下载报告">
 				<icons type="daoru" color="#2a7dc1" :size=20></icons>

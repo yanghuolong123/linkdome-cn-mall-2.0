@@ -17,6 +17,8 @@ module.exports =  {
 		effective: "effective {0}",
 		trend: "{0} trend",
     detailData: "Detailed data of {0}",
+    累计客流: "Total enter: {0}",
+    转化率: "Conversion rate: {0}%",
 	},
 
 	
@@ -37,11 +39,13 @@ module.exports =  {
 	minute: "minute",
 	second: "second",
 	enter: "enter",
+	客流量: "enter",
+  时间: "time",
 	occupancy: "occupancy",
 	sales: "sales",
 	yuan: "yuan",
 	同比: "over the previous year",
-	环比: "chain",
+	环比: "link relative ratio",
 	historicalDataQuery: "Historical data query",
   客流占比: "Proportion of enter",
   有效客流趋势: "Effective enter flow trend",
@@ -60,7 +64,7 @@ module.exports =  {
   客流排行: "ranking of enter",
   到店次数: "Number of visits",
   //Main.vue => routeTitle
-  实体客流分析: "Physical passenger flow analysis",
+  实体客流分析: "Physical enter analysis",
   年龄性别分析: "Age and gender analysis",
   排行占比分析: "Ranking proportion analysis",
   进店率分析: "Store entry rate analysis",
@@ -110,6 +114,22 @@ module.exports =  {
   // VxCard.vue => title
   关联度排行: "Relevance ranking",
   转化量排行: "Conversion ranking",
+  // Cross.vue
+  起点累计客流: "Starting point cumulative enter",
+  客流转化深度: "Enter transformation depth",
+  转化客流量: "Transformed enter",
+  查询: "Query",
+  重置: "Reset",
+  交叉客流路径: "Cross enter path",
+  最大客流路径: "Maximum enter path",
+  数据指标趋势: "Data index trend",
+  无对比: "No comparison",
+  自定义对比: "Customized comparison",
+  // pathTrendBackup.vue
+  路径动向图: "Path trend chart",
+  "游逛深度（个）": "Wandering depth (PCs.)",
+
+
 
 
 	fx: {
@@ -124,13 +144,17 @@ module.exports =  {
 	holder: {
 		请选择: "select",
     暂无数据:"No Data",//{{ $t('holder.暂无数据') }}
-	},
+    选择日期: "Date",
+    选择起点: "Start",
+    选择终点: "End",
+
+  },
 
 
 	passages: {
 		tootipText1: "Average @:(enter): the sum of the real-time cumulative @:(enter) of all shopping centers divided by the number of shopping centers \npeak @:(enter): the maximum value of the peak @:(enter) in all shopping centers \npeak @:(occupancy): the maximum value of the peak @:(occupancy) in all shopping centers \nToday's @:(occupancy): the sum of the @:(occupancy) in all shopping centers",
 		tootipText2: "Average @:(enter) today: the cumulative @:(enter) divided by the number of business hours \npeak @:(enter) today: the maximum @:(enter) from the start of business hours to the current time \npeak @:(occupancy) today: the maximum number of people staying in the shopping center and the time point from the start of business hours to the current time \npeak @:(occupancy) today: the difference between the total incoming @:(enter) and the total outgoing @:(enter) from the start of business hours to the current time",
-		tootipText3: "Average passenger flow: the cumulative passenger flow of all shopping centers in the selected time period divided by the number of shopping centers \nTotal passenger flow: the sum of passenger flow of all shopping centers in the selected time period \nPeak passenger flow: the maximum value of peak passenger flow in all shopping centers in the selected time period \nPeak passenger volume: the maximum value of peak passenger flow in all shopping centers in the selected time period \nEffective enter flow : the sum of the unique number of passengers in all shopping centers in the selected time period \nSales: the sum of the sales in all shopping centers in the selected time period",
+		tootipText3: "Average enter: the cumulative enter of all shopping centers in the selected time period divided by the number of shopping centers \nTotal enter: the sum of enter of all shopping centers in the selected time period \nPeak enter: the maximum value of peak enter in all shopping centers in the selected time period \nPeak passenger volume: the maximum value of peak enter in all shopping centers in the selected time period \nEffective enter flow : the sum of the unique number of passengers in all shopping centers in the selected time period \nSales: the sum of the sales in all shopping centers in the selected time period",
 	},
 
 	notices: {

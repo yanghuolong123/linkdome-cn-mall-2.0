@@ -39,7 +39,7 @@
                 <span v-else>发送中...</span>
               </Button>
             </i-col>
-            <Button size="large" class="resetButtom" @click="resetForm">重置</Button>
+            <Button size="large" class="resetButtom" @click="resetForm">{{ $t('重置') }}</Button>
           </Row>
         </FormItem>
       </Form>

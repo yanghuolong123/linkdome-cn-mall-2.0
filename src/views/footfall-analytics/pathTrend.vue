@@ -1,7 +1,7 @@
 <template>
   <div class="pathTrend" >
     <div class="noData" v-if="floorList.length<=0">
-      <p>暂无数据</p>
+      <p>{{ $t('holder.暂无数据') }}</p>
     </div>
     <div class="floorImg"  v-else>
       <div class="pathContent" id="pathContent" >
