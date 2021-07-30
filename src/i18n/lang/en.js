@@ -53,6 +53,7 @@ module.exports =  {
   停留时间分布: "residence time distribution",
   详细数据信息: "Detailed data information",
   销售额总览: "Sales overview",
+  实体客流无关联: "Physical passenger flow is not associated",
 
   // Itabs.vue => titleList[value]
 	客流量趋势: "Enter Trend",
@@ -172,6 +173,10 @@ module.exports =  {
   管理权限: "Management permission",
   保存: "Save",
   默认选择: "Default selection",
+  // VxSidebarGroup.vue
+  购物中心选择: "select shopping center",
+  请选择一个购物中心: "Please select a shopping center",
+  取消: "cancle",
 
 
 

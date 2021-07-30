@@ -50,20 +50,6 @@ export default [
           pageTitle: '实体客流分析'
         }
       },
-      // { // 实体客流分析
-      //     path: 'analytics',
-      //     name: 'Entity',
-      //     component: () =>
-      //         import ('@/views/footfall-analytics/Entity.vue'),
-      //     meta: {
-      //         breadcrumb: [
-      //             { title: 'DashBoard', url: '/' },
-      //             { title: '客流分析', url: '/footfall' },
-      //             { title: '实体客流分析', active: true },
-      //         ],
-      //         pageTitle: '实体客流分析'
-      //     }
-      // },
 
       { // 年龄性别分析
         path: 'agegender',
@@ -466,7 +452,7 @@ export default [
     },
     children: [
 			{ //实体管理
-				path: 'entiy',
+				path: 'entity',
 				name: 'EntityManage',
 				component: () =>
 					import ('@/views/admin/Entity.vue'),

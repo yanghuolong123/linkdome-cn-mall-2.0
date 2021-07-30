@@ -7,7 +7,7 @@
           v-model="relevanceDate"
           class="w-select"
           placement="bottom-end"
-          placeholder="选择日期"
+          :placeholder="$t('holder.请选择')"
           :options="disabledDate"
         ></DatePicker>
       </div>
@@ -33,7 +33,7 @@
           <div class="relevance-graph">
             <h3 v-show="isData == true">{{ $t('holder.暂无数据') }}</h3>
             <h3 v-show="isTotalData == true">
-              实体客流无关联
+              {{ $t('实体客流无关联') }}
             </h3>
             <div class="relevance-svg">
               <div class="relevance-left">
@@ -220,8 +220,8 @@ export default {
         this.changeTableList = this.disorderChangeTable
         // 关联度
         this.relevanceSeniority = this.disorderRelevancyRanking
-        this.tableName = ['实体名称', '实体名称', '关联度']
-        this.changeTableName = ['实体名称', '实体名称', '转换量']
+        this.tableName = ['', '', '关联度']
+        this.changeTableName = ['', '', '转换量']
       } else {
         // 转化量
         this.changeTableList = this.orderlyChangeTable

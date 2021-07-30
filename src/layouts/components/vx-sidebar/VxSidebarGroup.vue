@@ -14,8 +14,7 @@
     :class="[{'vs-sidebar-group-open' : openItems}, {'vs-sidebar-group-active': open}, {'disabled-item pointer-events-none': group.isDisabled}]"
     class="vs-sidebar-group"
     @mouseover="mouseover"
-    @mouseout="mouseout"
-  >
+    @mouseout="mouseout">
     <div @click="clickGroup" class="group-header w-full">
       <span class="flex items-center w-full">
         <feather-icon
@@ -27,8 +26,9 @@
         <vs-chip
           class="ml-auto mr-4"
           :color="group.tagColor"
-          v-if="group.tag && !sidebarItemsMin"
-        >{{ group.tag }}</vs-chip>
+          v-if="group.tag && !sidebarItemsMin">
+          {{ group.tag }}
+        </vs-chip>
       </span>
       <feather-icon
         icon="ChevronRightIcon"
@@ -41,26 +41,25 @@
     <ul ref="items" :style="styleItems" class="vs-sidebar-group-items">
       <li v-for="(groupItem, index) in group.submenu" :key="index" v-on:click='openNew(index)'>
         <vx-sidebar-group
+          v-if="groupItem.submenu"
           :group="groupItem"
           :groupIndex="Number(`${groupIndex}.${index}`)"
           :open="isGroupActive(groupItem)"
           :openHover="openHover"
-          v-if="groupItem.submenu"
         />
         <vx-sidebar-item
+          v-else
           :index="groupIndex + '.' + index"
           :to="routerFilter(groupItem.url)"
           :icon="itemIcon(groupIndex + '.' + index)"
           icon-small
-          :target="groupItem.target"
-          v-else
-          >
+          :target="groupItem.target">
           <!-- <pre>{{groupItem.url}}</pre> -->
           <span class="truncate">{{ $t(groupItem.i18n) || groupItem.name }}</span>
           <vs-chip
+            v-if="groupItem.tag"
             class="ml-auto"
             :color="groupItem.tagColor"
-            v-if="groupItem.tag"
           >{{ groupItem.tag }}</vs-chip>
         </vx-sidebar-item>
       </li>
@@ -71,17 +70,17 @@
         <div class="select-close"  v-on:click="selectClose">
            <Icon type="md-close" />
         </div>
-        <h2 class="select-title">购物中心选择</h2>
+        <h2 class="select-title">{{$t('购物中心选择')}}</h2>
         <div>
-          <p>请选择一个购物中心</p>
+          <p>{{$t('请选择一个购物中心')}}</p>
           <ul>
             <li :key="index" v-for="(item,index) in shopingList">
                <vs-radio v-model="shopingModel" vs-name="shopingModel" :vs-value="item.value">{{item.text}}</vs-radio>
             </li>
           </ul>
           <div class="select-foort">
-            <button v-on:click='selectSubmint'>保存</button>
-            <button v-on:click="selectClose">取消</button>
+            <button v-on:click='selectSubmint'>{{$t('保存')}}</button>
+            <button v-on:click="selectClose">{{$t('取消')}}</button>
           </div>
         </div>
       </div>

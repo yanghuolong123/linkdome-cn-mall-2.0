@@ -2,26 +2,24 @@
   <div class="bg-white dev-dashboard-box box-hover">
     <vs-row type="flex">
       <vs-col vs-lg="6" vs-xs="12" class="numberBox">
-        <p class="fontSize font-medium">
-         当日累积客流（人次）
-        </p>
+        <p class="fontSize font-medium">{{ $t('cumulativePassengerFlowOfTheDay') }}</p>
         <p class="dayEnter  font-number font-semibold">{{dayTotalEnter | numberFormat}}</p>
         <div class="month-data">
-          <p class="font-normal"> 当月累积客流（人次）</p>
+          <p class="font-normal">{{ $t('cumulativePassengerFlowOfTheMonth') }}</p>
           <p class="font-number ">{{ monthEnter| numberFormat}}</p>
         </div>
       </vs-col>
       <vs-col vs-lg="6" vs-xs="12" class="radial-bar">
         <div class="flex">
           <vue-apex-charts
-                  type="radialBar"
-                  height="100%"
-                  :options="chartOptions"
-                  :series="chartData"
+            type="radialBar"
+            height="100%"
+            :options="chartOptions"
+            :series="chartData"
           />
         </div>
         <div>
-          <p class="text-base text-grey font-normal">月达标值（人次）</p>
+          <p class="text-base text-grey font-normal">{{ $t('monthlyStandardValue') }}</p>
           <p class="text-lg text-grey font-number font-normal" style="text-align: center">{{ target| numberFormat}}</p>
         </div>
       </vs-col>
