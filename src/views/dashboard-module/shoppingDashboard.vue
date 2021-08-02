@@ -367,7 +367,7 @@ export default {
       if (this.clickTimeName === 'y') return _.dropRight([...tmlEnterKPI, ...tmlOccuKPI])
       let validObj = {
         id: 'entervalid',
-        name: this.$t('fn.effective', [this.$t('enter')]),
+        name: this.$t('有效客流'),
         data: Number(valid) < 0 ? 0 : valid,
         type: {
           icon: 'youxiaokeliu',
@@ -405,7 +405,7 @@ export default {
           }
         },
         occupancy: {
-          name: this.$t('occupancy'),
+          name: this.$t('集客量'),
           yaxis: {
             title: {
               text: '集客量（人次）'
@@ -593,12 +593,12 @@ export default {
       let checkNameObj = {
         enter: {
           avg: pic + '平均客流量',
-          highest: pic + this.$t('fn.peak', [this.$t('enter')]),
-          total: pic + this.$t('fn.total', [this.$t('enter')])
+          highest: pic + this.$t('客流峰值'),
+          total: pic + this.$t('总客流量'),
         },
         occupancy: {
-          highest: pic + this.$t('fn.peak', [this.$t('occupancy')]),
-          total: pic + this.$t('occupancy')
+          highest: pic + this.$t('集客峰值'),
+          total: pic + this.$t('集客量')
         }
       }
       let icontypes = {

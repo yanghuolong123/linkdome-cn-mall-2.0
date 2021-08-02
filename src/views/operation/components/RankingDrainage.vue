@@ -265,7 +265,7 @@ export default {
       return Object.keys(this.bussinessList).map(e => ({ text: this.bussinessList[e], value: Number(e) }))
     },
     withAllOptions () {
-      const allType = { text: '所有业态', value: 'all' }
+      const allType = { text: this.$t('所有业态'), value: 'all' }
       return [allType, ...this.bussinessTypes]
     },
     indicators () {

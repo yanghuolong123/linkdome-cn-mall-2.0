@@ -221,7 +221,7 @@
             // 获取业态
             getBusinessType () {
                 this.businessTypeOptions = [{
-                    text: '所有业态',
+                    text: this.$t('所有业态'),
                     value: 0
                 }]
                 activitiesList({ entity: 52, property_id: this.$store.state.home.headerAction }).then(res => {

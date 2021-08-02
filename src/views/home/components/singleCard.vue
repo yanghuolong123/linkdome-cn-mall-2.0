@@ -3,7 +3,7 @@
     <span class="iconBox" :style="{backgroundColor:`${iconBg}`}">
       <icons :type="item.type.icon"  :color="item.type.color"></icons>
     </span>
-    <span class="home-name" v-if="item.data.hasOwnProperty('name1')"> {{item.name}}</span>
+    <span class="home-name" v-if="item.data.hasOwnProperty('name1')"> {{ $t(item.name) }}</span>
     <p class="text-size text-black number-con" v-if="!multiDate" >
       <template v-if="!item.data.hasOwnProperty('number')">
         <span class="font-number font-bold" v-if="!item.data.hasOwnProperty('name1')">{{item.data | numberFormat}}</span>
@@ -53,11 +53,11 @@
     <template v-if="multiDate">
       <div class="datecompare-box">
         <p class="text-black font-bold">
-          <span>{{item.time1}}</span>
+          <span>{{ $t(item.name1) }}</span>
           <span class="text-2xl ml-6">{{item.data}}</span>
         </p>
         <p>
-          <span>{{item.time2}}</span>
+          <span>{{ $t(item.name2) }}</span>
           <span class="text-xl ml-8">
             <icons type="xiala"
               :style="{

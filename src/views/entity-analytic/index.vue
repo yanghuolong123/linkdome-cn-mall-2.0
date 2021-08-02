@@ -36,7 +36,7 @@
 				   ref="chartOccu" class="common-card m-t-20 chart-1"
 				   :toolList="occuTool"></chart-box>
 		<div class="common-card m-t-20" ref="occuTable" v-show="showOccu">
-			<div class="detail-title">{{ $t('fn.detailData', [$t('occupancy')]) }}</div>
+			<div class="detail-title">{{ $t('fn.detailData', [$t('集客量')]) }}</div>
 			<Table stripe height="400" :columns="occuTableColumnsTrans" :data="occuTable.tableData">
 				<template slot-scope="{row}" slot="entityType">
 					<span>{{getItype(row.entityName)}}</span>

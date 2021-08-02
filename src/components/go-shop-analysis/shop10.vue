@@ -9,13 +9,13 @@
           v-model="crossDate"
           placement="bottom-end"
           :options="disabledDate"
-          placeholder="选择日期"
+          :placeholder="$t('选择日期')"
 				></DatePicker>
 				<vs-select
           class="w-select m-l-20"
           autocomplete
           v-model="activities"
-          placeholder="选择业态"
+          :placeholder="$t('选择业态')"
           style="width:14.375rem;">
 					<vs-select-item
             :value="item.value"
@@ -211,7 +211,7 @@
         var that = this
         that.activitiesType = []
         var objD = {
-          text: '所有业态',
+          text: this.$t('所有业态'),
           value: 0
         }
         that.activitiesType.push(objD)

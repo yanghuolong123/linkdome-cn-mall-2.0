@@ -11,8 +11,7 @@ module.exports =  {
 		failedTo: "{0}失败。",
 		askConfirm: "确定要{0}？",
 		refreshTime: "{0}刷新一次",
-		average: "平均{0}",//this.$t('fn.average', [this.$t('enter')])
-		peak: "{0}峰值",//this.$t('fn.peak', [this.$t('occupancy')])
+		peak: "{0}峰值",//this.$t('fn.peak', [this.$t('集客量')])
 		total: "总{0}",//this.$t('fn.total', [this.$t('enter')])
 		effective: "有效{0}",//this.$t('fn.effective', [this.$t('enter')])
 		trend: "{0}趋势",
@@ -42,7 +41,6 @@ module.exports =  {
 	enter: "客流量",
 	客流量: "客流量",
   时间: "时间",
-	occupancy: "集客量",
 	sales: "销售额",
 	yuan: "元",
 	同比: "同比",
@@ -56,6 +54,19 @@ module.exports =  {
   关联度: "关联度",
   转换量: "转换量",
   暂无数据可下载: "暂无数据可下载",
+  所有业态: "所有业态",
+  客流峰值: "客流峰值",
+  集客峰值: "集客峰值",
+  有效客流: "有效客流",
+  总客流量: "总客流量",
+  平均客流: "平均客流",
+	集客量: "集客量",
+  成交率: "成交率",
+
+  "Total Enter": "总客流量",
+  "Average Enter": "平均客流",
+	"occupancy": "集客量",
+  "Peak Occupancy": "集客峰值",
 
 
 	historicalDataQuery: "历史数据查询",
@@ -125,7 +136,6 @@ module.exports =  {
   进店率趋势分析: "进店率趋势分析",
 
   // Cards.vue
-  有效客流: "有效客流",
   重复客流: "重复客流",
   平均到访次数: "平均到访次数",
   
@@ -175,7 +185,6 @@ module.exports =  {
   年度趋势: "年度趋势",
   月度趋势: "月度趋势",
   // singleCard.vue
-  成交率: "成交率",
   "坪效（元/平方米）": "坪效（元/平方米）",
   "客单价（元）" :"客单价（元）",
   "销售额（元）": "销售额（元）",
@@ -236,6 +245,7 @@ module.exports =  {
 		请选择: "请选择",
     暂无数据: "暂无数据",// $t('holder.暂无数据'), {{ $t('holder.暂无数据') }}
     选择日期: "选择日期",
+    选择业态: "选择业态",
     选择起点: "选择起点",
     选择终点: "选择终点",
     请输入用户名: "请输入用户名",

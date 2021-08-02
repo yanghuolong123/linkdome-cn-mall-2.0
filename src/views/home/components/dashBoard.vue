@@ -281,7 +281,7 @@ export default {
         stroke: {
           dashArray: 4
         },
-        labels: ['本月客流达成率'],
+        labels: [this.$t('passengerFlowachievementRateOfThisMonth')],
         responsive: [
           {
             breakpoint: 1700,

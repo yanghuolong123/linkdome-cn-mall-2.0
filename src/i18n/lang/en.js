@@ -11,8 +11,6 @@ module.exports =  {
 		failedTo: "failed to {0}.",
 		askConfirm: "Are you sure you want to {0}?",
 		refreshTime: "Refresh every {0}",
-		average: "average {0}",
-		peak: "peak {0}",
 		total: "total {0}",
 		effective: "effective {0}",
 		trend: "{0} trend",
@@ -32,17 +30,16 @@ module.exports =  {
   login: "Login",
 	jumpPath: "Jump path",
 	realTimeDataToday: "Real time data today",
-	realTimePassengerFlow: "Real time @:(enter)",
-	cumulativePassengerFlowOfTheDay: "Cumulative @:(enter) of the day (person time)",
-	cumulativePassengerFlowOfTheMonth: "Cumulative @:(enter) of the month (person time)",
+	realTimePassengerFlow: "Real time enter",
+	cumulativePassengerFlowOfTheDay: "Cumulative enter of the day (person time)",
+	cumulativePassengerFlowOfTheMonth: "Cumulative enter of the month (person time)",
 	monthlyStandardValue: "Monthly standard value (person time)",
-	passengerFlowachievementRateOfThisMonth: "@:(enter) achievement rate of this month",
+	passengerFlowachievementRateOfThisMonth: "enter achievement rate of this month",
 	minute: "minute",
 	second: "second",
 	enter: "enter",
 	客流量: "enter",
   时间: "time",
-	occupancy: "occupancy",
 	sales: "sales",
 	yuan: "yuan",
 	同比: "over the previous year",
@@ -57,6 +54,18 @@ module.exports =  {
   关联度: "Relevance",
   转换量: "Conversion",
   暂无数据可下载: "No data available for download",
+  所有业态: "All",
+  客流峰值: "Peak Enter",
+  集客峰值: "Peak Occupancy",
+  有效客流: "Effective enter",
+  总客流量: "Total Enter",
+  平均客流: "Average Enter",
+	集客量: "occupancy",
+  成交率: "Turnover rate",
+  "Total Enter": "Total Enter",
+  "Average Enter": "Average Enter",
+	"occupancy": "occupancy",
+  "Peak Occupancy": "Peak Occupancy",
 
   // Itabs.vue => titleList[value]
 	客流量趋势: "Enter Trend",
@@ -104,13 +113,13 @@ module.exports =  {
   账户管理: "Account",
   权限管理: "Role",
   // src\views\entity-analytic\index.vue
-  实体名称: "Entity name",
+  实体名称: "Entity Name",
   实体类别: "Entity Type",
   实体类型: "Entity Type",	
   累计入客流: "Total",
-  入客流峰值: "Highest",
+  入客流峰值: "Highest Enter",
   累计集客量: "total" ,
-  集客量峰值: "highest",
+  集客量峰值: "Highest Occupancy",
   平均停留时间: "Average residence time",
   名称: "name",
 
@@ -123,7 +132,6 @@ module.exports =  {
   进店率趋势分析: "Trend analysis of store entry rate",
 
   // Cards.vue
-  有效客流: "Effective enter",
   重复客流: "Repeated enter",
   平均到访次数: "Average visits",
   
@@ -173,7 +181,6 @@ module.exports =  {
   年度趋势: "Annual trend",
   月度趋势: "Monthly trend",
   // singleCard.vue
-  成交率: "成交率",
   "坪效（元/平方米）": "Floor efficiency (yuan / m2)",
   "客单价（元）" :"Customer unit price (yuan)",
   "销售额（元）": "Sales (yuan)",
@@ -234,6 +241,7 @@ module.exports =  {
 		请选择: "select",
     暂无数据:"No Data",//{{ $t('holder.暂无数据') }}
     选择日期: "Date",
+    选择业态: "Type",
     选择起点: "Start",
     选择终点: "End",
     请输入用户名: "Username",
@@ -243,8 +251,8 @@ module.exports =  {
 
 
 	passages: {
-		tootipText1: "Average @:(enter): the sum of the real-time cumulative @:(enter) of all shopping centers divided by the number of shopping centers \npeak @:(enter): the maximum value of the peak @:(enter) in all shopping centers \npeak @:(occupancy): the maximum value of the peak @:(occupancy) in all shopping centers \nToday's @:(occupancy): the sum of the @:(occupancy) in all shopping centers",
-		tootipText2: "Average @:(enter) today: the cumulative @:(enter) divided by the number of business hours \npeak @:(enter) today: the maximum @:(enter) from the start of business hours to the current time \npeak @:(occupancy) today: the maximum number of people staying in the shopping center and the time point from the start of business hours to the current time \npeak @:(occupancy) today: the difference between the total incoming @:(enter) and the total outgoing @:(enter) from the start of business hours to the current time",
+		tootipText1: "Average enter: the sum of the real-time cumulative enter of all shopping centers divided by the number of shopping centers \npeak enter: the maximum value of the peak enter in all shopping centers \npeak occupancy: the maximum value of the peak occupancy in all shopping centers \nToday's occupancy: the sum of the occupancy in all shopping centers",
+		tootipText2: "Average enter today: the cumulative enter divided by the number of business hours \npeak enter today: the maximum enter from the start of business hours to the current time \npeak occupancy today: the maximum number of people staying in the shopping center and the time point from the start of business hours to the current time \npeak occupancy today: the difference between the total incoming enter and the total outgoing enter from the start of business hours to the current time",
 		tootipText3: "Average enter: the cumulative enter of all shopping centers in the selected time period divided by the number of shopping centers \nTotal enter: the sum of enter of all shopping centers in the selected time period \nPeak enter: the maximum value of peak enter in all shopping centers in the selected time period \nPeak passenger volume: the maximum value of peak enter in all shopping centers in the selected time period \nEffective enter flow : the sum of the unique number of passengers in all shopping centers in the selected time period \nSales: the sum of the sales in all shopping centers in the selected time period",
     tootipText4: "The drainage map includes entrance and exit introduction passenger flow, store introduction passenger flow, radiation store passenger flow and departure passenger flow, Among them: \n incoming passenger flow at the entrance and exit: the transformed passenger flow directly entering the selected store from the entrance and exit \n incoming passenger flow at the store: the transformed passenger flow from other stores to the selected store \n radiating store passenger flow: the transformed passenger flow from the selected store to other stores \n departure passenger flow: the passenger flow directly leaving the shopping center from the selected store",
     tootipText5: "1. Trend chart: shows the passenger flow trend of entrances and exits and shops respectively \n2. Import total passenger flow: the sum of passenger flow from entrances and exits and shops \n3. Number of entrances and exits: the total number of entrances and exits entities \n4. Number of stores: the total number of store entities",
