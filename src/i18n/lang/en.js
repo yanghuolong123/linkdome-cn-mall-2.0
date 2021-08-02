@@ -54,6 +54,9 @@ module.exports =  {
   详细数据信息: "Detailed data information",
   销售额总览: "Sales overview",
   实体客流无关联: "Physical passenger flow is not associated",
+  关联度: "Relevance",
+  转换量: "Conversion",
+  暂无数据可下载: "No data available for download",
 
   // Itabs.vue => titleList[value]
 	客流量趋势: "Enter Trend",
@@ -101,6 +104,15 @@ module.exports =  {
   账户管理: "Account",
   权限管理: "Role",
   // src\views\entity-analytic\index.vue
+  实体名称: "Entity name",
+  实体类别: "Entity Type",
+  实体类型: "Entity Type",	
+  累计入客流: "Total",
+  入客流峰值: "Highest",
+  累计集客量: "total" ,
+  集客量峰值: "highest",
+  平均停留时间: "Average residence time",
+  名称: "name",
 
   // Chart-box.vue => toolList[tool]&&toolList[tool].name
   集客量趋势: "Occupancy Trend",
@@ -176,9 +188,38 @@ module.exports =  {
   // VxSidebarGroup.vue
   购物中心选择: "select shopping center",
   请选择一个购物中心: "Please select a shopping center",
-  取消: "cancle",
-
-
+  取消: "Cancle",
+  // src\views\ui-elements\table\TableMultipleSelected.vue =>item in tableName
+  本年客流目标: "Passenger flow target of this year",
+  本年销售目标: "Sales target of this year",
+  详情地址: "Detailed address",
+  描述: "describe",
+  图片配置: "Picture configuration",
+  操作: "operation",
+  节假日名称: "Holiday Name",
+  活动归属: "Activity attribution",
+  目标客流: "Target passenger flow",
+  开始时间: "start time",
+  结束时间: "End time",
+  持续时间: "Duration",
+  头像: "head portrait",
+  用户名: "user name",
+  姓名: "full name",
+  角色: "role",
+  性别: "Gender",
+  手机号: "phone number",
+  邮箱: "E-mail",
+  // Account.vue
+  添加: "Add",
+  删除: "Delete",
+  // addRole.vue
+  角色名称: "Role name",
+  角色归属于: "Role belongs to",
+  角色描述: "Role description",
+  提交: "Submit",
+  添加角色: "Add role",
+  
+  
 
 	fx: {
 		minute: "min",
@@ -195,6 +236,8 @@ module.exports =  {
     选择日期: "Date",
     选择起点: "Start",
     选择终点: "End",
+    请输入用户名: "Username",
+    请输入角色: "Role",
 
   },
 

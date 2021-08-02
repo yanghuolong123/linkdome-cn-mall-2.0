@@ -1,58 +1,56 @@
 <template>
-    <div class="account-center">
-        <div class="flex mb-4 account-text">
-            <div class="w-full bg-grid-color-secondary">
-                <div class="account-text-right">
-                    <div class="account-seach">
-                      <div class="data-picker">
-                        <div class="account-seach-text">
-                            <!-- <Icon size='24' type="ios-search" /> -->
-                            <input type="text" v-model="searchText" placeholder="请输入用户名">
-                        </div>
-                        <div class="account-seach-text" style="margin-left:10px;">
-                            <input type="text" v-model="searchRole" placeholder="请输入角色">
-                        </div>
-                        <div class="account-add-remove">
-                            <span class="account-add" title="添加" @click="addData">
-                                <Icon type="md-add" />
-                            </span>
-                            <span  title="删除" @click="allRemoveData">
-                                <Icon type="md-remove" />
-                            </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="account-table">
-                        <table-multiple-selected
-                            @tableData='tableData'
-                            @removeData='removeData'
-                            @tableSelect ='tableSelect'
-                            :tableName='tableName'
-                            :tableList='filterUser'
-                            :titleName='titleName'
-                            :isMultiple='true'
-                        >
-                        </table-multiple-selected>
-                    </div>
-                </div>
+  <div class="account-center">
+    <div class="flex mb-4 account-text">
+      <div class="w-full bg-grid-color-secondary">
+        <div class="account-text-right">
+          <div class="account-seach">
+            <div class="data-picker">
+              <div class="account-seach-text">
+                <!-- <Icon size='24' type="ios-search" /> -->
+                <input type="text" v-model="searchText" :placeholder="$t('holder.请输入用户名')">
+              </div>
+              <div class="account-seach-text" style="margin-left:10px;">
+                <input type="text" v-model="searchRole" :placeholder="$t('holder.请输入角色')">
+              </div>
+              <div class="account-add-remove">
+                <span class="account-add" :title="$t('添加')" @click="addData">
+                  <Icon type="md-add" />
+                </span>
+                <span  :title="$t('删除')" @click="allRemoveData">
+                  <Icon type="md-remove" />
+                </span>
+              </div>
             </div>
+          </div>
+          <div class="account-table">
+            <table-multiple-selected
+              @tableData='tableData'
+              @removeData='removeData'
+              @tableSelect ='tableSelect'
+              :tableName='tableName'
+              :tableList='filterUser'
+              :titleName='titleName'
+              :isMultiple='true'
+            ></table-multiple-selected>
+          </div>
         </div>
-         <account-edit
-            v-if="isEdit"
-            @closeEdit ='closeEdit'
-            @editData ='editData'
-            :editData ='dataList'
-            :roleList="roleList"
-            :organization="organization"
-          ></account-edit>
-
-          <alert
-            v-if="isAlert"
-            @closeAlert ='closeAlert'
-            @alertConfirm ='alertConfirm'
-            :alertText='alertText'
-           ></alert>
+      </div>
     </div>
+    <account-edit
+      v-if="isEdit"
+      @closeEdit ='closeEdit'
+      @editData ='editData'
+      :editData ='dataList'
+      :roleList="roleList"
+      :organization="organization"
+    ></account-edit>
+    <alert
+      v-if="isAlert"
+      @closeAlert ='closeAlert'
+      @alertConfirm ='alertConfirm'
+      :alertText='alertText'
+    ></alert>
+  </div>
 </template>
 
 <script>
@@ -320,119 +318,119 @@ export default {
   background-color: #f5f5f5;
 }
 .account-center{
-    .account-text{
-        margin-top: 25px;
-        .account-text-right{
-            width: 100%;
-            height: auto;
-            .account-seach{
-                width: 100%;
-                height: 43px;
-                .data-picker{
-                    margin-bottom: 20px;
-                    overflow: hidden;
-                    background-color: #fff;
-                    padding: 18px 30px;
-                    -webkit-box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
-                    box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
-                    border-radius: 6px;
-                }
-                .account-seach-text{
-                    width: 252px;
-                    height: 100%;
-                    border-radius: 6px;
-                    border: 1px solid rgba(0,0,0,.2);
-                    padding: 5px;
-                    float: left;
-                    background-color: #fff;
-                    .ivu-icon{
-                        float: left;
-                    }
-                    input{
-                        display: inline-block;
-                        width: 195px;
-                        border: none;
-                        height: 31px;
-                        margin-left: 10px;
-                        padding-left: 10px;
-                        background-color: rgba(93, 144, 255, 0.0);
-                    }
-                }
-                .account-add-remove{
-                    float:right;
-                    margin-right: 10px;
-                    span{
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        float: left;
-                        width: 24px;
-                        height: 24px;
-                        border-radius: 50%;
-                        text-align: center;
-                        font-size: 16px;
-                        color: #fff;
-                        margin-left: 20px;
-                        cursor: pointer;
-                        &:nth-child(1){
-                          margin-top: 9px;
-                          background-color: #2BD9CF;
-                        }
-                         &:nth-child(2){
-                          margin-top: 9px;
-                          background-color: #FEB33D;
-                        }
-                    }
-                }
-            }
-            .account-table{
-                margin-top:52px;
-                background:rgba(255,255,255,1);
-                box-shadow:0px 2px 9px 1px rgba(175,175,176,0.25);
-                border-radius:6px;
-                overflow: auto;
-            }
+  .account-text{
+    margin-top: 25px;
+    .account-text-right{
+      width: 100%;
+      height: auto;
+      .account-seach{
+        width: 100%;
+        height: 43px;
+      .data-picker{
+        margin-bottom: 20px;
+        overflow: hidden;
+        background-color: #fff;
+        padding: 18px 30px;
+        -webkit-box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
+        box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
+        border-radius: 6px;
+      }
+      .account-seach-text{
+        width: 252px;
+        height: 100%;
+        border-radius: 6px;
+        border: 1px solid rgba(0,0,0,.2);
+        padding: 5px;
+        float: left;
+        background-color: #fff;
+        .ivu-icon{
+          float: left;
         }
+        input{
+          display: inline-block;
+          width: 195px;
+          border: none;
+          height: 31px;
+          margin-left: 10px;
+          padding-left: 10px;
+          background-color: rgba(93, 144, 255, 0.0);
+        }
+      }
+      .account-add-remove{
+        float:right;
+        margin-right: 10px;
+        span{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          float: left;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          text-align: center;
+          font-size: 16px;
+          color: #fff;
+          margin-left: 20px;
+          cursor: pointer;
+          &:nth-child(1){
+            margin-top: 9px;
+            background-color: #2BD9CF;
+          }
+            &:nth-child(2){
+            margin-top: 9px;
+            background-color: #FEB33D;
+          }
+        }
+      }
+    }
+    .account-table{
+      margin-top:52px;
+      background:rgba(255,255,255,1);
+      box-shadow:0px 2px 9px 1px rgba(175,175,176,0.25);
+      border-radius:6px;
+      overflow: auto;
+    }
+  }
+}
+
+.vx-card .vx-card__collapsible-content {
+  img{
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+  }
+}
+.vs-con-table .vs-con-tbody .vs-table--tbody-table .vs-table--thead th{
+  &:nth-child(2){
+    padding-left: 10px
+  }
+}
+.vs-con-table .vs-con-tbody .vs-table--tbody-table .tr-table td{
+  padding: 1rem 0;
+  &:nth-child(2){
+    padding-left: 10px
+  }
+  &:last-child{
+    width: 130px;
+    span{
+      display: inline-table;
+        span{
+          display: inline-block;
+          float: left;
+          border-radius: 50%;
+          text-align: center;
+
+          color:#C7C6C6;
+          margin-right: 20px;
+          .ivu-icon{
+            font-size: 19px;
+          }
+        }
+      }
     }
 
-    .vx-card .vx-card__collapsible-content {
-        img{
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            -moz-border-radius: 50%;
-            -webkit-border-radius: 50%;
-        }
-    }
-    .vs-con-table .vs-con-tbody .vs-table--tbody-table .vs-table--thead th{
-        &:nth-child(2){
-            padding-left: 10px
-        }
-    }
-    .vs-con-table .vs-con-tbody .vs-table--tbody-table .tr-table td{
-        padding: 1rem 0;
-        &:nth-child(2){
-            padding-left: 10px
-        }
-        &:last-child{
-            width: 130px;
-            span{
-              display: inline-table;
-                span{
-                    display: inline-block;
-                    float: left;
-                    border-radius: 50%;
-                    text-align: center;
-
-                    color:#C7C6C6;
-                    margin-right: 20px;
-                    .ivu-icon{
-                        font-size: 19px;
-                    }
-                }
-            }
-        }
-
-    }
+  }
 }
 </style>

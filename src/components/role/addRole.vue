@@ -1,34 +1,34 @@
 <template>
 <div class="addRole">
   <div class="dialogs-edit">
-      <div class="dialogs-edit-bg"></div>
-      <div class="dialogs-edit-text" :style="{height:heights,marginTop:marginTops}">
-          <div class="edit-title">
-              {{editRoleTitle}}
-          </div>
-          <div class="edit-close" v-on:click="closeEdit">
-                <Icon type="md-close" />
-            </div>
-          <div class="edit-text">
-                <Form :model="formData" label-position="right" :label-width="92" ref="formData" :rules="ruleInline">
-                    <FormItem label="角色名称" prop="name">
-                        <Input type ="text" v-model="formData.name" placeholder="请输入角色名称"></Input>
-                    </FormItem>
-                    <FormItem label="角色归属于" prop="property" >
-                        <i-select v-model="formData.property" @on-change="getItemValue">
-                            <i-option v-for="item in propertyLists" :value="item.value" :key="item.value">{{item.label}}</i-option>
-                        </i-select>
-                    </FormItem>
-                    <FormItem label="角色描述" prop="description" :label-width="92">
-                        <Input  type="textarea" v-model="formData.description" :rows="4"></Input>
-                    </FormItem>
-                </Form>
-                <div class="control">
-                    <Button  @click="handleSubmit('formData')">提交</Button>
-                    <Button class="buttonCel" @click.native="closeEdit">取消</Button>
-                </div>
-          </div>
+    <div class="dialogs-edit-bg"></div>
+    <div class="dialogs-edit-text" :style="{height:heights,marginTop:marginTops}">
+      <div class="edit-title">
+        {{$t(editRoleTitle)}}
       </div>
+      <div class="edit-close" v-on:click="closeEdit">
+          <Icon type="md-close" />
+        </div>
+      <div class="edit-text">
+        <Form :model="formData" label-position="right" :label-width="92" ref="formData" :rules="ruleInline">
+          <FormItem :label="$t('角色名称')" prop="name">
+            <Input type ="text" v-model="formData.name" :placeholder="$t('holder.请输入角色')"></Input>
+          </FormItem>
+          <FormItem :label="$t('角色归属于')" prop="property" >
+            <i-select v-model="formData.property" @on-change="getItemValue" :placeholder="$t('holder.请选择')">
+              <i-option v-for="item in propertyLists" :value="item.value" :key="item.value">{{item.label}}</i-option>
+            </i-select>
+          </FormItem>
+          <FormItem :label="$t('角色描述')" prop="description" :label-width="92">
+            <Input  type="textarea" v-model="formData.description" :rows="4"></Input>
+          </FormItem>
+        </Form>
+        <div class="control">
+          <Button  @click="handleSubmit('formData')">{{$t('提交')}}</Button>
+          <Button class="buttonCel" @click.native="closeEdit">{{$t('取消')}}</Button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 </template>
@@ -112,29 +112,29 @@ export default {
     }
   },
   methods: {
-      handleGroupOrganizationData(data){
-          const checkilist = this.$store.state.user.checklist
-          const role_id = this.$store.state.user.role_id
-          let propertyList = []
-          data.map((m) => {
-              let obj = {}
-              obj.name = m.name
-              obj.label = m.name
-              obj.value = m.property_id
-              obj.id = m.property_id
-              if (role_id < 3) {
-                  propertyList.push(obj)
-              } else if (checkilist.indexOf(m.property_id) > -1) {
-                  propertyList.push(obj)
-              }
-          })
-          this.propertyList = propertyList
-      },
+    handleGroupOrganizationData(data){
+      const checkilist = this.$store.state.user.checklist
+      const role_id = this.$store.state.user.role_id
+      let propertyList = []
+      data.map((m) => {
+        let obj = {}
+        obj.name = m.name
+        obj.label = m.name
+        obj.value = m.property_id
+        obj.id = m.property_id
+        if (role_id < 3) {
+          propertyList.push(obj)
+        } else if (checkilist.indexOf(m.property_id) > -1) {
+          propertyList.push(obj)
+        }
+      })
+      this.propertyList = propertyList
+    },
     /* 校验表单
-        *@method handleSubmit
-        *@param {String} name 表单的ref值
-        *@return null
-        */
+    *@method handleSubmit
+    *@param {String} name 表单的ref值
+    *@return null
+    */
     handleSubmit (name) {
       var that = this
       that.$refs[name].validate((valid) => {
@@ -207,72 +207,72 @@ export default {
 
 <style lang="less" scoped>
 .addRole{
-    .dialogs-edit{
-        position: fixed;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 66666;
-        .dialogs-edit-bg{
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            opacity: 0.3;
-        }
-        .dialogs-edit-text{
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            margin-left: -250px;
-            width: 500px;
-            background-color: #fff;
-            background:rgba(255,255,255,1);
-            border:1px solid rgba(215,223,227,1);
-            box-shadow:1px 2px 10px 0px rgba(193,193,193,0.2);
-            border-radius:8px;
-            .edit-title{
-                width: 100%;
-                height: 53px;
-                line-height: 53px;
-                padding-left: 20px;
-                background:rgba(242,242,242,1);
-                font-size:18px;
-                font-family:PingFangSC-Medium;
-                font-weight:500;
-                color:rgba(91,89,89,1)
+  .dialogs-edit{
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 66666;
+    .dialogs-edit-bg{
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      opacity: 0.3;
+    }
+    .dialogs-edit-text{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-left: -250px;
+      width: 500px;
+      background-color: #fff;
+      background:rgba(255,255,255,1);
+      border:1px solid rgba(215,223,227,1);
+      box-shadow:1px 2px 10px 0px rgba(193,193,193,0.2);
+      border-radius:8px;
+      .edit-title{
+        width: 100%;
+        height: 53px;
+        line-height: 53px;
+        padding-left: 20px;
+        background:rgba(242,242,242,1);
+        font-size:18px;
+        font-family:PingFangSC-Medium;
+        font-weight:500;
+        color:rgba(91,89,89,1)
+      }
+      .edit-text{
+        width: 80%;
+        margin-left: 10%;
+        padding-top: 20px;
+        position: relative;
+        .control{
+          position: relative;
+          width: 52%;
+          left: 33%;
+          .ivu-btn{
+            width: 90px;
+            color: #fff;
+            outline: none;
+            &:nth-child(1){
+              margin-right: 20px;
+              background-color: #00a0e9;
+              &:hover{
+                border:px solid #00a0e9;
+              }
             }
-            .edit-text{
-                width: 80%;
-                margin-left: 10%;
-                padding-top: 20px;
-                position: relative;
-                .control{
-                    position: relative;
-                    width: 52%;
-                    left: 33%;
-                    .ivu-btn{
-                        width: 90px;
-                        color: #fff;
-                        outline: none;
-                        &:nth-child(1){
-                            margin-right: 20px;
-                            background-color: #00a0e9;
-                            &:hover{
-                                border:px solid #00a0e9;
-                            }
-                        }
-                         &:nth-child(2){
-                            background-color: #fff;
-                            color:#515a6e;
-                            &:hover{
-                               color: #57a3f3;
-                            }
-                        }
-                    }
-                }
+            &:nth-child(2){
+              background-color: #fff;
+              color:#515a6e;
+              &:hover{
+                color: #57a3f3;
+              }
             }
+          }
         }
+      }
+    }
   }
   .edit-close{
     position: absolute;
@@ -296,7 +296,7 @@ export default {
     }
   }
   .ivu-form-item {
-     margin-bottom: 24px;
-    }
+    margin-bottom: 24px;
+  }
 }
 </style>

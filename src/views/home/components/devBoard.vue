@@ -49,8 +49,8 @@ export default {
       default: 0
     },
     chartData:{
-        type:Array,
-        default:[]
+      type:Array,
+      default:[]
     },
     chartOptions:{
       type: Object,

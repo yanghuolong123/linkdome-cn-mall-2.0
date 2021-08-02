@@ -25,7 +25,7 @@
 		</chart-box>
 		<div class="common-card m-t-20" ref="enterTable" v-show="enterSelect.length === 1">
 			<div class="detail-title">{{ $t('fn.detailData', [$t('enter')]) }}</div>
-			<Table stripe height="400" :columns="enterTable.columns" :data="enterTable.tableData">
+			<Table stripe height="400" :columns="enterTableColumnsTrans" :data="enterTable.tableData">
 				<template slot-scope="{row}" slot="entityType">
 					<span>{{getItype(row.entityName)}}</span>
 				</template>
@@ -37,7 +37,7 @@
 				   :toolList="occuTool"></chart-box>
 		<div class="common-card m-t-20" ref="occuTable" v-show="showOccu">
 			<div class="detail-title">{{ $t('fn.detailData', [$t('occupancy')]) }}</div>
-			<Table stripe height="400" :columns="occuTable.columns" :data="occuTable.tableData">
+			<Table stripe height="400" :columns="occuTableColumnsTrans" :data="occuTable.tableData">
 				<template slot-scope="{row}" slot="entityType">
 					<span>{{getItype(row.entityName)}}</span>
 				</template>
@@ -110,6 +110,32 @@
         if (!this.oParams) return false
         return this.oParams.getBzidWithoutGate() && this.oParams.isSingleDay()&&this.oParams.params.compareType!=="businessType"
       },
+      // 这里实现对表头内容的翻译
+      enterTableColumnsTrans() {
+        let newArrey =[]
+        this.enterTable.columns.forEach((a) => {
+          let part={
+            title: this.$t(a.title),
+            key: a.key,
+            slot: a.slot 
+          }
+          newArrey.push(part)
+        })
+        return newArrey
+      },
+      // 第二个表头内容的翻译
+      occuTableColumnsTrans() {
+        let newArrey =[]
+        this.occuTable.columns.forEach((a) => {
+          let part={
+            title: this.$t(a.title),
+            key: a.key,
+            slot: a.slot 
+          }
+          newArrey.push(part)
+        })
+        return newArrey
+      }
     },
     methods: {
       //按小时开关

@@ -59,7 +59,13 @@
      </div>
     </div> 
   </div>
-  <dev-board :dayTotalEnter='dayTotalEnter' :monthEnter='monthEnter' :chartData=chartData(target,monthEnter) :chartOptions=chartOptions v-else></dev-board>
+  <dev-board 
+    v-else
+    :dayTotalEnter='dayTotalEnter' 
+    :monthEnter='monthEnter' 
+    :chartData="chartData(target,monthEnter)" 
+    :chartOptions="chartOptions" 
+    ></dev-board>
 </div>
   
 </template>

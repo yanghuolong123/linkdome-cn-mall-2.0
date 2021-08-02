@@ -15,10 +15,7 @@
       :noDataText="name">
       <!-- table title -->
       <template slot="thead" #thead>
-        <vs-th
-          :key="index"
-          class="table-title"
-          v-for="(item,index) in tableName">
+        <vs-th v-for="(item,index) in tableName" class="table-title" :key="index">
           {{ $t(item) }}
         </vs-th>
       </template>

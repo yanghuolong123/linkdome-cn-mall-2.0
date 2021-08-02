@@ -120,7 +120,7 @@ export default {
       data.push(columns)
       data.push(this.tableList)
       if (this.tableList.length == 0) {
-        alert('暂无数据可下载')
+        alert(this.$t('暂无数据可下载'))
         return false
       }
       let name = this.ExcelData.type == 1 ? '节假日活动趋势分析' : '节假日活动对比分析'
