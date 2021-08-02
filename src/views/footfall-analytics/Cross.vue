@@ -18,7 +18,7 @@
           v-model="selectType"
         >
         <vs-select-item
-          v-for="(item,index) in typeList"
+          v-for="(item,index) in typeListCom"
           :value="item.value"
           :text="$t(item.text)"
           :key="index"
@@ -191,27 +191,12 @@ export default {
     let that = this
     return {
       selectType: 0,
-	  selectTyepConfirm:0,
+	    selectTyepConfirm:0,
       noData: true,
       lineNoData: true,
       showTimeOne: '',
       showTimeTwo: '',
-      typeList: [
-        {
-          text: '无对比',
-          value: 0
-        },
-        {
-          text: '自定义对比',
-          value: 1
-        }, {
-          text: '同比',
-          value: 2
-        }, {
-          text: '环比',
-          value: 3
-        }
-      ],
+      typeList: [],
       isGraph: false,
       isLine: false,
       percentData: 0,
@@ -517,7 +502,26 @@ export default {
     },
     toBzid () {
       return this.endValue.map(o => { return o[1] }).flat()
-    }
+    },
+    typeListCom() {
+      this.typeList = [
+        {
+          text: $t('无对比'),
+          value: 0
+        },
+        {
+          text: $t('自定义对比'),
+          value: 1
+        }, {
+          text: $t('同比'),
+          value: 2
+        }, {
+          text: $t('环比'),
+          value: 3
+        }
+      ]
+      return this.typeList
+    },
   },
   created () {
     this.disabledDate = disabledDate

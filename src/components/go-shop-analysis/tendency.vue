@@ -16,10 +16,10 @@
           autocomplete
           v-model="selectType">
           <vs-select-item
+            v-for="(item,index) in typeListCom"
             :value="item.value"
             :text="item.text"
             :key="index"
-            v-for="(item,index) in typeList"
           />
         </vs-select>
         <DatePicker
@@ -50,7 +50,7 @@
         <p class="flex-center">
           <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(icon.value)">
             <icons
-              :title="iconTitle[icon.type]"
+              :title="iconTitleCom[icon.type]"
               :type="icon.type"
               :size="20"
               :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
@@ -128,18 +128,8 @@ export default {
       crossDateTwo: [],
       selectType: 0,
       selectAll: 0,
-      typeList: [
-        {
-          text: '无对比',
-          value: 0
-        },
-        {
-          text: '时间对比',
-          value: 1
-        }
-      ],
+      typeList: [],
       iconList: [
-       
         {
           type: '62',
           color: '#9D9D9DFF',
@@ -160,16 +150,7 @@ export default {
           value: 3
         }
       ],
-      iconTitle: {
-        'zhexiantu': '折线图',
-        '62': '柱状图',
-        'biaoge-copy': '详细数据',
-        'xiangxia': '查看全部实体排行',
-        'ditu': '出入口客流',
-        'fenxi': '饼状图',
-        'chakan': '查看所有',
-        'daoru': '下载'
-      },
+      iconTitle: {},
       iconIndex: 0,
       iconColor: 'rgb(34, 128, 215)',
       goTitle: '',
@@ -309,7 +290,34 @@ export default {
         bg: '',
         confirm: false
       },
-
+    }
+  },
+  computed: {
+    typeListCom() {
+      this.typeList = [
+        {
+          text: this.$t('无对比'),
+          value: 0
+        },
+        {
+          text: this.$t('时间对比'),
+          value: 1
+        }
+      ]
+      return this.typeList
+    },
+    iconTitleCom() {
+      this.iconTitle = {
+        'zhexiantu': this.$t('折线图'),
+        '62': this.$t('柱状图'),
+        'biaoge-copy': this.$t('详细数据'),
+        'xiangxia': this.$t('查看全部实体排行'),
+        'ditu': this.$t('出入口客流'),
+        'fenxi': this.$t('饼状图'),
+        'chakan': this.$t('查看所有'),
+        'daoru': this.$t('下载')
+      }
+      return this.iconTitle
     }
   },
   activated () {

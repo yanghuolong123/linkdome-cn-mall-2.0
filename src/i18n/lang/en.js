@@ -66,6 +66,11 @@ module.exports =  {
   "Average Enter": "Average Enter",
 	"occupancy": "occupancy",
   "Peak Occupancy": "Peak Occupancy",
+  实体对比: "Entity comparison",
+  业态对比: "Comparison of business types",
+  时间对比: "Time comparison",
+
+
 
   // Itabs.vue => titleList[value]
 	客流量趋势: "Enter Trend",
@@ -225,6 +230,19 @@ module.exports =  {
   角色描述: "Role description",
   提交: "Submit",
   添加角色: "Add role",
+  // entity-flow-selector.vue
+  楼层: "Floor",
+  商铺: "Store",
+  区域: "Area",
+  出入口: "Gate",
+  // tendency.vue
+  折线图: 'Line chart',
+  柱状图: 'Histogram',
+  查看全部实体排行: 'View ranking of all entities',
+  出入口客流: 'Gates Enter',
+  饼状图: 'Pie chart',
+  查看所有: 'View all',
+  下载: 'download',
   
   
 

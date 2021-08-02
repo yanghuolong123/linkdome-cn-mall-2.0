@@ -13,13 +13,6 @@
         ></DatePicker>
       </div>
       <div class="flex-center">
-        <!-- <el-cascader
-        collapse-tags
-        class="w-select"
-          v-model="activities"
-          :props="{ multiple: true,expandTrigger:'hover' }"
-          :options="activitiesType">
-        </el-cascader> -->
         <vs-select
           class="w-select"
           autocomplete
@@ -28,10 +21,10 @@
           style="width:14.375rem;"
           multiple>
           <vs-select-item
+            v-for="(item,index) in activitiesType"
             :value="item.value"
             :text="item.text"
             :key="index"
-            v-for="(item,index) in activitiesType"
           />
         </vs-select>
         <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('查询') }}</Button>
@@ -112,23 +105,22 @@ export default {
       crossDateTwo: [],
       selectType: 0,
       selectAll: 0,
-      typeList: [
+      // typeList: [
+      //   {
+      //     text: '无对比',
+      //     value: 0
+      //   },
+      //   {
+      //     text: '时间对比',
+      //     value: 1
+      //   }
+      // ],
+      iconList: [
         {
-          text: '无对比',
+          type: 'zhexiantu',
+          color: '#9D9D9DFF',
           value: 0
         },
-        {
-          text: '时间对比',
-          value: 1
-        }
-      ],
-      iconList: [
-      
-      {
-              type: 'zhexiantu',
-              color: '#9D9D9DFF',
-              value: 0
-          },
         {
           type: 'biaoge-copy',
           color: '#9D9D9DFF',

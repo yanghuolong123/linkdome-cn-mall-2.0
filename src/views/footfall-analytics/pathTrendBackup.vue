@@ -4,13 +4,13 @@
       <DatePicker
         type="date"
         v-model="drainageDate"
-        placeholder="选择日期"
+        :placeholder="$t('holder.选择日期')"
         class="select-date"
         :options="disabledDate"
         format="yyyy-MM-dd"
       ></DatePicker>
 
-      <Select v-model="floor" class="selectExample selectFloor">
+      <Select v-model="floor" class="selectExample selectFloor" :placeholder="$t('holder.select')">
         <Option v-for="item in allMoveData" :value="item.floor_index" :key="item.floor_index">{{ item.name }}</Option>
       </Select>
       <Button size="large" type="primary" class="m-l-20" @click="searchData">{{ $t('查询') }}</Button>
