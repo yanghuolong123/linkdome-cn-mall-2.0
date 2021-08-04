@@ -107,7 +107,7 @@ export default {
       if (this.userLvl == 'common_admin') {
         return '308px'
       } else {
-        return '360px'
+        return '400px'
       }
     }
   },
