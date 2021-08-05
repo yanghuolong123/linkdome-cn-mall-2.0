@@ -740,7 +740,7 @@ export default {
       this.formValidate.spc = val
       var titleNames
       if (val == 2) {
-        titleNames = this.isModify ? '编辑楼层' : '添加楼层'
+        titleNames = this.isModify ? this.$t('fn.编辑', [this.$t('楼层')]) : this.$t('fn.添加', [this.$t('楼层')])
         this.mWidth = '500px'
         this.mHeight = '530px'
         this.marginLeft = '-250px'
@@ -754,7 +754,7 @@ export default {
         document.getElementsByClassName('right')[0].style.display = 'none'
         document.getElementsByClassName('left')[0].style.width = '100%'
       } else if (val == 3) {
-        titleNames = this.isModify ? '编辑商铺' : '添加商铺'
+        titleNames = this.isModify ? this.$t('fn.编辑', [this.$t('商铺')]) : this.$t('fn.添加', [this.$t('商铺')])
         this.mWidth = '570px'
         this.mHeight = '686px'
         this.marginLeft = '-285px'
@@ -769,7 +769,7 @@ export default {
         document.getElementsByClassName('right')[0].style.display = 'none'
         document.getElementsByClassName('left')[0].style.width = '100%'
       } else if (val == 1) {
-        titleNames = this.isModify ? '编辑购物中心' : '添加购物中心'
+        titleNames = this.isModify ? this.$t('fn.编辑', [this.$t('购物中心')]) : this.$t('fn.添加', [this.$t('购物中心')])
         this.mWidth = '1286px'
         this.mHeight = '686px'
         this.marginLeft = '-643px'

@@ -18,7 +18,9 @@ module.exports =  {
     累计客流: "Total enter: {0}",
     转化率: "Conversion rate: {0}%",
     客流占比: "Proportion of enter: {0}%",
-    平均每月: "average {0} per month"
+    平均每月: "average {0} per month",
+    编辑: "Edit {0}",
+    添加: "Add {0}",
 	},
 
 	
