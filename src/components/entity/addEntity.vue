@@ -208,7 +208,7 @@
                   </row>
                 </div>
 
-                <FormItem label="销售额目标"></FormItem>
+                <FormItem :label="$t('销售额目标')"></FormItem>
                 <div class="form-control addsub">
                   <label></label>
                   <row>

@@ -261,6 +261,7 @@ module.exports =  {
   人: "persons",
   全年总计: "Total for the whole year:",
   购物中心: "Shopping center",
+  销售额目标: "Sales target",
   
   "1月":"Jan",
   "2月":"Feb",
