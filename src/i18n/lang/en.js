@@ -18,6 +18,7 @@ module.exports =  {
     累计客流: "Total enter: {0}",
     转化率: "Conversion rate: {0}%",
     客流占比: "Proportion of enter: {0}%",
+    平均每月: "average {0} per month"
 	},
 
 	
@@ -41,7 +42,7 @@ module.exports =  {
 	客流量: "enter",
   时间: "time",
 	sales: "sales",
-	yuan: "yuan",
+	yuan: "￥",
 	同比: "over the previous year",
 	环比: "link relative ratio",
 	historicalDataQuery: "Historical data query",
@@ -243,6 +244,37 @@ module.exports =  {
   饼状图: 'Pie chart',
   查看所有: 'View all',
   下载: 'download',
+  // addEntity.vue
+  地址: "Adress",
+  类型: "Type",
+  营业时间: "Business Hours",
+  区域关联: "Regional Association",
+  省份: "Province",
+  城市: "Sity",
+  父节点: "Parent Node",
+  业态: "Bussiness Pattern",
+  面积: "the measure of area",
+  选择年份: "Select year",
+  客流目标: "Enter Target",
+  全年目标: "Annual Target",
+  每月目标: "Monthly Target",
+  人: "persons",
+  全年总计: "Total for the whole year:",
+  购物中心: "Shopping center",
+  
+  "1月":"Jan",
+  "2月":"Feb",
+  "3月":"Mar",
+  "4月":"Apr",
+  "5月":"May",
+  "6月":"Jun",
+  "7月":"Jul",
+  "8月":"Aug",
+  "9月":"Sept",
+  "10月":"Oct",
+  "11月":"Nov",
+  "12月":"Dec",
+  
   
   
 
@@ -256,7 +288,7 @@ module.exports =  {
 		enter_trend: "Enter Trend",
 	},
 	holder: {
-		请选择: "select",
+		请选择: "Select",
     暂无数据:"No Data",//{{ $t('holder.暂无数据') }}
     选择日期: "Date",
     选择业态: "Type",
@@ -267,6 +299,11 @@ module.exports =  {
 
   },
 
+	notices: {
+  	wrongPassword: "Your account or password was entered incorrectly.",
+		noPermission: "Sorry, you don't have permission",
+		systemException: "System exception!",
+	},
 
 	passages: {
 		tootipText1: "Average enter: the sum of the real-time cumulative enter of all shopping centers divided by the number of shopping centers \npeak enter: the maximum value of the peak enter in all shopping centers \npeak occupancy: the maximum value of the peak occupancy in all shopping centers \nToday's occupancy: the sum of the occupancy in all shopping centers",
@@ -275,11 +312,5 @@ module.exports =  {
     tootipText4: "The drainage map includes entrance and exit introduction passenger flow, store introduction passenger flow, radiation store passenger flow and departure passenger flow, Among them: \n incoming passenger flow at the entrance and exit: the transformed passenger flow directly entering the selected store from the entrance and exit \n incoming passenger flow at the store: the transformed passenger flow from other stores to the selected store \n radiating store passenger flow: the transformed passenger flow from the selected store to other stores \n departure passenger flow: the passenger flow directly leaving the shopping center from the selected store",
     tootipText5: "1. Trend chart: shows the passenger flow trend of entrances and exits and shops respectively \n2. Import total passenger flow: the sum of passenger flow from entrances and exits and shops \n3. Number of entrances and exits: the total number of entrances and exits entities \n4. Number of stores: the total number of store entities",
     tootipText6: "1. Trend chart: shows the trend of passenger flow converted from the selected entity to other stores \n2. Radiated total passenger flow: the sum of passenger flow radiated from the selected store to other stores \n3. Radiated stores: the total number of selected stores radiated to other stores",
-	},
-
-	notices: {
-  	wrongPassword: "Your account or password was entered incorrectly.",
-		noPermission: "Sorry, you don't have permission",
-		systemException: "System exception!",
 	},
 }
