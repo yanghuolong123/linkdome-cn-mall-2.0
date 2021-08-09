@@ -1,66 +1,65 @@
 <template>
-    <div class="formats-center" style="position:relative">
-        <div class="add-edit-formats" v-if="isAddAndEdit">
-            <div class="add-edit-bg"></div>
-            <div class="add-edit-text">
-                <h4>{{formTitle}}</h4>
-                <div class="add-edit-close" v-on:click="closeAddAndEdit">
-                    <Icon type="md-close"/>
-                </div>
-                <div class="form-data">
-                    <div class="form-item">
-                        <span>名称：</span>
-                        <Input placeholder="请输入业态名称" v-model="formatsName" style="width: 210px"></Input>
-                    </div>
-
-                    <div class="form-item">
-                        <span>关联商铺：</span>
-                        <Transfer
-                                class="transfer"
-                                :data="transferData"
-                                :target-keys="targetKeys"
-                                :titles="transferTitle"
-                                filterable
-                                :filter-method="filterMethod"
-                                @on-change="handleTransChange"></Transfer>
-                    </div>
-                    <div class="add-edit-buttom">
-                        <Button @click="handleSubmit">提交</Button>
-                        <Button class="buttonCel" @click.native="closeAddAndEdit">取消</Button>
-                    </div>
-                </div>
-            </div>
-
+  <div class="formats-center" style="position:relative">
+    <div class="add-edit-formats" v-if="isAddAndEdit">
+      <div class="add-edit-bg"></div>
+      <div class="add-edit-text">
+        <h4>{{ formTitle }}</h4>
+        <div class="add-edit-close" v-on:click="closeAddAndEdit">
+          <Icon type="md-close"/>
         </div>
-        <div class="formats-table">
-           <div class="formats-header">
-              <span class="formats-add" title="添加" @click="addFormats">
-                <Icon type="md-add"/>
-              </span>
-                  <span class="formats-add" title="删除" @click="deleteMultiple">
-                <Icon type="md-remove"/>
-              </span>
-            </div>
-          <table-multiple-selected
-                class="formatsList"
-                :tableName='tableName'
-                :tableList='tableData'
-                :titleName='titleName'
-                @tableData='editData'
-                @removeData='deleteData'
-                @tableSelect="tableSelect"
-                :isMultiple='true'
-                :titleTip="tipContent"
-        >
-        </table-multiple-selected>
+        <div class="form-data">
+          <div class="form-item">
+            <span>{{ $t('名称')+$t('punctuation.colon') }}</span>
+            <Input placeholder="请输入业态名称" v-model="formatsName" style="width: 210px"></Input>
+          </div>
+          <div class="form-item">
+            <span>{{ $t('关联商铺')+$t('punctuation.colon') }}</span>
+            <Transfer
+              class="transfer"
+              :data="transferData"
+              :target-keys="targetKeys"
+              :titles="transferTitle"
+              filterable
+              :filter-method="filterMethod"
+              @on-change="handleTransChange"
+            ></Transfer>
+          </div>
+          <div class="add-edit-buttom">
+            <Button @click="handleSubmit">{{ $t('提交') }}</Button>
+            <Button class="buttonCel" @click.native="closeAddAndEdit">{{ $t('取消') }}</Button>
+          </div>
         </div>
-        <alert
-                v-if="isAlert"
-                @closeAlert='closeAlert'
-                @alertConfirm='alertConfirm'
-                :alertText='alertText'
-        ></alert>
+      </div>
+
     </div>
+    <div class="formats-table">
+      <div class="formats-header">
+        <span class="formats-add" :title="$t('添加')" @click="addFormats">
+          <Icon type="md-add"/>
+        </span>
+            <span class="formats-add" :title="$t('删除')" @click="deleteMultiple">
+          <Icon type="md-remove"/>
+        </span>
+      </div>
+      <table-multiple-selected
+        class="formatsList"
+        :tableName='tableName'
+        :tableList='tableData'
+        :titleName='titleName'
+        @tableData='editData'
+        @removeData='deleteData'
+        @tableSelect="tableSelect"
+        :isMultiple='true'
+        :titleTip="tipContentCom"
+      ></table-multiple-selected>
+    </div>
+    <alert
+      v-if="isAlert"
+      @closeAlert='closeAlert'
+      @alertConfirm='alertConfirm'
+      :alertText='alertText'
+    ></alert>
+  </div>
 
 </template>
 
@@ -108,7 +107,7 @@ export default {
       currentData: '',
       deleteSelect: 'multiple',
       editAndAddType: 'add',
-      tipContent: '“其他”业态为系统默认业态，不可删除，不可编辑。新建商铺默认归类为“其他”业态。',
+      tipContent: "",
       targetKeys: [], // 穿梭框右边的key数组
       transferData: [], // 穿梭框数据
       transferTitle: ['“其他”业态', '当前业态']
@@ -125,6 +124,10 @@ export default {
         return o.name === '其他'
       })
       return data ? data.id : ''
+    },
+    tipContentCom() {
+      this.tipContent = this.$t('passages.tipContent1')
+      return this.tipContent
     }
   },
   mounted () {
@@ -222,17 +225,17 @@ export default {
       this.formatsName = ''
     },
     addFormats () {
-      this.formTitle = '添加业态'
+      this.formTitle = this.$t('添加业态')
       this.formatsName = ''
       this.editAndAddType = 'add'
       this.isAddAndEdit = true
       this.getTransferData()
     },
     editData (value) {
-      this.formTitle = '编辑业态'
+      this.formTitle = this.$t('编辑业态')
       if (value.data.name === '其他') {
         this.isAlert = true
-        this.alertList('编辑业态', "'其他'业态不可编辑，请选择别的业态", '#00A0E9', false)
+        this.alertList(this.$t('编辑业态'), this.$t('notices.editOtherBusinessPattern'), '#00A0E9', false)
         return false
       }
       this.formatsName = ''
@@ -246,10 +249,10 @@ export default {
     deleteData (value) {
       if (value.data.name === '其他') {
         this.isAlert = true
-        this.alertList('删除业态', "'其他'业态不可删除，请重新选择", '#00A0E9', false)
+        this.alertList(this.$t('删除业态'), this.$t('notices.deleteOtherBusinessPattern'), '#00A0E9', false)
       } else {
         this.isAlert = true
-        this.alertList('删除业态', '确认要删除' + value.data.name + '此业态？', '#00A0E9', true)
+        this.alertList(this.$t('删除业态'), this.$t('fn.askConfirm', [this.$t('删除', [value.data.name])]), '#00A0E9', true)
         this.currentData = value.data
         this.deleteSelect = 'single'
       }
@@ -272,7 +275,7 @@ export default {
           deleteFormateData(this.currentData.id, this.propertyId).then(res => {
             if (res.data.code == 200) {
               this.isAlert = true
-              this.alertList('删除业态', '删除成功', '#00A0E9', false)
+              this.alertList(this.$t('删除业态'), this.$t('删除成功'), '#00A0E9', false)
               this.dataList()
               this.$store.commit('isGetDict', true)
             }
@@ -286,7 +289,7 @@ export default {
                 curLe--
                 if (curLe == 0) {
                   this.isAlert = true
-                  this.alertList('删除业态', '删除成功', '#00A0E9', false)
+                  this.alertList(this.$t('删除业态'), this.$t('删除成功'), '#00A0E9', false)
                   this.dataList()
                   this.$store.commit('isGetDict', true)
                 }
@@ -299,14 +302,14 @@ export default {
     deleteMultiple () {
       if (this.selected.length == 0) {
         this.isAlert = true
-        this.alertList('删除业态', '删除业态请选择最少一个！', '#00A0E9', false)
+        this.alertList(this.$t('删除业态'), this.$t('notices.notChoosePatter'), '#00A0E9', false)
       } else {
         if (_.find(this.selected, (v) => v.name == '其他')) {
           this.isAlert = true
-          this.alertList('删除业态', "'其他'业态不可删除，请重新选择", '#00A0E9', false)
+          this.alertList(this.$t('删除业态'), this.$t('notices.deleteOtherBusinessPattern'), '#00A0E9', false)
         } else {
           this.isAlert = true
-          this.alertList('删除业态', '确定要删除所选中的业态？', '#00A0E9', true)
+          this.alertList(this.$t('删除业态'), this.$t('notices.confirmDeleteAllPattern'), '#00A0E9', true)
           this.deleteSelect = 'multiple'
         }
       }
@@ -360,148 +363,135 @@ export default {
 </script>
 
 <style scoped lang="scss">
-    .formats-center {
-        margin-top: 20px;
-        .formats-table{
-          .formats-header{
-            position: absolute;
-            top:26px;
-            right:20px;
-            z-index:1;
-            span {
-              float: left;
+.formats-center {
+  margin-top: 20px;
+  .formats-table{
+    .formats-header{
+      position: absolute;
+      top:26px;
+      right:20px;
+      z-index:1;
+      span {
+        float: left;
+        display: flex;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        font-size: 16px;
+        color: #fff;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background-color: #00A0E9;
+        &:nth-child(1) {
+            background-color: #2BD9CF;
+        }
+        &:nth-child(2) {
+            margin-left: 20px;
+            background-color: #FEB33D;
+        }
+      }
+    }
+  }
+  .add-edit-formats {
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 51005;
+      .add-edit-bg {
+          width: 100%;
+          height: 100%;
+          background-color: #000;
+          opacity: 0.3;
+      }
+      .add-edit-text {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        border: 1px solid #d7dfe3;
+        -webkit-box-shadow: 1px 2px 10px 0 hsla(0, 0%, 75.7%, .2);
+        box-shadow: 1px 2px 10px 0 hsla(0, 0%, 75.7%, .2);
+        border-radius: 8px;
+        .add-edit-close {
+          position: absolute;
+          right: -5px;
+          top: -5px;
+          background: #fff;
+          width: 33px;
+          height: 33px;
+          box-shadow: 0 5px 20px 0 rgba(0, 0, 0, .1);
+          border-radius: 5px;
+          text-align: center;
+          line-height: 33px;
+          cursor: pointer;
+          transition: all .23s ease .1s;
+          &:hover {
+            transform: translate(5px, -5px);
+            box-shadow: 0 0 0 0 rgba(0, 0, 0, .1)
+          }
+          i {
+            font-size: 20px;
+          }
+        }
+        h4 {
+          width: 100%;
+          height: 53px;
+          line-height: 53px;
+          padding-left: 20px;
+          background: #f2f2f2;
+          font-size: 18px;
+          font-family: PingFangSC-Medium;
+          font-weight: 500;
+          color: #5b5959;
+        }
+
+        .form-data {
+          padding: 30px 40px;
+
+          .form-item {
               display: flex;
-              width: 24px;
-              height: 24px;
-              border-radius: 50%;
-              font-size: 16px;
+              align-content: center;
+
+              span {
+                  width: 130px;
+                  text-align: right;
+                  line-height: 32px;
+              }
+          }
+          .form-item + .form-item {
+              margin-top: 30px;
+          }
+          .add-edit-buttom {
+            margin-top: 30px;
+            text-align: right;
+            .ivu-btn {
+              width: 90px;
               color: #fff;
-              align-items: center;
-              justify-content: center;
-              cursor: pointer;
-              background-color: #00A0E9;
+              outline: none;
               &:nth-child(1) {
-                  background-color: #2BD9CF;
+                margin-right: 20px;
+                background-color: #00a0e9;
+                &:hover {
+                  border: 1px solid #00a0e9;
+                }
               }
               &:nth-child(2) {
-                  margin-left: 20px;
-                  background-color: #FEB33D;
+                background-color: #fff;
+                color: #515a6e;
+                &:hover {
+                  color: #57a3f3;
+                }
               }
             }
           }
         }
-        .add-edit-formats {
-            position: fixed;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 51005;
 
-            .add-edit-bg {
-                width: 100%;
-                height: 100%;
-                background-color: #000;
-                opacity: 0.3;
-            }
-
-            .add-edit-text {
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                background: #fff;
-                border: 1px solid #d7dfe3;
-                -webkit-box-shadow: 1px 2px 10px 0 hsla(0, 0%, 75.7%, .2);
-                box-shadow: 1px 2px 10px 0 hsla(0, 0%, 75.7%, .2);
-                border-radius: 8px;
-
-                .add-edit-close {
-                    position: absolute;
-                    right: -5px;
-                    top: -5px;
-                    background: #fff;
-                    width: 33px;
-                    height: 33px;
-                    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, .1);
-                    border-radius: 5px;
-                    text-align: center;
-                    line-height: 33px;
-                    cursor: pointer;
-                    transition: all .23s ease .1s;
-
-                    &:hover {
-                        transform: translate(5px, -5px);
-                        box-shadow: 0 0 0 0 rgba(0, 0, 0, .1)
-                    }
-
-                    i {
-                        font-size: 20px;
-                    }
-                }
-
-                h4 {
-                    width: 100%;
-                    height: 53px;
-                    line-height: 53px;
-                    padding-left: 20px;
-                    background: #f2f2f2;
-                    font-size: 18px;
-                    font-family: PingFangSC-Medium;
-                    font-weight: 500;
-                    color: #5b5959;
-                }
-
-                .form-data {
-                    padding: 30px 40px;
-
-                    .form-item {
-                        display: flex;
-                        align-content: center;
-
-                        span {
-                            width: 90px;
-                            text-align: right;
-                            line-height: 32px;
-                        }
-                    }
-
-                    .form-item + .form-item {
-                        margin-top: 30px;
-                    }
-
-                    .add-edit-buttom {
-                        margin-top: 30px;
-                        text-align: right;
-
-                        .ivu-btn {
-                            width: 90px;
-                            color: #fff;
-                            outline: none;
-
-                            &:nth-child(1) {
-                                margin-right: 20px;
-                                background-color: #00a0e9;
-
-                                &:hover {
-                                    border: 1px solid #00a0e9;
-                                }
-                            }
-
-                            &:nth-child(2) {
-                                background-color: #fff;
-                                color: #515a6e;
-
-                                &:hover {
-                                    color: #57a3f3;
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-        }
     }
+  }
+}
 
 </style>

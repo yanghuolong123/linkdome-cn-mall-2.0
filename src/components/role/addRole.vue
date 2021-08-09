@@ -10,7 +10,7 @@
           <Icon type="md-close" />
         </div>
       <div class="edit-text">
-        <Form :model="formData" label-position="right" :label-width="92" ref="formData" :rules="ruleInline">
+        <Form :model="formData" label-position="right" :label-width="110" ref="formData" :rules="ruleInline">
           <FormItem :label="$t('角色名称')" prop="name">
             <Input type ="text" v-model="formData.name" :placeholder="$t('holder.请输入角色')"></Input>
           </FormItem>
@@ -19,7 +19,7 @@
               <i-option v-for="item in propertyLists" :value="item.value" :key="item.value">{{item.label}}</i-option>
             </i-select>
           </FormItem>
-          <FormItem :label="$t('角色描述')" prop="description" :label-width="92">
+          <FormItem :label="$t('角色描述')" prop="description" :label-width="110">
             <Input  type="textarea" v-model="formData.description" :rows="4"></Input>
           </FormItem>
         </Form>
@@ -225,7 +225,7 @@ export default {
       left: 50%;
       top: 50%;
       margin-left: -250px;
-      width: 500px;
+      width: 600px;
       background-color: #fff;
       background:rgba(255,255,255,1);
       border:1px solid rgba(215,223,227,1);

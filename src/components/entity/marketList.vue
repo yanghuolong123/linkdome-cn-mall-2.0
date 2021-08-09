@@ -108,8 +108,8 @@
       },
       delMail (value) {
         let alertText = {}
-        alertText.title = '删除实体'
-        alertText.text = '确认删除此商场信息？'
+        alertText.title = this.$t('删除实体')
+        alertText.text = this.$t('确认删除实体')
         alertText.bg = '#00A0E9'
         alertText.confirm = true
         this.$emit('delMail', true, alertText, value.data)
