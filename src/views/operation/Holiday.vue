@@ -613,7 +613,8 @@ export default {
         var data = res.data.data
         var xaxis = []
         data.forEach(function (m, index) {
-          xaxis.push('第' + (index + 1) + '天')
+          // xaxis.push('第' + (index + 1) + '天')
+          xaxis.push(index + 1)
         })
         var resData1 = []
         if (Moment(compare1.begin).isAfter(Moment(new Date()))) {

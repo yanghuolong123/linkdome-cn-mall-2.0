@@ -28,14 +28,12 @@ footFall:客流
           :extraOptions="bizExtraOptions"
           :istotal='istotal'
           title="业态排行"
-          key="bizTop"
-        >
+          key="bizTop">
           <vs-select
             autocomplete
             v-model="bizIndicator"
             class="chartSelector"
-            v-if="indicatorSelector"
-          >
+            v-if="indicatorSelector"s>
             <vs-select-item
               v-for="(item,index) in indicators "
               :text="item.name"

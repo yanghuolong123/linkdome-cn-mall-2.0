@@ -22,6 +22,9 @@ module.exports =  {
     编辑: "Edit {0}",
     添加: "Add {0}",
     删除: "delete {0}",
+    请选择: "choose {0}",
+    第_周: "week {0}",
+    第_天: "day {0}",
 	},
   punctuation: {
     colon: ":"
@@ -78,6 +81,13 @@ module.exports =  {
   时间对比: "Time comparison",
   来源实体: "Source entity",
   目的实体: "Destination entity",
+  周: "week",
+  年: "year",
+  月: "month",
+  日期: "date",
+  自定义: "costomized",
+  实体: "entity",
+  全部客流: "All",
 
 
 
@@ -121,7 +131,7 @@ module.exports =  {
   日报: "Daily Report",
   周报: "Week Report",
   月报: "Month Report",
-  自定义报告: "Costomize Report",
+  自定义报告: "Costomized Report",
   实体管理: "Entity Manage",
   节假日活动管理: "Holiday Manage",
   账户管理: "Account",
@@ -178,6 +188,7 @@ module.exports =  {
   数据指标趋势: "Data index trend",
   无对比: "No comparison",
   自定义对比: "Customized comparison",
+  自定义时间对比: "Customized comparison",
   // pathTrendBackup.vue
   路径动向图: "Path trend chart",
   "游逛深度（个）": "Wandering depth (PCs.)",
@@ -280,6 +291,9 @@ module.exports =  {
   // mrketlist.vue
   删除实体: "Delete Entity",
   确认删除实体: "Are you sure to delete this store information?",
+  // HeatMap.vue
+  时段客流分布: "Passenger flow distribution in different periods",
+  客流热力图: "Passenger flow heat map",
   
 
   
