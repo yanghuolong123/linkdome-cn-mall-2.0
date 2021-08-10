@@ -6,7 +6,7 @@
 				<div class="alert-close" v-on:click="closeAlert">
 					<Icon type="md-close"/>
 				</div>
-				<header>{{title}}</header>
+				<header>{{ title }}</header>
 				<div class="alert-center-text">{{content}}</div>
 				<div class="flooter">
 					<Button type="primary" :style="{'background-color':color}" @click="alertConfirm">确定</Button>
@@ -22,7 +22,7 @@
       return {
         content: '',
         title: '提示',
-		color:'#37b5ed',
+				color:'#37b5ed',
         show: false,
         showConfirm:true,
       }

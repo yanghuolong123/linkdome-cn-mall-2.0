@@ -341,6 +341,8 @@ module.exports =  {
     deleteOtherBusinessPattern: "“其他”业态不可删除，请重新选择",
     notChoosePatter: "删除业态请选择最少一个！",
     confirmDeleteAllPattern: "确定要删除所选中的业态？",
+    notChooseEntity: "请选择最少两个实体",
+    ChooseEntityTooMuch: "因页面效果最多选择40个实体, 请重新选择实体",
 	},
 	passages: {
 		tootipText1: "平均客流量：所有购物中心实时累计客流之和除以购物中心个数\n客流峰值：所有购物中心当中客流峰值的最大值\n集客量峰值：所有购物中心当中集客量峰值的最大值\n今日集客量：所有购物中心集客量之和",

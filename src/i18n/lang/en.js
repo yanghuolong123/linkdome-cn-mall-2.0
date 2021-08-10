@@ -342,6 +342,8 @@ module.exports =  {
     deleteOtherBusinessPattern: "\"other\" business type cannot be deleted, please select again",
     notChoosePatter: "Please select at least one business type to delete!",
     confirmDeleteAllPattern: "Are you sure you want to delete the selected business type?",
+    notChooseEntity: "Please select at least two entities",
+    ChooseEntityTooMuch: "At most 40 entities can be selected due to page effect. Please re select entities",
 	},
 
 	passages: {

@@ -275,10 +275,10 @@ export default {
       let time = moment(this.relevanceDate[0]).format('YYYY-MM-DD') + ',' +
       moment(this.relevanceDate[1]).format('YYYY-MM-DD')
       if (this.relevanceValue.length <= 1) {
-        this.$alert({ content:'请选择最少两个实体' })
+        this.$alert({ content: this.$t('notices.notChooseEntity') })
         return false
       }if (this.relevanceValue.length >= 40){
-        this.$alert({ content:'因页面效果最多选择40个实体, 请重新选择实体' })
+        this.$alert({ content: this.$t('notices.ChooseEntityTooMuch') })
         return false
       }
       let ListId = _.clone(this.relevanceValue)
