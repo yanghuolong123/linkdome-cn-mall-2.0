@@ -88,6 +88,9 @@ module.exports =  {
   自定义: "costomized",
   实体: "entity",
   全部客流: "All",
+  辐射总客流: "Total radiated enter",
+  辐射店铺个数: "Number of shops radiated",
+  确定: "OK",
 
 
 
