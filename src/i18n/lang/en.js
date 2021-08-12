@@ -1,5 +1,6 @@
 module.exports =  {
   changeLang: "简体中文",
+  mainTitle: "Smart Management System",
 	fn: {
 		_: "{0} {1}",
 		Parentheses: "（{0}）",
@@ -29,7 +30,7 @@ module.exports =  {
   punctuation: {
     colon: ":"
   },
-
+  
 	
 	account: "Account",
   accountNum: "account number",
@@ -52,8 +53,8 @@ module.exports =  {
   时间: "time",
 	sales: "sales",
 	yuan: "￥",
-	同比: "over the previous year",
-	环比: "link relative ratio",
+	同比: "Over the previous year",
+	环比: "Link relative ratio",
 	historicalDataQuery: "Historical data query",
   客流占比: "Proportion of enter",
   有效客流趋势: "Effective enter flow trend",
@@ -149,6 +150,10 @@ module.exports =  {
   集客量峰值: "Highest Occupancy",
   平均停留时间: "Average residence time",
   名称: "name",
+  入客流: "incoming",
+  出客流: "outbound",
+  小时: "hour",
+  默认: "default",
 
   // Chart-box.vue => toolList[tool]&&toolList[tool].name
   集客量趋势: "Occupancy Trend",

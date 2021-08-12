@@ -7,6 +7,7 @@
 		methods:{
 			changeLang(){
 				this.$i18n.locale = (this.$i18n.locale == 'zh-CN') ? 'en-US' : 'zh-CN'
+				document.title = this.$t('mainTitle')
 			},
 		},
 	}

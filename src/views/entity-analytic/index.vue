@@ -8,9 +8,9 @@
 				   class="common-card m-t-20 chart-1"
 				   :toolList="toolList">
 			<div class="flex-center quota">
-				<span>{{ $t('fx.Data_indicators') }}</span>
+				<span class="quota-label">{{ $t('fx.Data_indicators') }}</span>
 				<Select v-model="enterSelect" multiple :max-tag-count="1" @on-change="enterSelectChange">
-					<Option v-for="item in enterFlowList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+					<Option v-for="item in enterFlowList" :value="item.value" :key="item.value">{{ $t(item.name) }}</Option>
 				</Select>
 				<i-switch
 						:disabled="(oParams && oParams.isSingleDay())||(enterSelect.length>1&&(oParams&&oParams.params.entitys.length>1))"
@@ -18,8 +18,8 @@
 						class="ml-20"
 						size="large"
 						@on-change="compareTypeChange" v-model="isHour">
-					<span slot="open">小时</span>
-					<span slot="close">默认</span>
+					<span slot="open">{{ $t('小时') }}</span>
+					<span slot="close">{{ $t('默认') }}</span>
 				</i-switch>
 			</div>
 		</chart-box>
@@ -355,7 +355,9 @@
 			margin-right: 50px;
 			width: 360px;
 			word-break: keep-all;
-			
+			&-label {
+				width: 25rem
+      }
 			.ml-20 {
 				width: 100px;
 				margin-left: 20px;

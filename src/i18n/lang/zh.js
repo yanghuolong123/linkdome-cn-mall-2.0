@@ -1,5 +1,6 @@
 module.exports =  {
   changeLang: "English",
+  mainTitle: "智慧商城管理系统",
 	fn: {
 		_: "{0}{1}",
 		Parentheses: "（{0}）",//this.$t('fn._', [this.$t('sales'), this.$t('fn.Parentheses', [this.$t('yuan')])])
@@ -150,6 +151,10 @@ module.exports =  {
   集客量峰值: "集客量峰值",	
   平均停留时间: "平均停留时间",
   名称: "名称",
+  入客流: "入客流",
+  出客流: "出客流",
+  小时: "小时",
+  默认: "默认",
   
 
   // Chart-box.vue => toolList[tool]&&toolList[tool].name

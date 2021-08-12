@@ -14,7 +14,8 @@ export default [
     path: '/',
     component: main,
     meta: {
-      icon: 'HomeIcon'
+      icon: 'HomeIcon',
+       title: '客流分析asd'
     },
     name: 'Dashboard',
     redirect: '/dashboard/analytics',
