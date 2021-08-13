@@ -19,7 +19,7 @@
           <vs-select autocomplete :multiple='canSelectMulti' v-model="curretIndicator" :max-selected="2" id="chartSelect" @change="curretIndicatorChange">
             <vs-select-item
               v-for="(item,index) in filteredSelectList"
-              :text="item.name"
+              :text="$t(item.name)"
               :key="index"
               :value="item.value"
             />

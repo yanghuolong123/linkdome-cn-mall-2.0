@@ -42,7 +42,7 @@ footFall:客流
           >
             <vs-select-item
               v-for="(item,index) in indicators "
-              :text="item.name"
+              :text="$t(item.name)"
               :key="index"
               :value="item.value"
             />
@@ -75,7 +75,7 @@ footFall:客流
           >
             <vs-select-item
               v-for="(item,index) in indicators"
-              :text="item.name"
+              :text="$t(item.name)"
               :key="index"
               :value="item.value"
             />

@@ -21,7 +21,7 @@
                             @change="selectFloor"
                            >
                   <vs-select-item v-for="(item,index) in selectList "
-                                  :text="item.name"
+                                  :text="$t(item.name)"
                                   :key="index"
                                   :value="item.value" />
                 </vs-select>

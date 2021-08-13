@@ -72,7 +72,7 @@
 				<vs-select autocomplete
 						   @change="formatSaleLineChartData(saleLineOriginData)"
 						   v-model="saleSelected">
-					<vs-select-item :value="item.value" :text="item.name" :key="index"
+					<vs-select-item :value="item.value" :text="$t(item.name)" :key="index"
 									v-for="(item,index) in saleOptions"/>
 				</vs-select>
 				<vue-apex-charts

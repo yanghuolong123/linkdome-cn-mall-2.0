@@ -59,7 +59,7 @@
         >
 					<template slot="title">
 						<span class="text-xl text-black font-medium hidden sm:block" style="padding-left:18px;">
-							{{ $t('historicalDataQuery') }}
+							{{ $t('历史数据查询') }}
 							<Tooltip 
 								:content="tootipText"
 								placement="right"

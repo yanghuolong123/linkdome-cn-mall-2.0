@@ -356,7 +356,7 @@
 			width: 360px;
 			word-break: keep-all;
 			&-label {
-				width: 25rem
+				width: 25rem;
       }
 			.ml-20 {
 				width: 100px;

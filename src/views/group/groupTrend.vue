@@ -1,6 +1,7 @@
 <template>
   <div v-if="canshow">
-    <chart-tabs ref="charts"
+    <chart-tabs
+      ref="charts"
       :xAxis="xAxisObj"
       :series="finnalSeries"
       :extraOptions="extraOptWithYaxis"
@@ -19,7 +20,7 @@
           <vs-select autocomplete   v-model="curretIndicator" @change="curretIndicatorChange" :max-selected="2" id="chartSelect">
             <vs-select-item
               v-for="(item,index) in filteredSelectList "
-              :text="item.name"
+              :text="$t(item.name)"
               :key="index"
               :value="item.value"
             />

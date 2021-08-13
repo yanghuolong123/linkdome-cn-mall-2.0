@@ -76,14 +76,13 @@
           <template>
             <template slot="title">
               <span class="text-xl text-black font-medium hidden sm:block" style="padding-left:18px">
-                历史数据查询
+							{{ $t('历史数据查询') }}
                 <Tooltip
 									:content="tootipText"
 									placement="right"
 									theme="light"
 									transfer
-									max-width="500"
-								>
+									max-width="500">
                   <icons type="wenhao" />
                 </Tooltip>
               </span>
@@ -92,7 +91,8 @@
               <i-date-picker
 								@selectDate="selectDate"
 								:value="historyDate"
-								class="mr-8 history-date-picker"></i-date-picker>
+								class="mr-8 history-date-picker"
+              ></i-date-picker>
             </template>
           </template>
         </indicator-cards>
@@ -253,7 +253,7 @@ export default {
   },
   computed: {
     tootipText () {
-      return '总客流： 所选时间段内的客流之和\n客流峰值：所选时间段内的客流的最大值和时间点\n集客量峰值：所选时间段内的购物中心驻留人数的最大值和时间点\n有效客流：所选时间段内的购物中心用户的唯一客流人数\n销售额：所选时间段内购物中心销售额之和\n坪效： 所选时间段内销售额除以购物中心面积\n成交率：所选时间段内购物中心的成交单数除以进入购物中心的客流\n客单价： 所选时间段内购物中心所的销售额除以购物中心的成交单数\n'
+      return this.$t('tootipText7')
     },
     companyId () {
       return this.$store.state.user.companyId

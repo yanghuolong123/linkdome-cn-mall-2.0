@@ -55,7 +55,7 @@ module.exports =  {
 	yuan: "￥",
 	同比: "Over the previous year",
 	环比: "Link relative ratio",
-	historicalDataQuery: "Historical data query",
+	历史数据查询: "Historical data query",
   客流占比: "Proportion of enter",
   有效客流趋势: "Effective enter flow trend",
   停留时间分布: "residence time distribution",
@@ -92,6 +92,9 @@ module.exports =  {
   辐射总客流: "Total radiated enter",
   辐射店铺个数: "Number of shops radiated",
   确定: "OK",
+  销售额: "Sales",
+  坪效: "Flat effect",
+  客单价: "Customer unit price",
 
 
 
@@ -355,12 +358,13 @@ module.exports =  {
 	},
 
 	passages: {
-		tootipText1: "Average enter: the sum of the real-time cumulative enter of all shopping centers divided by the number of shopping centers \npeak enter: the maximum value of the peak enter in all shopping centers \npeak occupancy: the maximum value of the peak occupancy in all shopping centers \nToday's occupancy: the sum of the occupancy in all shopping centers",
-		tootipText2: "Average enter today: the cumulative enter divided by the number of business hours \npeak enter today: the maximum enter from the start of business hours to the current time \npeak occupancy today: the maximum number of people staying in the shopping center and the time point from the start of business hours to the current time \npeak occupancy today: the difference between the total incoming enter and the total outgoing enter from the start of business hours to the current time",
+		tootipText1: "Average enter: the sum of the real-time cumulative enter of all shopping centers divided by the number of shopping centers \nPeak enter: the maximum value of the peak enter in all shopping centers \nPeak occupancy: the maximum value of the peak occupancy in all shopping centers \nToday's occupancy: the sum of the occupancy in all shopping centers",
+		tootipText2: "Average enter today: the cumulative enter divided by the number of business hours \nPeak enter today: the maximum enter from the start of business hours to the current time \nPeak occupancy today: the maximum number of people staying in the shopping center and the time point from the start of business hours to the current time \nPeak occupancy today: the difference between the total incoming enter and the total outgoing enter from the start of business hours to the current time",
 		tootipText3: "Average enter: the cumulative enter of all shopping centers in the selected time period divided by the number of shopping centers \nTotal enter: the sum of enter of all shopping centers in the selected time period \nPeak enter: the maximum value of peak enter in all shopping centers in the selected time period \nPeak passenger volume: the maximum value of peak enter in all shopping centers in the selected time period \nEffective enter flow : the sum of the unique number of passengers in all shopping centers in the selected time period \nSales: the sum of the sales in all shopping centers in the selected time period",
-    tootipText4: "The drainage map includes entrance and exit introduction passenger flow, store introduction passenger flow, radiation store passenger flow and departure passenger flow, Among them: \n incoming passenger flow at the entrance and exit: the transformed passenger flow directly entering the selected store from the entrance and exit \n incoming passenger flow at the store: the transformed passenger flow from other stores to the selected store \n radiating store passenger flow: the transformed passenger flow from the selected store to other stores \n departure passenger flow: the passenger flow directly leaving the shopping center from the selected store",
+    tootipText4: "The drainage map includes entrance and exit introduction passenger flow, store introduction passenger flow, radiation store passenger flow and departure passenger flow, Among them: \nIncoming passenger flow at the entrance and exit: the transformed passenger flow directly entering the selected store from the entrance and exit \nIncoming passenger flow at the store: the transformed passenger flow from other stores to the selected store \nRadiating store passenger flow: the transformed passenger flow from the selected store to other stores \nDeparture passenger flow: the passenger flow directly leaving the shopping center from the selected store",
     tootipText5: "1. Trend chart: shows the passenger flow trend of entrances and exits and shops respectively \n2. Import total passenger flow: the sum of passenger flow from entrances and exits and shops \n3. Number of entrances and exits: the total number of entrances and exits entities \n4. Number of stores: the total number of store entities",
     tootipText6: "1. Trend chart: shows the trend of passenger flow converted from the selected entity to other stores \n2. Radiated total passenger flow: the sum of passenger flow radiated from the selected store to other stores \n3. Radiated stores: the total number of selected stores radiated to other stores",
+    tootipText7: "Total passenger flow: the sum of passenger flow in the selected time period \nPeak passenger flow: the maximum passenger flow and time point in the selected time period \nPeak passenger volume: the maximum number of people staying in the shopping center and time point in the selected time period \nEffective passenger flow: the only passenger flow of users in the shopping center in the selected time period \nSales: the sum of sales in the shopping center in the selected time period \nFloor efficiency : sales in the selected time period divided by the area of the shopping center \n transaction rate: the number of transaction orders in the shopping center in the selected time period divided by the passenger flow entering the shopping center \n customer unit price: the sales in the shopping center in the selected time period divided by the number of transaction orders in the shopping center",
     tipContent1: "The other business pattern is the system default business pattern and cannot be deleted or edited. New shops are classified as \"other\" by default,",
 	},
 }
