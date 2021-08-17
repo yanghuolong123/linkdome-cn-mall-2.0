@@ -95,6 +95,7 @@ module.exports =  {
   销售额: "Sales",
   坪效: "Flat effect",
   客单价: "Customer unit price",
+  请添加实体信息: "Add Entity",
 
 
 
