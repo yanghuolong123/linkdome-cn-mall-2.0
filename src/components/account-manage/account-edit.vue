@@ -3,7 +3,7 @@
     <div class="account-edit-bg" v-on:click="closeEdit"></div>
     <div class="account-edit-text">
       <div class="edit-title">
-        {{ $t(msgTitle) }}
+        {{ $t(editTitle) }}
       </div>
         <div class="edit-close" v-on:click="closeEdit">
           <Icon type="md-close" />
@@ -16,19 +16,19 @@
           <uploadImg @changeImg="changeImg"></uploadImg>
         </div>
         <div class="model-right">
-          <div class="edit-right-title">详细信息</div>
+          <div class="edit-right-title">{{ $t('详细信息') }}</div>
 
           <Form ref="formInline" :model="userForm" :rules="ruleInline" inline>
             <div class="flex">
               <div class="half">
                 <FormItem prop="username" :label="$t('用户名')">
-                  <Input :disabled="modify" :maxlength="45" placeholder="请输入用户名" v-model="userForm.username"></Input>
+                  <Input :disabled="modify" :maxlength="45" :placeholder="$t('holder.请输入用户名')" v-model="userForm.username"></Input>
                 </FormItem>
               </div>
 
               <div class="half">
                 <FormItem prop="realname" :label="$t('姓名')">
-                  <Input v-model="userForm.realname" :maxlength="128" placeholder="请输入用户姓名"/>
+                  <Input v-model="userForm.realname" :maxlength="128":placeholder="$t('holder.请输入用户姓名')"/>
                 </FormItem>
               </div>
               <input type="text" style="width:20px;height:20px;opacity: 0;">
@@ -91,6 +91,7 @@
               <div class="more" v-if="showEntityPermission">
                 <FormItem prop="bzidList" v-if="!superAdmin"  :label="$t('实体权限')" style="position:relative">
                   <el-cascader
+                  :placeholder="$t('holder.请选择')"
                   class="account-edit-select"
                   @change="changeBzid"
                   v-model="userForm.bzidList"
@@ -102,8 +103,8 @@
                   </el-cascader>
                 </FormItem>
                 <FormItem  :label="$t('实体权限')" v-else :prop='editTitle=="编辑用户"?"superAdminList":""'>
-                  <Select value="全部实体" disabled>
-                  <Option value="全部实体">全部实体</Option>
+                  <Select :value="$t('全部实体')" disabled>
+                    <Option :value="$t('全部实体')">{{ $t('全部实体') }}</Option>
                   </Select>
                 </FormItem>
               </div>
@@ -160,11 +161,11 @@ export default {
   const validatePass = (rule, value, callback) => {
     if (!this.modify) {
     if (value === undefined || value === '') {
-      callback(new Error('密码不能为空'))
+      callback(new Error(this.$t('密码不能为空')))
     } else if (value.length < 6) {
-      callback(new Error('密码长度不得小于6个字符'))
+      callback(new Error(this.$t('密码长度不得小于6个字符')))
     } else if (value.length > 255) {
-      callback(new Error('密码长度不得大于255个字符'))
+      callback(new Error(this.$t('密码长度不得大于255个字符')))
     } else {
       callback()
     }
@@ -175,11 +176,11 @@ export default {
   // 用户名验证
   const validUserName = (rule, value, callback) => {
     if (value === undefined || value === '') {
-    callback(new Error('用户名不能为空'))
+    callback(new Error(this.$t('用户名不能为空')))
     } else if (value.length < 2) {
-    callback(new Error('用户名长度不得小于2个字符'))
+    callback(new Error(this.$t('用户名长度不得小于2个字符')))
     } else if (value.length > 10) {
-    callback(new Error('用户名不得大于10个字符'))
+    callback(new Error(this.$t('用户名不得大于10个字符')))
     } else {
     callback()
     }
@@ -189,9 +190,9 @@ export default {
     if (value === undefined || value === '' || value === null) {
     callback()
     } else if (value.length < 2) {
-    callback(new Error('用户姓名长度不得小于2个字符'))
+    callback(new Error(this.$t('用户姓名长度不得小于2个字符')))
     } else if (value.length > 10) {
-    callback(new Error('用户姓名不得大于10个字符'))
+    callback(new Error(this.$t('用户姓名不得大于10个字符')))
     } else {
     callback()
     }
@@ -200,19 +201,19 @@ export default {
   const validatePassCheck = (rule, value, callback) => {
     if (!that.modify) {
     if (value === undefined || value === '') {
-      callback(new Error('请输入密码'))
+      callback(new Error(this.$t('fn.require', [this.$t('password')])))
     } else if (value.length < 6) {
-      callback(new Error('密码长度不得小于6个字符'))
+      callback(new Error(this.$t('密码长度不得小于6个字符')))
     } else if (value.length > 255) {
-      callback(new Error('密码长度不得大于50个字符'))
+      callback(new Error(this.$t('密码长度不得大于255个字符')))
     } else if (that.userForm.password2 !== that.userForm.password) {
-      callback(new Error('两次密码不一致!'))
+      callback(new Error(this.$t('两次密码不一致!')))
     } else {
       callback()
     }
     } else {
     if (that.userForm.password2 !== that.userForm.password) {
-      callback(new Error('两次密码不一致!'))
+      callback(new Error(this.$t('两次密码不一致!')))
     } else {
       callback()
     }
@@ -260,17 +261,17 @@ export default {
     checklist: [{ required: true, validator: validateSelectMore, trigger: 'change' }],
     bzidList: [{ required: true, validator: validateSelectMore, trigger: 'change' }],
     role: [{ required: true, validator: validateSelectMore, trigger: 'change' }],
-    email: [{ required: true, message: '邮箱不能为空', trigger: 'blur' },
-      { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }],
+    email: [{ required: true, message: this.$t('邮箱不能为空'), trigger: 'blur' },
+      { type: 'email', message: this.$t('邮箱格式不正确'), trigger: 'blur' }],
     password: [{ required: true, validator: validatePass, trigger: 'blur' }],
     password2: [{ required: true, validator: validatePassCheck, trigger: 'blur' }],
     superAdminList: [{ required: true, validator: superAdminCheck }]
     },
-    sexList: [{ 'label': '男', 'value': 1 }, { 'label': '女', 'value': 0 }],
+    sexList: [{ 'label': this.$t('男'), 'value': 1 }, { 'label': this.$t('女'), 'value': 0 }],
     isAdminList: [
-    { 'label': '超级管理员', 'value': 22 },
-    { 'label': '管理员', 'value': 28 },
-    { 'label': '普通用户', 'value': 23 }
+    { 'label': this.$t('超级管理员'), 'value': 22 },
+    { 'label': this.$t('管理员'), 'value': 28 },
+    { 'label': this.$t('普通用户'), 'value': 23 }
     ],
     modify: false,
     copyBzid: []

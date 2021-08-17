@@ -17,8 +17,9 @@ import en from './lang/en'
 import ivuZh from 'view-design/dist/locale/zh-CN';
 import ivuEn from 'view-design/dist/locale/en-US';
 
-Vue.use(VueI18n)
+Vue.use(VueI18n);
 Vue.use(ViewUI);
+Vue.locale = () => {};
 
 export default new VueI18n({
   locale: 'zh-CN', // set default locale

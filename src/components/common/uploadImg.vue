@@ -10,10 +10,10 @@
         :on-format-error="formatType"
         :show-upload-list="false"
         name="file">
-            <Button v-show ="showUpload" type="primary" :disabled="disabled" class="buttons">
-             <Icon type="md-cloud-upload"  />
-             <slot>上传头像</slot>
-            </Button>
+          <Button v-show ="showUpload" type="primary" :disabled="disabled" class="buttons">
+            <Icon type="md-cloud-upload"  />
+            <slot>{{$t('上传头像')}}</slot>
+          </Button>
       </Upload>
       <!-- <div style="text-align:center;">
         <Button class="buttons"><icons :type="face":size="20"></icons>人脸采集</Button>
