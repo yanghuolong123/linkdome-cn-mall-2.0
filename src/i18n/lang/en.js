@@ -305,7 +305,13 @@ module.exports =  {
   // HeatMap.vue
   时段客流分布: "Passenger flow distribution in different periods",
   客流热力图: "Passenger flow heat map",
-  
+  // holiday-edit.vue
+  添加活动: "Add Activity",
+  开始日期: "start date",
+  结束日期: "end date",
+  请选择结束时间: "Choose end time",
+  结束时间应晚于开始时间: "End time should later than start time",
+  '活动名称已存在,请修改': "Activity name already exists, please modify",
 
   
   "1月":"Jan",
