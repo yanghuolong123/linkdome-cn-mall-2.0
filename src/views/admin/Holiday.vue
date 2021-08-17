@@ -6,7 +6,7 @@
             </vs-select>
         </div>
         <div class="holidayTable">
-            <TableMultipleSelected class="tables" :titleName="titleName" :tableName='tableName' :tableList="showHolidays" >
+            <TableMultipleSelected class="tables" :titleName="$t(titleName)" :tableName='$t(tableName)' :tableList="showHolidays" >
 
             </TableMultipleSelected>
             <div class="paginations">
@@ -15,15 +15,15 @@
         </div>
         <div class="holidayTable">
              <div class="account-add-remove" >
-                <span class="account-add" @click="addData" title="添加">
+                <span class="account-add" @click="addData" :title="$t('添加')">
                     <Icon type="md-add" />
                 </span>
-                <span class="account-add" title="删除" @click="deleteMultiple">
+                <span class="account-add"  :title="$t('删除')" @click="deleteMultiple">
                     <Icon type="md-remove" />
                 </span>
             </div>
             <TableMultipleSelected class="tables" @tableData='tableData' @removeData='removeData'  @tableSelect="tableSelect"
-                :isMultiple='true' :titleName = "titleName2" :tableName='tableName2' :tableList="showEvents" >
+                :isMultiple='true' :titleName = "$t(titleName2)" :tableName='$t(tableName2)' :tableList="showEvents" >
             </TableMultipleSelected>
             <div class="paginations">
                 <vs-pagination  :total="eventTotal" v-model="currentActive" goto ></vs-pagination>
@@ -145,7 +145,7 @@ export default {
         that.$refs.editActive.isAlert = false
         that.$refs.editActive.datas = data
         that.$refs.editActive.isUpdate = false
-        that.$refs.editActive.msgTitle = '添加活动'
+        that.$refs.editActive.msgTitle = this.$t('添加活动')
 
         if (that.$store.state.user.role_id < 3) {
           that.$refs.editActive.showBelong = true
@@ -180,7 +180,7 @@ export default {
         that.$refs.editActive.datas = _.cloneDeep(value.data)
         that.$refs.editActive.datas.property = that.$refs.editActive.datas.property_id
         that.$refs.editActive.isUpdate = true
-        that.$refs.editActive.msgTitle = '编辑活动'
+        that.$refs.editActive.msgTitle = this.$t('编辑活动')
 
         if (that.$store.state.user.role_id < 3) {
           that.$refs.editActive.showBelong = true
@@ -199,8 +199,8 @@ export default {
             if (res.data.code === 200) {
               that.isAlert = true
               that.alertText.bg = '#00A0E9'
-              that.alertText.title = '删除活动管理'
-              that.alertText.text = '删除成功'
+              that.alertText.title = this.$t('删除活动管理')
+              that.alertText.text = this.$t('删除成功')
               that.alertText.confirm = false
               that.initData(21, false)
             } else {
@@ -214,7 +214,7 @@ export default {
                 this.selected.splice(0, this.selected.length)
                 curLe--
                 if (curLe == 0) {
-                  this.$alert({content:'删除成功'})
+                  this.$alert({content: this.$t('删除成功')})
                   this.initData(21, false)
                 }
             })
@@ -226,8 +226,8 @@ export default {
     },
     removeData (value) {
       this.id = value.data.id
-      this.alertText.title = '删除活动'
-      this.alertText.text = '确认删除此活动信息？'
+      this.alertText.title = this.$t('删除活动')
+      this.alertText.text = this.$t('确认删除此活动信息？')
       this.alertText.bg = '#00A0E9'
       this.alertText.confirm = true
       this.isAlert = true
@@ -239,12 +239,12 @@ export default {
     },
     deleteMultiple () {
       if (!this.selected.length) {
-          this.$alert({
-              content:'删除活动管理请选择最少一个！'
-          })
+        this.$alert({
+          content: this.$t('删除活动管理请选择最少一个！')
+        })
       } else {
         this.isAlert = true
-        this.alertList('删除活动管理', '确定要删除所选中的活动管理？', '#00A0E9', true)
+        this.alertList(this.$t('删除活动管理'), this.$t('确定要删除所选中的活动管理？'), '#00A0E9', true)
         this.deleteSelect = 'multiple'
       }
     },
@@ -261,7 +261,12 @@ export default {
             this.loading = false
             let data = res.data.data
             this.holidayAllData = _.cloneDeep(data)
-            data.forEach(e => { e.duration = `${e.duration}天` })
+            data.forEach(e => { 
+              const day = (this.$i18n.locale === "zh-CN")
+                ? "天"
+                : (e.duration > 1 ? " days" : " day");
+              e.duration = String(e.duration) + day 
+            })
             this.holidayTotal = Math.ceil(data.length / 5)
             this.holidays = _.clone(data)
             if (isInit) {
@@ -282,7 +287,10 @@ export default {
           res = res.data.data
           res.forEach(b => {
             b.operation = true
-            b.duration = `${b.duration}天`
+            const day = (this.$i18n.locale === "zh-CN")
+              ? "天"
+              : (b.duration > 1 ? " days" : " day");
+            b.duration = String(b.duration) + day;
             b.enterGoal = b.property_name || ' '
             if (b.target_enter == 0) b.saleGoal = 0
             else b.saleGoal = b.target_enter || ' '

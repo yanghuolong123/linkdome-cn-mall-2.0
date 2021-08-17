@@ -46,7 +46,7 @@
 				ref="entityModal"
 				:addmall='addmall'
 				:mallList='mallList'
-				:editTitle="editTitle"
+				:editTitle="$t(editTitle)"
 				:isEmptyPage="isEmptyPage"
 				:userLvl="userLvl"
 				:propertyId="addmall.property_id"
@@ -67,7 +67,7 @@
 				v-if="isAlert"
 				@closeAlert='closeAlert'
 				@alertConfirm='alertConfirm'
-				:alertText='alertText'
+				:alertText='$t(alertText)'
 		></alert>
 		<imgconfig-modal ref="imgcofig" title="配置图片" :footerHide="true" :width="1350">
 			<div class="img-config" @mousemove="handleMouseMove">
@@ -1132,8 +1132,8 @@
               if (res.data.code === 200) {
                 that.isAlert = true
                 that.alertText.bg = '#00A0E9'
-                that.alertText.title = '删除购物中心'
-                that.alertText.text = '删除购物中心成功'
+                that.alertText.title = this.$t('删除购物中心')
+                that.alertText.text = this.$t('删除购物中心成功')
                 that.alertText.confirm = false
                 that.defaultValue = []
                 that.getData()
@@ -1146,8 +1146,8 @@
               if (res.data.code === 200) {
                 that.isAlert = true
                 that.alertText.bg = '#00A0E9'
-                that.alertText.title = '删除楼层'
-                that.alertText.text = '删除楼层成功'
+                that.alertText.title = this.$t('删除楼层')
+                that.alertText.text = this.$t('删除楼层成功')
                 that.alertText.confirm = false
                 that.defaultValue = [that.defaultValue[0]]
 
@@ -1160,8 +1160,8 @@
               if (res.data.code === 200) {
                 that.isAlert = true
                 that.alertText.bg = '#00A0E9'
-                that.alertText.title = '删除商铺'
-                that.alertText.text = '删除商铺成功'
+                that.alertText.title = this.$t('删除商铺')
+                that.alertText.text = this.$t('删除商铺成功')
                 that.alertText.confirm = false
                 that.defaultValue = [that.defaultValue[0], that.defaultValue[1]]
                 that.addType = 2
@@ -1177,7 +1177,7 @@
         if (this.nowEntity.length == 1) {
           let alertText = {}
           alertText.title = this.editTitle
-          alertText.text = '确认删除此购物中心信息？'
+          alertText.text = this.$t('确认删除此购物中心信息？')
           alertText.bg = '#00A0E9'
           alertText.confirm = true
           this.theMail = this.addmall
@@ -1185,8 +1185,8 @@
           this.delMail(true, alertText, this.theMail)
         } else if (this.nowEntity.length == 2) {
           let alertText = {}
-          alertText.title = '删除楼层'
-          alertText.text = '确认删除此楼层信息？'
+          alertText.title = this.$t('删除楼层')
+          alertText.text = this.$t('确认删除此楼层信息？')
           alertText.bg = '#00A0E9'
           alertText.confirm = true
           this.delFloor(true, alertText, { id: this.defaultValue[1] })
@@ -1200,8 +1200,8 @@
           // })
         } else if (this.nowEntity.length == 3) {
           let alertText = {}
-          alertText.title = '删除商铺'
-          alertText.text = '确认删除此商铺？'
+          alertText.title = this.$t('删除商铺')
+          alertText.text = this.$t('确认删除此商铺？')
           alertText.bg = '#00A0E9'
           alertText.confirm = true
           this.delStore(true, alertText, { id: this.defaultValue[2] })
@@ -1215,8 +1215,8 @@
           // })
         } else {
           let alertText = {}
-          alertText.title = '提示'
-          alertText.text = '请选择商场/楼层/店铺'
+          alertText.title = this.$t('提示')
+          alertText.text = this.$t('请选择商场/楼层/店铺')
           alertText.bg = '#00A0E9'
           alertText.confirm = false
           // this.$Modal.confirm({

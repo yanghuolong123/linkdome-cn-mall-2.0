@@ -337,8 +337,34 @@ module.exports =  {
   普通用户: "Ordinary user",
   实体权限: "Entity permissions",
   上传头像: "Upload avatar",
-
+  // Entity.vue
+  "确认删除此购物中心信息？": "Are you sure you want to delete this shopping center information?",
+  "删除购物中心": "Delete shopping center",
+  "删除购物中心成功": "Shopping center deleted successfully",
+  "删除楼层": "Delete floor",
+  "确认删除此楼层信息？": "Are you sure to delete this floor information?",
+  "删除楼层成功": "Floor deleted successfully",
+  "删除商铺": "Delete shop",
+  "确认删除此商铺？": "Are you sure you want to delete this shop?",
+  "提示": "Notice",
+  "请选择商场/楼层/店铺": "Please select shopping mall/floor/store",
+  添加购物中心: "Add shopping center",
+  编辑楼层: "Edit floor",
+  编辑商铺: "Edit shop",
+  编辑购物中心: "Edit shopping center",
+  添加购物中心成功: "Add shopping center successfully!",
+  编辑购物中心成功: "Edit shopping center successfully!",
+  添加楼层: "Add floor",
+  添加商铺: "Add shop",
+  // holiday.vue
+  删除活动: "Delete Activity",
+  "确认删除此活动信息？": "Are you sure to delete this activity information?",
+  "删除活动管理请选择最少一个！": "Please select at least one activity management to delete!",
+  "删除活动管理": "Delete activity management",
+  "确定要删除所选中的活动管理？": "Are you sure you want to delete the selected activity management?",
   
+
+
   "1月":"Jan",
   "2月":"Feb",
   "3月":"Mar",
@@ -374,7 +400,7 @@ module.exports =  {
     请输入用户名: "Username",
     请输入用户姓名: "Name",
     请输入角色: "Role",
-
+    请输入业态名称: "Please enter the format name",
   },
 
 	notices: {

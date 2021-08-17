@@ -6,7 +6,7 @@
         :class="{largeScroll:formValidate.spc===1,noscroll:formValidate.spc!==1}"
         :style="{width:mWidth}"
         id="addEntity">
-        <div class="edit-title">{{editTitle}}</div>
+        <div class="edit-title">{{ $t(editTitle) }}</div>
         <div class="edit-close" v-on:click="closeEdit">
           <Icon type="md-close"/>
         </div>
@@ -914,8 +914,8 @@ export default {
                   that.closeEdit()
                   var alertText = {}
                   alertText.bg = '#00A0E9'
-                  alertText.title = '添加购物中心'
-                  alertText.text = '添加购物中心成功'
+                  alertText.title = this.$t('添加购物中心')
+                  alertText.text = this.$t('添加购物中心成功')
                   alertText.confirm = false
                   that.$emit('alertMessage', true, alertText)
                   var data = {}
@@ -938,8 +938,8 @@ export default {
                   that.closeEdit()
                   var alertText = {}
                   alertText.bg = '#00A0E9'
-                  alertText.title = '编辑购物中心'
-                  alertText.text = '编辑购物中心成功'
+                  alertText.title = this.$t('编辑购物中心')
+                  alertText.text = this.$t('编辑购物中心成功')
                   alertText.confirm = false
                   that.$emit('alertMessage', true, alertText)
                   var data = {}
@@ -962,7 +962,7 @@ export default {
               var alertText = {}
               alertText.bg = '#00A0E9'
               alertText.title = that.editTitle
-              alertText.text = '添加楼层成功'
+              alertText.text = this.$t('fn.successTo', [this.$t('添加楼层')])
               alertText.confirm = false
               that.$emit('alertMessage', true, alertText)
               var data = {}
@@ -993,7 +993,7 @@ export default {
               var alertText = {}
               alertText.bg = '#00A0E9'
               alertText.title = that.editTitle
-              alertText.text = '编辑楼层成功'
+              alertText.text = this.$t('fn.successTo', [this.$t('编辑楼层')])
               alertText.confirm = false
               that.$emit('alertMessage', true, alertText)
               var data = {}
@@ -1026,7 +1026,7 @@ export default {
               var alertText = {}
               alertText.bg = '#00A0E9'
               alertText.title = that.editTitle
-              alertText.text = '添加商铺成功'
+              alertText.text = this.$t('fn.successTo', [this.$t('添加商铺')])
               alertText.confirm = false
               that.$emit('alertMessage', true, alertText)
               var data = {}
@@ -1049,7 +1049,7 @@ export default {
               var alertText = {}
               alertText.bg = '#00A0E9'
               alertText.title = that.editTitle
-              alertText.text = '修改商铺成功'
+              alertText.text = this.$t('fn.successTo', [this.$t('编辑商铺')])
               alertText.confirm = false
               that.$emit('alertMessage', true, alertText)
               var data = {}

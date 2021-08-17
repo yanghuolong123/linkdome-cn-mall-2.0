@@ -10,7 +10,7 @@
         <div class="form-data">
           <div class="form-item">
             <span>{{ $t('名称')+$t('punctuation.colon') }}</span>
-            <Input placeholder="请输入业态名称" v-model="formatsName" style="width: 210px"></Input>
+            <Input :placeholder="$t('holder.请输入业态名称')" v-model="formatsName" style="width: 210px"></Input>
           </div>
           <div class="form-item">
             <span>{{ $t('关联商铺')+$t('punctuation.colon') }}</span>
