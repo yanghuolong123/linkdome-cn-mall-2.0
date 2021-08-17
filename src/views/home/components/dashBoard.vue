@@ -24,7 +24,7 @@
             <i class="iconfont iconyuekeliu-copy"></i>
             <span class="text-size" >本月累积客流(人次)</span>
           </p>
-          <div class="value-size" s><b>{{ monthEnter| tenthousandFormat}}</b></div>
+          <div class="value-size" ><b>{{ monthEnter| tenthousandFormat}}</b></div>
         </div>
         <div>
           <p class="title flex-box">
@@ -34,7 +34,7 @@
           <div class="value-size" ><b>{{ saleData.sale_month| tenthousandFormat}}</b></div>
         </div>
       </div>
-    </div> 
+    </div>
 
     <div class="chart-box bg-white flex-box">
       <div class="chart-b">
@@ -57,11 +57,15 @@
        <span>月达标值(元)</span>
        <span>{{ saleData.sale_target| tenthousandFormat}}</span>
      </div>
-    </div> 
+    </div>
   </div>
-  <dev-board :dayTotalEnter='dayTotalEnter' :monthEnter='monthEnter' :chartData=chartData(target,monthEnter) :chartOptions=chartOptions v-else></dev-board>
+  <dev-board :dayTotalEnter='dayTotalEnter'
+             :monthEnter='monthEnter'
+             :target="target"
+             :chartData=chartData(target,monthEnter)
+             :chartOptions=chartOptions v-else></dev-board>
 </div>
-  
+
 </template>
 <script>
 import VueApexCharts from 'vue-apexcharts'
