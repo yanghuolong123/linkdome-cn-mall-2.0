@@ -32,6 +32,7 @@
 			<el-cascader
 					v-show="compareType === 'entity'&& entityType === 'store'"
 					class="w-select"
+					:placeholder=" $t('holder.请选择') "
 					v-model="storeCascadeData"
 					filterable
 					collapse-tags
@@ -41,6 +42,7 @@
 			</el-cascader>
 			<el-cascader
 					v-show="compareType === 'entity'&& entityType === 'gate'"
+					:placeholder=" $t('holder.请选择') "
 					class="w-select"
 					v-model="gateCascadeData"
 					collapse-tags
@@ -50,6 +52,7 @@
 			</el-cascader>
 			<el-cascader
 					v-show="compareType !== 'entity'&&compareType !== 'businessType'"
+					:placeholder=" $t('holder.请选择') "
 					v-model="entityCascaderData"
 					collapse-tags
 					class="w-select "

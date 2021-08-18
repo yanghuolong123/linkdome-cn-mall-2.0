@@ -12,10 +12,10 @@
 							  change-on-select @on-change="caseDidChange" class="cascader">
 					</Cascader>
 					<div class="stall-header-right">
-                      <span class="stall-add" v-if="isSuperAdmin" title="添加" @click="addEntity">
+                      <span class="stall-add" v-if="isSuperAdmin" :title="$t('添加')" @click="addEntity">
                         <Icon type="md-add"/>
                       </span>
-						<span class="stall-add" v-if="isSuperAdmin" title="删除" @click="delEntity">
+						<span class="stall-add" v-if="isSuperAdmin" :title="$t('删除')" @click="delEntity">
                           <Icon type="md-remove"/>
                       </span>
 					</div>
@@ -69,7 +69,7 @@
 				@alertConfirm='alertConfirm'
 				:alertText='$t(alertText)'
 		></alert>
-		<imgconfig-modal ref="imgcofig" title="配置图片" :footerHide="true" :width="1350">
+		<imgconfig-modal ref="imgcofig"  :title="$t('图片配置')" :footerHide="true" :width="1350">
 			<div class="img-config" @mousemove="handleMouseMove">
 				<div class="part">
 					<div class="img-container" ref="imgContainer"
@@ -95,11 +95,11 @@
 							 src="../../assets/images/fixation_img/bg/symbol.png"
 							 v-show="addStatus">
 					</div>
-					<p>图片建议尺寸:1000×800像素</p>
+					<p>{{$t('图片建议尺寸')}}:1000×800</p>
 				</div>
 				<div class="part">
-					<span>操作</span>
-					<span v-if="addType===1">首页实体展示图配置</span>
+					<span>{{$t('操作')}}</span>
+					<span v-if="addType===1">{{$t('首页实体展示图配置')}}}</span>
 					<div class="flex-center">
 						<Select v-if="addType===1" :disabled="!isConfigDataSame"
 								v-model="property" style="width:200px"
@@ -109,11 +109,11 @@
 						</Select>
 						<uploadImg @changeImg="changeImg" :disabled="property === ''&&addType===1"
 								   v-if="currentWay.itype !== 'property'"
-								   :style="{marginLeft:addType===1?'20px':''}">上传图片
+								   :style="{marginLeft:addType===1?'20px':''}">{{$t('上传')}}
 						</uploadImg>
 					</div>
-					<span v-if="addType===1">首页展示图出入口坐标配置</span>
-					<span v-else>{{floorInfo[1] && floorInfo[1].name}}下属出入口店铺坐标配置</span>
+					<span v-if="addType===1">{{$t('首页展示图出入口坐标配置')}}</span>
+					<span v-else>{{floorInfo[1] && floorInfo[1].name}}{{$t('下属出入口店铺坐标配置')}}</span>
 					<div class="flex-center">
 						<Select v-model="way" :disabled="!isConfigDataSame" style="width:160px" @on-change="wayChange">
 							<Option v-for="item in wayList" :value="item.id" :key="item.id">{{
@@ -122,30 +122,30 @@
 						</Select>
 						<Button type="primary" style="margin-left: 20px"
 								:disabled="!way" :loading="uploadLoading" @click="setClick">
-							{{hasSymbol?'删除坐标':'放置坐标'}}
+							{{hasSymbol?$t('删除坐标'):$t('放置坐标')}}
 						</Button>
-						<Button v-if="addType === 3" :disabled="!way" style="margin-left: 20px" @click="previewClick">预览</Button>
+						<Button v-if="addType === 3" :disabled="!way" style="margin-left: 20px" @click="previewClick">{{$t('预览')}}</Button>
 					</div>
 					<div class="part" v-if="['gate','store'].includes(currentWay.itype)">
-						<span>是否为热力图</span>
+						<span>{{$t('是否为热力图')}}</span>
 						<i-switch :disabled="!way" :true-value="1" :false-value="0"
 								  v-model="configData.is_heatmap"></i-switch>
-						<span>是否为路径动线点</span>
+						<span>{{$t('是否为路径动线点')}}</span>
 						<i-switch :disabled="!way" :true-value="1" :false-value="0"
 								  v-model="configData.is_keypath"></i-switch>
 					</div>
 
 					<div class="btn-box">
-						<Button type="primary" :disabled="!Object.keys(currentWay).length" @click="handleReset">重置
+						<Button type="primary" :disabled="!Object.keys(currentWay).length" @click="handleReset">{{$t('重置')}}
 						</Button>
 						<Button :disabled="isConfigDataSame" type="primary" @click="handleSave" :loading="saveLoading">
-							保存
+							{{$t('保存')}}
 						</Button>
 					</div>
 				</div>
 			</div>
 		</imgconfig-modal>
-		<imgconfig-modal ref="preview" title="预览" :footerHide="true" :width="650">
+		<imgconfig-modal ref="preview" :title="$t('预览')" :footerHide="true" :width="650">
 			<div class="flex-column">
 				<div ref="viewContainer" id="viewContainer">
 					<img v-if="cameraImageUrl" width="500" height="400" :src="cameraImageUrl">

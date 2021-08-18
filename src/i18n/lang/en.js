@@ -30,8 +30,8 @@ module.exports =  {
   punctuation: {
     colon: ":"
   },
-  
-	
+
+
 	account: "Account",
   accountNum: "account number",
   password: "password",
@@ -50,6 +50,7 @@ module.exports =  {
 	second: "second",
 	enter: "enter",
 	客流量: "enter",
+  population: "Population",
   时间: "time",
 	sales: "sales",
 	yuan: "￥",
@@ -147,7 +148,7 @@ module.exports =  {
   // src\views\entity-analytic\index.vue
   实体名称: "Entity Name",
   实体类别: "Entity Type",
-  实体类型: "Entity Type",	
+  实体类型: "Entity Type",
   累计入客流: "Total",
   入客流峰值: "Highest Enter",
   累计集客量: "total" ,
@@ -166,14 +167,17 @@ module.exports =  {
   结账排队分析: "Checkout Queue Analysis",
   货架触摸分析: "Shelf touch analysis",
   进店率趋势分析: "Trend analysis of store entry rate",
-
+  选择排队名:'Select queue name',
+  排队长度:'Queuing length',
+  平均等待时间:'Average waiting time',
+  次数:'Times',
   // Cards.vue
   重复客流: "Repeated enter",
   平均到访次数: "Average visits",
-  
+
 	// goalCharts.vue => title1
   平均到访频次趋势: "Average visits trend",
-  
+
   // RelavanceTab.vue =>item.label
   关联关系无序图: "Association unordered graph",
   关联关系有序图: "Association ordered graph",
@@ -256,6 +260,7 @@ module.exports =  {
   // Account.vue
   添加: "Add",
   删除: "Delete",
+  编辑: "Edit",
   // addRole.vue
   角色名称: "Role name",
   角色归属于: "Role belongs to",
@@ -297,7 +302,7 @@ module.exports =  {
   添加业态: "Add business pattern",
   编辑业态: "Edit business pattern",
   关联商铺: "Associated shops",
-  其他: "其他",
+  其他: "Others",
   删除业态: "Delete business pattern",
   删除成功: "Delete successfully",
   // mrketlist.vue
@@ -338,6 +343,8 @@ module.exports =  {
   普通用户: "Ordinary user",
   实体权限: "Entity permissions",
   上传头像: "Upload avatar",
+  上传图片: "Upload image",
+  上传: "Upload",
   // Entity.vue
   "确认删除此购物中心信息？": "Are you sure you want to delete this shopping center information?",
   "删除购物中心": "Delete shopping center",
@@ -357,13 +364,21 @@ module.exports =  {
   编辑购物中心成功: "Edit shopping center successfully!",
   添加楼层: "Add floor",
   添加商铺: "Add shop",
-  // holiday.vue
+  删除坐标: "Del coord",
+  放置坐标: "Set coord",
+  预览: "Preview",
+  是否为热力图: "Is heatmap",
+  是否为路径动线点: "Is path trend pot",
+  图片建议尺寸: "Suggested size of picture",
+  首页实体展示图配置: "Configure the entity display diagram on the home page",
+  首页展示图出入口坐标配置: "The home page display picture configures the entry and exit coordinates",
+  下属出入口店铺坐标配置: "Coordinates of subordinate outlets and outlets",
   删除活动: "Delete Activity",
   "确认删除此活动信息？": "Are you sure to delete this activity information?",
   "删除活动管理请选择最少一个！": "Please select at least one activity management to delete!",
   "删除活动管理": "Delete activity management",
   "确定要删除所选中的活动管理？": "Are you sure you want to delete the selected activity management?",
-  
+
 
 
   "1月":"Jan",
@@ -378,9 +393,9 @@ module.exports =  {
   "10月":"Oct",
   "11月":"Nov",
   "12月":"Dec",
-  
-  
-  
+
+
+
 
 	fx: {
 		minute: "min",

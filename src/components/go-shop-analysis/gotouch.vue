@@ -8,7 +8,7 @@
           v-model="crossDate"
           placement="bottom-end"
           :options="disabledDate"
-          placeholder="选择日期"
+          :placeholder="$t('holder.选择日期')"
           class="w-select"
         ></DatePicker>
       </div>
@@ -17,7 +17,7 @@
           class="w-select"
           autocomplete
           v-model="activities"
-          placeholder="选择排队名"
+          :placeholder="$t('选择排队名')"
           style="width:14.375rem;"
           multiple>
           <vs-select-item
@@ -181,7 +181,7 @@ export default {
           },
           yaxis: {
             title: {
-              text: "次数"
+              text: this.$t("次数")
             },
             labels: {
               show: true,
@@ -229,7 +229,7 @@ export default {
           colors: ['#33B3ED', '#2BD9CF', '#94E2FF', '#FBAB40', '#8D82F0', '#E8585A'],
           yaxis: {
             title: {
-              text: '次数'
+              text:this.$t("次数")
             },
             tickAmount: 5,
             min: 0,
@@ -405,18 +405,17 @@ export default {
           data : txDataArray
         })
       }
-      console.log(xArray)
       that.lineData.chartOptions.xaxis.categories = xArray
       that.lineData.chartOptions.legend.data = legend
       that.lineData.series = xDataArray
       that.$refs.graphLine.updateOptions({
-        xaxis: { categories: that.lineData.chartOptions.xaxis.categories }
+        xaxis: { categories: that.lineData.chartOptions.xaxis.categories },
+        yaxis: {title:{text:this.$t("次数")}}
       })
      
       _.forEach(data,(ele)=>{
         that.goName.push(ele.name)
       })
-      console.log(that.goName)
       let timeArray = _.keys(data[0].list.time1)
       let resultArray = []
       for(let j = 0 ; j < timeArray.length ; j ++){
@@ -449,7 +448,8 @@ export default {
       // })
       if (that.$refs.graphLine) {
         that.$refs.graphLine.updateOptions({
-          xaxis: { categories: that.lineData.chartOptions.xaxis.categories }
+          xaxis: { categories: that.lineData.chartOptions.xaxis.categories },
+          yaxis: {title:{text:this.$t("次数")}}
         })
       }
 

@@ -15,7 +15,7 @@
           class="w-select m-l-20"
           autocomplete
           v-model="activities"
-          placeholder="选择排队名"
+          :placeholder="$t('选择排队名')"
           style="width:14.375rem;"
           multiple>
 					<vs-select-item
@@ -29,15 +29,15 @@
 					class="w-select m-l-20"
 					autocomplete
 					v-model="dataType"
-					placeholder="选择数据指标"
+					:placeholder="$t('fx.Data_indicators')"
 					style="width:14.375rem;">
 					<vs-select-item
 						value="0"
-						text="排队长度"
+						:text="$t('排队长度')"
 					/>
 					<vs-select-item
 						value="1"
-						text="平均等待时间"
+						:text="$t('平均等待时间')"
 					/>
 				</vs-select>
 				<Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('查询') }}</Button>
@@ -166,7 +166,7 @@ export default {
           },
           yaxis: {
             title: {
-              text: '人数'
+              text:this.$t('population')
             },
             min: 0,
             labels: {
@@ -304,8 +304,7 @@ export default {
         that.graphData.chartOptions.xaxis.categories = xArray
         that.graphData.chartOptions.legend.data = legend
         that.graphData.series = xDataArray
-        let yTitle = dataTypeEle == 0 ? "人数":"平均等待时长(秒)"
-        console.log(2222)
+        let yTitle = dataTypeEle == 0 ? this.$t('population'):this.$t('平均等待时间')+"("+this.$t('second')+")"
         let labelsObj = {}
         if(dataTypeEle == 0) {
           labelsObj = {
@@ -322,11 +321,7 @@ export default {
             }
           }
         }
-        console.log(that.$refs.graphLine)
         if (that.$refs.graphLine){
-          console.log(1111111)
-
-          console.log(dataTypeEle)
           that.$refs.graphLine.updateOptions({
             xaxis: { categories: that.graphData.chartOptions.xaxis.categories },
             yaxis:{
