@@ -117,7 +117,7 @@
           let part={
             title: this.$t(a.title),
             key: a.key,
-            slot: a.slot 
+            slot: a.slot
           }
           newArrey.push(part)
         })
@@ -130,7 +130,7 @@
           let part={
             title: this.$t(a.title),
             key: a.key,
-            slot: a.slot 
+            slot: a.slot
           }
           newArrey.push(part)
         })
@@ -300,7 +300,7 @@
 					if(!data.length) return;
           const entityName = d.split('|')[0]
           const highestIndex = getMaxIndex(data)
-          const total = _.sum(data).toLocaleString() + '人次'
+          const total = _.sum(data).toLocaleString() + this.$t('人次')
           let time
           if (this.oParams.isDateCompare()) {
             time = d.split('|')[2]
@@ -318,7 +318,7 @@
           tableData.push({
             entityName,
             entityType: entityName,
-            highest: `${data[highestIndex].toLocaleString()}人次 ${highestTime}`,
+            highest: `${data[highestIndex].toLocaleString()} ${this.$t('人次')} ${highestTime}`,
             total,
             time
           })
@@ -333,7 +333,7 @@
           return o.name === name
         }, 'children')
         if (node) {
-          return findKey(config.dictionary, 'value', node.itype, 'name') || '购物中心'
+          return this.$t(findKey(config.dictionary, 'value', node.itype, 'name')) || this.$t('购物中心')
         } else {
           return ''
         }

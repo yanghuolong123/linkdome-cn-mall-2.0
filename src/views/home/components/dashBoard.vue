@@ -44,7 +44,7 @@
                 :options="chartOptions"
                 :series="chartData(target,monthEnter)"
         />
-        <span>月达标值(人次)</span>
+        <span>{{$t('monthlyStandardValue')}}</span>
         <span>{{ target| tenthousandFormat}}</span>
       </div>
      <div class="chart-b">
@@ -54,7 +54,7 @@
                :options="chartOptions2"
                :series="chartData(saleData.sale_target,saleData.sale_month)"
        />
-       <span>月达标值(元)</span>
+       <span>{{$t('monthlyStandardValues')}}</span>
        <span>{{ saleData.sale_target| tenthousandFormat}}</span>
      </div>
     </div>

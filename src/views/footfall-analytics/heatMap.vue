@@ -1,7 +1,7 @@
 <template>
   <div class="heatMaps">
     <div v-show="drainageType===0" class="flex-box path-picker">
-      <el-select style="width: 200px" v-model="drainageType" placeholder="$t('请选择')">
+      <el-select style="width: 200px" v-model="drainageType" :placeholder="$t('holder.请选择')">
         <el-option
             v-for="item in tabsListCom"
             :key="item.value"
@@ -20,7 +20,7 @@
         :options="entityCascaderOption"
       >
       </el-cascader>
-      <el-select @change="dateTypeChange" class="m-l-10" style="width: 160px" v-model="dateType" :placeholder="$t('请选择')">
+      <el-select @change="dateTypeChange" class="m-l-10" style="width: 160px" v-model="dateType" :placeholder="$t('holder.请选择')">
         <el-option
             v-for="item in dateOptions"
             :key="item.value"
@@ -64,7 +64,7 @@
         v-model="dayTime"
         placement="bottom-end"
         @on-change="()=>{hourTime = '-1'}"
-        placeholder="选择日期"
+        :placeholder="$t('holder.选择日期')"
         :options="disabledDate"
         format="yyyy-MM-dd"
         style='width:230px'
@@ -203,7 +203,7 @@
       },
       dateFormat () {
         if (this.dateType === 'week') {
-          return 'yyyy 第 WW 周'
+          return this.$i18n.locale === "zh-CN"?'yyyy 第 WW 周':'yyyy WW week'
         } else {
           return ''
         }

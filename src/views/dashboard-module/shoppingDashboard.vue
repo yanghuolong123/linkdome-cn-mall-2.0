@@ -1,7 +1,7 @@
 <template>
   <div >
     <!-- 实时数据区域 -->
-    <real-time-data 
+    <real-time-data
 			@interValChange="intervalClick"
 			@refresh="updateRealTimezone"
 		>
@@ -20,7 +20,7 @@
       </template>
 			
       <template slot="dashboard">
-        <dashBoard 
+        <dashBoard
 					:target="monthTargetVal"
 					:saleData="saleData"
 					:todayEnter="todayEnter"
@@ -53,7 +53,7 @@
     <template>
       <!-- 历史数据指标 -->
       <div class="-mx-3 px-3 py-2">
-        <indicator-cards 
+        <indicator-cards
 					:indicatorList="historyIndicators"
 					:propertyId="currentPropertyId"
 					ref="historyKpi"
@@ -66,7 +66,7 @@
           <template slot-scope="{item}">
             <!-- 历史数据 卡片 列表  -->
             <!-- 平均客流量 客流峰值 总客流 集客量峰值 销售额 有效客流 -->
-            <singleCard 
+            <singleCard
 							:isShowText='false'
 							:item="item"
 							:innerRange="innerRange"
@@ -98,7 +98,7 @@
         </indicator-cards>
       </div>
       <!-- 趋势对比 -->
-      <Trend 
+      <Trend
 				style="margin-top:20px"
 				:time1="outRange"
 				@curretIndicatorChange="val=>{showTotal = !val}"
@@ -108,7 +108,7 @@
 				:istotal='showTotal'
 			></Trend>
       <!-- 排行占比 -->
-      <Ranking 
+      <Ranking
 				:time1="outRange"
 				:propertyId="currentPropertyId"
 				:indicatorData="rankingIndicators"
@@ -118,16 +118,16 @@
       <!-- 顾客类型数据 -->
       <customer-analytics :data="customAnalytics">
         <template slot-scope="{item}">
-          <customer-charts 
+          <customer-charts
 						:labels="item.labels"
 						:series="item.series"
 						:type="item.type"
 						:title="item.title"
-						tooltipUnit='人'
+						:tooltipUnit='$t("人")'
 						:height="item.height"
 						@tableChage="shopTabChange"
 					>
-            <export-menu 
+            <export-menu
 							slot="export"
 							@onchange="genderExportBiztop(item.title)"></export-menu>
           </customer-charts>
@@ -253,7 +253,7 @@ export default {
   },
   computed: {
     tootipText () {
-      return this.$t('tootipText7')
+      return this.$t('passages.tootipText7')
     },
     companyId () {
       return this.$store.state.user.companyId
@@ -272,16 +272,16 @@ export default {
         if (e === 'gender_propotion') {
           let genderName = {
             '0': {
-              name: '女',
+              name: this.$t('女性'),
               icon: 'female'
             },
             '1': {
-              name: '男',
+              name: this.$t('男性'),
               icon: 'male'
             }
           }
           chartObj.labels = {
-            name: '性别',
+            name: this.$t('性别'),
             key: 'gender',
             data: Object.keys(data[e]).map(e => genderName[e].name),
             icons: Object.keys(data[e]).map(e => genderName[e].icon)
@@ -289,18 +289,18 @@ export default {
           chartObj.series = Object.values(data[e])
         } else if (e === 'age_distribution') {
           let genderName = {
-            male: '男性',
-            female: '女性'
+            male:  this.$t('男性'),
+            female: this.$t('女性')
           }
           chartObj.labels = {
-            name: '年龄',
+            name: this.$t('年龄'),
             key: 'age',
             data: Object.keys(data[e]).map(e => { return this.ageNameformat(e) })
           }
           chartObj.series = Object.keys(genderName).map(k => ({ name: genderName[k], key: k, data: (Object.values(data[e])).map(o => o[k]) }))
         } else {
           chartObj.labels = {
-            name: '类型',
+            name: this.$t('类型'),
             key: e,
             data: Object.keys(data[e]).map(e => customerNameDict[e].name),
             icons: Object.keys(data[e]).map(e => customerNameDict[e].icon)
@@ -317,38 +317,6 @@ export default {
     historyIndicators () {
       var arr = [...this.historyKpiData, ...this.summarySalse]
       return arr // 合并数组 组成一个新的数组
-    },
-    historyNewKpi () {
-      const { new_old_proportion, gender_propotion } = this.footFallTypeRes
-      let manAndWomen = {
-        id: 'entermanAndWomen',
-        name: '性别人数',
-        data: {
-          name1: '女性',
-          name2: '男性',
-          data1: gender_propotion[0],
-          data2: gender_propotion[1]
-        },
-        type: {
-          icon: 'xingbie',
-          color: '#E8585A'
-        }
-      }
-      let newAndOld = {
-        id: 'enternewAndOld',
-        name: '新老顾客',
-        data: {
-          name1: '新顾客',
-          name2: '老顾客',
-          data1: new_old_proportion.newNum,
-          data2: new_old_proportion.oldNum
-        },
-        type: {
-          icon: 'xinlaoguke',
-          color: '#857aef'
-        }
-      }
-      return [manAndWomen, newAndOld]
     },
     rankingIndicators () {
       return { ...{ enter: { name: '入客流' } }, ...salesDict }
@@ -380,7 +348,7 @@ export default {
       let selectDateTwo = this.outRange.split(',')[1]
       if (newDate == selectDate && newDate == selectDateTwo) {
         tmlEnterKPI.forEach(val => {
-          if (val.name == '平均客流量') val.data = this.currentDayData.enter.avg
+          if (val.name == this.$t('Average Enter')) val.data = this.currentDayData.enter.avg
           if (val.name == this.$t('fn.total', [this.$t('enter')])) val.data = val.data.number
         })
       }
@@ -392,10 +360,10 @@ export default {
     trendIndicators () {
       let footfallYaxis = {
         enter: {
-          name: '客流量',
+          name: this.$t('客流量'),
           yaxis: {
             title: {
-              text: '客流量（人次）'
+              text: `${this.$t('客流量')}(${this.$t('人次')})`
             },
             labels: {
               formatter (value) {
@@ -408,7 +376,7 @@ export default {
           name: this.$t('集客量'),
           yaxis: {
             title: {
-              text: '集客量（人次）'
+              text:  `${this.$t('集客量')}(${this.$t('人次')})`
             },
             labels: {
               formatter (value) {
@@ -588,17 +556,15 @@ export default {
       this.updateMapZoneByName(firstMenuName)
     },
     processKPIData (data, type) {
-      let pic = ''
-      // data.isexist ? pic = '今日' : pic = ''
       let checkNameObj = {
         enter: {
-          avg: pic + '平均客流量',
-          highest: pic + this.$t('客流峰值'),
-          total: pic + this.$t('总客流量'),
+          avg: this.$t('Average Enter'),
+          highest: this.$t('客流峰值'),
+          total:this.$t('总客流量'),
         },
         occupancy: {
-          highest: pic + this.$t('集客峰值'),
-          total: pic + this.$t('集客量')
+          highest: this.$t('集客峰值'),
+          total: this.$t('集客量')
         }
       }
       let icontypes = {

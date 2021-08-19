@@ -25,7 +25,7 @@
 				>
 				</vue-apex-charts>
 			</div>
-			<custom-legend :data="lengendData" v-if="lengendData.length" :unit="unit"></custom-legend>
+			<custom-legend :data="lengendData" v-if="lengendData.length" :unit="$t(unit)"></custom-legend>
 			<div class="noDataStyle" v-if="isNoData" :class="'noDataStyle'+item"></div>
 		</tab-item>
 		<tab-item icon="biaoge-copy" :titles="tableTitle" id="table-item">
@@ -124,7 +124,6 @@ export default {
   data () {
     return {
       current: 0,
-      nodata: '暂无数据',
       isTypeChange: true,
       iconCheck: {
         bar: '62',
@@ -180,7 +179,7 @@ export default {
            
           }
         }else{
-         return { title: e.name, key: e.key }
+          return { title: e.name, key: e.key }
         }
       })
       this.$emit('getShopTableCoumn', column)
@@ -231,12 +230,12 @@ export default {
               tableList.map(list => {
                 totalNum += Object.values(list)[index]
               })
-              total[keys[index]] = totalNum.toLocaleString() 
+              total[keys[index]] = totalNum.toLocaleString()
             } else if (name2 === 'enter' || name2 === 'exit') {
               tableList.map(list => {
                 totalNum += Object.values(list)[index]
               })
-              total[keys[index]] = _.isNaN(totalNum) ? '' : totalNum.toLocaleString() 
+              total[keys[index]] = _.isNaN(totalNum) ? '' : totalNum.toLocaleString()
             } else total[keys[index]] = ''
           }
         })
@@ -245,7 +244,7 @@ export default {
       tableList.forEach(o => {
         _.forIn(o, (val, key) => {
           if (!Array.isArray(this.tooltipUnit) && typeof val === 'number') {
-            o[key] = val.toLocaleString() 
+            o[key] = val.toLocaleString()
           }
           // 首页购物中心趋势分析 数据指标是多选 tooltipUnit会传入多个
           if (Array.isArray(this.tooltipUnit)) {
@@ -255,7 +254,7 @@ export default {
                 return o.value === unitKey
               })
               if (tooltipUnit) {
-                o[key] = val.toLocaleString() 
+                o[key] = val.toLocaleString()
               }
             }
           }

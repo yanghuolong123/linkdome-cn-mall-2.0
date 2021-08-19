@@ -23,6 +23,10 @@ export default {
       this.toggleClassInBody(val)
     }
   },
+	created(){
+    this.$i18n.locale = this.$store.state.language
+    document.title = this.$t('mainTitle')
+	},
   methods: {
     toggleClassInBody (className) {
       if (className == 'dark') {

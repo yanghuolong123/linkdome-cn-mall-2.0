@@ -69,9 +69,7 @@ export default {
     FlowSelector
   },
   data () {
-    let that = this
     return {
-
       tableTitle: '详细数据信息',
       isGraph: false,
       isTableDate: false,
@@ -129,7 +127,7 @@ export default {
           },
           yaxis: {
             title: {
-              text: '时间'
+              text: this.$t('时间')
             },
             labels: {
               show: true,
@@ -413,7 +411,7 @@ export default {
       var that = this
       that.columnsList = [
         {
-          title: '时间',
+          title: this.$t('时间'),
           key: 'time'
         }
       ]
@@ -426,11 +424,11 @@ export default {
           that.columnsList.push(obj)
         })
         var timeType = that.compareData.compareType
-        series.map(function (list, index) {
+        series.map( (list, index) =>{
           var obj = {}
           if (['time','onYear','onChain'].includes(timeType)) {
             var num = Number(index) + 1
-            obj.time = '第' + num + '天'
+            obj.time = this.$t('fn.第_天',[num])
           } else {
             obj.time = that.compareData.date1Array[0]
           }

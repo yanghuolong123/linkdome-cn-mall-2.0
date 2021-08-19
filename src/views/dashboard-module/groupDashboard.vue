@@ -1,12 +1,12 @@
 <template>
   <div>
     <!-- 实时数据区域 -->
-    <real-time-data 
+    <real-time-data
 			@interValChange="intervalClick"
 			@refresh="updateRealTimezone"
 		>
 			<template slot="map">
-				<map-carousel 
+				<map-carousel
 					:center="center"
 					:zooms="zooms"
 					:markers="markers"
@@ -20,7 +20,7 @@
       </template>
 
       <template slot="dashboard">
-        <right-data 
+        <right-data
 					@isRightImg='isRightImg'
 					:rightShoppingList='rightShoppingList'
 					ref="dashBoard"
@@ -60,7 +60,7 @@
 					<template slot="title">
 						<span class="text-xl text-black font-medium hidden sm:block" style="padding-left:18px;">
 							{{ $t('历史数据查询') }}
-							<Tooltip 
+							<Tooltip
 								:content="tootipText"
 								placement="right"
 								theme="light"
@@ -71,7 +71,7 @@
 						</span>
 					</template>
 					<template slot="dateSelector">
-						<i-date-picker 
+						<i-date-picker
 							@selectDate="selectDate"
 							:value="historyDate"
 							class="mr-8 history-date-picker"
@@ -80,7 +80,7 @@
           <template slot-scope="{item}">
             <!-- 历史数据 卡片 列表  -->
             <!-- 平均客流量 客流峰值 总客流 集客量峰值 销售额 有效客流 -->
-            <singleCard 
+            <singleCard
 							:isShowText='false'
 							:item="item"
 							:innerRange="innerRange"
@@ -90,7 +90,7 @@
         </indicator-cards>
       </div>
       <!-- 趋势对比 -->
-      <group-trend 
+      <group-trend
 				style="margin-top:20px"
 				:time1="outRange"
 				:innerRange="innerRange"
@@ -98,7 +98,7 @@
 				:indicatorData="trendIndicators"
 			></group-trend>
       <!-- 排行占比 -->
-      <ranking-group 
+      <ranking-group
 				:time1="outRange"
 				:propertyId="currentPropertyId"
 				:indicatorData="rankingIndicators"
@@ -281,38 +281,6 @@ export default {
     historyIndicators () {
       var arr = [...this.historyKpiData, ...this.summarySalse]
       return arr // 合并数组 组成一个新的数组
-    },
-    historyNewKpi () {
-      const { new_old_proportion, gender_propotion } = this.footFallTypeRes
-      let manAndWomen = {
-        id: 'entermanAndWomen',
-        name: '性别人数',
-        data: {
-          name1: '女性',
-          name2: '男性',
-          data1: gender_propotion[0],
-          data2: gender_propotion[1]
-        },
-        type: {
-          icon: 'xingbie',
-          color: '#E8585A'
-        }
-      }
-      let newAndOld = {
-        id: 'enternewAndOld',
-        name: '新老顾客',
-        data: {
-          name1: '新顾客',
-          name2: '老顾客',
-          data1: new_old_proportion.newNum,
-          data2: new_old_proportion.oldNum
-        },
-        type: {
-          icon: 'xinlaoguke',
-          color: '#857aef'
-        }
-      }
-      return [manAndWomen, newAndOld]
     },
     rankingIndicators () {
       return { ...{ enter: { name: '入客流' } }, ...salesDict }

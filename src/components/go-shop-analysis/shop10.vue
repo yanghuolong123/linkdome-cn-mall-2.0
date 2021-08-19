@@ -153,7 +153,7 @@
             },
             yaxis: {
               title: {
-                text: '百分比（%）'
+                text: this.$t('百分比')+'（%）'
               },
               labels: {
                 show: true,

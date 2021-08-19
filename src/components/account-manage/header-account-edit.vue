@@ -160,9 +160,9 @@ export default {
     // 验证密码
     const validatePass = (rule, value, callback) => {
       if (value === undefined || value === '') {
-        callback(new Error('密码不能为空'))
+        callback(new Error(this.$t('密码不能为空')))
       } else if (value.length < 6) {
-        callback(new Error('密码长度不得小于6个字符'))
+        callback(new Error(this.$t('密码长度不得小于6个字符')))
       } else if (value.length > 255) {
         callback(new Error('密码长度不得大于255个字符'))
       } else {
@@ -172,11 +172,11 @@ export default {
     // 验证用户名
     const validUserName = (rule, value, callback) => {
       if (value === undefined || value === '') {
-        callback(new Error('用户名不能为空'))
+        callback(new Error(this.$t('用户名不能为空')))
       } else if (value.length < 2) {
-        callback(new Error('用户名长度不得小于2个字符'))
+        callback(new Error(this.$t('长度不得小于2个字符')))
       } else if (value.length > 10) {
-        callback(new Error('用户名不得大于10个字符'))
+        callback(new Error(this.$t('最多输入10个字符')))
       } else {
         callback()
       }
@@ -186,9 +186,9 @@ export default {
       if (value === undefined || value === '' || value === null) {
         callback()
       } else if (value.length < 2) {
-        callback(new Error('用户姓名长度不得小于2个字符'))
+        callback(new Error(this.$t('长度不得小于2个字符')))
       } else if (value.length > 10) {
-        callback(new Error('用户姓名不得大于10个字符'))
+        callback(new Error(this.$t('最多输入10个字符')))
       } else {
         callback()
       }
@@ -196,13 +196,13 @@ export default {
     // 验证确认密码
     const validatePassCheck = (rule, value, callback) => {
       if (value === undefined || value === '') {
-        callback(new Error('请输入密码'))
+        callback(new Error(this.$t('密码不能为空')))
       } else if (value.length < 6) {
-        callback(new Error('密码长度不得小于6个字符'))
+        callback(new Error(this.$t('密码长度不得小于6个字符')))
       } else if (value.length > 255) {
-        callback(new Error('密码长度不得大于50个字符'))
+        callback(new Error(this.$t('密码长度不得大于50个字符')))
       } else if (value !== this.userForm.password) {
-        callback(new Error('两次密码不一致!'))
+        callback(new Error(this.$t('两次密码不一致!')))
       } else {
         callback()
       }

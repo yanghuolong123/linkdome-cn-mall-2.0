@@ -7,7 +7,7 @@
 	Author: Pixinvent
 	Author URL: hhttp://www.themeforest.net/user/pixinvent
 ========================================================================================== */
-
+import i18n from '@/i18n/i18n'
 export default {
   // LINE CHART
   siteTraffic: {
@@ -1083,7 +1083,7 @@ export default {
       }
     },
     series: [{
-      name: '平均热力值',
+      name: i18n.t('平均热力值'),
       type: 'heatmap',
       data: [],
       label: {
@@ -1166,7 +1166,7 @@ export default {
       }
     },
     series: [{
-      name: '平均热力值',
+      name: i18n.t('平均热力值'),
       type: 'heatmap',
       data:[],
       label: {

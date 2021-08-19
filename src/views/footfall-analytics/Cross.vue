@@ -36,7 +36,7 @@
         ></DatePicker>
       </div>
       <div class="flex-center">
-        <el-cascader 
+        <el-cascader
           v-model="startValue"
           :placeholder="$t('holder.选择起点')"
           popper-class="cascade-dom"
@@ -66,7 +66,7 @@
         <img :src="item.icon" alt="">
         <div class="tootipsTitle">
           <span class="cross_time_name">{{ $t(item.name) }}</span>
-          <Tooltip class="m-l-20"  :content="item.tootipText"  placement="bottom" theme="light" transfer max-width="600">
+          <Tooltip class="m-l-20"  :content="$t(item.tootipText)"  placement="bottom" theme="light" transfer max-width="600">
             <icons type="wenhao"/>
           </Tooltip>
         </div>
@@ -415,7 +415,7 @@ export default {
             }
         }
         
-          
+        
         }
       },
       siteTrafficAvg: {
@@ -506,17 +506,17 @@ export default {
     typeListCom() {
       this.typeList = [
         {
-          text: $t('无对比'),
+          text: this.$t('无对比'),
           value: 0
         },
         {
-          text: $t('自定义对比'),
+          text: this.$t('自定义对比'),
           value: 1
         }, {
-          text: $t('同比'),
+          text: this.$t('同比'),
           value: 2
         }, {
-          text: $t('环比'),
+          text: this.$t('环比'),
           value: 3
         }
       ]
@@ -582,11 +582,11 @@ export default {
     paramsPrepare () { // 点击查询
       var time1, time2
       if (this.startValue.length === 0) {
-        this.alert('起点不能为空，请选择起点')
+        this.alert(this.$t('请选择起点'))
         return false
       }
       if (this.endValue.length === 0) {
-        this.alert('终点不能为空，请选择终点')
+        this.alert(this.$t('请选择终点'))
         return false
       }
       this.iconIndex = 0
@@ -829,14 +829,14 @@ export default {
               table.time = m.name + '(' + d.date + ')'
             }
           }
-          table.avg = NP.times(Number(d.convetRate), 100) 
+          table.avg = NP.times(Number(d.convetRate), 100)
           that.tableList.push(table)
         })
         that.siteTraffic.series.push(obj)
         that.lineNoData = false
       })
       if(that.siteTraffic.series[1]){
-        let maxLength 
+        let maxLength
         if(that.siteTraffic.series[0].data.length> that.siteTraffic.series[1].data.length){
           maxLength = that.siteTraffic.series[0].data
         }else{
@@ -862,12 +862,10 @@ export default {
       }
       var dataList
       data1.length > data2.length ? dataList = data1 : dataList = data2
-      dataList.map(function (n, index) {
-        var num, size = Number(index) + 1, dayStyle
-        dayStyle = range == 'Month' ? '月' : '天'
-        var dateList = '第' + size + dayStyle
+      dataList.map( (n, index)=> {
+        var num, size = Number(index) + 1, dateList
+        dateList = range == 'Month' ? this.$t('fn.第_月',[ size ]):this.$t('fn.第_天',[ size])
         type === 0 ? num = n.date : num = dateList
-
         that.siteTraffic.chartOptions.xaxis.categories.push(num)
       })
       that.$refs.lineChart.updateOptions({

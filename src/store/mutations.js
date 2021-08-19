@@ -41,6 +41,10 @@ const mutations = {
   UPDATE_LOADING_STATUS (state, val) {
     state.loadingStatus = val
   },
+  UPDATE_LANG(state,lang){
+    state.language = lang;
+    localStorage.setItem('lang',lang)
+  },
   // ////////////////////////////////////////////
   // COMPONENT
   // ////////////////////////////////////////////

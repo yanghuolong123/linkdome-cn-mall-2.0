@@ -47,7 +47,7 @@ export default {
 	},
   computed: {
     typeOptionsCom() {
-      this.typeoptions = [
+      this.typeOptions = [
         {
           value: 'not',
           label: this.$t('无对比')

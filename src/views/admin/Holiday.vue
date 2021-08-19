@@ -31,11 +31,7 @@
         </div>
         <holidayEdit
             ref = "editActive"
-            v-if="isEdit"
             @initData="initData"
-            @closeEdit="closeEdit"
-            @editData="editData"
-            @showAlert="showAlert"
         ></holidayEdit>
         <alert
             v-if="isAlert"
@@ -47,11 +43,10 @@
 </template>
 
 <script>
-import Moment from 'moment'
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import alert from '@/components/alert.vue'
 import holidayEdit from '@/components/holiday-manage/holiday-edit.vue'
-import { getActiveDays, addActiveDays, updateActiveDays, deleteActiveDays } from '@/api/manager.js'
+import { getActiveDays, deleteActiveDays } from '@/api/manager.js'
 import { yearList } from '@/libs/util.js'
 export default {
   components: {
@@ -75,7 +70,6 @@ export default {
       currentx: 1,
       currentActive: 1,
       years: [],
-      isEdit: false,
       isAlert: false,
       alertText: {
         title: '',
@@ -121,18 +115,13 @@ export default {
   mounted () {
     this.currentPropertyId = this.$store.state.home.headerAction
     this.years = yearList()
-    // this.selectYear = Moment().year()
     this.initData(20, true)
     this.initData(21, true)
   },
   methods: {
-    // 编辑活动
-    editData () {
-      this.isEdit = false
-    },
     // 新增活动
     addData () {
-      this.isEdit = true
+        this.$refs.editActive.$refs.modal.showModal()
       var data = {
         name: '',
         begin: '',
@@ -157,9 +146,6 @@ export default {
         }
       })
     },
-    closeEdit () {
-      this.isEdit = false
-    },
     closeAlert () {
       this.isAlert = false
     },
@@ -172,7 +158,7 @@ export default {
       that.alertText.confirm = confirm
     },
     tableData (value) {
-      this.isEdit = true
+      this.$refs.editActive.$refs.modal.showModal()
       var that = this
       var checklist = that.$store.state.user.checklist
       this.$nextTick(() => {
@@ -195,16 +181,16 @@ export default {
         that.isAlert = false
         if (this.deleteSelect == 'single') {
           var id = this.id
-          deleteActiveDays(id).then(function (res) {
+          deleteActiveDays(id).then( (res)=> {
             if (res.data.code === 200) {
               that.isAlert = true
               that.alertText.bg = '#00A0E9'
-              that.alertText.title = this.$t('删除活动管理')
-              that.alertText.text = this.$t('删除成功')
+              that.alertText.title = that.$t('删除活动管理')
+              that.alertText.text = that.$t('删除成功')
               that.alertText.confirm = false
               that.initData(21, false)
             } else {
-              this.$alert({content:res.data.message})
+              that.$alert({content:res.data.message})
             }
           })
         } else {
@@ -261,11 +247,11 @@ export default {
             this.loading = false
             let data = res.data.data
             this.holidayAllData = _.cloneDeep(data)
-            data.forEach(e => { 
+            data.forEach(e => {
               const day = (this.$i18n.locale === "zh-CN")
                 ? "天"
                 : (e.duration > 1 ? " days" : " day");
-              e.duration = String(e.duration) + day 
+              e.duration = String(e.duration) + day
             })
             this.holidayTotal = Math.ceil(data.length / 5)
             this.holidays = _.clone(data)

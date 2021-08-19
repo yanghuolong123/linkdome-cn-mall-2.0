@@ -23,9 +23,11 @@ module.exports =  {
     编辑: "Edit {0}",
     添加: "Add {0}",
     删除: "delete {0}",
-    请选择: "choose {0}",
+    请选择: "Please choose {0}",
     第_周: "week {0}",
     第_天: "day {0}",
+    第_月: "month {0}",
+    entityLimit:'The number of selected entities cannot exceed {0}'
 	},
   punctuation: {
     colon: ":"
@@ -45,6 +47,7 @@ module.exports =  {
 	cumulativePassengerFlowOfTheDay: "Cumulative enter of the day (person time)",
 	cumulativePassengerFlowOfTheMonth: "Cumulative enter of the month (person time)",
 	monthlyStandardValue: "Monthly standard value (person time)",
+	monthlyStandardValues: "Monthly standard value (¥)",
 	passengerFlowachievementRateOfThisMonth: "enter achievement rate of this month",
 	minute: "minute",
 	second: "second",
@@ -96,8 +99,9 @@ module.exports =  {
   销售额: "Sales",
   坪效: "Flat effect",
   客单价: "Customer unit price",
+  合计: "Total",
   请添加实体信息: "Add Entity",
-
+  compareTimeSame:'The comparison time is the same. Select a new time',
 
 
   // Itabs.vue => titleList[value]
@@ -105,6 +109,8 @@ module.exports =  {
 	集团业态排行: "Group business ranking",
 	详细数据: "Detailed Data",
 	购物中心业态排行: "Shopping center ranking",
+  销售商铺排行: "Ranking of Sales Shops",
+  销售业态排行: "Sales business ranking",
 	请选择: "select",
   排行分析: "Ranking analysis",
   年龄分布: "Age distribution",
@@ -159,7 +165,13 @@ module.exports =  {
   出客流: "outbound",
   小时: "hour",
   默认: "default",
-
+  人次: "person-time",
+  年龄:'Age',
+  类别:'Category',
+  男性:'Male',
+  女性:'Female',
+  大于:'more than',
+  小于:'less than',
   // Chart-box.vue => toolList[tool]&&toolList[tool].name
   集客量趋势: "Occupancy Trend",
   // class="go-shop-time-icon"
@@ -205,6 +217,11 @@ module.exports =  {
   无对比: "No comparison",
   自定义对比: "Customized comparison",
   自定义时间对比: "Customized comparison",
+  请选择起点: "Please select starting point",
+  请选择终点: "Please select destination",
+  所有从起点实体到终点实体的客流总和: "The sum of all passenger flows from the starting entity to the destination entity",
+  进入起点的人去目的实体的平均游逛深度: "The average depth at which the person entering the starting point goes to the destination entity",
+  为起点所有实体的客流之和: "Is the sum of passenger flows of all entities at the starting point",
   // pathTrendBackup.vue
   路径动向图: "Path trend chart",
   "游逛深度（个）": "Wandering depth (PCs.)",
@@ -222,9 +239,11 @@ module.exports =  {
   年度趋势: "Annual trend",
   月度趋势: "Monthly trend",
   // singleCard.vue
-  "坪效（元/平方米）": "Floor efficiency (yuan / m2)",
+  "坪效（元/平方米）": "Floor efficiency (yuan/m²)",
   "客单价（元）" :"Customer unit price (yuan)",
   "销售额（元）": "Sales (yuan)",
+  "元": "yuan",
+  "元/m²": "yuan/m²",
   // Role.vue
   超级管理员: "Super administrator",
   集团管理员: "Group administrator",
@@ -311,6 +330,7 @@ module.exports =  {
   // HeatMap.vue
   时段客流分布: "Passenger flow distribution in different periods",
   客流热力图: "Passenger flow heat map",
+  平均热力值: "Mean thermal value",
   // holiday-edit.vue
   添加活动: "Add Activity",
   编辑活动: "Edit Activity",
@@ -327,14 +347,13 @@ module.exports =  {
   // account-edit.vue
   全部实体: "All entities",
   "密码不能为空": "Password is required",
+  "名称不能为空": "Name is required",
   "密码长度不得小于6个字符": "password length shall not be less than 6 characters",
   "密码长度不得大于50个字符": "password length shall not be greater than 50 characters",
   "两次密码不一致!": "The two passwords are inconsistent!",
   "用户名不能为空": "Username  is required",
-  "用户名长度不得小于2个字符": "用户名长度不得小于2个字符",
-  "用户名不得大于10个字符": "用户名不得大于10个字符",
-  "用户姓名长度不得小于2个字符": "用户姓名长度不得小于2个字符",
-  "用户姓名不得大于10个字符": "用户姓名不得大于10个字符",
+  "最多输入10个字符": "A maximum of 10 characters can be entered",
+  "长度不得小于2个字符": "The value contains at least two characters",
   邮箱不能为空: "E-mail is required",
   邮箱格式不正确: "The E-mail format is incorrect",
   男: "Male",
@@ -345,6 +364,8 @@ module.exports =  {
   上传头像: "Upload avatar",
   上传图片: "Upload image",
   上传: "Upload",
+  全部: "All",
+  百分比: "Percent",
   // Entity.vue
   "确认删除此购物中心信息？": "Are you sure you want to delete this shopping center information?",
   "删除购物中心": "Delete shopping center",

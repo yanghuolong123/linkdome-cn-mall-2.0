@@ -9,7 +9,7 @@
 				</div>
 				<div class="topArea" v-bind:class="{ mohu: hasCover==3 }">
 					<Cascader :data="dataList" v-model="defaultValue"
-							  change-on-select @on-change="caseDidChange" class="cascader">
+										change-on-select @on-change="caseDidChange" class="cascader">
 					</Cascader>
 					<div class="stall-header-right">
                       <span class="stall-add" v-if="isSuperAdmin" :title="$t('添加')" @click="addEntity">
@@ -21,18 +21,18 @@
 					</div>
 					<!-- 商场列表 -->
 					<market-list v-if="addType === 1" :userLvl="userLvl" @imgConfig="imgConfig" @editMail="editMail"
-								 @delMail="delMail"
-								 ref="marketlist"></market-list>
+											 @delMail="delMail"
+											 ref="marketlist"></market-list>
 					<!-- 楼层列表 -->
 					<area-list v-if="addType === 2" :userLvl="userLvl" @imgConfig="imgConfig" @editFloor="editFloor"
-							   @delFloor="delFloor"
-							   @changeDoorway='changeDoorway'
-							   ref="arealist" :floorInfo="floorInfo" :parent_id="parent_id"></area-list>
+										 @delFloor="delFloor"
+										 @changeDoorway='changeDoorway'
+										 ref="arealist" :floorInfo="floorInfo" :parent_id="parent_id"></area-list>
 					<!-- 商铺列表 -->
-					<group-list v-if="addType === 3" :userLvl="userLvl"  @editStore="editStore" @delStore="delStore"
-								@changeDoorway='changeDoorway'
-								:storeInfo="storeInfo"></group-list>
-
+					<group-list v-if="addType === 3" :userLvl="userLvl" @editStore="editStore" @delStore="delStore"
+											@changeDoorway='changeDoorway'
+											:storeInfo="storeInfo"></group-list>
+				
 				</div>
 			</div>
 			<!-- 业态管理 -->
@@ -42,58 +42,58 @@
 		</div>
 		<!-- 添加商场 -->
 		<add-Entity
-				v-show="showAddEntity"
-				ref="entityModal"
-				:addmall='addmall'
-				:mallList='mallList'
-				:editTitle="$t(editTitle)"
-				:isEmptyPage="isEmptyPage"
-				:userLvl="userLvl"
-				:propertyId="addmall.property_id"
-				@changeEditTitle="changeEditTitle"
-				@init="init"
-				@alertMessage="alertMessage"
-				@closeEdit="closeEdit"
-				@getData="getData"
-				@addTypeData="addTypeData"
-				@addFloorData="addFloorData"
-				@addStoreData="addStoreData"
-				@updateTypeData="updateTypeData"
-				@updateFloorData="updateFloorData"
-				@updateStoreData="updateStoreData"
-				v-cloak
+			v-show="showAddEntity"
+			ref="entityModal"
+			:addmall='addmall'
+			:mallList='mallList'
+			:editTitle="$t(editTitle)"
+			:isEmptyPage="isEmptyPage"
+			:userLvl="userLvl"
+			:propertyId="addmall.property_id"
+			@changeEditTitle="changeEditTitle"
+			@init="init"
+			@alertMessage="alertMessage"
+			@closeEdit="closeEdit"
+			@getData="getData"
+			@addTypeData="addTypeData"
+			@addFloorData="addFloorData"
+			@addStoreData="addStoreData"
+			@updateTypeData="updateTypeData"
+			@updateFloorData="updateFloorData"
+			@updateStoreData="updateStoreData"
+			v-cloak
 		></add-Entity>
 		<alert
-				v-if="isAlert"
-				@closeAlert='closeAlert'
-				@alertConfirm='alertConfirm'
-				:alertText='$t(alertText)'
+			v-if="isAlert"
+			@closeAlert='closeAlert'
+			@alertConfirm='alertConfirm'
+			:alertText='$t(alertText)'
 		></alert>
-		<imgconfig-modal ref="imgcofig"  :title="$t('图片配置')" :footerHide="true" :width="1350">
+		<imgconfig-modal ref="imgcofig" :title="$t('图片配置')" :footerHide="true" :width="1350">
 			<div class="img-config" @mousemove="handleMouseMove">
 				<div class="part">
 					<div class="img-container" ref="imgContainer"
-						 @drop.stop.prevent="handleDropOnPannel($event)"
-						 @dragover.stop.prevent>
+							 @drop.stop.prevent="handleDropOnPannel($event)"
+							 @dragover.stop.prevent>
 						<img class="img-bg" ref="img" :src="configImage" v-if="configImage">
 						<img ref="img"
-							 class="img-bg"
-							 v-else
-							 src="../../assets/images/fixation_img/bg/placeholder.jpg">
+								 class="img-bg"
+								 v-else
+								 src="../../assets/images/fixation_img/bg/placeholder.jpg">
 						<img width="27" height="40"
-							 :src="currentWay.id==symbol.id?require('@/assets/images/fixation_img/bg/symbol_select.png'):require('@/assets/images/fixation_img/bg/symbol.png')"
-							 :key="index"
-							 class="symbol"
-							 :draggable="currentWay.id==symbol.id"
-							 @dragstart="handleDragStart($event,symbol.id)"
-							 :style="{top:symbol.top+'px',left:symbol.left+'px'}"
-							 v-for="(symbol,index) in symbolList">
+								 :src="currentWay.id==symbol.id?require('@/assets/images/fixation_img/bg/symbol_select.png'):require('@/assets/images/fixation_img/bg/symbol.png')"
+								 :key="index"
+								 class="symbol"
+								 :draggable="currentWay.id==symbol.id"
+								 @dragstart="handleDragStart($event,symbol.id)"
+								 :style="{top:symbol.top+'px',left:symbol.left+'px'}"
+								 v-for="(symbol,index) in symbolList">
 						<img class="add-symbol"
-							 @click="setCoordinate"
-							 width="27" height="40"
-							 :style="{top:symbol.top+'px',left:symbol.left+'px'}"
-							 src="../../assets/images/fixation_img/bg/symbol.png"
-							 v-show="addStatus">
+								 @click="setCoordinate"
+								 width="27" height="40"
+								 :style="{top:symbol.top+'px',left:symbol.left+'px'}"
+								 src="../../assets/images/fixation_img/bg/symbol.png"
+								 v-show="addStatus">
 					</div>
 					<p>{{$t('图片建议尺寸')}}:1000×800</p>
 				</div>
@@ -102,14 +102,14 @@
 					<span v-if="addType===1">{{$t('首页实体展示图配置')}}}</span>
 					<div class="flex-center">
 						<Select v-if="addType===1" :disabled="!isConfigDataSame"
-								v-model="property" style="width:200px"
-								@on-change="propertyChange">
+										v-model="property" style="width:200px"
+										@on-change="propertyChange">
 							<Option v-for="(item,index) in propertyList" :value="item.id" :key="index">{{ item.name }}
 							</Option>
 						</Select>
 						<uploadImg @changeImg="changeImg" :disabled="property === ''&&addType===1"
-								   v-if="currentWay.itype !== 'property'"
-								   :style="{marginLeft:addType===1?'20px':''}">{{$t('上传')}}
+											 v-if="currentWay.itype !== 'property'"
+											 :style="{marginLeft:addType===1?'20px':''}">{{$t('上传')}}
 						</uploadImg>
 					</div>
 					<span v-if="addType===1">{{$t('首页展示图出入口坐标配置')}}</span>
@@ -121,20 +121,21 @@
 							</Option>
 						</Select>
 						<Button type="primary" style="margin-left: 20px"
-								:disabled="!way" :loading="uploadLoading" @click="setClick">
+										:disabled="!way" :loading="uploadLoading" @click="setClick">
 							{{hasSymbol?$t('删除坐标'):$t('放置坐标')}}
 						</Button>
-						<Button v-if="addType === 3" :disabled="!way" style="margin-left: 20px" @click="previewClick">{{$t('预览')}}</Button>
+						<Button v-if="addType === 3" :disabled="!way" style="margin-left: 20px" @click="previewClick">{{$t('预览')}}
+						</Button>
 					</div>
 					<div class="part" v-if="['gate','store'].includes(currentWay.itype)">
 						<span>{{$t('是否为热力图')}}</span>
 						<i-switch :disabled="!way" :true-value="1" :false-value="0"
-								  v-model="configData.is_heatmap"></i-switch>
+											v-model="configData.is_heatmap"></i-switch>
 						<span>{{$t('是否为路径动线点')}}</span>
 						<i-switch :disabled="!way" :true-value="1" :false-value="0"
-								  v-model="configData.is_keypath"></i-switch>
+											v-model="configData.is_keypath"></i-switch>
 					</div>
-
+					
 					<div class="btn-box">
 						<Button type="primary" :disabled="!Object.keys(currentWay).length" @click="handleReset">{{$t('重置')}}
 						</Button>
@@ -150,18 +151,18 @@
 				<div ref="viewContainer" id="viewContainer">
 					<img v-if="cameraImageUrl" width="500" height="400" :src="cameraImageUrl">
 					<img width="500" height="400"
-						 v-else
-						 src="../../assets/images/fixation_img/bg/placeholder.jpg">
+							 v-else
+							 src="../../assets/images/fixation_img/bg/placeholder.jpg">
 					<template v-for="(node) in graphViewData.nodeList">
 						<flow-node
-								:id="node.id"
-								:key="'node'+node.id"
-								:node="node"
+							:id="node.id"
+							:key="'node'+node.id"
+							:node="node"
 						>
 						</flow-node>
 					</template>
 				</div>
-
+			
 			</div>
 		</imgconfig-modal>
 	</div>
@@ -189,16 +190,17 @@
     getConfigStructure,
     getCameraImageUrl
   } from '@/api/manager.js'
-  import { initMonthsData, deepTraversal, isEmpty,deepFind } from '@/libs/util'
+  import { initMonthsData, deepTraversal, isEmpty, deepFind } from '@/libs/util'
   import { getGroupOrganization } from '@/api/home.js'
   import uploadImg from '_c/common/uploadImg.vue'
+
   export default {
     name: 'entity',
-	provide(){
-      return{
-        getGateTypeList:()=>this.gateTypeList
-	  }
-	},
+    provide () {
+      return {
+        getGateTypeList: () => this.gateTypeList
+      }
+    },
     components: {
       uploadImg,
       imgconfigModal,
@@ -267,11 +269,11 @@
         switch2: true,
         configOriginData: {},//图片配置的原始数据
         configData: {},//图片配置的数据
-        graphViewData:{
-          nodeList:[]
-		},
-        storeImageUrl:'',//预览时显示的店铺图片
-		cameraImageUrl:'',
+        graphViewData: {
+          nodeList: []
+        },
+        storeImageUrl: '',//预览时显示的店铺图片
+        cameraImageUrl: '',
         jsPlumb: null,
       }
     },
@@ -304,24 +306,24 @@
       //图片配置的背景图
       configImage () {
         switch (this.addType) {
-		      case 1:
+          case 1:
             const property = _.find(this.propertyList, (o => {
               return o.id === this.property
             }))
             if (property) {
-              if(property.itype === 'company'){
+              if (property.itype === 'company') {
                 return require('@/assets/images/fixation_img/bg/map.png')
-              }else {
-                return property.map_url;
+              } else {
+                return property.map_url
               }
             }
-          break;
+            break
           case 2:
-            if (this.floorInfo[1]) return this.floorInfo[1].map_url;
-          break;
+            if (this.floorInfo[1]) return this.floorInfo[1].map_url
+            break
           case 3:
             return this.storeImageUrl
-          break;
+            break
         }
       },
       //当前选中的店铺或者出入口是否有symbol
@@ -342,7 +344,7 @@
       },
       //配置图片的数据是否发生了变化
       isConfigDataSame () {
-        return _.isEqual(JSON.stringify(this.configData),JSON.stringify(this.configOriginData))
+        return _.isEqual(JSON.stringify(this.configData), JSON.stringify(this.configOriginData))
       }
     },
     mounted () {
@@ -350,19 +352,19 @@
       this.$store.commit('setMall', { shoppingInfoDate: this.shoppingInfoDate })
     },
     methods: {
-      previewClick(){
-        getCameraImageUrl({line_id:this.currentWay.id}).then(res=>{
-		  this.cameraImageUrl = res.data.data.screen_capture
+      previewClick () {
+        getCameraImageUrl({ line_id: this.currentWay.id }).then(res => {
+          this.cameraImageUrl = res.data.data.screen_capture
         })
-        this.jsPlumb && this.jsPlumb.reset();
-        this.$refs.preview.showModal();
-        this.$nextTick(()=>{
-          this.formatGraphData([this.currentWay],'line')
+        this.jsPlumb && this.jsPlumb.reset()
+        this.$refs.preview.showModal()
+        this.$nextTick(() => {
+          this.formatGraphData([this.currentWay], 'line')
         })
 
       },
       // 加载流程图
-      loadEasyFlow() {
+      loadEasyFlow () {
         // 初始化节点
         for (var i = 0; i < this.graphViewData.nodeList.length; i++) {
           let node = this.graphViewData.nodeList[i]
@@ -377,7 +379,7 @@
           let connParam = {
             source: line.from,
             target: line.to,
-          };
+          }
           if (line.isLastLine) {
             connParam.overlays = [
               ['Arrow', {
@@ -392,12 +394,12 @@
           this.jsPlumb.connect(connParam, this.jsplumbConnectOptions)
         }
       },
-      jsPlumbInit() {
+      jsPlumbInit () {
         this.jsPlumb.ready(() => {
           // 导入默认配置
           this.jsPlumb.importDefaults(this.jsplumbSetting)
           // 会使整个jsPlumb立即重绘。
-          this.jsPlumb.setSuspendDrawing(false, true);
+          this.jsPlumb.setSuspendDrawing(false, true)
           // 初始化节点
           this.loadEasyFlow()
           this.jsPlumb.setContainer(this.$refs.viewContainer)
@@ -405,16 +407,16 @@
         })
       },
       //构造图形数据，type是polygon时需要闭合
-      formatGraphData(data, type) {
+      formatGraphData (data, type) {
         this.graphViewData = {
           nodeList: [],
           lineList: []
-        };
-        const imgWidth = this.$refs.viewContainer.offsetWidth;
-        const imgHeight = this.$refs.viewContainer.offsetHeight;
+        }
+        const imgWidth = this.$refs.viewContainer.offsetWidth
+        const imgHeight = this.$refs.viewContainer.offsetHeight
         data.forEach((o, i) => {
-          const specification = JSON.parse(o.line_specification);
-          const specificationLength = specification.length;
+          const specification = JSON.parse(o.line_specification)
+          const specificationLength = specification.length
           for (let j = 0; j < specificationLength; j++) {
             this.graphViewData.nodeList.push({
               graphId: o.id,//图形id
@@ -423,7 +425,7 @@
               top: Math.round(imgHeight * specification[j].y) + 'px',
               x: specification[j].x,
               y: specification[j].y
-            });
+            })
             if (j < specificationLength - 1) {
               this.graphViewData.lineList.push({
                 from: `${i}${j}`,
@@ -453,16 +455,16 @@
       //保存图片配置
       handleSave () {
         this.saveLoading = true
-		let image_type;
+        let image_type
         switch (this.addType) {
-		  case 1:
-            image_type = this.currentWay.itype === 'property' ? 'company' : 'property';
-            break;
-		  case 2:
-            image_type = 'floor';
-            break;
-		  case 3:
-            image_type = 'store';
+          case 1:
+            image_type = this.currentWay.itype === 'property' ? 'company' : 'property'
+            break
+          case 2:
+            image_type = 'floor'
+            break
+          case 3:
+            image_type = 'store'
             break
         }
         let data = {}
@@ -475,26 +477,26 @@
             data.bz_id = this.currentWay.bz_id
             break
           case 'floor':
-            data.bz_id = this.currentWay.id;
+            data.bz_id = this.currentWay.id
             break
           case 'store':
-            data.bz_id = this.storeInfo[2].id;
-            data.line_id = this.currentWay.id;
+            data.bz_id = this.storeInfo[2].id
+            data.line_id = this.currentWay.id
             break
         }
         data.image_type = image_type
-		//存储的坐标点应该是symbol的指向点
-        const img = this.$refs.img;
-        const configData = _.cloneDeep(this.configData);
-        configData.position_x = ((configData.position_x*img.offsetWidth+13.5) / img.offsetWidth).toFixed(4)
-        configData.position_y = ((configData.position_y*img.offsetHeight+35) / img.offsetHeight).toFixed(4)
+        //存储的坐标点应该是symbol的指向点
+        const img = this.$refs.img
+        const configData = _.cloneDeep(this.configData)
+        configData.position_x = ((configData.position_x * img.offsetWidth + 13.5) / img.offsetWidth).toFixed(4)
+        configData.position_y = ((configData.position_y * img.offsetHeight + 35) / img.offsetHeight).toFixed(4)
         data = _.merge(data, configData)
         configEntity(data).then(async res => {
-          this.$Message.success('保存成功');
-          if(this.currentWay.itype === 'property'){
+          this.$Message.success('保存成功')
+          if (this.currentWay.itype === 'property') {
             const orgData = await getGroupOrganization()
             this.$store.commit('saveOrganizationData', orgData.data.data)
-		  }
+          }
           //保存成功之后重新拉取数据库的数据，并展示当前选择的节点
           if (this.addType === 1) {
             this.imgConfig(this.way, this.property)
@@ -515,7 +517,7 @@
         })
         if (symbol) {
           //本来就有坐标
-          if (this.configOriginData.position_x>-1 && this.configOriginData.position_y>-1) {
+          if (this.configOriginData.position_x > -1 && this.configOriginData.position_y > -1) {
             symbol.left = this.configOriginData.position_x * img.offsetWidth
             symbol.top = this.configOriginData.position_y * img.offsetHeight
           } else {
@@ -525,7 +527,7 @@
             })
             this.symbolList.splice(index, 1)
           }
-        } else if (this.configOriginData.position_x>-1 && this.configOriginData.position_y>-1) {//本来有坐标，但是点了删除坐标时要恢复坐标
+        } else if (this.configOriginData.position_x > -1 && this.configOriginData.position_y > -1) {//本来有坐标，但是点了删除坐标时要恢复坐标
           const symbolNew = {
             id: this.currentWay.id,
             name: this.currentWay.name,
@@ -545,8 +547,8 @@
         })
         if (way) {
           this.configData = {
-            position_x: way.position_x?way.position_x:-1,
-            position_y: way.position_y?way.position_y:-1,
+            position_x: way.position_x ? way.position_x : -1,
+            position_y: way.position_y ? way.position_y : -1,
             is_heatmap: way.is_heatmap || 0,
             is_keypath: way.is_keypath || 0,
             map_url: this.configImage
@@ -569,13 +571,13 @@
           const imgContainer = this.$refs.imgContainer
           const left = event.x - 13.5 - modalEl.offsetLeft - imgContainer.offsetLeft
           const top = event.y - 20 - modalEl.offsetTop - imgContainer.offsetTop
-          symbol.left = left > (img.offsetWidth-27) ? (img.offsetWidth-27) : left < 0 ? 0 : left
-          symbol.top = top > (img.offsetHeight-35) ? (img.offsetHeight-35) : top < 0 ? 0 : top
+          symbol.left = left > (img.offsetWidth - 27) ? (img.offsetWidth - 27) : left < 0 ? 0 : left
+          symbol.top = top > (img.offsetHeight - 35) ? (img.offsetHeight - 35) : top < 0 ? 0 : top
         } else {
           const left = event.offsetX - 13.5
           const top = event.offsetY - 20
-          symbol.left = left > (img.offsetWidth-27) ? (img.offsetWidth-27) : left < 0 ? 0 : left
-          symbol.top = top > (img.offsetHeight-35) ? (img.offsetHeight-35) : top < 0 ? 0 : top
+          symbol.left = left > (img.offsetWidth - 27) ? (img.offsetWidth - 27) : left < 0 ? 0 : left
+          symbol.top = top > (img.offsetHeight - 35) ? (img.offsetHeight - 35) : top < 0 ? 0 : top
         }
         this.configData.position_x = (symbol.left / img.offsetWidth).toFixed(4)
         this.configData.position_y = (symbol.top / img.offsetHeight).toFixed(4)
@@ -586,9 +588,9 @@
         const orgData = await getConfigStructure()
         this.$refs.imgcofig.showModal()
         this.orgData = orgData.data.data
-        let floor,floorId;
+        let floor, floorId
         this.$nextTick(() => {
-          const img = this.$refs.img;
+          const img = this.$refs.img
           switch (this.addType) {
             case 1://购物中心
               this.orgData.forEach(o => {
@@ -609,50 +611,50 @@
               this.propertyChange(this.property, way)
               break
             case 2://楼层
-              floorId = this.floorInfo[1].id;
-              floor = deepFind(this.orgData,(o)=>{
+              floorId = this.floorInfo[1].id
+              floor = deepFind(this.orgData, (o) => {
                 return o.bz_id === floorId
-			  },'children')
+              }, 'children')
               this.wayList = _.compact(floor.store.concat(floor.gate))
-              this.wayList.forEach(o=>{
-                o.id = o.bz_id;
+              this.wayList.forEach(o => {
+                o.id = o.bz_id
                 //因为保存的时候存的是symbol的指向点，所以此时要恢复0,0,点坐标
-                if(o.position_x>-1&&!isEmpty(o.position_x)) o.position_x = ((o.position_x*img.offsetWidth-13.5)/img.offsetWidth).toFixed(4);
-                if(o.position_y>-1&&!isEmpty(o.position_y)) o.position_y = ((o.position_y*img.offsetHeight-35)/img.offsetHeight).toFixed(4);
-			  })
+                if (o.position_x > -1 && !isEmpty(o.position_x)) o.position_x = ((o.position_x * img.offsetWidth - 13.5) / img.offsetWidth).toFixed(4)
+                if (o.position_y > -1 && !isEmpty(o.position_y)) o.position_y = ((o.position_y * img.offsetHeight - 35) / img.offsetHeight).toFixed(4)
+              })
               this.way = way || this.wayList[0].id
               this.wayChange(this.way)
-              break;
-			case 3:
-              floorId = this.floorInfo[1].id;
-              floor = deepFind(this.orgData,(item)=>{
+              break
+            case 3:
+              floorId = this.floorInfo[1].id
+              floor = deepFind(this.orgData, (item) => {
                 return item.bz_id === floorId
-			  },'children');
+              }, 'children')
               const storeId = this.storeInfo[2].id
-			  const store = floor.store.find(o=>{
-			    return o.bz_id === storeId;
-			  })
-			  this.storeImageUrl = store.map_url;
-              this.wayList = store.line || [];
-              this.way = way || (this.wayList[0]&&this.wayList[0].id)
+              const store = floor.store.find(o => {
+                return o.bz_id === storeId
+              })
+              this.storeImageUrl = store.map_url
+              this.wayList = store.line || []
+              this.way = way || (this.wayList[0] && this.wayList[0].id)
               this.wayChange(this.way)
-              break;
+              break
           }
         })
       },
       changeImg (img) {
         switch (this.addType) {
-		  case 1:
+          case 1:
             const property = _.find(this.propertyList, (o => {
               return o.id === this.property
             }))
-            property.map_url = img;
-            break;
-		  case 2:
-            if (this.floorInfo[1]) this.floorInfo[1].map_url = img;
-            break;
-		  case 3:
-		    this.storeImageUrl = img
+            property.map_url = img
+            break
+          case 2:
+            if (this.floorInfo[1]) this.floorInfo[1].map_url = img
+            break
+          case 3:
+            this.storeImageUrl = img
         }
 
         this.configData.map_url = img
@@ -664,8 +666,8 @@
             return o.id === this.currentWay.id
           })
           this.symbolList.splice(index, 1)
-          this.configData.position_x =-1//'-1'代表删除了当前点
-          this.configData.position_y =-1
+          this.configData.position_x = -1//'-1'代表删除了当前点
+          this.configData.position_y = -1
         } else {//放置坐标
           this.addStatus = true
           const modalEl = document.getElementsByClassName('ivu-modal')[0]
@@ -694,12 +696,12 @@
           this.configData.position_y = (this.symbol.top / height).toFixed(4)
           this.symbolList.push(_.cloneDeep(this.symbol))
           this.addStatus = false
-        }else {
+        } else {
           console.log('cc')
         }
       },
       propertyChange (val, way) {
-        const img = this.$refs.img;
+        const img = this.$refs.img
         if (val.indexOf('company') > -1) {//选择的是集团
           //wayList是集团下的购物中心
           this.wayList = _.cloneDeep(this.propertyList).splice(1)
@@ -716,18 +718,18 @@
           })
         }
         this.wayList.forEach(o => {
-          if (val.indexOf('company') === -1) o.id = o.bz_id;
+          if (val.indexOf('company') === -1) o.id = o.bz_id
           //因为保存的时候存的是symbol的指向点，所以此时要恢复0,0,点坐标
-          if(o.gate_position_x>-1&&!isEmpty(o.gate_position_x)) {
-            o.position_x = ((o.gate_position_x*img.offsetWidth-13.5)/img.offsetWidth).toFixed(4);
-		  }else {
+          if (o.gate_position_x > -1 && !isEmpty(o.gate_position_x)) {
+            o.position_x = ((o.gate_position_x * img.offsetWidth - 13.5) / img.offsetWidth).toFixed(4)
+          } else {
             o.position_x = o.gate_position_x
           }
-          if(o.gate_position_y>-1&&!isEmpty(o.gate_position_y)) {
-            o.position_y = ((o.gate_position_y*img.offsetHeight-35)/img.offsetHeight).toFixed(4);
-		  }else {
+          if (o.gate_position_y > -1 && !isEmpty(o.gate_position_y)) {
+            o.position_y = ((o.gate_position_y * img.offsetHeight - 35) / img.offsetHeight).toFixed(4)
+          } else {
             o.position_y = o.gate_position_y
-		  }
+          }
         })
         this.way = way || this.wayList[0].id
         this.wayChange(this.way)
@@ -736,7 +738,7 @@
       getSymbolList () {
         if (!this.wayList.length) return
         const wayList = this.wayList.filter(o => {
-          return o.position_x>-1 && o.position_y>-1 && !isEmpty(o.position_x) && !isEmpty(o.position_y)
+          return o.position_x > -1 && o.position_y > -1 && !isEmpty(o.position_x) && !isEmpty(o.position_y)
         })
         const img = this.$refs.img
         return wayList.map(o => {
@@ -776,64 +778,64 @@
       },
       getData () {
         this.id = this.$route.params.id
-        getDataEntity().then(res=> {
+        getDataEntity().then(res => {
           this.entity = res.data.data.zone_type[0].id
           this.floor_entity = res.data.data.zone_type[1].id
-		  this.gateTypeList = res.data.data.gate_type;
-          getbusinessDate(52).then( resd=>{
-              if (resd.data.code == 200) {
-                this.type = resd.data.data.length > 0 ? 2 : 1
-                this.isEmptyPage = false
-                let temp = resd.data.data
-                if (this.$store.state.user.role_id < 3) {
-                  this.treeData = this.addValuesToEle(temp)
-                } else {
-                  let checklist = this.$store.state.user.checklist
-                  if (checklist) {
-                    temp = temp.map(mm =>{
-                      if (checklist.indexOf(mm.property_id) > -1) return mm
-                    })
-                  }
-                  this.treeData = this.addValuesToEle(temp)
-                }
-                this.cascaderCanshow = true
-                if (this.defaultValue.length === 0) {
-                  if (this.treeData[0]) {
-                    this.defaultValue = [this.treeData[0].value]
-                    this.caseDidChange([this.treeData[0].value], [this.treeData[0]])
-                  }
-                } else {
-                  let dataArr = []
-                  let propertyData, floorData, storeData
-                  this.defaultValue.forEach((list, index) => {
-                    switch (index) {
-                      case 0:
-                        propertyData = _.find(this.treeData, (val) => {
-                          return val.value === list
-                        })
-                        dataArr.push(propertyData)
-                        break
-                      case 1:
-                        floorData = _.find(propertyData.children, (val) => {
-                          return val.value === list
-                        })
-                        dataArr.push(floorData)
-                        break
-                      case 2:
-                        storeData = _.find(floorData.children, (val) => {
-                          return val.value === list
-                        })
-                        dataArr.push(storeData)
-                        break
-                    }
-                  })
-                  this.caseDidChange(this.defaultValue, dataArr)
-                }
-                this.mallList = this.treeData
+          this.gateTypeList = res.data.data.gate_type
+          getbusinessDate(52).then(resd => {
+            if (resd.data.code == 200) {
+              this.type = resd.data.data.length > 0 ? 2 : 1
+              this.isEmptyPage = false
+              let temp = resd.data.data
+              if (this.$store.state.user.role_id < 3) {
+                this.treeData = this.addValuesToEle(temp)
               } else {
-                this.type = 1
+                let checklist = this.$store.state.user.checklist
+                if (checklist) {
+                  temp = temp.map(mm => {
+                    if (checklist.indexOf(mm.property_id) > -1) return mm
+                  })
+                }
+                this.treeData = this.addValuesToEle(temp)
               }
-            })
+              this.cascaderCanshow = true
+              if (this.defaultValue.length === 0) {
+                if (this.treeData[0]) {
+                  this.defaultValue = [this.treeData[0].value]
+                  this.caseDidChange([this.treeData[0].value], [this.treeData[0]])
+                }
+              } else {
+                let dataArr = []
+                let propertyData, floorData, storeData
+                this.defaultValue.forEach((list, index) => {
+                  switch (index) {
+                    case 0:
+                      propertyData = _.find(this.treeData, (val) => {
+                        return val.value === list
+                      })
+                      dataArr.push(propertyData)
+                      break
+                    case 1:
+                      floorData = _.find(propertyData.children, (val) => {
+                        return val.value === list
+                      })
+                      dataArr.push(floorData)
+                      break
+                    case 2:
+                      storeData = _.find(floorData.children, (val) => {
+                        return val.value === list
+                      })
+                      dataArr.push(storeData)
+                      break
+                  }
+                })
+                this.caseDidChange(this.defaultValue, dataArr)
+              }
+              this.mallList = this.treeData
+            } else {
+              this.type = 1
+            }
+          })
         }).catch(err => {
           console.log(err)
         })
@@ -1241,7 +1243,7 @@
 			font-size: 14px;
 			font-family: "source_han_sans_cn", "Roboto", sans-serif;
 		}
-
+		
 		position: relative;
 		padding: 32px;
 		background: rgba(255, 255, 255, 1);
@@ -1251,19 +1253,20 @@
 		border-radius: 6px;
 		-moz-border-radius: 6px;
 		-webkit-border-radius: 6px;
-
+		
 		.stall-header-right {
 			position: absolute;
 			top: 40px;
 			right: 20px;
 			margin-top: 3.5px;
+			
 			span {
 				float: left;
 				width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+				height: 24px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
 				border-radius: 50%;
 				text-align: center;
 				font-size: 16px;
@@ -1272,19 +1275,19 @@
 				cursor: pointer;
 				margin-top: 9px;
 				background-color: #00A0E9;
-
+				
 				&:nth-child(1) {
 					margin-top: 9px;
 					background-color: #2BD9CF;
 				}
-
+				
 				&:nth-child(2) {
 					margin-top: 9px;
 					background-color: #FEB33D;
 				}
 			}
 		}
-
+		
 		.entity-query {
 			width: 103px;
 			height: 50px;
@@ -1303,12 +1306,13 @@
 			cursor: pointer;
 		}
 	}
-
+	
 	.cascader {
 		width: 230px;
+		
 		.ivu-input-wrapper {
 			width: 100%;
-
+			
 			.ivu-input {
 				width: 230px;
 				height: 43px;
@@ -1317,75 +1321,81 @@
 			}
 		}
 	}
-
+	
 	[v-cloak] {
 		display: none;
 	}
-
+	
 	.img-config {
 		display: flex;
 		align-items: start;
-
+		
 		.add-symbol {
 			position: absolute;
 			cursor: pointer;
 			z-index: 9999999999999999;
 		}
-		.part:nth-child(1){
+		
+		.part:nth-child(1) {
 			width: 65%;
 		}
-		.part:nth-child(2){
+		
+		.part:nth-child(2) {
 			flex: 1;
 		}
+		
 		.part {
 			display: flex;
 			flex-direction: column;
-
+			
 			span {
 				font-size: 14px;
 			}
-
+			
 			.img-container {
 				position: relative;
 				font-size: 0;
-				.img-bg{
+				
+				.img-bg {
 					width: 100%;
 					height: 500px;
 				}
+				
 				.symbol {
 					position: absolute;
 				}
 			}
-
+			
 			.flex-center {
 				display: flex;
 				align-items: center;
 			}
-
+			
 			.btn-box {
 				text-align: right;
 				margin-top: 20px;
-
+				
 				> * + * {
 					margin-left: 20px;
-
+					
 				}
 			}
-
+			
 			> * + * {
 				margin-top: 10px;
 			}
 		}
-
+		
 		.part + .part {
 			margin-left: 20px;
 		}
 	}
+	
 	#viewContainer {
 		position: relative;
 		width: 100%;
-
-		img{
+		
+		img {
 			margin: 0 auto;
 		}
 	}

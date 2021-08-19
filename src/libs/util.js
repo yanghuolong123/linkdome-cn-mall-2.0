@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie'
+import i18n from '../i18n/i18n'
 // cookie保存的天数
 // import { forEach, hasOneOf} from '@/libs/tools'
 import Moment from 'moment'
@@ -151,14 +152,14 @@ export const validateTel = (rule, value, callback) => {
      */
 export const validateSelectMore = (rule, value, callback) => {
   if (value === undefined || value === '' || value.length < 1) {
-    callback(new Error('请选择'))
+    callback(new Error(i18n.t('holder.请选择')))
   } else {
     callback()
   }
 }
 export const validName = (rule, value, callback) => {
   if (value === undefined || value === '') {
-    callback(new Error('名称不能为空'))
+    callback(new Error(i18n.t('名称不能为空')))
   } else if (value.length > 10) {
     callback(new Error('最多输入10个字符'))
   } else {

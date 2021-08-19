@@ -26,7 +26,7 @@
             v-for="(item,index) in navList"
             @click="handleClick(index,item)"
             :key="index"
-            :title="iconTitle[item.icon] ? iconTitle[item.icon] : ''">
+            :title="$t(iconTitle[item.icon] ? iconTitle[item.icon] : '')">
             <span class="navitemIcon">
               <icons
                 :type="item.icon"

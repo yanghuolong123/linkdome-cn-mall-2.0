@@ -12,7 +12,7 @@
         name="file">
           <Button v-show ="showUpload" type="primary" :disabled="disabled" class="buttons">
             <Icon type="md-cloud-upload"  />
-            <slot>{{$t('上传头像')}}</slot>
+            <slot>{{$t('上传')}}</slot>
           </Button>
       </Upload>
       <!-- <div style="text-align:center;">

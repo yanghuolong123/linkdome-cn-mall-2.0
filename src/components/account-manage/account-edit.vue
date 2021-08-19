@@ -178,9 +178,9 @@ export default {
     if (value === undefined || value === '') {
     callback(new Error(this.$t('用户名不能为空')))
     } else if (value.length < 2) {
-    callback(new Error(this.$t('用户名长度不得小于2个字符')))
+    callback(new Error(this.$t('长度不得小于2个字符')))
     } else if (value.length > 10) {
-    callback(new Error(this.$t('用户名不得大于10个字符')))
+    callback(new Error(this.$t('最多输入10个字符')))
     } else {
     callback()
     }
@@ -190,9 +190,9 @@ export default {
     if (value === undefined || value === '' || value === null) {
     callback()
     } else if (value.length < 2) {
-    callback(new Error(this.$t('用户姓名长度不得小于2个字符')))
+    callback(new Error(this.$t('长度不得小于2个字符')))
     } else if (value.length > 10) {
-    callback(new Error(this.$t('用户姓名不得大于10个字符')))
+    callback(new Error(this.$t('最多输入10个字符')))
     } else {
     callback()
     }

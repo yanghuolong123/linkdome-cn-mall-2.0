@@ -6,7 +6,8 @@
 		name:'LanguageBtn',
 		methods:{
 			changeLang(){
-				this.$i18n.locale = (this.$i18n.locale == 'zh-CN') ? 'en-US' : 'zh-CN'
+				this.$i18n.locale = (this.$i18n.locale == 'zh-CN') ? 'en-US' : 'zh-CN';
+        this.$store.commit('UPDATE_LANG', this.$i18n.locale)
 				document.title = this.$t('mainTitle')
 			},
 		},

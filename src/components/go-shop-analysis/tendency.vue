@@ -88,19 +88,11 @@
         :tableList='goTableList'
       ></table-default>
     </div>
-    <alert
-      v-if="isAlert"
-      @closeAlert ='closeAlert'
-      @alertConfirm ='alertConfirm'
-      :alertText='alertText'
-    ></alert>
   </div>
 </template>
 <script>
 import TableDefault from '@/views/ui-elements/table/TableDefault.vue'
-import alert from '@/components/alert.vue'
 import VueApexCharts from 'vue-apexcharts'
-import { getBussinessTree, getBussinessCommon } from '@/api/passenger'
 import { getCascadeList } from '@/api/passenger.js'
 import { goShopTrend } from '@/api/analysis'
 import { goShowFlowTend ,exportEx} from '@/api/home.js'
@@ -113,8 +105,6 @@ export default {
   components: {
     TableDefault,
     VueApexCharts,
-    alert
-
   },
   data () {
     return {
@@ -190,7 +180,7 @@ export default {
           },
           yaxis: {
             title: {
-              text: '百分比（%）'
+              text: this.$t('百分比')+'（%）'
             },
             labels: {
               show: true,
@@ -238,7 +228,7 @@ export default {
           colors: ['#33B3ED', '#2BD9CF', '#94E2FF', '#FBAB40', '#8D82F0', '#E8585A'],
           yaxis: {
             title: {
-              text: '百分比（%）'
+              text: this.$t('百分比')+'（%）'
             },
             tickAmount: 5,
             // min: 0,
@@ -282,13 +272,6 @@ export default {
         time1: '',
         time2: '',
         id: ''
-      },
-      isAlert: false,
-      alertText: {
-        title: '',
-        text: '',
-        bg: '',
-        confirm: false
       },
     }
   },
@@ -400,15 +383,21 @@ export default {
       else range = 'Date'
       // 提示
       if (that.activities.length === 0) {
-        this.alertShow('商铺不能为空，请选择商铺')
+        this.$alert({
+          content:this.$t('fn.请选择',[this.$t('商铺')])
+        })
         return false
       }
       if (that.activities.length > 25) {
-        this.alertShow('商铺个数不能超过25个，请重新选择')
+        this.$alert({
+          content:this.$t('fn.entityLimit',[25])
+        })
         return false
       }
       if(time1===time2){
-        this.alertShow('对比时间相等,请重新选择时间')
+        this.$alert({
+          content:this.$t('compareTimeSame')
+        })
         return false
       }
       var listId = _.clone(that.activities)
@@ -519,11 +508,9 @@ export default {
       let allData
       if (value1 > value2) allData = Object.values(date1)[0]
       else allData = Object.values(date2)[0]
-      let dateType
-      type == 'Month' ? dateType = '月' : dateType = '天'
-      allData.map(function (d, index) {
+      allData.map( (d, index)=> {
         var size = Number(index) + 1
-        var num = '第' + size + dateType
+        var num = type == 'Month' ?this.$t('fn.第_月',[ size ]):this.$t('fn.第_天',[ size])
         that.lineData.chartOptions.xaxis.categories.push(num)
         that.graphData.chartOptions.xaxis.categories.push(num)
       })
@@ -575,10 +562,10 @@ export default {
       if (value1 > value2) {
         var list = Object.values(date1)
         var listTwo = Object.values(date2)
-        list[0].map(function (listData, listIndex) {
+        list[0].map((listData, listIndex)=> {
           var tableObj = {}
           var size = listIndex + 1
-          tableObj.name = '第' + size + dateType
+          tableObj.name = type == 'Month' ?this.$t('fn.第_月',[ size ]):this.$t('fn.第_天',[ size])
           tableObj.percentList = []
           list.map(function (all, allIdnex) {
             var d = list[allIdnex][listIndex].rate
@@ -589,7 +576,7 @@ export default {
             var td = listTwo[allIdnex][listIndex]
             var sizeT
             if (td) {
-              sizeT = td === 0 ? '0' : NP.times(td.rate, 100) 
+              sizeT = td === 0 ? '0' : NP.times(td.rate, 100)
             } else {
               sizeT = ' '
             }
@@ -600,10 +587,10 @@ export default {
       } else {
         var list = Object.values(date2)
         var listTwo = Object.values(date1)
-        list[0].map(function (listData, listIndex) {
+        list[0].map((listData, listIndex) =>{
           var tableObj = {}
           var size = listIndex + 1
-          tableObj.name = '第' + size + dateType
+          tableObj.name = type == 'Month' ?this.$t('fn.第_月',[ size ]):this.$t('fn.第_天',[ size])
           tableObj.percentList = []
           list.map(function (all, allIdnex) {
             var td = listTwo[allIdnex][listIndex]
@@ -696,8 +683,6 @@ export default {
         this.iconIndex = index
       }
     },
-    alertConfirm () { this.isAlert = false },
-    closeAlert () { this.isAlert = false },
     shopActionList (value) {
       var that = this
       let totalLength = that.activitiesType.length
@@ -718,13 +703,6 @@ export default {
         this.selectAll = 1
         that.activities = arr
       }
-    },
-    alertShow(text){
-      this.isAlert = true
-      this.alertText.bg = '#00A0E9'
-      this.alertText.title = '趋势分析'
-      this.alertText.text = text
-      this.alertText.confirm = false
     },
     gotInnerRange (date) {
       const [start, end] = date

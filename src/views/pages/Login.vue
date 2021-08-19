@@ -26,7 +26,7 @@
 			<Button class="login-btn" :loading="loading" type="primary" @click="handleLogin('formValidate')">{{ $t('login') }}</Button>
 		</div>
 		<div class="bottom">
-			浙ICP备20009188号-1 浙江凌图科技有限公司 Copyright 2019-{{currentYear}}
+			浙ICP备20009188号-1 苏州凌图科技有限公司 Copyright 2019-{{currentYear}}
 		</div>
 		<vs-alert :active="isalert" color="danger" icon-pack="feather" icon="icon-info">
 			<span>{{alertText}}</span>

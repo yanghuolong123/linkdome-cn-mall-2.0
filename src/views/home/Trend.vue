@@ -282,14 +282,14 @@ export default {
         switch (type) {
           case 'enter':
           case 'occupancy':
-            name = '人次'
+            name = this.$t('人次')
             break
           case 'SquaerMetre':
-            name = '元/m²'
+            name = this.$t('元/m²')
             break
           case 'UnitPrice':
           case 'SaleAmount':
-            name = '元'
+            name = this.$t('元')
             break
           case 'CloseRate':
             name = '%'
@@ -377,7 +377,7 @@ export default {
         _.forIn(tml, (val, key) => {
           val.total = {}
           let series = val.series[0]
-          if(series) val.total[`${series.key}`] = _.sum(series.data).toLocaleString() 
+          if(series) val.total[`${series.key}`] = _.sum(series.data).toLocaleString()
         })
         this.chartData = tml
         this.canshow = true
