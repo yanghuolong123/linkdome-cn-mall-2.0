@@ -220,8 +220,8 @@ export default {
         this.changeTableList = this.disorderChangeTable
         // 关联度
         this.relevanceSeniority = this.disorderRelevancyRanking
-        this.tableName = ['', '', '关联度']
-        this.changeTableName = ['', '', '转换量']
+        this.tableName = ['实体名称', '实体名称', '关联度']
+        this.changeTableName = ['实体名称', '实体名称', '转换量']
       } else {
         // 转化量
         this.changeTableList = this.orderlyChangeTable

@@ -15,7 +15,7 @@ export default [
     component: main,
     meta: {
       icon: 'HomeIcon',
-       title: '客流分析asd'
+       title: '客流分析'
     },
     name: 'Dashboard',
     redirect: '/dashboard/analytics',
@@ -117,7 +117,7 @@ export default [
           breadcrumb: [
             { title: '客流分析', url: '/' },
             { title: '客流分析', url: '/footfall' },
-            { title: '有效客流分析', active: false },
+            { title: '有效客流分析', active: true },
           ],
           pageTitle: '有效客流分析'
         }
@@ -131,7 +131,7 @@ export default [
           breadcrumb: [
             { title: '客流分析', url: '/' },
             { title: '客流分析', url: '/footfall' },
-            { title: '排队货架分析', active: false },
+            { title: '排队货架分析', active: true },
           ],
           pageTitle: '排队货架分析'
         }
@@ -143,10 +143,10 @@ export default [
   {
     path: '/generatrix',
     component: main,
-    redirect: '/generatrix/analytics',
+    redirect: '/generatrix/relevance',
     meta: {
       icon: 'GitMergeIcon',
-      pageTitle: '客流分析'
+      pageTitle: '顾客行为分析'
     },
     name: 'Generatrix',
     children: [{ // 关联分析
@@ -157,7 +157,7 @@ export default [
       meta: {
         breadcrumb: [
           { title: '客流分析', url: '/' },
-          { title: '客流分析', url: '/footfall' },
+          { title: '顾客行为分析', url: '/generatrix' },
           { title: '关联分析', active: true },
         ],
         pageTitle: '关联分析'
@@ -171,7 +171,7 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'DashBoard', url: '/dashboard' },
-            { title: '客流分析', url: '/footfall' },
+            { title: '顾客行为分析', url: '/generatrix' },
             { title: '交叉客流分析', active: true },
           ],
           pageTitle: '交叉客流分析'
@@ -199,7 +199,7 @@ export default [
         meta: {
           breadcrumb: [
             { title: '客流分析', url: '/' },
-            { title: '客流分析', url: '/footfall' },
+            { title: '顾客行为分析', url: '/generatrix' },
             { title: '路径动向分析', active: true },
           ],
           pageTitle: '路径动向分析'
@@ -213,7 +213,7 @@ export default [
         meta: {
           breadcrumb: [
             { title: '客流分析', url: '/' },
-            { title: '客流分析', url: '/footfall' },
+            { title: '顾客行为分析', url: '/generatrix' },
             { title: '路径动向分析', active: true },
           ],
           pageTitle: '路径动向分析'
@@ -227,7 +227,7 @@ export default [
         meta: {
           breadcrumb: [
             { title: '客流分析', url: '/' },
-            { title: '客流分析', url: '/footfall' },
+            { title: '顾客行为分析', url: '/generatrix' },
             { title: '实体引流分析', active: true },
           ],
           pageTitle: '实体引流分析'
@@ -241,8 +241,8 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'DashBoard', url: '/dashboard' },
-            { title: '客流分析', url: '/footfall' },
-            { title: '停留时间分析', active: false },
+            { title: '顾客行为分析', url: '/generatrix' },
+            { title: '停留时间分析', active: true },
           ],
           pageTitle: '停留时间分析'
         }
@@ -266,7 +266,7 @@ export default [
       meta: {
         breadcrumb: [
           { title: 'Analytics', url: '/dashboard/analytics' },
-          { title: '运营分析' },
+          { title: '运营分析', url: '/operation' },
           { title: '目标达成分析', active: true },
         ],
         pageTitle: '目标达成分析',
@@ -281,7 +281,7 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '运营分析' },
+            { title: '运营分析', url: '/operation' },
             { title: '节假日活动分析', active: true },
           ],
           pageTitle: '节假日活动分析'
@@ -296,7 +296,7 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '运营分析' },
+            { title: '运营分析', url: '/operation' },
             { title: '销售分析', active: true },
           ],
           pageTitle: '销售分析'
@@ -304,13 +304,13 @@ export default [
       },
       { // 店铺画像
         path: 'shopPortrait',
-        name: 'shopPortrait',
+        name: 'ShopPortrait',
         component: () =>
           import ('@/views/operation/ShopPortrait.vue'),
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '运营分析' },
+            { title: '运营分析', url: '/operation' },
             { title: '店铺画像', active: true },
           ],
           pageTitle: '店铺画像'
@@ -324,7 +324,7 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '运营分析' },
+            { title: '运营分析', url: '/operation' },
             { title: '销售分析', active: true },
           ],
           pageTitle: '销售分析'
@@ -332,13 +332,13 @@ export default [
       },
       { // 调铺分析
         path: 'changeStore',
-        name: 'changeStore',
+        name: 'ChangeStore',
         component: () =>
           import ('@/views/operation/ChangeStore.vue'),
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '运营分析' },
+            { title: '运营分析', url: '/operation' },
             { title: '调铺效果分析', active: true },
           ],
           pageTitle: '调铺效果分析'
@@ -352,7 +352,7 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '运营分析' },
+            { title: '运营分析', url: '/operation' },
             { title: '商品分析', active: true },
           ],
           pageTitle: '商品分析'
@@ -378,7 +378,7 @@ export default [
 				meta: {
 					breadcrumb: [
 						{ title: 'Analytics', url: '/dashboard/analytics' },
-						{ title: '报告详情' },
+						{ title: '报告详情', url: '/report'},
 						{ title: '门店日报', active: true },
 					],
 					pageTitle: '门店日报',
@@ -392,7 +392,7 @@ export default [
 				meta: {
 					breadcrumb: [
 						{ title: 'Analytics', url: '/dashboard/analytics' },
-						{ title: '报告详情' },
+            { title: '报告详情', url: '/report'},
 						{ title: '日报', active: true },
 					],
 					pageTitle: '日报',
@@ -406,7 +406,7 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '报告详情' },
+            { title: '报告详情', url: '/report'},
             { title: '周报', active: true },
           ],
           pageTitle: '周报',
@@ -420,7 +420,7 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '报告详情' },
+            { title: '报告详情', url: '/report'},
             { title: '月报', active: true },
           ],
           pageTitle: '月报',
@@ -434,7 +434,7 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '报告详情' },
+            { title: '报告详情', url: '/report'},
             { title: '自定义报告', active: true },
           ],
           pageTitle: '自定义报告',
@@ -460,7 +460,7 @@ export default [
 				meta: {
 					breadcrumb: [
 						{ title: 'Analytics', url: '/dashboard/analytics' },
-						{ title: '后台管理' },
+						{ title: '后台管理', url: '/admin' },
 						{ title: '实体管理', active: true },
 					],
 					pageTitle: '实体管理',
@@ -476,7 +476,7 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '后台管理' },
+            { title: '后台管理', url: '/admin' },
             { title: '节假日活动管理', active: true },
           ],
           pageTitle: '节假日活动管理'
@@ -490,7 +490,7 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '后台管理' },
+            { title: '后台管理', url: '/admin' },
             { title: '账户管理', active: true },
           ],
           pageTitle: '账户管理',
@@ -505,7 +505,7 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '后台管理' },
+            { title: '后台管理', url: '/admin' },
             { title: '权限管理', active: true },
           ],
           pageTitle: '权限管理',

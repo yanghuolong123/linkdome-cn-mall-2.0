@@ -15,9 +15,9 @@
             <Input type ="text" v-model="formData.name" :placeholder="$t('holder.请输入角色')"></Input>
           </FormItem>
           <FormItem :label="$t('角色归属于')" prop="property" >
-            <i-select v-model="formData.property" @on-change="getItemValue" :placeholder="$t('holder.请选择')">
-              <i-option v-for="item in propertyLists" :value="item.value" :key="item.value">{{item.label}}</i-option>
-            </i-select>
+            <Select v-model="formData.property" @on-change="getItemValue" :placeholder="$t('holder.请选择')">
+              <Option v-for="item in propertyLists" :value="item.value" :key="item.value">{{item.label}}</Option>
+            </Select>
           </FormItem>
           <FormItem :label="$t('角色描述')" prop="description" :label-width="110">
             <Input  type="textarea" v-model="formData.description" :rows="4"></Input>
@@ -60,22 +60,17 @@ export default {
       id: '',
       formData: {
         name: '',
-        property: 0,
+        property:'',
         description: ''
       },
       ruleInline: {
         name: [{
           required: true,
-          message: '请输入长度为2-8的角色名称',
+          message: this.$t('请输入长度为2-8的角色名称'),
           trigger: 'blur',
           max: 8,
           min: 2
         } ],
-        property: [{
-          required: true,
-          message: '至少选择一项'
-
-        }]
       }
     }
   },
@@ -144,6 +139,10 @@ export default {
       })
     },
     closeEdit () {
+      for(let key in this.formData){
+        this.formData[key] = ''
+      }
+      this.$refs.formData.resetFields()
       this.$emit('closeEdit')
     },
     getItemValue (val) {
@@ -158,15 +157,11 @@ export default {
       data.metric_privilege = ''
       if (!that.isModify) {
         data.pages_privilege = ''
-        addRoles(data).then(function (res) {
+        addRoles(data).then( (res)=> {
           if (res.data.code == 200) {
-            that.closeEdit()
-            var alertText = {}
-            alertText.bg = '#00A0E9'
-            alertText.title = that.editTitle
-            alertText.text = '添加角色成功'
-            alertText.confirm = false
-            that.$emit('alertMessage', alertText)
+            this.$message.success(this.$t('fn.successTo',[this.$t('添加')]))
+            this.$emit('success')
+            this.closeEdit()
           }
         })
       } else {
@@ -188,15 +183,10 @@ export default {
         pages_privilege.sort()
         data.pages_privilege = pages_privilege.join(',')
         data.id = that.id
-        updateRoles(data).then(function (res) {
+        updateRoles(data).then((res)=> {
           if (res.data.code == 200) {
-            that.closeEdit()
-            var alertText = {}
-            alertText.bg = '#00A0E9'
-            alertText.title = that.editTitle
-            alertText.text = '编辑角色成功'
-            alertText.confirm = false
-            that.$emit('alertMessage', alertText)
+            this.$message.success(this.$t('fn.successTo',[this.$t('编辑')]))
+            this.closeEdit()
           }
         })
       }

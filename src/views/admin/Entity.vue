@@ -99,7 +99,7 @@
 				</div>
 				<div class="part">
 					<span>{{$t('操作')}}</span>
-					<span v-if="addType===1">{{$t('首页实体展示图配置')}}}</span>
+					<span v-if="addType===1">{{$t('首页实体展示图配置')}}</span>
 					<div class="flex-center">
 						<Select v-if="addType===1" :disabled="!isConfigDataSame"
 										v-model="property" style="width:200px"

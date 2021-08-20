@@ -5,7 +5,10 @@
      </div>
      <div class="box-card bg-white">
         <template v-if="chartType ==='bar'">
-          <chart-tabs :title="formatTitle" :xAxis="rightXaxis" :series="rightValue" :type="['bar']" horizonta></chart-tabs>
+          <chart-tabs :title="formatTitle"
+                      :xAxis="rightXaxis"
+                      :series="rightValue"
+                      :type="['bar']" horizonta></chart-tabs>
         </template>
         <template v-else>
           <div class= "pieTitle">{{$t('客流占比')}}</div>
@@ -64,16 +67,6 @@ export default {
       current: 0,
       businessCurrent: 0,
       rightTabCurrent: 0,
-      columns: [
-        {
-          title: '名称',
-          key: 'name'
-        },
-        {
-          title: '客流量',
-          key: 'enter'
-        }
-      ],
       colors: ['#42efe9'],
       leftXaxis: [],
       leftSeries: [],
@@ -120,6 +113,7 @@ export default {
           followCursor: true,
           y: {
             formatter: function (val) {
+              console.log(val)
               return Number(val).toLocaleString()
             }
           }
@@ -297,7 +291,7 @@ export default {
         })
       })
       series = [{
-        name: '客流量',
+        name: this.$t('客流量'),
         data: seriesData,
         showInLegend: false
       }]

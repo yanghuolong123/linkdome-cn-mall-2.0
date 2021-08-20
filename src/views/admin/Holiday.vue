@@ -30,7 +30,7 @@
             </div>
         </div>
         <holidayEdit
-            ref = "editActive"
+            ref="editActive"
             @initData="initData"
         ></holidayEdit>
         <alert
@@ -314,7 +314,7 @@ export default {
     z-index: 1;
   }
 </style>
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .holiday{
   .headerSelect{
     position: relative;

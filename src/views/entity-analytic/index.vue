@@ -15,7 +15,7 @@
 				<i-switch
 						:disabled="(oParams && oParams.isSingleDay())||(enterSelect.length>1&&(oParams&&oParams.params.entitys.length>1))"
 						v-if="oParams && !oParams.isDateCompare()"
-						class="ml-20"
+						class="ml-20 switch"
 						size="large"
 						@on-change="compareTypeChange" v-model="isHour">
 					<span slot="open">{{ $t('小时') }}</span>
@@ -353,14 +353,18 @@
 		.quota {
 			font-size: 14px;
 			margin-right: 50px;
-			width: 360px;
 			word-break: keep-all;
-			&-label {
-				width: 25rem;
+			white-space: nowrap;
+			.quota-label {
+				margin-right: 20px;
       }
-			.ml-20 {
-				width: 100px;
+
+			.switch {
+				width: 145px;
 				margin-left: 20px;
+				&.ivu-switch-large.ivu-switch-checked:after{
+					left: 50px;
+				}
 			}
 		}
 	}

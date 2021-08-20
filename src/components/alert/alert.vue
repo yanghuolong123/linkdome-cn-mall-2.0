@@ -6,10 +6,12 @@
 				<div class="alert-close" v-on:click="closeAlert">
 					<Icon type="md-close"/>
 				</div>
-				<header>{{ title }}</header>
+				<header>{{ i18n.t(title) }}</header>
 				<div class="alert-center-text">{{content}}</div>
 				<div class="flooter">
-					<Button type="primary" :style="{'background-color':color}" @click="alertConfirm">确定</Button>
+					<Button type="text" @click="closeAlert" v-if="showCancel">{{i18n.t('取消')}}</Button>
+					<Button type="primary" class="m-l-20" :style="{'background-color':color}" @click="alertConfirm">{{i18n.t('确定')}}</Button>
+				
 				</div>
 			</div>
 		</div>
@@ -17,6 +19,7 @@
 </template>
 
 <script>
+  import i18n from '@/i18n/i18n'
   export default {
     data () {
       return {
@@ -30,7 +33,10 @@
     computed:{
       showCancel(){
         return this.cancel
-      }
+      },
+      i18n(){
+        return i18n
+			}
     },
     methods: {
       closeAlert () {

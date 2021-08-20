@@ -48,6 +48,8 @@ import tabItem from '_c/I-Tabs/TabItem.vue'
 import VueApexCharts from 'vue-apexcharts'
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import iTabs from '_c/I-Tabs/Itabs.vue'
+import i18n from '@/i18n/i18n'
+
 import golaEnterAnalysis from '@/components/goal-achievement/enterAnalysis.vue'
 export default {
   name: 'goalCharts',
@@ -74,7 +76,7 @@ export default {
     },
     columns: {
       type: Array,
-      default: () => ['日期', '客流量 ( 人次 )', '目标客流量 ( 人次 )']
+      default: () => ['日期', i18n.t('fn.EnterUnit',[i18n.t('人次')]), i18n.t('fn.TargetEnterUnit',[i18n.t('人次')])]
     },
     tableList: {
       type: Array,

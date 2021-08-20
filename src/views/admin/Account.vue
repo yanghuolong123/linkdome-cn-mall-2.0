@@ -37,25 +37,17 @@
       </div>
     </div>
     <account-edit
-      v-if="isEdit"
-      @closeEdit ='closeEdit'
-      @editData ='editData'
+     ref="accoutModal"
+      @success='initData'
       :editData ='dataList'
       :roleList="roleList"
       :organization="organization"
     ></account-edit>
-    <alert
-      v-if="isAlert"
-      @closeAlert ='closeAlert'
-      @alertConfirm ='alertConfirm'
-      :alertText='alertText'
-    ></alert>
   </div>
 </template>
 
 <script>
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
-import alert from '@/components/alert.vue'
 import accountEdit from '@/components/account-manage/account-edit.vue'
 import photoImg from '@/assets/images/fixation_img/rest/who.png'
 import { getUserData, deleteUserData, getbusinessDate } from '@/api/manager.js'
@@ -66,22 +58,10 @@ export default {
   components: {
     TableMultipleSelected,
     accountEdit,
-    alert
-
   },
   data () {
     return {
-      removeType: 0,
-      accountText: '',
-      isAlert: false,
       tableIdList: [],
-      alertText: {
-        title: '',
-        text: '',
-        bg: '',
-        confirm: false
-      },
-      isEdit: false,
       userLvl: '',
       searchText: '',
       searchRole: '',
@@ -252,37 +232,26 @@ export default {
         }
       })
     },
-    editData () {
-      this.initData()
-      this.isEdit = false
-    },
     addData () {
-      this.isEdit = true
+      this.$refs.accoutModal.$refs.modal.showModal()
       this.dataList = {
         data: '',
         type: 'add'
       }
     },
     tableData (value) {
-      this.isEdit = true
+      this.$refs.accoutModal.$refs.modal.showModal()
       this.dataList = _.cloneDeep(value)
     },
-    closeEdit () { this.isEdit = false },
-    closeAlert () { this.isAlert = false },
-    alertConfirm (valuer) {
-      var that = this, id
-      if (valuer === true) {
-        that.isAlert = false
-        id = this.removeType === 0 ? this.accountText.data.id : this.tableIdList.join(',')
-        deleteUserData(id).then(function (res) {
-          if (res.data.code === 200) {
-            that.alertStart('删除用户', '删除成功', false)
-            that.initData()
-          }
-        })
-      } else {
-        this.isAlert = false
-      }
+    delUser(id){
+      deleteUserData(id).then((res) => {
+        if (res.data.code === 200) {
+          this.$message.success(this.$t('删除成功'))
+          this.initData()
+        }else {
+          this.$message.error(this.$t('删除失败'))
+        }
+      })
     },
     tableSelect (value) {
       var that = this
@@ -292,28 +261,28 @@ export default {
       })
     },
     allRemoveData () {
-      this.removeType = 1
-      this.alertStart('删除用户', '确认删除选中用户信息？', true)
+      this.$alert({
+        content:this.$t('确认删除选中用户信息？'),
+        cancel(){},
+        confirm:()=>{
+          this.delUser(this.tableIdList.join(','))
+        }
+      })
     },
     removeData (value) {
-      this.removeType = 0
-      this.alertStart('删除用户', '确认删除此用户信息？', true)
-      this.accountText = value
+      this.$alert({
+        content:this.$t('确认删除此用户信息？'),
+        cancel(){},
+        confirm:()=>{
+          this.delUser(value.data.id)
+        }
+      })
     },
-    alertStart (title, text, confirm) {
-      this.alertText = {
-        title: title,
-        text: text,
-        bg: '#00A0E9',
-        confirm: confirm
-      }
-      this.isAlert = true
-    }
   }
 }
 </script>
 
-<style scope lang="scss">
+<style scoped lang="scss">
 #content-overlay{
   background-color: #f5f5f5;
 }
@@ -389,19 +358,18 @@ export default {
       box-shadow:0px 2px 9px 1px rgba(175,175,176,0.25);
       border-radius:6px;
       overflow: auto;
+      /deep/img{
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+      }
     }
   }
 }
 
-.vx-card .vx-card__collapsible-content {
-  img{
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    -moz-border-radius: 50%;
-    -webkit-border-radius: 50%;
-  }
-}
+
 .vs-con-table .vs-con-tbody .vs-table--tbody-table .vs-table--thead th{
   &:nth-child(2){
     padding-left: 10px

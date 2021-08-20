@@ -21,7 +21,7 @@
           <template slot="title">
             {{item.name}}
             <icons type="weibiaoti520" v-if="showSuperAdmin" @click.native="upldateRole(item.id)"></icons>
-            <icons type="weibiaoti544" v-if="showSuperAdmin" @click.native="delRole(item.id)"></icons>
+            <icons type="weibiaoti544" v-if="showSuperAdmin" @click.native="delRoleClick(item.id,index)"></icons>
           </template>
         </Submenu>
       </Menu>
@@ -41,20 +41,18 @@
         <Button @click="defaltSelect" v-if="showSuperAdmin">{{ $t('默认选择') }}</Button>
       </div>
     </div>
-    <addRole  ref="addRole" :roleList="roleList" :menuListData="menuListData" v-show="showAddRole" @closeEdit="closeEdit" @alertMessage="alertMessage"></addRole>
-    <alert
-      v-if="isAlert"
-      @closeAlert ='closeAlert'
-      @alertConfirm ='alertConfirm'
-      :alertText='alertText'
-    ></alert>
+    <addRole  ref="addRole"
+              :roleList="roleList"
+              :menuListData="menuListData"
+              @success="initRoleList"
+              v-show="showAddRole"
+              @closeEdit="closeEdit"></addRole>
   </div>
 </template>
 
 <script>
 import CheckboxGroups from '@/components/role/CheckboxGroups.vue'
 import addRole from '@/components/role/addRole.vue'
-import alert from '@/components/alert.vue'
 import { getMenuList, getRolesList, delRole, updateRoles } from '@/api/custom.js'
 import _ from 'lodash'
 export default {
@@ -62,17 +60,14 @@ export default {
   components: {
     CheckboxGroups,
     addRole,
-    alert
   },
   data () {
     return {
       accordion: true,
       showSuperAdmin: false,
       showCompanyAdmin: false,
-      // showShoppingAdmin:false,
       theRoleId: '',
       showAddRole: false,
-      isAlert: false,
       roleList: [],
       menuListData: [],
       allMenuData: [],
@@ -151,20 +146,15 @@ export default {
       })
       pages_privilege.sort()
       data.pages_privilege = pages_privilege.join(',')
-      updateRoles(data).then(function (res) {
+      updateRoles(data).then( (res)=> {
         if (res.data.code == 200) {
-         
           let role_id = that.$store.state.user.role_id
           if (role_id == data.id) {
             that.$store.commit('setAccess', data.pages_privilege)
           }
-          that.isAlert = true
-          var alertText = {}
-          alertText.bg = '#00A0E9'
-          alertText.title = that.editTitle
-          alertText.text = '编辑角色成功'
-          alertText.confirm = false
-          that.alertText = alertText
+          this.$message.success(this.$t('fn.successTo',[this.$t('编辑')]))
+        }else {
+          this.$message.error(this.$t('fn.failedTo',[this.$t('编辑')]))
         }
       })
     },
@@ -279,7 +269,6 @@ export default {
       this.$nextTick(() => {
         that.$refs.addRole.editRoleTitle = '添加角色'
         that.$refs.addRole.isModify = false
-        that.$refs.addRole.formData = { name: '', property: 0, description: '' }
       })
     },
     upldateRole (id) {
@@ -295,56 +284,32 @@ export default {
         that.$refs.addRole.formData.description = data.describ
       })
     },
-    delRole (id) {
+    delRoleClick (id,i) {
       this.theRoleId = id
-      this.isAlert = true
-      this.alertText.bg = '#00A0E9'
-      this.alertText.title = '删除角色'
-      this.alertText.text = '确认删除选中的角色？'
-      this.alertText.confirm = true
+      this.$alert({
+        content:this.$t('确认删除选中的角色'),
+        cancel(){},
+        confirm:()=>{
+          this.delRole(id,i)
+        },
+      })
     },
-    closeAlert () {
-      this.isAlert = false
+    delRole(id,i){
+      delRole(id).then(res => {
+        if (res.data.code === 200) {
+          this.$message.success(this.$t('删除成功'))
+          this.roleList.splice(i,1);
+          this.changeOpenChange([this.$store.state.user.role_id])
+         
+        } else {
+          this.$message.error(this.$t('删除失败'))
+        }
+      })
     },
-    alertMessage (alertText) {
-      this.isAlert = true
-      this.alertText = alertText
-      this.initRoleList()
-    },
-    alertConfirm (value) {
-      var that = this
-      if (value === true) {
-        let id = that.theRoleId
-        // if (this.$store.state.home.loadingState == false) {
-        //   this.$store.commit('loadingState', true)
-        //   this.$vs.loading()
-        // }
-        delRole(id).then(res => {
-          if (res.data.code == 200) {
-            that.isAlert = true
-            that.alertText.bg = '#00A0E9'
-            that.alertText.title = '删除该角色'
-            that.alertText.text = '删除角色成功'
-            that.alertText.confirm = false
-            that.initRoleList()
-          } else {
-            that.isAlert = true
-            that.alertText.bg = '#00A0E9'
-            that.alertText.title = '删除该角色失败'
-            that.alertText.text = res.data.message
-            that.alertText.confirm = false
-            // this.$vs.loading.close()
-            // this.$store.commit('loadingState', false)
-          }
-        })
-      } else {
-        this.isAlert = false
-      }
-    }
   }
 }
 </script>
-<style scope lang="scss">
+<style scoped lang="scss">
 .roles{
   position:relative;
   display: flex;
@@ -432,7 +397,4 @@ export default {
     content: "";
   }
 }
-</style>
-<style>
-
 </style>

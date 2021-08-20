@@ -309,8 +309,7 @@ export default {
           that.lineData.chartOptions.xaxis.categories.push(n)
         })
         if (res.data.data.charts.series.length !== 0) {
-          // that.graphData.series = res.data.data.charts.series
-          res.data.data.charts.series.map(function (d) {
+          res.data.data.charts.series.map( (d)=> {
             var obj = {}
             const arr = d.name.split(',');
             let name =  d.name.replace(/,/g, ' - ')
@@ -319,7 +318,7 @@ export default {
                 name = arr[0]
               }
             }
-            obj.name = name
+            obj.name = this.$t(name)
             obj.data = []
             d.data.map((num, index) => { obj.data.push(num) })
             that.lineData.series.push(obj)
@@ -350,10 +349,10 @@ export default {
         that.chartTableData(res.data.data.charts.categories, res.data.data.charts.series, charType)
         // 表格数据
         that.tableList = []
-        res.data.data.zones.map(function (d) {
+        res.data.data.zones.map( (d)=> {
           var obj = {}
           obj.name = d.name
-          obj.type = d.type == null ? '出入口' : d.type
+          obj.type = this.$t(d.type == null ? '出入口' : d.type)
           if (that.isTableDate === false) obj.time = ''
           else {
             let date;

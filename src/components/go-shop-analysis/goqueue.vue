@@ -15,7 +15,7 @@
           class="w-select m-l-20"
           autocomplete
           v-model="activities"
-          :placeholder="$t('选择排队名')"
+					:placeholder="$t('fn.请选择',[$t('排队名')])"
           style="width:14.375rem;"
           multiple>
 					<vs-select-item

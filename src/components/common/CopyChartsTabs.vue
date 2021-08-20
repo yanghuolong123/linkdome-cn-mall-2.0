@@ -172,14 +172,14 @@ export default {
            return { title: e.name+' ( '+ this.tooltipUnit[index-1].name +' ) ', key: e.key }
           }else{
             if(this.tooltipUnit){
-               return { title: e.name+' ( '+ this.tooltipUnit +' ) ', key: e.key }
+               return { title: this.$t(e.name)+' ( '+ this.tooltipUnit +' ) ', key: e.key }
             }else{
-               return { title: e.name, key: e.key }
+               return { title: this.$t(e.name), key: e.key }
             }
            
           }
         }else{
-          return { title: e.name, key: e.key }
+          return { title: this.$t(e.name), key: e.key }
         }
       })
       this.$emit('getShopTableCoumn', column)

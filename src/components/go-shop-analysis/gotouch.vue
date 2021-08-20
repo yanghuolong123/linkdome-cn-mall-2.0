@@ -17,7 +17,7 @@
           class="w-select"
           autocomplete
           v-model="activities"
-          :placeholder="$t('选择排队名')"
+          :placeholder="$t('fn.请选择',[$t('货架')])"
           style="width:14.375rem;"
           multiple>
           <vs-select-item
@@ -335,14 +335,17 @@ export default {
       var time1 = moment(that.crossDate[0]).format('YYYY-MM-DD') + ',' +
       moment(that.crossDate[1]).format('YYYY-MM-DD')
       let range = this.gotInnerRange(that.crossDate)
-      console.log(time1)
       // 提示
       if (that.activities.length === 0) {
-        this.alertShow('货架不能为空，请选择货架')
+        this.$alert({
+          content:this.$t('fn.请选择',[this.$t('货架')])
+        })
         return false
       }
       if (that.activities.length > 25) {
-        this.alertShow('货架个数不能超过25个，请重新选择')
+        this.$alert({
+          content:this.$t('fn.shelfLimit',[25])
+        })
         return false
       }
       // var bzid = "1,2,3"

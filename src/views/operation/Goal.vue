@@ -112,7 +112,7 @@ export default {
       options1: {},
       options2: {},
       // 销售 类型
-      marketTableTitle: ['日期', '销售额 ( 元 )', '目标销售额 ( 元 )'],
+      marketTableTitle: ['日期',this.$t('fn.SaleUnit',[this.$t('元')]),this.$t('fn.TargetSaleUnit',[this.$t('元')])],
       marketTableData: [],
       marketOptions1: {},
       marketOptions2: {},
@@ -213,7 +213,7 @@ export default {
         that.activityList = []
         var obj = {}
         obj.value = '1'
-        obj.key = '客流量趋势'
+        obj.key = this.$t('客流量趋势')
         obj.time = `${this.goalDate}-01-01` + ',' + `${this.goalDate}-12-31`
         obj.action = true
         that.activityList.push(obj)
@@ -253,7 +253,7 @@ export default {
       }
       var that = this
       if (!year) {
-        this.$alert({ content:'请选择年份' })
+        this.$alert({ content:this.$t('选择年份') })
         return
       }
       if (this.flow_year_data.goal_flow) {
@@ -267,7 +267,7 @@ export default {
           this.getData(range, this.entities[0].value, innerRange)
           this.marketData(year, this.entities[0].property_id)
         } else {
-          this.$alert({ content:'选择商场无目标数据' })
+          this.$alert({ content:this.$t('无目标数据') })
         }
       }
     },
@@ -344,8 +344,8 @@ export default {
       }
       // 线
       this.series1 = [
-        { name: '客流量', data: addUpArr },
-        { name: '目标客流量', data: goal }
+        { name: this.$t('客流量'), data: addUpArr },
+        { name: this.$t('目标客流量'), data: goal }
       ]
 
       this.options1 = _.cloneDeep(options0)
@@ -369,7 +369,7 @@ export default {
             })
           }
           num == null ? barData2.push(0) : barData2.push(num)
-          var end = Number(num).toLocaleString() 
+          var end = Number(num).toLocaleString()
           obj.end = end
           tableData.push(obj)
         })
@@ -382,7 +382,7 @@ export default {
           obj.begin = begin
           var num = (sele.enter / data.length).toFixed(0)
           barData2.push(num)
-          var end = Number(num).toLocaleString() 
+          var end = Number(num).toLocaleString()
           obj.end = end
           tableData.push(obj)
         })
@@ -390,8 +390,8 @@ export default {
 
       // 柱状图
       this.series2 = [
-        { name: '客流量', data: barData1 },
-        { name: '目标客流量', data: barData2 }
+        { name: this.$t('客流量'), data: barData1 },
+        { name: this.$t('目标客流量'), data: barData2 }
       ]
       let optionsBar = _.cloneDeep(options2)
       optionsBar.xaxis.categories = xAxis
@@ -492,17 +492,17 @@ export default {
         }
         // 线
         this.marketSeries1 = [
-          { name: '销售额', data: addUpArr },
-          { name: '目标销售额', data: goal }
+          { name: this.$t('销售额'), data: addUpArr },
+          { name: this.$t('目标销售额'), data: goal }
         ]
         this.marketOptions1 = _.cloneDeep(options0)
         this.marketOptions1.xaxis.categories = xAxis
         this.marketOptions1.tooltip.y = {
-          formatter: function (val) {
+          formatter:  (val)=> {
             if (val == undefined || val == null || val == '') {
               return ''
             } else {
-              return val.toLocaleString() +'元'
+              return val.toLocaleString() +this.$t('元')
             }
           }
         }
@@ -523,23 +523,23 @@ export default {
             })
           }
           num == null ? barData2.push(0) : barData2.push(num)
-          var end = Number(num).toLocaleString() 
+          var end = Number(num).toLocaleString()
           obj.end = end
           tableData.push(obj)
         })
         // 柱状图
         this.marketSeries2 = [
-          { name: '销售额', data: barData1 },
-          { name: '目标销售额', data: barData2 }
+          { name: this.$t('销售额'), data: barData1 },
+          { name: this.$t('目标销售额'), data: barData2 }
         ]
         this.marketOptions2 = _.cloneDeep(options2)
         this.marketOptions2.xaxis.categories = xAxis
         this.marketOptions2.tooltip.y = {
-          formatter: function (val) {
+          formatter: (val)=> {
             if (val == undefined || val == null || val == '') {
               return ''
-            } else { 
-              return val.toLocaleString() +'元'
+            } else {
+              return val.toLocaleString() +this.$t('元')
             }
           }
         }

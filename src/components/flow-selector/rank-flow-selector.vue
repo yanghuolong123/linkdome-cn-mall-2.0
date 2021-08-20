@@ -4,7 +4,7 @@
 			<i-date-picker class="w-select" :value='queryParams.date1Array' :dType="1" @selectDate="dateSelect"></i-date-picker>
 		</div>
 		<div class="flex-center raido-group">
-			<vs-radio v-model="entityType" :vs-value="item.value" :key="item.value"  v-for="item in entityOptions" class="mr-4">{{item.label}}</vs-radio>
+			<vs-radio v-model="entityType" :vs-value="item.value" :key="item.value"  v-for="item in entityOptions" class="mr-4">{{$t(item.label)}}</vs-radio>
 		</div>
 		<div class="flex-center mt-20">
 			<el-cascader
