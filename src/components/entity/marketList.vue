@@ -98,6 +98,7 @@
         }
         obj.address = obj.address ? obj.address : ' '
         obj.describe = obj.description ? obj.description : ' '
+        console.log(obj)
         this.tableList.push(obj)
       },
       imgConfig () {

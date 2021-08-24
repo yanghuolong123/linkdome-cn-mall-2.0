@@ -14,7 +14,7 @@
             >
              <template>
               <div class="flex justify-between items-center mr-10">
-                <span class="whitespace-no-wrap mx-4 text-sm">楼层:</span>
+                <span class="whitespace-no-wrap mx-4 text-sm">{{$t('楼层')}}:</span>
                 <vs-select autocomplete
                            v-model="floorAction"
                             style="width:150px"
@@ -105,12 +105,12 @@ export default {
       switch (this.parameter.type) {
         case 'enter':
         case 'occupancy':
-          return '人次'
+          return this.$t('人次')
         case 'SquaerMetre':
-          return '元/m²'
+          return this.$t('元/m²')
         case 'UnitPrice':
         case 'SaleAmount':
-          return '元'
+          return this.$t('元')
         case 'CloseRate':
           return '%'
       }
@@ -170,7 +170,7 @@ export default {
       this.finnalSeries = []
       data.forEach(list => {
         this.finnalSeries.push({
-          name: list.industry_name,
+          name: this.$t(list.industry_name),
           key: list.industry_id,
           data: Object.values(list.list)
         })
@@ -179,16 +179,16 @@ export default {
       this.xAxisObj.data = Object.keys(data[0].list)
       switch(this.parameter.type){
         case 'SaleAmount':
-          this.extraOptWithYaxis.yaxis.title.text = '销售额（元）'
+          this.extraOptWithYaxis.yaxis.title.text = this.$t('销售额（元）')
           break
         case 'SquaerMetre':
-          this.extraOptWithYaxis.yaxis.title.text = '坪效（元/m²）'
+          this.extraOptWithYaxis.yaxis.title.text = this.$t('坪效（元/平方米）')
           break
         case 'UnitPrice':
-          this.extraOptWithYaxis.yaxis.title.text = '客单价（元）'
+          this.extraOptWithYaxis.yaxis.title.text = this.$t('客单价（元）')
           break
         case 'CloseRate':
-          this.extraOptWithYaxis.yaxis.title.text = '成交率（%）'
+          this.extraOptWithYaxis.yaxis.title.text = this.$t('成交率')+'（%）'
           break
       }
       if (this.xAxisObj.data.length == 1) {

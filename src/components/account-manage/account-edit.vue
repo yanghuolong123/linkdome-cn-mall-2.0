@@ -46,7 +46,7 @@
 										v-for="item in roleList"
 										:value="item.value"
 										:key="item.value"
-									>{{ item.label }}
+									>{{ $t(item.label) }}
 									</Option>
 								</Select>
 							</FormItem>

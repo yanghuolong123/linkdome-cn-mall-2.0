@@ -1,6 +1,9 @@
 <template>
-	<vx-card :title=titleName :titleTip="titleTip">
-		<vs-table v-model="selected" :multiple="isMultiple" :noDataText="$t('holder.暂无数据')" :data="tableList">
+	<vx-card :title=titleName :titleTip="titleTip" class="mul-table">
+		<vs-table v-model="selected"
+							:multiple="isMultiple"
+							:noDataText="$t('holder.暂无数据')"
+							:data="tableList">
 			
 			<template slot="thead" #thead>
 				<vs-th :key="indexs" class="table-title" v-for="(item, indexs) in tableName">{{$t(item)}}</vs-th>
@@ -183,61 +186,11 @@
   }
 </script>
 <style lang="scss" scoped>
-.vs-con-table .vs-con-tbody .vs-table--tbody-table .vs-table--thead th {
-  white-space: nowrap;
-  padding-right: 5px;
-  min-width: fit-content;
-  &:nth-child(1) {
-    background-color: #f8f8f8;
-  }
-  .vs-table-text{
-    font-size: 14px;
-  }
-}
-
-.vs-table--tbody-table .tr-values td {
-  border-bottom: 1px solid #f8f8f8;
-  white-space: nowrap;
-  min-width: fit-content;
-}
-	.table-page {
-		margin-top: 30px;
-		
-		.vs-pagination--li {
+	.mul-table{
+		/deep/	.vs-table--tbody{
+			z-index: 1;
 		}
 	}
-	.vs-table--tbody{
-		z-index: 1;
-	}
-	.table-title {
-		background-color: #f8f8f8;
-	}
-	
-	.vs-con-table .vs-con-tbody .vs-table--tbody-table .vs-table--thead th {
-		&:nth-child(1) {
-			background-color: #f8f8f8
-		}
-		
-		.vs-table-text {
-			font-size: 14px;
-		}
-	}
-	
-	.vs-table--tbody-table .tr-values.selected {
-		border-bottom: 1px solid #f8f8f8;
-	}
-	
-	.vs-table--td {
-		padding-left: 0 !important;
-		
-		>span {
-			display: inline-block;
-			height: 38px;
-			line-height: 38px;
-			float: left;
-		}
-	}
-	
 	.account-remove i {
 		font-size: 20px;
 		color: #C7C6C6;

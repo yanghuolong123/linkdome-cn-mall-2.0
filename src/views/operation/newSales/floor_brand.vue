@@ -14,14 +14,14 @@
             >
              <template>
               <div class="flex justify-between items-center mr-10">
-                <span class="whitespace-no-wrap mx-4 text-sm">{{floorOption.select}}:</span>
+                <span class="whitespace-no-wrap mx-4 text-sm">{{this.$t(floorOption.select)}}:</span>
                 <vs-select autocomplete
                            v-model="floorOption.selectAction"
                            style="width:150px"
                            @change="selectType('floor')"
                            >
                   <vs-select-item v-for="(se,index) in floorOption.selectList "
-                                  :text="se.name"
+                                  :text="$t(se.name)"
                                   :key="index"
                                   :value="se.value" />
                 </vs-select>
@@ -49,7 +49,7 @@
                            @change="selectType('brand')"
                            >
                   <vs-select-item v-for="(se,index) in brandOption.selectList "
-                                  :text="se.name"
+                                  :text="$t(se.name)"
                                   :key="index"
                                   :value="se.value" />
                 </vs-select>
@@ -161,12 +161,12 @@ export default {
       switch (this.floorParameter.type) {
         case 'enter':
         case 'occupancy':
-          return '人次'
+          return this.$t('人次')
         case 'SquaerMetre':
-          return '元/m²'
+          return this.$t('元/m²')
         case 'UnitPrice':
         case 'SaleAmount':
-          return '元'
+          return this.$t('元')
         case 'CloseRate':
           return '%'
       }
@@ -266,16 +266,16 @@ export default {
       }
       switch (this.brandParameter.type) {
         case 'SaleAmount':
-          dataObj.name = '销售额'
+          dataObj.name = this.$t('销售额')
           break
         case 'SquaerMetre':
-          dataObj.name = '坪效'
+          dataObj.name = this.$t('坪效')
           break
         case 'CloseRate':
-          dataObj.name = '成交率'
+          dataObj.name = this.$t('成交率')
           break
         case 'UnitPrice':
-          dataObj.name = '客单价'
+          dataObj.name = this.$t('客单价')
           break
       }
 

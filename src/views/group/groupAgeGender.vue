@@ -46,7 +46,7 @@
               :key="index"
               v-for="(icon,index) in iconList"
               v-on:click='iconClick(index,"gender")'>
-              <icons 
+              <icons
                 :type="icon.type"
                 :size="20"
                 :color="genderIconIndex === icon.value ? iconColor :'#9D9D9DFF'"
@@ -78,7 +78,7 @@
         <div class="title">
           <p>{{$t('新老顾客占比')}}
             <Tooltip
-              :content="tootipText"
+              :content="$t('notices.customer')"
               placement="bottom"
               theme="light"
               transfer
@@ -93,7 +93,7 @@
               v-on:click='iconClick(index,"client")'
               :title="iconTitle[icon.type]"
             >
-              <icons 
+              <icons
                 :type="icon.type"
                 :size="20"
                 :color="clientIconIndex === icon.value ? iconColor :'#9D9D9DFF'"
@@ -145,7 +145,7 @@
             :options="frequencyOptions"
             :series="frequencySeries"
           ></vue-apex-charts>
-          <table-default 
+          <table-default
             v-else
             class="groupTable"
             :tableName='frequencyName'
@@ -176,7 +176,7 @@ export default {
   data () {
     return {
       downLoadIcon: 'daoru',
-      tootipText: '新顾客：在所选时间段内仅来过1次的人数\n老顾客：在所选时间段内来过2次及以上的人数',
+      tootipText: this.$t('notices.customer'),
       iconColor: 'rgb(34, 128, 215)',
       iconIndex: 0,
       frequencyIconIndex: 0,
@@ -534,9 +534,9 @@ export default {
           let genderKeys = Object.keys(data.gender_propotion)
           let genderValues = Object.values(data.gender_propotion)
           if (genderValues.length != 0) {
-            Object.keys(genderValues[0]).map(function (name, index) {
+            Object.keys(genderValues[0]).map((name, index) =>{
               let obj = {}
-              obj.name = index == 0 ? '男性' : '女性'
+              obj.name = this.$t(index == 0 ? '男性' : '女性')
               obj.data = []
               genderValues.map((lise) => { obj.data.push(lise[index]) })
               that.genderSeries.push(obj)
@@ -547,7 +547,7 @@ export default {
           that.$refs.genderBar&&that.$refs.genderBar.updateOptions({
             xaxis: { categories: that.genderChartOptions.xaxis.categories }
           })
-          that.genderSeries.map(name => { that.genderName.push(name.name +' ( 人 ) ') })
+          that.genderSeries.map(name => { that.genderName.push(name.name +`(${this.$t('人')})`) })
           genderKeys.map(function (list, index) {
             let obj = {}
             obj.name = list
@@ -604,16 +604,16 @@ export default {
       }
       let ageValue = Object.values(data)
       let nameList = Object.keys(ageValue[0])
-      nameList.map(function (list, index) {
+      nameList.map( (list, index) =>{
         let obj = {}
         if (type == 'number') {
           let xName
-          Number(list) == nameList.length ? xName = list + '次及以上' : xName = list + '次'
+          Number(list) == nameList.length ? xName = this.$t(list + '次及以上') : xName = this.$t('fn.times',[this.$t(list)])
           obj.name = xName
         } else if(type==='age'){
-           obj.name = list.replace('_', '-').replace('less-', '小于').replace(/more-/, '大于') 
+           obj.name = list.replace('_', '-').replace('less-', this.$t('小于')).replace(/more-/, this.$t('大于'))
         } else{
-          obj.name = list +' ( 人 ) '
+          obj.name = list +`(${this.$t('人')})`
         }
         obj.data = []
         ageValue.map(function (val, vIndex) {
@@ -628,7 +628,7 @@ export default {
         dataNumber.series.push(obj)
       })
       dataNumber.series.map(name => {
-        let tableName = name.name +' ( 人 ) '
+        let tableName = name.name +`(${this.$t('人')})`
         type == 'age' ? that.ageName.push(tableName) : that.frequencyName.push(tableName)
       })
       dataNumber.xaxis.map(function (list, index) {
@@ -651,11 +651,11 @@ export default {
       let nameList = Object.keys(clinetValue[0])
       nameList.map(name => {
         let obj = {}
-        if (type == 'client') obj.name = name == 'newNum' ? '新顾客' : '老顾客'
+        if (type == 'client') obj.name = this.$t(name == 'newNum' ? '新顾客' : '老顾客')
         else obj.name = name == 'vipNum' ? 'VIP顾客' : '普通顾客'
         obj.data = []
         clinetValue.map(list => {
-          _.forIn(list, function (value, key) {
+          _.forIn(list,  (value, key)=> {
             if (name == key) obj.data.push(value)
           })
         })
@@ -663,7 +663,7 @@ export default {
       })
 
       dataNumber.series.map(name => {
-        let tableName = name.name +' ( 人 ) '
+        let tableName = name.name +`(${this.$t('人')})`
         type == 'client' ? that.clientName.push(tableName) : that.vipName.push(tableName)
       })
       dataNumber.xaxis.map(function (list, index) {

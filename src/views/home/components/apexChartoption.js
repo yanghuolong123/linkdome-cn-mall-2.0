@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import NP from 'number-precision'
+import i18n from '@/i18n/i18n'
 export default {
   donut: {
     plotOptions: {
@@ -196,7 +197,7 @@ export default {
       }
     },
     noData: {
-      text: '暂无数据',
+      text: i18n.t('暂无数据') ,
       align: 'center',
       verticalAlign: 'middle',
       offsetX: 0,
@@ -277,7 +278,7 @@ export default {
       }
     },
     noData: {
-      text: '暂无数据',
+      text:i18n.t('暂无数据') ,
       align: 'center',
       verticalAlign: 'middle',
       offsetX: 0,
@@ -404,7 +405,7 @@ export default {
       enabled: false
     },
     noData: {
-      text: '暂无数据',
+      text: i18n.t('暂无数据') ,
       align: 'center',
       verticalAlign: 'middle',
       offsetX: 0,
@@ -416,8 +417,8 @@ export default {
       }
     },
     tooltip: {
-      y:{},
-      enabled: true,
+      y:{ },
+      show: false,
       custom: ({ series, seriesIndex, dataPointIndex, w }) => {
         return `<p style=background-color:${w.config.colors[seriesIndex]} class='p-2'><span class='pr-4'>${w.config.labels[seriesIndex]}:</span>${series[seriesIndex]}元</p>`
       }

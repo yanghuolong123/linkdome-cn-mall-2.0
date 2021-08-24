@@ -124,7 +124,7 @@ export default {
   },
   computed: {
     totalData () { // 合计数据
-      let obj = { time: '合计' }
+      let obj = { time: this.$t('合计') }
       _.forIn(this.chartData, (val, key) => {
         if (this.curretIndicator.includes(key)) {
           Object.assign(obj, val.total)
@@ -235,6 +235,7 @@ export default {
             }
           }
         }
+        console.log(tmlYaxis)
         return tmlYaxis
       })
       // 同一类的只需要保留一个轴,分组之后,将第一个除外其余隐藏
@@ -332,7 +333,7 @@ export default {
             if (['CloseRate', 'RepeatPurchaseRate'].includes(indicatorKey)) seriesData = seriesData.map(e => NP.times(e, 100))// 复购率和成交率需要乘以100
             seriesData = seriesData.map(val => Number(val) < 0 ? 0 : parseInt(val))
             return {
-              name: time2 ? `${indicatorData[indicatorKey].name} ${date.split(',').join(' - ')}` : indicatorData[indicatorKey].name,
+              name: time2 ? `${indicatorData[indicatorKey].name} ${date.split(',').join(' - ')}` : this.$t(indicatorData[indicatorKey].name),
               key: `${indicatorKey}_${date}`,
               data: seriesData
             }

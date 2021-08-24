@@ -99,7 +99,7 @@
       </div>
       <!-- 趋势对比 -->
       <Trend
-				style="margin-top:20px"
+				class="m-t-20"
 				:time1="outRange"
 				@curretIndicatorChange="val=>{showTotal = !val}"
 				:innerRange="innerRange"
@@ -421,7 +421,7 @@ export default {
 
     ]),
     ageNameformat (str) {
-      return str.replace('_', '-').replace('less-', '小于').replace(/more-/, '大于')
+      return str.replace('_', '-').replace('less-', this.$t('小于')).replace(/more-/, this.$t('大于'))
     },
     updateMapZoneByName (name) {
       this.currentMenuName = Number(name)

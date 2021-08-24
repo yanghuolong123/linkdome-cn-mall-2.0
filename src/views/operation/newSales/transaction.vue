@@ -1,11 +1,11 @@
 <template>
     <div class="box-card bg-white transaction"  v-if="isHtml">
-        <p>异动分析</p>
+        <p>{{$t('异动分析')}}</p>
         <div class="transaction-left" >
-            <header>{{topTen.title}}</header>
+          <header>{{$t(topTen.title)}}</header>
             <ul v-if="!topTable">
                 <li>
-                    <p :key="index" v-for="(name,index) in topTen.name">{{name}}</p>
+                    <p :key="index" v-for="(name,index) in topTen.name">{{$t(name)}}</p>
                 </li>
             </ul>
             <div class="transaction-list" style=" height: 345px;" v-if="!topTable">
@@ -33,8 +33,8 @@
                      <template>
                         <div class="flex justify-between items-center mr-10">
                           <span class="whitespace-no-wrap mx-4 text-sm">
-                            <vs-radio style="margin-right:10px;" v-model="topTen.topRadio" vs-value="topFloor">楼层</vs-radio>
-                            <vs-radio v-model="topTen.topRadio" vs-value="topBusiness">业态</vs-radio>
+                            <vs-radio style="margin-right:10px;" v-model="topTen.topRadio" vs-value="topFloor">{{$t('楼层')}}</vs-radio>
+                            <vs-radio v-model="topTen.topRadio" vs-value="topBusiness">{{$t('业态')}}</vs-radio>
                           </span>
                           <vs-select autocomplete
                                     v-model="topTen.selectAction"
@@ -42,7 +42,7 @@
                                     @change="topSelectChange"
                                     >
                             <vs-select-item v-for="(se,index) in topTen.selectList "
-                                            :text="se.name"
+                                            :text="$t(se.name)"
                                             :key="index"
                                             :value="se.value" />
                           </vs-select>
@@ -53,10 +53,10 @@
             </div>
         </div>
         <div class="transaction-left">
-            <header>{{afterTen.title}}</header>
+            <header>{{$t(afterTen.title)}}</header>
             <ul v-if="!afterTable">
                 <li>
-                    <p :key="index" v-for="(name,index) in afterTen.name">{{name}}</p>
+                    <p :key="index" v-for="(name,index) in afterTen.name">{{$t(name)}}</p>
                 </li>
             </ul>
             <div class="transaction-list" style=" height: 345px;" v-if="!afterTable">
@@ -84,8 +84,8 @@
                   <template>
                     <div class="flex justify-between items-center mr-10">
                       <span class="whitespace-no-wrap mx-4 text-sm">
-                        <vs-radio style="margin-right:10px;" v-model="afterTen.AfterRadio" vs-value="AfterFloor">楼层</vs-radio>
-                        <vs-radio v-model="afterTen.AfterRadio" vs-value="AfterBusiness">业态</vs-radio>
+                        <vs-radio style="margin-right:10px;" v-model="afterTen.AfterRadio" vs-value="AfterFloor">{{$t('楼层')}}</vs-radio>
+                        <vs-radio v-model="afterTen.AfterRadio" vs-value="AfterBusiness">{{$t('业态')}}</vs-radio>
                       </span>
                       <vs-select autocomplete
                                 v-model="afterTen.selectAction"
@@ -93,7 +93,7 @@
                                 @change="afterSelectChange"
                                 >
                         <vs-select-item v-for="(se,index) in afterTen.selectList "
-                                        :text="se.name"
+                                        :text="$t(se.name)"
                                         :key="index"
                                         :value="se.value" />
                       </vs-select>
@@ -283,12 +283,12 @@ export default {
       switch (this.afterParameter.type) {
         case 'enter':
         case 'occupancy':
-          return '人次'
+          return this.$t('人次')
         case 'SquaerMetre':
-          return '元/m²'
+          return this.$t('元/m²')
         case 'UnitPrice':
         case 'SaleAmount':
-          return '元'
+          return this.$t('元')
         case 'CloseRate':
           return '%'
       }
@@ -371,16 +371,16 @@ export default {
       }
       switch (this.topParameter.type) {
         case 'SaleAmount':
-          seriesObj.name = '销售额'
+          seriesObj.name = this.$t('销售额')
           break;
         case 'SquaerMetre':
-           seriesObj.name = '坪效'
+           seriesObj.name = this.$t('坪效')
           break;
           case 'CloseRate':
-          seriesObj.name = '成交率'
+          seriesObj.name = this.$t('成交率')
           break;
           case 'UnitPrice':
-           seriesObj.name = '客单价'
+           seriesObj.name = this.$t('客单价')
           break;
       }
       data.forEach(list => {

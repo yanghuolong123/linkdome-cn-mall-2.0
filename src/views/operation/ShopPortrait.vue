@@ -13,24 +13,29 @@
                         :key="index">{{ item.text }}</Option>
                 </Select>
                 <Button size="large" type="primary" class="m-l-20"  @click="getTableList" >{{ $t('查询') }}</Button>
-                <Button size="large" class="m-l-20 goal-reset"  @click="handleCompare" >查看详情</Button>
+                <Button size="large" class="m-l-20 goal-reset"  @click="handleCompare" >{{ $t('查看详情') }}</Button>
             </div>
         </div>
         <div class="box-card bg-white detail" v-show="compareChartShow">
-            <p>运营指数{{chartTitle}}</p>
+            <p>{{$t('fn.OperateIndex',[$t(chartTitle)])}}</p>
             <div class="flex-box">
-                <vue-scroll :ops="config.vueScrollOps" style="width: 25%;">
+                <VuePerfectScrollbar
+                  style="width: 25%"
+                  ref="mainSidebarPs"
+                  class="scroll-area--main-sidebar pt-2"
+                  :settings="settings"
+                >
                     <div class="left">
                         <div class="card" v-for="(item,index) in shopIndexList" :key="index">
                             <span>{{index+1}}. <span class="color" :style="{backgroundColor:colorList[index]}"></span> {{item.shop_name}} </span>
-                            <span>运营指数: {{item.index}}</span>
-                            <span>全场排名: {{item.overall_ranking}}</span>
-                            <span>同业态排名: {{item.format_rank}}</span>
-                            <span>同楼层排名: {{item.floor_rank}}</span>
-                            <span>健康度: {{item.health}}</span>
+                            <span>{{$t('运营指数')}}: {{item.index}}</span>
+                            <span>{{$t('全场排名')}}: {{item.overall_ranking}}</span>
+                            <span>{{$t('同业态排名')}}: {{item.format_rank}}</span>
+                            <span>{{$t('同楼层排名')}}: {{item.floor_rank}}</span>
+                            <span>{{$t('健康度')}}: {{item.health}}</span>
                         </div>
                     </div>
-                </vue-scroll>
+                </VuePerfectScrollbar>
                 <vue-apex-charts
                         type="radar"
                         height="600"
@@ -42,10 +47,10 @@
     
         </div>
         <div class="selected-table">
-            <vx-card title="店铺指数列表">
-                <vs-table stripe v-model="tableSelected" max-items="5" pagination  noDataText="暂无数据" multiple :data="tableList">
+            <vx-card :title="$t('店铺指数列表')">
+                <vs-table stripe v-model="tableSelected" max-items="5" pagination  :noDataText="$t('holder.暂无数据')" multiple :data="tableList">
                     <template slot="thead" >
-                        <vs-th :key="indexs" class="table-title" v-for="(item, indexs) in tableName">{{item}}</vs-th>
+                        <vs-th :key="indexs" class="table-title" v-for="(item, indexs) in tableName">{{$t(item)}}</vs-th>
                     </template>
                     <template slot-scope="{data}">
                         <vs-tr :data="tr" :disabled="false" :key="indextr" v-for="(tr, indextr) in data">
@@ -102,6 +107,7 @@
     </div>
 </template>
 <script>
+    import VuePerfectScrollbar from 'vue-perfect-scrollbar'
     import {getShopPortrait, getOperateIndex, getIndexMap} from '@/api/operate'
     import config from '@/config/index';
     import VueApexCharts from 'vue-apexcharts'
@@ -152,7 +158,8 @@
           }
         },
         components: {
-            VueApexCharts
+            VueApexCharts,
+            VuePerfectScrollbar
         },
         data() {
             return {
@@ -165,6 +172,11 @@
                     property_id: '',
                     page_index: 9999999999999,
                     page: 1
+                },
+                settings: { // perfectscrollbar settings
+                    maxScrollbarLength: 60,
+                    wheelSpeed: 1,
+                    swipeEasing: true
                 },
                 shopIndexList: [],
                 compareChartShow:false,
@@ -210,7 +222,7 @@
                         }
                     },
                     xaxis: {
-                        categories: ['销售额', '销售坪效','停留时间', '成交率', '客流量'],
+                        categories: [this.$t('销售额'), this.$t('销售坪效'),this.$t('停留时间'), this.$t('成交率'), this.$t('客流量')],
                     }
                 },
                 businessType: 0,
@@ -236,13 +248,13 @@
             handleCompare(){
                 if (!this.tableSelected.length) {
                     this.$alert({
-                        content:'请选择要查看的店铺'
+                        content:this.$t('fn.请选择',[this.$t('店铺')])
                     })
                     return
                 }
                 if(this.tableSelected.length > 6){
                     this.$alert({
-                        content:'最多选择6个店铺'
+                        content:this.$t('fn.storeLimit',[6])
                     })
                     return
                 }
@@ -261,7 +273,7 @@
                     this.series = [];
                     Array.isArray(res[1]) && res[1].forEach(o=>{
                         const obj = {
-                            name:o.shop_name+'指数',
+                            name:o.shop_name+this.$t('指数'),
                             data:[o.sale?o.sale.toFixed(2):o.sale,o.sales_ratio?o.sales_ratio.toFixed(2):o.sales_ratio,o.dwellTime?o.dwellTime.toFixed(2):o.dwellTime,o.closeRate?o.closeRate.toFixed(2):o.closeRate,o.enter?o.enter.toFixed(2):o.enter]
                         };
                         this.series.push(obj)

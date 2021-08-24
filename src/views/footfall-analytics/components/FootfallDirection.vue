@@ -7,7 +7,10 @@
     <div class="p-3 chart-container" v-if="chartData">
       <div class="trend-container">
         <div class="left-chart-box" id="drainageChart">
-          <chartTabs :xAxis="chartData.xAxis" :extraOptions="occpuancyOptions" title='趋势图' :series="chartData.series"></chartTabs>
+          <chartTabs :xAxis="chartData.xAxis"
+                     :extraOptions="occpuancyOptions"
+                     title='趋势图'
+                     :series="chartData.series"></chartTabs>
         </div>
         <div class="right-card-box">
           <div v-for="(item,index) in cardData" :key="index">
@@ -142,7 +145,7 @@ export default {
           })
 
           let obj = {}
-          obj.name = this.drainageType === 'to' ? '目的流量' : `${this.entityType[e]}${this.direction[this.drainageType]}`
+          obj.name = this.$t(this.drainageType === 'to' ? '目的流量' : `${this.entityType[e]}${this.direction[this.drainageType]}`)
           obj.key = ''
           obj.data = []
           resData.map(data => {

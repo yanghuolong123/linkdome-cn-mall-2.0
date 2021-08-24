@@ -318,7 +318,7 @@ export default [
       },
       { // 销售分析
         path: 'salesNew',
-        name: '销售多维度',
+        name: 'SalesDimensions',
         component: () =>
           import ('@/views/operation/SalesNew.vue'),
         meta: {

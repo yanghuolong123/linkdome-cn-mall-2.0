@@ -113,7 +113,6 @@ export default {
           followCursor: true,
           y: {
             formatter: function (val) {
-              console.log(val)
               return Number(val).toLocaleString()
             }
           }

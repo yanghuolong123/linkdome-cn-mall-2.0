@@ -6,7 +6,7 @@
           {{ $t(titleList[value]) }}
           <Tooltip
             v-if="titleList[0]=='新老顾客占比'"
-            :content="tootipText"
+            :content="$t('notices.customer')"
             placement="bottom"
             theme="light"
             transfer
@@ -70,7 +70,6 @@ export default {
   },
   data () {
     return {
-      tootipText: '新顾客：在所选时间段内仅来过1次的人数\n老顾客：在所选时间段内来过2次及以上的人数',
       navList: [],
       titleList: [],
       currentIndex: 0,
@@ -172,6 +171,7 @@ export default {
       display flex
       flex-wrap wrap
       justify-content space-between
+      align-items center
       >div
         margin-right 50px
       >ul

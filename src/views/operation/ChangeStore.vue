@@ -3,7 +3,7 @@
 	<div class="shop-portrait">
     <div class="selector-container common-card" style="margin-bottom:20px">
        <div class="flex-center">
-         	维度:&nbsp;&nbsp;
+         {{	$t('维度')}}:&nbsp;&nbsp;
           <Select v-model="type" @on-change="typeChange"  style="width:100px;" >
             <Option v-for="(item,index) in typeOptions"
                 :value="item.value"
@@ -14,22 +14,22 @@
                 :value="item.id"
                 :key="index">{{ type==='store'?item.shop_name:item.location_name }}</Option>
           </Select>
-          调铺时间:&nbsp;&nbsp;
-          <Select v-model="currentDate" @on-change="dateChange"  style="width:200px;margin:0 20px;" >
+          {{$t('调铺时间')}}:&nbsp;&nbsp;
+          <Select v-model="currentDate" @on-change="dateChange"  style="width:200px;" >
             <Option v-for="(item,index) in dateOptions"
                 :value="item.location_change_time"
                 :key="index">{{ item.location_change_time }}</Option>
-          </Select> 
-        </div>   
+          </Select>
+        </div>
     </div>
 		<div class="box-card bg-white flex-box">
 			<div class="card" >
-				<span class="flex-box"><span class="color" style="background-color: #009FE9"></span> 调铺前{{displayName}}</span>
+				<span class="flex-box"><span class="color" style="background-color: #009FE9"></span> {{$t('fn.调铺前_',[$t(displayName)])}}</span>
 				<div class="flex-box entity-info" v-if="cardList[1]" >
 					<span>{{cardList[1]&&cardList[1].name}}</span>
-					<span v-if="type!=='store'">开业时间点:{{cardList[1].openDate}}</span>
+					<span v-if="type!=='store'">{{$t('开业时间点')}}:{{cardList[1].openDate}}</span>
 				</div>
-				<span>调铺前数据指标时间段</span>
+				<span>{{$t('调铺前数据指标时间段')}}</span>
 				<DatePicker v-if="cardList[1]"
 						:options="dateRangeBefore"
 						:value="cardList[1]&&cardList[1].timeRange"
@@ -39,12 +39,12 @@
 
 			</div>
 			<div class="card">
-				<span class="flex-box"><span class="color" style="background-color: #2BD9CF"></span> 调铺后{{displayName}}</span>
+				<span class="flex-box"><span class="color" style="background-color: #2BD9CF"></span> {{$t('fn.调铺后_',[$t(displayName)])}}</span>
 				<div class="flex-box entity-info" v-if="cardList[0]">
 					<span>{{cardList[0]&&cardList[0].name}}</span>
-					<span v-if="type!=='store'">开业时间点:{{cardList[0].openDate}}</span>
+					<span v-if="type!=='store'">{{$t('开业时间点')}}:{{cardList[0].openDate}}</span>
 				</div>
-				<span>调铺后数据指标时间段</span>
+				<span>{{$t('调铺后数据指标时间段')}}</span>
 				<DatePicker v-if="cardList[0]" :value="cardList[0]&&cardList[0].timeRange"
 							:options="dateRangeAfter"
 							@on-change="(val)=>{timeRangeChange(0,val)}"
@@ -53,7 +53,7 @@
       <Select v-model="saleMultipleSelected" :max-tag-count="1" multiple style="width:220px">
 				<Option v-for="(item,index) in radarOptions"
 						:value="item.value"
-						:key="index">{{ item.name }}</Option>
+						:key="index">{{ $t(item.name) }}</Option>
 			</Select>
       <Button size="large" type="primary" class="m-l-20"  @click="handleSearch" >{{ $t('查询') }}</Button>
 		</div>
@@ -244,25 +244,25 @@ export default {
       saleMultipleSelected: [],
       radarOptions: [
         {
-          name: '租金坪效',
+          name: this.$t('租金坪效'),
           value: 'SquaerMetre',
-          unit: '元/m²'
+          unit: this.$t('元/m²')
         }, {
-          name: '销售额',
+          name: this.$t('销售额'),
           value: 'SaleAmount',
-          unit: '元'
+          unit: this.$t('元')
         }, {
-          name: '停留时间',
+          name: this.$t('停留时间'),
           value: 'Dwell',
           unit: 'min'
         }, {
-          name: '成交率',
+          name: this.$t('成交率'),
           value: 'CloseRate',
           unit: '%'
         }, {
-          name: '客流量',
+          name: this.$t('客流量'),
           value: 'Enter',
-          unit: '人次'
+          unit: this.$t('人次')
         }
       ]
     }
@@ -406,7 +406,7 @@ export default {
       }
       this.lineSeries = [seriesData1, seriesData2]
       targetData.forEach((o, i) => {
-        this.lineOptions.xaxis.categories.push(`第${i + 1}天`)
+        this.lineOptions.xaxis.categories.push(this.$t('fn.第_天',[i+1]))
         _.forIn(o, (val, key) => {
             this.lineSeries.find(l => {
               return l.key === key

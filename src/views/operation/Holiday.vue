@@ -6,7 +6,7 @@
               <vs-select-item  :value="item.value" :text="item.key" :key="index" v-for="(item,index) in years" />
             </vs-select>
             <vs-select class="w-select m-l-20" autocomplete v-model="selectHoliday" >
-              <vs-select-item  :value="item.value" :text="item.key" :key="index" v-for="(item,index) in holidays" />
+              <vs-select-item  :value="item.value" :text="$t(item.key)" :key="index" v-for="(item,index) in holidays" />
             </vs-select>
             <Button size="large" class="m-l-20" type="primary" @click="handleSearch">{{ $t('查询') }}</Button>
             <Button size="large" class="m-l-20" @click="trendResetData">{{ $t('重置') }}</Button>

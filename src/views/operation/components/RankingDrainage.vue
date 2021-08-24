@@ -9,12 +9,12 @@ footFall:客流
   <div class="mt-6 p-6 bg-white box-card">
     <div class="ranking-selector-box flex items-center">
       <span class="mr-3">{{$t(selectTitle)}}</span>
-      <vs-select v-model="bussinessType" autocomplete :placeholder="$t(请选择)" :noDataText="$t(暂无数据)">
+      <vs-select v-model="bussinessType" autocomplete :placeholder="$t('请选择')" :noDataText="$t('暂无数据')">
         <vs-select-item
           v-for="item in withAllOptions"
           :value="item.value"
           :key="item.value"
-          :text="item.text"
+          :text="$t(item.text)"
         />
       </vs-select>
     </div>
@@ -28,7 +28,7 @@ footFall:客流
           :extraOptions="bizExtraOptions"
           :istotal='istotal'
           title="业态排行"
-          tooltipUnit='人次'
+          :tooltipUnit="$t('人次')"
           @getShopTableCoumn="leftTableCoumn"
           @getShopTableData="letfTableData"
           key="bizTop"
@@ -59,7 +59,7 @@ footFall:客流
           title="商铺排行"
           :isHome='true'
           :istotal='istotal'
-          tooltipUnit='人次'
+          :tooltipUnit="$t('人次')"
           @getShopTableCoumn="rightTableCoumn"
           @getShopTableData="rightTableData"
           key="shopTop"
@@ -265,7 +265,7 @@ export default {
       return Object.keys(this.bussinessList).map(e => ({ text: this.bussinessList[e], value: Number(e) }))
     },
     withAllOptions () {
-      const allType = { text: this.$t('所有业态'), value: 'all' }
+      const allType = { text: '所有业态', value: 'all' }
       return [allType, ...this.bussinessTypes]
     },
     indicators () {
@@ -305,9 +305,9 @@ export default {
         xAxis: {
           name: '名称',
           key: 'bussiness',
-          data: Object.values(Object.values(tml)[0]).map(e => e.name)
+          data: Object.values(Object.values(tml)[0]).map(e => this.$t(e.name))
         },
-        series: Object.keys(tml).map(function (e, index) {
+        series: Object.keys(tml).map((e, index)=> {
           if (index < 10) {
             let obj = {
               name: e,
@@ -457,7 +457,7 @@ export default {
     },
     leftTableCoumn(value){
      value.map(list=>{
-        if(list.title!=='名称'){
+        if(list.title!==this.$t('名称')){
           let newTime =  list.title.split(',')
           if(newTime[0]===newTime[1]){
             list.title = newTime[0]
@@ -473,7 +473,7 @@ export default {
     },
     rightTableCoumn(value){
       value.map(list=>{
-        if(list.title!=='名称'){
+        if(list.title!==this.$t('名称')){
           let newTime =  list.title.split(',')
           if(newTime[0]===newTime[1]){
             list.title = newTime[0]

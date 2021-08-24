@@ -91,7 +91,7 @@
       </div>
       <!-- 趋势对比 -->
       <group-trend
-				style="margin-top:20px"
+				class="m-t-20"
 				:time1="outRange"
 				:innerRange="innerRange"
 				:companyId="companyId"
@@ -319,7 +319,7 @@ export default {
           name: '客流量',
           yaxis: {
             title: {
-              text: '客流量（人次）'
+              text:  `${this.$t('客流量')}(${this.$t('人次')})`
             },
             labels: {
               formatter (value) {
@@ -332,7 +332,7 @@ export default {
           name: this.$t('集客量'),
           yaxis: {
             title: {
-              text: '集客量（人次）'
+              text: `${this.$t('集客量')}(${this.$t('人次')})`
             },
             labels: {
               formatter (value) {
