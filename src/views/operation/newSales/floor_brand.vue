@@ -209,6 +209,7 @@ export default {
       })
       this.floorOption.selectAction = this.floorOption.selectList[0].value
       // 品牌
+      this.brandOption.selectList = []
       let floorData = this.$store.state.home.bussinessTree
       this.brandOption.selectList.push({
         name: '全部楼层',

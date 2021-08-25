@@ -123,7 +123,7 @@ export default {
         if(this.curretIndicator==='enter'){
           if(val.series[0].name==='客流量'){
             let total = {}
-            total[val.series[0].key+'_'+this.time1] = val.series[0].data[1].toLocaleString() 
+            total[val.series[0].key+'_'+this.time1] = val.series[0].data[1].toLocaleString()
             Object.assign(obj, total)
           }
         }else if(this.curretIndicator==='SaleAmount'){
@@ -291,7 +291,7 @@ export default {
 
             dataKeys.map(list => {
               let obj = {}
-              obj.name = findKey(this.filteredSelectList,'value',this.curretIndicator,'name')
+              obj.name = this.$t(findKey(this.filteredSelectList,'value',this.curretIndicator,'name'))
               obj.key = this.curretIndicator + '_' + list + '_' + that.time1
               obj.data = []
               if (time[0] == time[1]) {
@@ -320,7 +320,7 @@ export default {
             let dataValues = Object.values(data.data)
             Object.keys(dataValues[0]).map(list => {
               let obj = {}
-              obj.name = findKey(this.filteredSelectList,'value',this.curretIndicator,'name')
+              obj.name = this.$t(findKey(this.filteredSelectList,'value',this.curretIndicator,'name'))
               obj.key = list
               obj.data = []
               Object.values(dataValues[0][list]).map(val => {
@@ -371,15 +371,15 @@ export default {
     tooltipUnit (type) { // 业态排行tooltip显示的单位
       switch (type) {
         case 'enter':
-          return '人次'
+          return this.$t('人次')
         case 'SquaerMetre':
-          return '元/m²'
+          return this.$t('元/m²')
         case 'SaleAmount':
-          return '元'
+          return this.$t('元')
         case 'CloseRate':
           return '%'
         case 'UnitPrice':
-          return '元'
+          return this.$t('元')
       }
     },
     getTrendData: _.debounce(function (params) {

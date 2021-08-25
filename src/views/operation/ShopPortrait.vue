@@ -76,11 +76,11 @@
                             </vs-td>
                             <!--租金坪效-->
                             <vs-td :data="data[indextr].rent">
-                                {{data[indextr].rent}}元/m²
+                                {{data[indextr].rent}} &nbsp;{{$t('元/m²')}}
                             </vs-td>
                             <!--销售坪效-->
                             <vs-td :data="data[indextr].sale_ratio">
-                                {{data[indextr].sale_ratio}}元/m²
+                                {{data[indextr].sale_ratio}} &nbsp;{{$t('元/m²')}}
                             </vs-td>
                             <!--租售比-->
                             <vs-td :data="data[indextr].rent_sale_per">
@@ -88,7 +88,7 @@
                             </vs-td>
                             <!--客流量-->
                             <vs-td :data="data[indextr].enter">
-                                {{data[indextr].enter && data[indextr].enter.toLocaleString()}}人次
+                                {{data[indextr].enter && data[indextr].enter.toLocaleString()}} &nbsp;{{$t('人次')}}
                             </vs-td>
                             <!--租约开始-->
                             <vs-td :data="data[indextr].lease_start">

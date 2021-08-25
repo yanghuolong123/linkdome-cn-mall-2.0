@@ -43,7 +43,12 @@ module.exports =  {
   punctuation: {
     colon: "："
   },
-
+  datePicker:{
+    yesterday:'昨 日',
+    lastWeek:'上 周',
+    lastMonth:'上 月',
+    thisYear:'今 年',
+  },
 
 	account: "账户",
   accountNum: "账号",

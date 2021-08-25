@@ -41,7 +41,7 @@ export default {
       options: {
         shortcuts: [
           {
-            text: '昨 日',
+            text: this.$t('datePicker.yesterday'),
             value () {
               const end = new Date()
               const start = new Date()
@@ -58,7 +58,7 @@ export default {
             }
           },
           {
-            text: '上 周',
+            text:this.$t('datePicker.lastWeek'),
             value () {
               const end = new Date()
               const start = new Date()
@@ -80,7 +80,7 @@ export default {
             }
           },
           {
-            text: '上 月',
+            text:this.$t('datePicker.lastMonth'),
             value () {
               const end = new Date()
               const start = new Date()
@@ -104,7 +104,7 @@ export default {
             }
           },
           {
-            text: '今 年',
+            text:this.$t('datePicker.thisYear'),
             value () {
               const end = new Date()
               const start = new Date()

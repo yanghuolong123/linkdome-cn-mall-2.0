@@ -42,7 +42,12 @@ module.exports =  {
   punctuation: {
     colon: ":"
   },
-
+  datePicker:{
+    yesterday:'Yesterday',
+    lastWeek:'Last week',
+    lastMonth:'Last Month',
+    thisYear:'This year',
+  },
 
 	account: "Account",
   accountNum: "account number",
@@ -118,7 +123,7 @@ module.exports =  {
   确定: "OK",
   销售额: "Sales",
   目标销售额: "Target Sales",
-  坪效: "Flat effect",
+  坪效: "Floor effect",
   客单价: "Customer unit price",
   合计: "Total",
   请添加实体信息: "Add Entity",
@@ -324,7 +329,7 @@ module.exports =  {
   年度趋势: "Annual trend",
   月度趋势: "Monthly trend",
   // singleCard.vue
-  "坪效（元/平方米）": "Floor efficiency (yuan/m²)",
+  "坪效（元/平方米）": "Floor effect (yuan/m²)",
   "客单价（元）" :"Customer unit price (yuan)",
   "销售额（元）": "Sales (yuan)",
   "元": " yuan",
@@ -404,7 +409,7 @@ module.exports =  {
   全年总计: "Total for the whole year:",
   购物中心: "Shopping center",
   销售额目标: "Sales target",
-  销售坪效: "Sales flat effect",
+  销售坪效: "Sales floor effect",
   // formats.vue
   添加业态: "Add business pattern",
   编辑业态: "Edit business pattern",

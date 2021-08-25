@@ -776,7 +776,7 @@ export default {
       var dataList = this.allData
       if (value === 0) {
         that.tableList = []
-        that.tableName = ['时间', '客流转化深度 ( % )']
+        that.tableName = ['时间', that.$t('客流转化深度')+' ( % )']
         dataList.everyDateConvrRate.map(function (m) {
           m.data.map(function (d) {
             var table = {}
@@ -804,7 +804,7 @@ export default {
       that.siteTraffic.series = []
       that.siteTraffic.chartOptions.xaxis.categories = []
       that.tableList = []
-      that.tableName = ['时间', '客流转化深度 ( % )']
+      that.tableName = ['时间',that.$t('客流转化深度')+' ( % )']
       data.everyDateConvrRate.map(function (m, kIndexs) {
         var obj = {}
         obj.name = m.name

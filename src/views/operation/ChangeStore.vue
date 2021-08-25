@@ -7,7 +7,7 @@
           <Select v-model="type" @on-change="typeChange"  style="width:100px;" >
             <Option v-for="(item,index) in typeOptions"
                 :value="item.value"
-                :key="index">{{ item.name }}</Option>
+                :key="index">{{ $t(item.name) }}</Option>
           </Select>
           <Select v-model="entity"  style="width:150px;margin:0 20px;">
             <Option v-for="(item,index) in entityOpitons"
