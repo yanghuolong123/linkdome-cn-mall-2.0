@@ -24,8 +24,7 @@
       </div>
     <div v-if="id!=='company'" style="width:100%;height:100%;">
       <template>
-        <div class="carousel" >
-          <img :src="mapCarousel.map_url" alt="">
+        <div class="carousel" :style="{backgroundImage:`url(${mapCarousel.map_url})`}" >
           <div
             class="positions"
             style="position:absolute"
@@ -163,18 +162,15 @@ export default {
   }
 }
 </script>
-<style lang="less" scope="scoped">
+<style lang="less" scoped>
 .carousel{
   position:relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
   border-radius: 6px;
-  img{
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
+  background-size: 100% 100%;
+  min-height: 436px;
   .positions{
     background-color: #3a96e8;
     opacity: 0.9;

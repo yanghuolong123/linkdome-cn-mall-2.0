@@ -494,6 +494,7 @@ export const disabledDate = {
 }
 // 处理实体权限级联数据
 export const formatEntityData = (data, role_id, checklist) => {
+  console.log(_.cloneDeep(data))
   let organization = data.map(function (m, index) {
     m.value = m.id
     m.label = m.name

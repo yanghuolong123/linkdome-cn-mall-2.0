@@ -55,6 +55,7 @@
   import { entityFlow } from '@/api/entityNew'
   import { getMaxIndex, findKey, deepFind } from '@/libs/util'
   import moment from 'moment'
+	import {isEmpty} from '../../libs/util'
 
   export default {
     name: 'entity-analytic',
@@ -105,10 +106,10 @@
         })
         return tools
       },
-      //显示集客量图表的条件为：选择了非出入口的实体 并且 是单天的数据
+      //显示集客量图表的条件为：选择了购物中心 并且 是单天的数据
       showOccu () {
         if (!this.oParams) return false
-        return this.oParams.getBzidWithoutGate() && this.oParams.isSingleDay()&&this.oParams.params.compareType!=="businessType"
+        return !isEmpty(this.oParams.getSelectedShopId()) && this.oParams.isSingleDay()&&this.oParams.params.compareType!=="businessType"
       },
     },
     methods: {
