@@ -4,7 +4,6 @@
 							:multiple="isMultiple"
 							:noDataText="$t('holder.暂无数据')"
 							:data="tableList">
-			
 			<template slot="thead" #thead>
 				<vs-th :key="indexs" class="table-title" v-for="(item, indexs) in tableName">{{$t(item)}}</vs-th>
 			</template>
@@ -187,7 +186,7 @@
 </script>
 <style lang="scss" scoped>
 	.mul-table{
-		/deep/	.vs-table--tbody{
+		/deep/ .vs-table--tbody{
 			z-index: 1;
 		}
 	}

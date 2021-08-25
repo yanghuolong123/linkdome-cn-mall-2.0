@@ -8,6 +8,7 @@ import {
   deepFind,
   getCompareDate,
   getUnique,
+  isEmpty
 } from '@/libs/util'
 import i18n from '@/i18n/i18n'
 import { getBussinessTree,  getCascadeList } from '@/api/passenger.js'
@@ -399,7 +400,7 @@ const selectMixin = {
     //过滤实体权限
     handleEntityPrivilege () {
       const entityPrivilege = _.cloneDeep(this.$store.state.user.business_zone_privilege)
-      if (entityPrivilege === '') return
+      if (isEmpty(entityPrivilege)) return
       /** *************处理楼层权限***************/
         // 所有商铺(叶子)
       const leaves = entityPrivilege.filter(o => {

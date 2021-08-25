@@ -1,4 +1,5 @@
 import {  isEmpty,gotInnerRange } from '@/libs/util'
+import store from  '@/store/store'
 export class ParamsConstructor{
   constructor (params={},isHour=false){
     this.params = params;
@@ -16,16 +17,13 @@ export class ParamsConstructor{
       return ''
     }
   }
-  //获取所有不含出入口的bzid（用于查集客量）
-  getBzidWithoutGate(){
+  //若选择了购物中心则返回购物中心id（用于查集客量）
+  getSelectedShopId(){
     if(!isEmpty(this.params.entitys)){
-      const entity = this.params.entitys.filter(o=>{
-        return o.itype !== 'gate'
+      const entity = this.params.entitys.find(o=>{
+        return o.property_id == store.state.home.headerAction
       })
-      const bzids = entity.map(o=>{
-        return o.id
-      })
-      return bzids.toString()
+      return entity && entity.id
     }else {
       return ''
     }
@@ -70,7 +68,7 @@ export class ParamsConstructor{
     if(this.params.compareType === "businessType"){
       data.industry_id = this.getBzid()
     }else {
-      data.bzid = isOccu?this.getBzidWithoutGate():this.getBzid()
+      data.bzid = isOccu?this.getSelectedShopId():this.getBzid()
     }
     if(this.isDateCompare()){
       data.time2 = this.params.date2Array.toString()
