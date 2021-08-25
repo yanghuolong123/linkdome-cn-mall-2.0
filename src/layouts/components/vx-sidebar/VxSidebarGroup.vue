@@ -54,7 +54,6 @@
           :icon="itemIcon(groupIndex + '.' + index)"
           icon-small
           :target="groupItem.target">
-          <!-- <pre>{{groupItem.url}}</pre> -->
           <span class="truncate">{{ $t(groupItem.i18n) || groupItem.name }}</span>
           <vs-chip
             v-if="groupItem.tag"
@@ -78,9 +77,9 @@
                <vs-radio v-model="shopingModel" vs-name="shopingModel" :vs-value="item.value">{{item.text}}</vs-radio>
             </li>
           </ul>
-          <div class="select-foort">
-            <button v-on:click='selectSubmint'>{{$t('保存')}}</button>
-            <button v-on:click="selectClose">{{$t('取消')}}</button>
+          <div class="select-foort flex-center">
+            <div class="button" @click='selectSubmint'>{{$t('保存')}}</div>
+            <div class="button" @click="selectClose">{{$t('取消')}}</div>
           </div>
         </div>
       </div>
@@ -362,13 +361,13 @@ export default {
         text-align: center;
         margin-top: 10px;
         padding-bottom: 10px;
-        button{
+        justify-content: center;
+        .button{
           width: 76px;
-          height:26px;
-          text-align: center;
+          height:30px;
+          line-height:30px;
           font-size: 12px;
           color: #fff;
-          border:2px solid rgba(255, 255, 255, 1);
           border-radius:6px;
           cursor: pointer;
           &:nth-child(1){
