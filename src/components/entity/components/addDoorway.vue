@@ -40,7 +40,6 @@
 
 <script>
 import _ from "lodash";
-import axios from "axios";
 import {
    addGate,
     getGateTypeList,
@@ -110,7 +109,7 @@ export default {
     },
     computed:{
         gateTypeList(){
-            return this.getGateTypeList()
+            return this.getGateTypeList()||[]
         },
         marginTops(){
             if(this.userLvl=='common_admin'){

@@ -13,7 +13,7 @@
           label=""
           v-model="comprotModel"
           autocomplete
-          v-show="showCompany&&isnotBgmange"
+          v-if="showCompany&&isnotBgmange"
           @change="comprotChange"
         >
 
@@ -25,6 +25,7 @@
           v-for="(item,index) in comprotList"
         />
         </vs-select>
+        <span v-else>{{$store.state.home.headerData.text}}</span>
         <vs-spacer></vs-spacer>
         <div class="flex-center">
           <!-- <div id="openVip" @click="openModal" v-if="showVIpModule">
