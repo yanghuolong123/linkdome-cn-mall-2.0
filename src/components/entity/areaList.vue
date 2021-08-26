@@ -243,6 +243,7 @@ export default {
       this.alertText = alertText
     },
     adDoorway () {
+      console.log(1)
       this.showDoorway = true
       var that = this
       setTimeout(() => {

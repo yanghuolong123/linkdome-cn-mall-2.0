@@ -118,22 +118,16 @@ export default {
   },
   computed: {
     totalData () { // 合计数据
-      let obj = { time: '合计' }
-      _.forIn(this.chartData, (val, key) => {
-        if(this.curretIndicator==='enter'){
-          if(val.series[0].name==='客流量'){
-            let total = {}
-            total[val.series[0].key+'_'+this.time1] = val.series[0].data[1].toLocaleString()
-            Object.assign(obj, total)
-          }
-        }else if(this.curretIndicator==='SaleAmount'){
-        if(val.series[0].name==='销售额'){
-            let total = {}
-            total[this.time1] = parseInt(_.sum(Object.values(val.series[0].data[0]))).toLocaleString()
-            Object.assign(obj, total)
-          }
-        }
-      })
+      let obj = { time: '合计' };
+      if(['enter','SaleAmount'].includes(this.curretIndicator)){
+        this.chartData[this.curretIndicator] && this.chartData[this.curretIndicator].series.forEach(o=>{
+          if(this.curretIndicator === 'enter'){
+            obj[`${o.key}_${this.time1}`] = o.data[1].toLocaleString()
+					}else {
+            obj[`${o.key}_${this.time1}`] = parseInt(_.sum(Object.values(o.data[0]))).toLocaleString()
+					}
+				})
+			}
       return obj
     },
     convertInnerRange () {
@@ -286,12 +280,12 @@ export default {
         if (data.code == 200) {
           let time = this.time1.split(',')
           // 判断类型是不是客流量或者集客量
-          if (this.curretIndicator == 'enter' || this.curretIndicator == 'occupancy') {
+          if (this.curretIndicator === 'enter' || this.curretIndicator === 'occupancy') {
             let dataKeys = Object.keys(data.data)
 
             dataKeys.map(list => {
               let obj = {}
-              obj.name = this.$t(findKey(this.filteredSelectList,'value',this.curretIndicator,'name'))
+              obj.name = list+'-'+this.$t(findKey(this.filteredSelectList,'value',this.curretIndicator,'name'))
               obj.key = this.curretIndicator + '_' + list + '_' + that.time1
               obj.data = []
               if (time[0] == time[1]) {
@@ -317,22 +311,20 @@ export default {
               series.push(obj)
             })
           } else {
-            let dataValues = Object.values(data.data)
-            Object.keys(dataValues[0]).map(list => {
-              let obj = {}
-              obj.name = this.$t(findKey(this.filteredSelectList,'value',this.curretIndicator,'name'))
-              obj.key = list
-              obj.data = []
-              Object.values(dataValues[0][list]).map(val => {
-                if(this.curretIndicator === 'CloseRate'){
-                  obj.data.push(parseInt(val*100))
-                }else {
-                  obj.data.push(parseInt(val))
-                }
-              
-              })
+            _.forIn(data.data,(value,key)=>{
+              let obj = {
+                key:`${this.curretIndicator}_${key}_${Object.keys(value)[0]}`,
+                name: key+'_'+this.$t(findKey(this.filteredSelectList,'value',this.curretIndicator,'name')),
+								data:Object.values(value[Object.keys(value)[0]]).map(val=>{
+                  if(this.curretIndicator === 'CloseRate'){
+                    return parseInt(val*100)
+                  }else {
+                    return parseInt(val)
+                  }
+								})
+							};
               series.push(obj)
-            })
+						})
           }
           return series
         }
@@ -512,7 +504,7 @@ export default {
     enterTableChage (value) {
       this.tableListData = value.data
     },
-    curretIndicatorChange(val){
+    curretIndicatorChange(val){//只有客流量和销售额需要显示合计
       if(val!=='enter'&&val!=='SaleAmount'){
         this.showTotal = false
       }else{

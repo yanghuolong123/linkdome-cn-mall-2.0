@@ -103,7 +103,7 @@
 							</Option>
 						</Select>
 						<uploadImg @changeImg="changeImg" :disabled="property === ''&&addType===1"
-											 v-if="currentWay.itype !== 'property'"
+											 v-if="currentWay.itype&&currentWay.itype !== 'property'"
 											 :style="{marginLeft:addType===1?'20px':''}">{{$t('上传')}}
 						</uploadImg>
 					</div>
@@ -464,7 +464,7 @@
         let data = {}
         switch (image_type) {
           case 'company':
-            data.property_id = Number(this.property.split('_')[1])
+            data.property_id = Number(this.currentWay.id.split('_')[1])
             break
           case 'property':
             data.property_id = Number(this.property.split('_')[1])
@@ -702,14 +702,24 @@
         } else {//选择的是购物中心
           const value = val.split('_')
           //waylist 是购物中心下的所有出入口gate
+          console.log(_.cloneDeep(this.orgData))
+          this.wayList = []
           deepTraversal(this.orgData, 'children', o => {
             if (o.itype === value[0] && o.id === Number(value[1])) {
-              const gateList = o.children.map(child => {
-                return child.gate
-              })
-              this.wayList = _.compact(gateList.flat())
+              if (o.children && o.children.length) {
+                const gateList = o.children.map(child => {
+                  return child.gate
+                })
+                this.wayList = _.compact(gateList.flat())
+              }
+
             }
           })
+					if(!this.wayList.length){
+            this.way = ''
+					  this.$Message.warning('该购物中心下未配置出入口，请先配置！')
+					  return
+					}
         }
         this.wayList.forEach(o => {
           if (val.indexOf('company') === -1) o.id = o.bz_id
@@ -726,6 +736,7 @@
           }
         })
         this.way = way || this.wayList[0].id
+        console.log('change')
         this.wayChange(this.way)
 
       },
