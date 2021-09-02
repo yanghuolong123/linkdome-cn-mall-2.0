@@ -386,6 +386,7 @@ const selectMixin = {
     },
     //给级联数据最后一级加全部按钮
     cascadeDataAddAll (data) {
+      console.log(data)
       findCascadeLastLevel(data, 'children', addAll)
 
       function addAll (levelNode) {

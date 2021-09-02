@@ -19,7 +19,7 @@
 						size="large"
 						@on-change="compareTypeChange" v-model="isHour">
 					<span slot="open">小时</span>
-					<span slot="close">默认</span>
+					<span slot="close">天</span>
 				</i-switch>
 			</div>
 		</chart-box>

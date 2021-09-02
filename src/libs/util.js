@@ -624,8 +624,8 @@ export const deepTraversal = (arr, child, callback) => {
 export const findCascadeLastLevel = (arr, child, callback) => {
   function traversal (a) {
     for (let i = 0; i < a.length; i++) {
-      if (a[i][child] && a[i][child].length) {
-        traversal(a[i][child])
+      if (a[i][child] && a[i][child].length ||a[i].itype==='floor') {//a[i].itype==='floor'  专为解决楼层下无实体时，全部按钮加在了楼层列
+        traversal(a[i][child]||[])
       } else {
         callback(a)
         return
