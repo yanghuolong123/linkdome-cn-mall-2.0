@@ -13,13 +13,12 @@
 					<Option v-for="item in enterFlowList" :value="item.value" :key="item.value">{{ $t(item.name) }}</Option>
 				</Select>
 				<i-switch
-						:disabled="(oParams && oParams.isSingleDay())||(enterSelect.length>1&&(oParams&&oParams.params.entitys.length>1))"
-						v-if="oParams && !oParams.isDateCompare()"
+						v-if="oParams && !oParams.isDateCompare() && !((oParams && oParams.isSingleDay())||(enterSelect.length>1&&(oParams&&oParams.params.entitys.length>1)))"
 						class="ml-20 switch"
 						size="large"
 						@on-change="compareTypeChange" v-model="isHour">
 					<span slot="open">{{ $t('小时') }}</span>
-					<span slot="close">{{ $t('默认') }}</span>
+					<span slot="close">{{ $t('fx.day') }}</span>
 				</i-switch>
 			</div>
 		</chart-box>
