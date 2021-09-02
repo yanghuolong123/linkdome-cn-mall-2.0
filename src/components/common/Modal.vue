@@ -25,10 +25,6 @@
         type:Boolean,
         default:false
       },
-      loading:{
-        type:Boolean,
-        default:false
-      },
       width:{
         type:Number,
         default:520
@@ -36,7 +32,8 @@
     },
     data(){
       return{
-        modalShow:false
+        modalShow:false,
+        loading:true
       }
     },
     methods:{

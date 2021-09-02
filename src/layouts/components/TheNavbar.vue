@@ -25,7 +25,7 @@
           v-for="(item,index) in comprotList"
         />
         </vs-select>
-        <span v-else>{{$store.state.home.headerData.text}}</span>
+        <span v-else class="m-l-20">{{$store.state.home.headerData.text}}</span>
         <vs-spacer></vs-spacer>
         <div class="flex-center">
           <!-- <div id="openVip" @click="openModal" v-if="showVIpModule">
@@ -55,14 +55,14 @@
                   @click="isAccount=true"
                 >
                   <Icon type="md-person" size="16"/>
-                  <span class="ml-2">账户信息</span>
+                  <span class="ml-2">{{$t('账户信息')}}</span>
                 </li>
                 <li
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
                   @click="accountOut"
                 >
                   <feather-icon icon="LogOutIcon" svgClasses="w-4 h-4"></feather-icon>
-                  <span class="ml-2">退出</span>
+                  <span class="ml-2">{{$t('退出')}}</span>
                 </li>
               </ul>
             </vs-dropdown-menu>
@@ -89,24 +89,24 @@
       </div>
       <ul class="account-text">
         <li>
-          <span>角色：</span>
-          <span>{{roleName}}</span>
+          <span>{{$t('角色')}}：</span>
+          <span>{{$t(roleName)}}</span>
         </li>
         <li>
-          <span>姓名：</span>
+          <span>{{$t('姓名')}}：</span>
           <span>{{user.realName}}</span>
         </li>
         <li>
-          <span>性别：</span>
-          <span v-if="user.sex == 1">男</span>
-          <span v-if="user.sex == 0">女</span>
+          <span>{{$t('性别')}}：</span>
+          <span v-if="user.sex == 1">{{$t('男性')}}</span>
+          <span v-if="user.sex == 0">{{$t('女性')}}</span>
         </li>
         <li>
-          <span>手机号：</span>
+          <span>{{$t('手机号')}}：</span>
           <span>{{user.mobile}}</span>
         </li>
         <li>
-          <span>邮箱：</span>
+          <span>{{$t('邮箱')}}：</span>
           <span>{{user.email}}</span>
         </li>
       </ul>

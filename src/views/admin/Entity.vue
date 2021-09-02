@@ -52,7 +52,6 @@
 			:propertyId="addmall.property_id"
 			@changeEditTitle="changeEditTitle"
 			@init="init"
-			@alertMessage="alertMessage"
 			@closeEdit="closeEdit"
 			@getData="getData"
 			@addTypeData="addTypeData"
@@ -717,7 +716,7 @@
           })
 					if(!this.wayList.length){
             this.way = ''
-					  this.$Message.warning('该购物中心下未配置出入口，请先配置！')
+					  this.$Message.warning(this.$t('notices.configGate'))
 					  return
 					}
         }
@@ -1116,7 +1115,7 @@
           }
         })
       },
-      delFloor (value, alertText, obj) {
+      delFloor (obj) {
         this.$alert({
           content:this.$t('确认删除此楼层信息？'),
           cancel(){},

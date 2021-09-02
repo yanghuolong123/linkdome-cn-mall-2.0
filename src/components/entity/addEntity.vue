@@ -16,12 +16,12 @@
               v-if="isEmptyPage">
               <div class="flexs">
                 <FormItem :label="$t('名称')" prop="name" v-if="formValidate.spc!=2">
-                  <Input type="text" v-model="formValidate.name"></Input>
+                  <Input maxlength="20" type="text" v-model="formValidate.name"></Input>
                 </FormItem>
               </div>
               <div class="flexs">
                 <FormItem :label="$t('地址')" prop="address" v-if="formValidate.spc==1">
-                  <Input type="text" v-model="formValidate.address"></Input>
+                  <Input maxlength="20" type="text" v-model="formValidate.address"></Input>
                 </FormItem>
               </div>
             </Form>
@@ -38,7 +38,7 @@
                 </FormItem>
 
                 <FormItem :label="$t('名称')" prop="name" v-if="formValidate.spc!=2">
-                  <Input type="text" v-model="formValidate.name"></Input>
+                  <Input maxlength="20" type="text" v-model="formValidate.name"></Input>
                 </FormItem>
 
                 <FormItem :label="$t('楼层')" prop="floor" v-if="formValidate.spc==2">
@@ -106,7 +106,7 @@
                 </FormItem>
 
                 <FormItem :label="$t('地址')" prop="address" v-if="formValidate.spc==1">
-                  <Input type="text" v-model="formValidate.address"></Input>
+                  <Input maxlength="20" type="text" v-model="formValidate.address"></Input>
                 </FormItem>
 
                 <FormItem :label="$t('父节点')" prop="parentNode" v-if="formValidate.spc!=1&&userLvl=='admin'">
@@ -137,7 +137,7 @@
                 </FormItem>
 
                 <FormItem :label="$t('描述')" prop="description">
-                  <Input type="text" v-model="formValidate.description"></Input>
+                  <Input maxlength="50" type="text" v-model="formValidate.description"></Input>
                 </FormItem>
 
                 <FormItem v-if="userLvl!='admin'&&formValidate.spc!=3">
@@ -240,7 +240,7 @@
                           <FormItem :label="$t(item.name)"></FormItem>
                         </i-col>
                         <i-col span="16">
-                          <Input 
+                          <Input
                             type="number"
                             :disabled="disabledSale"
                             v-model="item.modal"
@@ -271,6 +271,7 @@
 </template>
 
 <script>
+  import i18n from '@/i18n/i18n'
 import data from '@/assets/json/province.json'
 import { initMonthsData } from '@/libs/util'
 import {
@@ -314,14 +315,14 @@ export default {
   data () {
     const validSelectTime = (rule, value, callback) => {
       if (value[0] === '' && value[1] === '') {
-        callback(new Error('请选择营业时间'))
+        callback(new Error(i18n.t('fn.请选择',[i18n.t('营业时间')])))
       } else {
         callback()
       }
     }
     const validSelect = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请选择' + rule.tips))
+        callback(new Error(i18n.t('fn.请选择',[i18n.t(rule.tips)])))
       } else {
         callback()
       }
@@ -330,10 +331,10 @@ export default {
       // 模拟异步验证效果
       setTimeout(() => {
         if (!Number.isFinite(Number(value))) {
-          callback(new Error('面积数要为数字'))
+          callback(new Error(i18n.t('面积数要为数字')))
         } else {
           if (value < 0) {
-            callback(new Error('面积数不能为负'))
+            callback(new Error(i18n.t('面积数不能为负')))
           } else {
             callback()
           }
@@ -364,36 +365,18 @@ export default {
       ruleValidate: {
         name: [{
           required: true,
-          message: '名称不能为空',
-          trigger: 'blur'
-        },
-        {
-          type: 'string',
-          max: 20,
-          message: '名称长度不得大于20个字符',
+          message: this.$t('名称不能为空'),
           trigger: 'blur'
         }],
         address: [{
           required: true,
-          message: '地址不能为空',
+          message: this.$t('fn._不能为空',[this.$t('地址')]),
           trigger: 'blur'
         },
         {
           type: 'string',
           min: 6,
-          message: '地址长度不得少于6个字符',
-          trigger: 'blur'
-        },
-        {
-          type: 'string',
-          max: 20,
-          message: '地址长度不得大于20个字符',
-          trigger: 'blur'
-        }],
-        description: [{
-          type: 'string',
-          max: 50,
-          message: '描述长度不得大于50个字符',
+          message: this.$t('fn.cantLessThan',[this.$t('地址'),6]),
           trigger: 'blur'
         }],
         floor: [{ required: true, tips: '楼层', validator: validSelect, trigger: 'change' }],
@@ -830,7 +813,6 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           this.addEntity()
-        } else {
         }
       })
     },
@@ -912,12 +894,7 @@ export default {
                 that.formValidate.address, that.formValidate.description, flowType, sumFlow, saleType, sumSale, that.zone_id,
                 daily_start, daily_end, that.flow_month, that.sale_month, Number(that.formValidate.area), years).then(res=> {
                   that.closeEdit()
-                  var alertText = {}
-                  alertText.bg = '#00A0E9'
-                  alertText.title = this.$t('添加购物中心')
-                  alertText.text = this.$t('添加购物中心成功')
-                  alertText.confirm = false
-                  that.$emit('alertMessage', true, alertText)
+                  this.$message.success(this.$t('fn.successTo', [this.$t('添加购物中心')]))
                   var data = {}
                   data.children = []
                   data.name = that.formValidate.name
@@ -936,12 +913,7 @@ export default {
                       that.$store.commit('saveOrganizationData', res.data.data)
                   })
                   that.closeEdit()
-                  var alertText = {}
-                  alertText.bg = '#00A0E9'
-                  alertText.title = this.$t('编辑购物中心')
-                  alertText.text = this.$t('编辑购物中心成功')
-                  alertText.confirm = false
-                  that.$emit('alertMessage', true, alertText)
+                  this.$message.success(this.$t('fn.successTo', [this.$t('编辑购物中心')]))
                   var data = {}
                   data.name = that.formValidate.name
                   data.label = that.formValidate.name
@@ -955,16 +927,12 @@ export default {
             }
         })
       } else if (that.formValidate.spc == 2) {
+       
         // 添加楼层
         if (!that.isModify) {
           addtype(that.floor, that.addmall.property_id, that.floornum, that.addmall.id, that.zone_id, that.floorindex, that.formValidate.description).then(res=> {
               that.closeEdit()
-              var alertText = {}
-              alertText.bg = '#00A0E9'
-              alertText.title = that.editTitle
-              alertText.text = this.$t('fn.successTo', [this.$t('添加楼层')])
-              alertText.confirm = false
-              that.$emit('alertMessage', true, alertText)
+              this.$message.success(this.$t('fn.successTo', [this.$t('添加楼层')]))
               var data = {}
               data.itype = 'floor'
               data.id = res.data.data.bzid
@@ -986,16 +954,11 @@ export default {
           let description = that.formValidate.description
           let bzid = that.formValidate.id
           let parent_id = that.formValidate.parentNode
-          let zones = that.formValidate.zones.join(',')
+          let zones = that.formValidate.zones && that.formValidate.zones.join(',')
           let zone_index = thefloor.value
           updateFloorData(name, parent_id, zones, zone_index, description, bzid).then(res=> {
               that.closeEdit()
-              var alertText = {}
-              alertText.bg = '#00A0E9'
-              alertText.title = that.editTitle
-              alertText.text = this.$t('fn.successTo', [this.$t('编辑楼层')])
-              alertText.confirm = false
-              that.$emit('alertMessage', true, alertText)
+              this.$message.success(this.$t('fn.successTo', [this.$t('编辑楼层')]))
               var data = {}
               data.itype = 'floor'
               data.id = bzid
@@ -1023,12 +986,7 @@ export default {
         if (!that.isModify) {
           addAreas('store', that.addmall.property_id, name, parent_id, that.zone_id, business_type_id, area_size, description).then(res=> {
               that.closeEdit()
-              var alertText = {}
-              alertText.bg = '#00A0E9'
-              alertText.title = that.editTitle
-              alertText.text = this.$t('fn.successTo', [this.$t('添加商铺')])
-              alertText.confirm = false
-              that.$emit('alertMessage', true, alertText)
+              this.$message.success(this.$t('fn.successTo', [this.$t('添加商铺')]))
               var data = {}
               data.itype = 'store'
               data.id = res.data.data.bzid
@@ -1046,12 +1004,7 @@ export default {
           var bzid = that.formValidate.id
           updateAreas('store', that.addmall.property_id, name, parent_id, that.zone_id, business_type_id, area_size, description, bzid).then(res=>{
               that.closeEdit()
-              var alertText = {}
-              alertText.bg = '#00A0E9'
-              alertText.title = that.editTitle
-              alertText.text = this.$t('fn.successTo', [this.$t('编辑商铺')])
-              alertText.confirm = false
-              that.$emit('alertMessage', true, alertText)
+              this.$message.success(this.$t('fn.successTo', [this.$t('编辑商铺')]))
               var data = {}
               data.itype = 'store'
               data.id = bzid

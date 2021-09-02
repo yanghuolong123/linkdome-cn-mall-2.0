@@ -98,18 +98,6 @@
 			</div>
 		</div>
 	</modal>
-	<!--  <div class="account-edit">-->
-	<!--    <div class="account-edit-bg" v-on:click="closeEdit"></div>-->
-	<!--    <div class="account-edit-text">-->
-	<!--      <div class="edit-title">-->
-	<!--        {{ $t(editTitle) }}-->
-	<!--      </div>-->
-	<!--        <div class="edit-close" v-on:click="closeEdit">-->
-	<!--          <Icon type="md-close" />-->
-	<!--        </div>-->
-	
-	<!--    </div>-->
-	<!--  </div>-->
 </template>
 
 <script>
@@ -243,11 +231,6 @@
           superAdminList: [{ required: true, validator: superAdminCheck }]
         },
         sexList: [{ 'label': this.$t('男'), 'value': 1 }, { 'label': this.$t('女'), 'value': 0 }],
-        isAdminList: [
-          { 'label': this.$t('超级管理员'), 'value': 22 },
-          { 'label': this.$t('管理员'), 'value': 28 },
-          { 'label': this.$t('普通用户'), 'value': 23 }
-        ],
         modify: false,
         copyBzid: []
       }
@@ -480,7 +463,6 @@
         this.uploadImg = img
       },
       handleSubmit (name) {
-        this.$refs.modal.loading = true
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.updataUser()
@@ -518,6 +500,7 @@
           }
           addUserData(user)
             .then((res) => {
+              this.$refs.modal.resetOkButton()
               switch (res.data.code) {
                 case 200:
                   this.$message.success(this.$t('fn.successTo', [this.$t('添加用户')]))
@@ -539,6 +522,7 @@
           user.id = that.userForm.id
           updateUserData(user)
             .then(res => {
+              this.$refs.modal.resetOkButton()
               if (res.data.code === 200) {
                 this.$message.success(this.$t('fn.successTo', [this.$t('编辑用户')]))
                 this.$emit('success');

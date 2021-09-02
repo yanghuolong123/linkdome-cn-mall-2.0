@@ -1,5 +1,5 @@
 <template>
-	<vx-card :title=titleName :titleTip="titleTip" class="mul-table">
+	<vx-card :title="titleName" :titleTip="titleTip" class="mul-table">
 		<vs-table v-model="selected"
 							:multiple="isMultiple"
 							:noDataText="$t('holder.暂无数据')"

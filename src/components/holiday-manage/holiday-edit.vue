@@ -1,6 +1,6 @@
 <template>
-	<modal ref="modal" :loading="true" :title="$t(msgTitle)" @onOk="handleSubmit" @onCancel="closeEdit">
-		<Form class="edit-form" ref="formInline" :model="datas" :rules="ruleInline" label-position="right" inline
+	<modal ref="modal"  :loading="true" :title="$t(msgTitle)" @onOk="handleSubmit" @onCancel="closeEdit">
+		<Form class="edit-form" ref="formInline" :model="datas" :rules="ruleInline"
 					:label-width="80">
 			<FormItem prop="name" :label="$t('名称')">
 				<Input v-model="datas.name"></Input>
