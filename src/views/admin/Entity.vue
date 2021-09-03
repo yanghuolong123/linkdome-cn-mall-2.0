@@ -866,6 +866,7 @@
         } else if (value.length == 1) {
           getGroupOrganization().then((res) => {
             if (res.data.code == 200) {
+              that.$store.commit('saveOrganizationData', res.data.data)
               this.organaizationData = _.cloneDeep(res.data.data)
               var shopping = res.data.data.property
               for (var i = 0; i < shopping.length; i++) {
