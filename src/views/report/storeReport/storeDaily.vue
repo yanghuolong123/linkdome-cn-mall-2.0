@@ -274,7 +274,7 @@
         const datelist = time.split(',')
         const filename = datelist[0] === datelist[1] ? datelist[0] : time
         if(!this.pdfBaseUrl){
-          this.$message.warning('未获取到pdf_center服务器地址')
+          this.$Message.warning('未获取到pdf_center服务器地址')
 					return
         }
         axios.post(this.pdfBaseUrl + '/pdf/execute', {
@@ -294,8 +294,10 @@
             document.body.removeChild(downloadElement) // 下载完成移除元素
             window.URL.revokeObjectURL(href) // 释放掉blob对象
           })
-          .catch(function (error) {
+          .catch((error) =>{
             console.log(error)
+						this.$Message.error('报告下载失败')
+            this.$vs.loading.close()
           })
       },
       reportQuery () {
