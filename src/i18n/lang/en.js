@@ -277,7 +277,7 @@ module.exports =  {
   结账排队分析: "Checkout Queue Analysis",
   货架触摸分析: "Shelf touch analysis",
   进店率趋势分析: "Trend analysis of store entry rate",
-  排队名:'queue name',
+  排队名:'Queue name',
   排队长度:'Queuing length',
   平均等待时间:'Average waiting time',
   次数:'Frequency',
@@ -615,6 +615,7 @@ module.exports =  {
   error:{
     tokenExpired:'Login expired, please log in again',
     timeout:'Time out',
-    serverError:'Server error, please try again later'
+    serverError:'Server error, please try again later',
+    pdfError:'The pdf_center server address was not obtained',
   }
 }

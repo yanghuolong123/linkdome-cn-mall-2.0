@@ -65,22 +65,13 @@
         :tableList='goTableList'
       ></table-default>
     </div>
-    <alert
-      v-if="isAlert"
-      @closeAlert ='closeAlert'
-      @alertConfirm ='alertConfirm'
-      :alertText='alertText'
-    ></alert>
   </div>
 </template>
 <script>
 import TableDefault from '@/views/ui-elements/table/TableDefault.vue'
-import alert from '@/components/alert.vue'
 import VueApexCharts from 'vue-apexcharts'
-import { getBussinessTree, getBussinessCommon } from '@/api/passenger'
 import { getHuojiaList , getHuojiaAnalysis } from '@/api/passenger.js'
-import { goShopTrend } from '@/api/analysis'
-import { goShowFlowTend ,exportEx} from '@/api/home.js'
+import { exportEx} from '@/api/home.js'
 import { disabledDate,downloadEx } from '@/libs/util.js'
 import moment from 'moment'
 import NP from 'number-precision'
@@ -90,7 +81,6 @@ export default {
   components: {
     TableDefault,
     VueApexCharts,
-    alert
 
   },
   data () {
@@ -105,16 +95,6 @@ export default {
       crossDateTwo: [],
       selectType: 0,
       selectAll: 0,
-      // typeList: [
-      //   {
-      //     text: '无对比',
-      //     value: 0
-      //   },
-      //   {
-      //     text: '时间对比',
-      //     value: 1
-      //   }
-      // ],
       iconList: [
         {
           type: 'zhexiantu',
@@ -220,7 +200,6 @@ export default {
             text: ''
           },
           stroke: {
-            //curve: 'smooth',
             width: 2
           },
           dataLabels: {
@@ -267,21 +246,7 @@ export default {
         time2: '',
         id: ''
       },
-      isAlert: false,
-      alertText: {
-        title: '',
-        text: '',
-        bg: '',
-        confirm: false
-      },
-
     }
-  },
-  activated () {
-    // this.isHtml = true
-  },
-  deactivated () {
-    // this.isHtml = false
   },
   watch: {
     '$store.state.home.headerAction' () {
@@ -359,7 +324,6 @@ export default {
       // that.goName = []
       // that.goTableList = []
       // that.goName.push('时间')
-      console.log(this.activities)
       let selectedIds = this.activities.join(',')
       getHuojiaAnalysis({property_id:propertyId, time1: time1, queue_id: selectedIds, type: range }).then(res => {
         that.isList = true
@@ -672,8 +636,6 @@ export default {
         this.iconIndex = index
       }
     },
-    alertConfirm () { this.isAlert = false },
-    closeAlert () { this.isAlert = false },
     shopActionList (value) {
       var that = this
       let totalLength = that.activitiesType.length
@@ -694,13 +656,6 @@ export default {
         this.selectAll = 1
         that.activities = arr
       }
-    },
-    alertShow(text){
-      this.isAlert = true
-      this.alertText.bg = '#00A0E9'
-      this.alertText.title = '趋势分析'
-      this.alertText.text = text
-      this.alertText.confirm = false
     },
     gotInnerRange (date) {
       const [start, end] = date

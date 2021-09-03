@@ -161,12 +161,6 @@
       </div>
       </div>
     </div>
-    <alert
-      v-if="isAlert"
-      @closeAlert ='closeAlert'
-      @alertConfirm ='closeAlert'
-      :alertText='alertText'
-    ></alert>
   </div>
 </template>
 <script>
@@ -174,7 +168,6 @@ import VueApexCharts from 'vue-apexcharts'
 import { getBussinessTree } from '@/api/passenger.js'
 import { crossData } from '@/api/analysis'
 import TableDefault from '../ui-elements/table/TableDefault.vue'
-import alert from '@/components/alert.vue'
 import moment from 'moment'
 import NP from 'number-precision'
 import _ from 'lodash'
@@ -184,7 +177,6 @@ export default {
   components: {
     VueApexCharts,
     TableDefault,
-    alert,
     vChart: VueECharts
   },
   data () {
@@ -485,14 +477,7 @@ export default {
       startList: [],
       endValue: [],
       endList: [],
-      isAlert: false,
       allData: '',
-      alertText: {
-        title: '',
-        text: '',
-        bg: '',
-        confirm: false
-      },
       disabledDate: ''
     }
   },
@@ -582,11 +567,11 @@ export default {
     paramsPrepare () { // 点击查询
       var time1, time2
       if (this.startValue.length === 0) {
-        this.alert(this.$t('请选择起点'))
+        this.$message.warning(this.$t('请选择起点'))
         return false
       }
       if (this.endValue.length === 0) {
-        this.alert(this.$t('请选择终点'))
+        this.$message.warning(this.$t('请选择终点'))
         return false
       }
       this.iconIndex = 0
@@ -981,16 +966,7 @@ export default {
         })
       })
     },
-    closeAlert () { this.isAlert = false },
     iconClick (index) { this.iconIndex = index },
-    // 弹框
-    alert (text) {
-      this.isAlert = true
-      this.alertText.bg = '#00A0E9'
-      this.alertText.title = '交叉客流'
-      this.alertText.text = text
-      this.alertText.confirm = false
-    },
     //  更新 线的  x 轴 位置
     avgLineXaxisType (size, type) {
       var that = this

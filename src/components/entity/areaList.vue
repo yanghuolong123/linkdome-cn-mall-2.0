@@ -83,25 +83,17 @@ import { zones, deleteData } from '@/api/manager.js'
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import addDoorway from '_c/entity/components/addDoorway.vue'
 import addArea from '_c/entity/components/addArea.vue'
-import alert from '@/components/alert.vue'
 
 export default {
   components: {
     TableMultipleSelected,
     addDoorway,
     addArea,
-    alert
   },
   data () {
     return {
       theDoorWay: '', // 当前选中的出入口
       theArea: '',
-      alertText: {
-        title: '',
-        text: '',
-        bg: '',
-        confirm: false
-      },
       editDoorWayTitle: '添加出入口',
       editAreaTitle: '添加区域',
       floorTitle: '基本信息',

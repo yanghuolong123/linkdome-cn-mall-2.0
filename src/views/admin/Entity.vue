@@ -485,7 +485,7 @@
         configData.position_y = ((configData.position_y * img.offsetHeight + 35) / img.offsetHeight).toFixed(4)
         data = _.merge(data, configData)
         configEntity(data).then(async res => {
-          this.$Message.success('保存成功')
+          this.$message.success(this.$t('fn.successTo',[this.$t('保存')]))
           if (this.currentWay.itype === 'property') {
             const orgData = await getGroupOrganization()
             this.$store.commit('saveOrganizationData', orgData.data.data)
@@ -499,7 +499,7 @@
           this.saveLoading = false
         }).catch(err => {
           this.saveLoading = false
-          this.$Message.error(err)
+          this.$message.error(err)
         })
       },
       //重置图片配置
@@ -716,7 +716,7 @@
           })
 					if(!this.wayList.length){
             this.way = ''
-					  this.$Message.warning(this.$t('notices.configGate'))
+					  this.$message.warning(this.$t('notices.configGate'))
 					  return
 					}
         }
