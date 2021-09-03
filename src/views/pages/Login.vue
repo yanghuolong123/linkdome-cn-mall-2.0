@@ -36,7 +36,7 @@
 <script>
 import { getMenuList } from '@/api/custom.js'
 import { login } from '@/api/user.js'
-import { getUrl,getGroupOrganization } from '@/api/home.js'
+import { getUrl,getGroupOrganization,getPdfCenterUrl } from '@/api/home.js'
 import moment from 'moment'
 import md5 from 'md5'
 import _ from 'lodash'
@@ -100,6 +100,11 @@ export default {
   mounted () {
   },
   methods: {
+    getPdfCenter(){
+      getPdfCenterUrl().then(res=>{
+        this.$store.commit('setPdfBaseUrl', res.data.data.pdf_center)
+      })
+    },
     handleSystemSwitch (id) {
       this.systemSelect = id
       this.selectBoxShow = false
@@ -125,8 +130,8 @@ export default {
                   that.showHint(this.$t('notices.noPermission'))
                   this.loading = false
                 }
-              }
-							else {
+              } else {
+                that.getPdfCenter()
                 //  store list
                 that.commitStoreData(data)
                 // 处理当前账户菜单数据为键值对数组类型
