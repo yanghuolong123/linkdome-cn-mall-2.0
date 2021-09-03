@@ -16,7 +16,6 @@
 
 <script>
 import themeConfig from '@/../themeConfig.js'
-import {getPdfCenterUrl} from './api/home'
 
 export default {
   watch: {
@@ -25,11 +24,6 @@ export default {
     }
   },
   methods: {
-    getPdfCenter(){
-      getPdfCenterUrl().then(res=>{
-        this.$store.commit('setPdfBaseUrl', res.data.data.pdf_center)
-      })
-		},
     toggleClassInBody (className) {
       if (className == 'dark') {
         if (document.body.className.match('theme-semi-dark')) document.body.classList.remove('theme-semi-dark')
@@ -44,8 +38,6 @@ export default {
     }
   },
   mounted () {
-    console.log(333)
-		this.getPdfCenter()
     this.toggleClassInBody(themeConfig.theme);
 	  //点击文本就让它自动点击前面的input就可以触发选择。但是因组件阻止了冒泡，暂时想不到好方法来触发。
 	  //这种比较耗性能，暂时想不到其他的，能实现效果了。
