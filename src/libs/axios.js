@@ -53,7 +53,12 @@ class HttpRequest {
         notTarget && this.destroy(url)
         if (res.status === 200) {
           const { data, status } = res
-          return { data, status }
+          if(data.code === 200){
+            return { data, status }
+          }else {
+            return Promise.reject({ data, status })
+          }
+
         }
       },
       error => {

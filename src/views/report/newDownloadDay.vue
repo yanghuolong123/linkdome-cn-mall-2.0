@@ -63,12 +63,12 @@ import reportBackCover from '@/components/report/newReport/report_back_cover'
 import reportTable from '@/components/report/newReport/report_table'
 import reportChartMulti from '@/components/report/newReport/report_chart_multi'
 import moment from 'moment'
+import {mapState} from 'vuex'
 import _ from 'lodash'
 import Bus from '@/libs/bus.js'
 import { setToken } from '@/libs/util'
 import axios from 'axios'
 import mixins from './reportMixin.js'
-import config from '@/config/index'
 
 import { newReportEnter, newReportSuggest, newReportGate, newReportShop } from '@/api/report'
 import { getanalysiseeo, getGroupOrganization } from '@/api/home'
@@ -148,6 +148,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      pdfBaseUrl: state => state.report.pdfBaseUrl,
+    }),
     selectDateText () {
       return this.$route.query.date
     },
@@ -464,13 +467,17 @@ export default {
       this.multiChartData(data, 'allDwellFormatStore','dwell')
       this.$nextTick(()=>{
         this.clickData =  this.clickData+1
-        Bus.$emit('chartData')
-        let ht = window.location.href.split('://')[0]
-        setTimeout(() => {
-          axios.get(ht +config.pdfBaseUrl+ '/pdf/finish', {
-            params: {  filename: this.selectDateText }
-          })
-        }, 8000)
+        Bus.$emit('chartData');
+        if(!this.pdfBaseUrl){
+          this.$message.warning('未获取到pdf_center服务器地址')
+        }else {
+          setTimeout(() => {
+            axios.get(this.pdfBaseUrl+ '/pdf/finish', {
+              params: {  filename: this.selectDateText }
+            })
+          }, 8000)
+        }
+       
       })
     },
   }

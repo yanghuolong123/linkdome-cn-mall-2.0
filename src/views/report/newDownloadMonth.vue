@@ -52,7 +52,6 @@
 </div>
 </template>
 <script>
-  import config from '@/config/index'
 import reportOne from '@/components/report/newReport/report_one'
 import reportCover from '@/components/report/newReport/report_cover'
 import reportRatioTable from '@/components/report/newReport/report_ratio_table'
@@ -64,7 +63,7 @@ import reportHeatMap from '@/components/report/newReport/report_heat_map'
 import reportTable from '@/components/report/newReport/report_table'
 import reportRemark from '@/components/report/newReport/report_remark'
   import reportMonthTable from '@/components/report/newReport/new_report_month_table'
-
+  import {mapState} from 'vuex'
   // api
 import { getanalysiseeo, getGroupOrganization } from '@/api/home'
 import {
@@ -183,6 +182,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      pdfBaseUrl: state => state.report.pdfBaseUrl,
+    }),
     oneListData () {
       return [
         {
@@ -649,18 +651,19 @@ export default {
       this.multiChartData(data, 'allDwellFormatStore','dwell')
       this.$nextTick(()=>{
         Bus.$emit('chartData')
-        this.clickData=this.clickData+1
-        let ht = window.location.href.split('://')[0]
-        setTimeout(() => {
-          axios.get(ht + config.pdfBaseUrl+'/pdf/finish', {
-            params: { filename: this.selectDate }
-          })
-        }, 8000)
+        this.clickData=this.clickData+1;
+        if(!this.pdfBaseUrl){
+          this.$message.warning('未获取到pdf_center服务器地址')
+        }else {
+          setTimeout(() => {
+            axios.get(this.pdfBaseUrl+'/pdf/finish', {
+              params: { filename: this.selectDate }
+            })
+          }, 8000)
+        }
       })
     },
-  },
-  created () {}
-
+  }
 }
 </script>
 <style lang="less">

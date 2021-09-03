@@ -168,7 +168,6 @@
   import reportOverview from './components/report-overview'
   import reportDwell from './components/report-dwell'
   import reportBackCover from '@/components/report/newReport/report_back_cover'
-  import config from '@/config/index'
 
   import reportTrendChart from './components/report-trend-chart'
   import reportAgeGenderChart from './components/report-age-gender-chart'
@@ -182,7 +181,7 @@
   import { setToken } from '@/libs/util'
   import axios from 'axios'
   import storeMixin from './mixin'
-
+  import {mapState} from 'vuex'
   export default {
     components: {
       reportCover,
@@ -203,6 +202,9 @@
       }
     },
     computed: {
+      ...mapState({
+        pdfBaseUrl: state => state.report.pdfBaseUrl,
+      }),
       selectDateText () {
         return this.$route.query.date
       },
@@ -383,12 +385,15 @@
         })
       },
       handleDownload () {
-        let ht = window.location.href.split('://')[0]
-        setTimeout(() => {
-          axios.get(ht + config.pdfBaseUrl + '/pdf/finish', {
-            params: { filename: this.selectDateText+this.storeName }
-          })
-        }, 3000)
+        if(!this.pdfBaseUrl){
+          this.$message.warning('未获取到pdf_center服务器地址')
+        }else{
+          setTimeout(() => {
+            axios.get(this.pdfBaseUrl + '/pdf/finish', {
+              params: { filename: this.selectDateText+this.storeName }
+            })
+          }, 3000)
+				}
       },
 
     },

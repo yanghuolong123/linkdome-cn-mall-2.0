@@ -201,9 +201,13 @@
 
   import { entityFlow } from '@/api/entityNew'
   import storeMixin from './mixin'
-  import config from '@/config/index'
-
+  import {mapState} from 'vuex'
   export default {
+    computed:{
+      ...mapState({
+        pdfBaseUrl: state => state.report.pdfBaseUrl,
+      }),
+		},
     components: {
       reportCover,
       reportBackCover,
@@ -265,12 +269,15 @@
         let pdfUrl = window.location.href.split('/#/')[0]
         let token = getToken()
         let objName = (pdfUrl.split('://')[1]).split('.')[0]
-        let ht = pdfUrl.split('://')[0]
         let url = pdfUrl + '/#/downloadStoreDayPdf?propertyId=' + this.propertyId + '&date=' + time + '&token=' + token + '&bzid=' + this.storeBzids+'&storeNames='+encodeURI(this.storeNames)
         this.$vs.loading()
         const datelist = time.split(',')
         const filename = datelist[0] === datelist[1] ? datelist[0] : time
-        axios.post(ht + config.pdfBaseUrl + '/pdf/execute', {
+        if(!this.pdfBaseUrl){
+          this.$message.warning('未获取到pdf_center服务器地址')
+					return
+        }
+        axios.post(this.pdfBaseUrl + '/pdf/execute', {
           filename: time+this.storeNames,
           project: objName,
           url: url

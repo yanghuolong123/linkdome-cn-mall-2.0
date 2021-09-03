@@ -3,8 +3,7 @@ import _ from 'lodash'
 import { getToken } from '@/libs/util'
 import axios from 'axios'
 import NP from 'number-precision'
-import config from '@/config/index'
-
+import {mapState} from 'vuex'
 export default {
   data () {
     let that = this
@@ -166,15 +165,12 @@ export default {
     }
   },
   computed: {
-    userRole () {
-      return this.$store.state.user.role_name
-    },
-    reportType () {
-      return this.$store.state.report.reportHeaderType
-    },
-    propertyId () {
-      return this.$store.state.home.headerAction
-    },
+    ...mapState({
+      pdfBaseUrl: state => state.report.pdfBaseUrl,
+      userRole: state => state.user.role_name,
+      reportType:state => state.report.reportHeaderType,
+      propertyId:state => state.home.headerAction
+    }),
     bzid () {
       let property = _.filter(this.$store.state.home.organizationData.property, o => {
         return o.property_id === this.propertyId
@@ -356,7 +352,11 @@ export default {
       this.$vs.loading()
       const datelist = time.split(',')
       const filename = datelist[0] === datelist[1] ? datelist[0] : time
-      axios.post(ht + config.pdfBaseUrl + '/pdf/execute', {
+      if(!this.pdfBaseUrl){
+        this.$message.warning('未获取到pdf_center服务器地址');
+        return
+      }
+      axios.post(this.pdfBaseUrl + '/pdf/execute', {
         filename: time,
         project: objName,
         url: url
