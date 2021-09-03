@@ -25,7 +25,7 @@
           v-for="(item,index) in comprotList"
         />
         </vs-select>
-        <span v-else>{{$store.state.home.headerData.text}}</span>
+        <span v-else class="m-l-20">{{$store.state.home.headerData.text}}</span>
         <vs-spacer></vs-spacer>
         <div class="flex-center">
           <!-- <div id="openVip" @click="openModal" v-if="showVIpModule">

@@ -283,9 +283,7 @@ export default {
 .vs-sidebar{
   width: 223px;
 }
-#content-area{
-  margin-left:223px;
-}
+
 #vipDiv{
     width: 100%;
     position: fixed;
