@@ -12,61 +12,46 @@
         @keydown.enter.native="handleSubmit"
         @submit.native.prevent
       >
-        <FormItem prop="UserMailAddress" class="forgot-label" label="邮箱">
+        <FormItem prop="UserMailAddress" class="forgot-label" :label="$t('邮箱')">
           <Input
             v-model="formData.UserMailAddress"
             size="large"
             autofocus
-            placeholder="请输入注册时的邮箱"
+            :placeholder="$t('fn.请输入', [$t('邮箱')])"
             type="email"
           />
         </FormItem>
         <FormItem>
           <Button type="primary" size='large' @click="handleSubmit" :loading="loading">
-            <span v-if="!loading">提交</span>
-            <span v-else>发送中...</span>
+            <span v-if="!loading">{{$t('提交')}}</span>
+            <span v-else>{{$t('发送中')}}</span>
           </Button>
         </FormItem>
       </Form>
     </Content>
   </Layout>
-<alert
-    v-if="isAlert"
-    @closeAlert ='closeAlert'
-    @alertConfirm ='alertConfirm'
-    :alertText='alertText'
-  ></alert>
 </div>
 
 </template>
 <script>
 import headerBar from '_c/password/headerbar.vue'
 import steps from '_c/password/steps.vue'
-import alert from '@/components/alert.vue'
 import { userCheck } from '@/api/user'
 export default {
   name: 'forgotPassword',
   components: {
     headerBar,
     steps,
-    alert
   },
   data () {
     return {
-      isAlert: false,
-      alertText: {
-        title: '',
-        text: '',
-        bg: '',
-        confirm: false
-      },
       formData: {
         UserMailAddress: ''
       },
       ruleValidate: {
         UserMailAddress: [
-          { required: true, message: '邮箱不能为空', trigger: 'blur' },
-          { type: 'email', message: '不正确的邮箱地址', trigger: 'blur' }
+          { required: true, message: this.$t('fn._不能为空',[this.$t('邮箱')]), trigger: 'blur' },
+          { type: 'email', message: this.$t('不正确的邮箱地址'), trigger: 'blur' }
         ]
       },
       loading: false
@@ -82,25 +67,12 @@ export default {
           userCheck({ email: this.formData.UserMailAddress }).then(res => {
             this.loading = false
             if (res.data.code === 304) {
-              // alert('没有此用户')
-              that.isAlert = true
-              that.alertText.bg = '#00A0E9'
-              that.alertText.title = '忘记密码'
-              that.alertText.text = '没有此用户'
-              that.alertText.confirm = false
+              this.$message.warning(this.$t('没有此用户'))
             } else {
-              // setTimeout(() => {
-              //   alert('发送成功')
-              // }, 100)
-              that.isAlert = true
-              that.alertText.bg = '#00A0E9'
-              that.alertText.title = '忘记密码'
-              that.alertText.text = '发送成功'
-              that.alertText.confirm = true
+              this.$message.success(this.$t('发送成功'))
             }
-            // this.$router.push('/resetPassword')
           }).catch(err => {
-            if (err.response.status === 500) alert('服务器错误，请稍后重试')
+            if (err.response.status === 500) this.$message.error(this.$t('error.serverError'))
             this.loading = false
           })
         } else {
@@ -108,12 +80,6 @@ export default {
         }
       })
     },
-    closeAlert () {
-      this.isAlert = false
-    },
-    alertConfirm (valuer) {
-      this.isAlert = false
-    }
   }
 }
 </script>

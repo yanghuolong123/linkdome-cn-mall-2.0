@@ -1,37 +1,5 @@
 <template>
-  <div class="formats-center" style="position:relative">
-    <div class="add-edit-formats" v-if="isAddAndEdit">
-      <div class="add-edit-bg"></div>
-      <div class="add-edit-text">
-        <h4>{{ formTitle }}</h4>
-        <div class="add-edit-close" v-on:click="closeAddAndEdit">
-          <Icon type="md-close"/>
-        </div>
-        <div class="form-data">
-          <div class="form-item">
-            <span>{{ $t('名称')+$t('punctuation.colon') }}</span>
-            <Input :placeholder="$t('holder.请输入业态名称')" v-model="formatsName" style="width: 210px"></Input>
-          </div>
-          <div class="form-item">
-            <span>{{ $t('关联商铺')+$t('punctuation.colon') }}</span>
-            <Transfer
-              class="transfer"
-              :data="transferData"
-              :target-keys="targetKeys"
-              :titles="transferTitle"
-              filterable
-              :filter-method="filterMethod"
-              @on-change="handleTransChange"
-            ></Transfer>
-          </div>
-          <div class="add-edit-buttom">
-            <Button @click="handleSubmit">{{ $t('提交') }}</Button>
-            <Button class="buttonCel" @click.native="closeAddAndEdit">{{ $t('取消') }}</Button>
-          </div>
-        </div>
-      </div>
-
-    </div>
+  <div class="formats-center">
     <div class="formats-table">
       <div class="formats-header">
         <span class="formats-add" :title="$t('添加')" @click="addFormats">
@@ -53,20 +21,33 @@
         :titleTip="tipContentCom"
       ></table-multiple-selected>
     </div>
-    <alert
-      v-if="isAlert"
-      @closeAlert='closeAlert'
-      @alertConfirm='alertConfirm'
-      :alertText='alertText'
-    ></alert>
+    <Modal ref="modal" :width="700" :loading="true" :title="$t(formTitle)" @onOk="handleSubmit" @onCancel="closeAddAndEdit">
+      <Form ref="formInline" :model="form" :rules="ruleInline"
+            :label-width="80">
+        <FormItem prop="formatsName" :label="$t('名称')">
+          <Input v-model="form.formatsName" maxlength="10"></Input>
+        </FormItem>
+        <FormItem :label="$t('关联商铺')+$t('punctuation.colon') ">
+          <Transfer
+            class="transfer"
+            :data="transferData"
+            :target-keys="targetKeys"
+            :titles="transferTitle"
+            filterable
+            :filter-method="filterMethod"
+            @on-change="handleTransChange"
+          ></Transfer>
+        </FormItem>
+      </Form>
+    </Modal>
   </div>
 
 </template>
 
 <script>
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
-import alert from '@/components/alert.vue'
 import _ from 'lodash'
+import Modal from '_c/common/Modal.vue'
 import {
   getFormateData,
   addFormateData,
@@ -79,7 +60,7 @@ import {
 export default {
   components: {
     TableMultipleSelected,
-    alert
+    Modal
   },
   props: {
     propertyId: {
@@ -89,28 +70,30 @@ export default {
   },
   data () {
     return {
-      alertText: {
-        title: '',
-        text: '',
-        bg: '',
-        confirm: false
-      },
-      isAddAndEdit: false,
-      isAlert: false,
       titleName: '业态列表',
       formTitle: '添加业态',
       tableName: ['名称', '操作'],
       tableData: [],
       selected: [],
-      formatsName: '',
       originFormatsName: '', // 编辑时原始业态名称
       currentData: '',
-      deleteSelect: 'multiple',
       editAndAddType: 'add',
       tipContent: "",
       targetKeys: [], // 穿梭框右边的key数组
       transferData: [], // 穿梭框数据
-      transferTitle: ['“其他”业态', '当前业态']
+      transferTitle: [this.$t('othersBussinessParttern'), this.$t('当前业态')],
+      form:{
+        formatsName:''
+      },
+      ruleInline:{
+        formatsName: [{ required: true, message: this.$t('fn._不能为空',[this.$t('业态名称')]), trigger: 'blur' },{
+          required: true,
+          message: this.$t('fn.cantLessThan',[this.$t('业态名称'),2]),
+          trigger: 'blur',
+          max: 10,
+          min: 2
+        } ],
+      }
     }
   },
   watch: {
@@ -139,7 +122,6 @@ export default {
       getFormateData(id).then(res => {
         if (res.data.code == 200) {
           let data = res.data.data
-          // this.$store.commit('saveBussinessType', data)
           this.tableData = []
           data.map(list => {
             let obj = {
@@ -153,172 +135,146 @@ export default {
       })
     },
     handleSubmit () {
-      if (this.formatsName == '') {
-        this.isAlert = true
-        if (this.editAndAddType == 'add') {
-          this.alertList('添加业态', '业态名称不能为空，请填写名称', '#00A0E9', false)
-        } else {
-          this.alertList('编辑业态', '业态名称不能为空，请填写名称', '#00A0E9', false)
-        }
-        return false
-      } else if (this.formatsName.length < 2 || this.formatsName.length > 10) {
-        this.isAlert = true
-        if (this.editAndAddType == 'add') {
-          this.alertList('添加业态', '业态名称长度为2-10个字符，请填写名称', '#00A0E9', false)
-        } else {
-          this.alertList('编辑业态', '业态名称长度为2-10个字符，请填写名称', '#00A0E9', false)
-        }
-        return false
-      }
-      let leftRestData = this.transferData.filter(o => {
-        return !this.targetKeys.includes(o.key)
-      })
-      leftRestData = leftRestData.map(o => { return o.key })
-      const leftData = {// 穿梭框左侧其他业态数据
-        bz_ids: leftRestData.toString(),
-        business_type_id: this.othersId
-      }
-      const rightData = {// 穿梭框右侧目标业态数据
-        bz_ids: this.targetKeys.toString(),
-        business_type_id: this.currentData.id
-      }
-      if (this.editAndAddType === 'add') {
-        addFormateData({ property_id: this.propertyId, name: this.formatsName }).then(res => {
-          if (res.data.code === 200) {
-            rightData.business_type_id = res.data.data
-            Promise.all([saveFormateRelatedStore(leftData), saveFormateRelatedStore(rightData)]).then(() => {
-              this.handleSubmitSuc('添加')
-            })
-          } else if (res.data.code === 308) {
-            this.isAlert = true
-            this.alertList('添加业态', '名称重复，请重新填写', '#00A0E9', false)
-            this.formatsName = ''
-          }
-        })
-      } else {
-        // 用户没有修改业态名时不调用update接口，否则会验重
-        if (this.originFormatsName === this.formatsName) {
-          Promise.all([saveFormateRelatedStore(leftData), saveFormateRelatedStore(rightData)]).then(() => {
-            this.handleSubmitSuc('编辑')
+      this.$refs.formInline.validate(valid=>{
+        if(valid){
+          let leftRestData = this.transferData.filter(o => {
+            return !this.targetKeys.includes(o.key)
           })
-        } else {
-          updateFormateData({ id: this.currentData.id, name: this.formatsName }).then(res => {
-            if (res.data.code === 200) {
+          leftRestData = leftRestData.map(o => { return o.key })
+          const leftData = {// 穿梭框左侧其他业态数据
+            bz_ids: leftRestData.toString(),
+            business_type_id: this.othersId
+          }
+          const rightData = {// 穿梭框右侧目标业态数据
+            bz_ids: this.targetKeys.toString(),
+            business_type_id: this.currentData.id
+          }
+          if (this.editAndAddType === 'add') {
+            addFormateData({ property_id: this.propertyId, name: this.form.formatsName }).then(res => {
+              this.$refs.modal.resetOkButton()
+              if (res.data.code === 200) {
+                rightData.business_type_id = res.data.data
+                Promise.all([saveFormateRelatedStore(leftData), saveFormateRelatedStore(rightData)]).then(() => {
+                  this.handleSubmitSuc('添加')
+                })
+              } else if (res.data.code === 308) {
+                this.$message.warning(this.$t('业态名称重复'))
+                this.form.formatsName = ''
+              }
+            })
+          } else {
+            // 用户没有修改业态名时不调用update接口，否则会验重
+            if (this.originFormatsName === this.form.formatsName) {
               Promise.all([saveFormateRelatedStore(leftData), saveFormateRelatedStore(rightData)]).then(() => {
+                this.$refs.modal.resetOkButton()
                 this.handleSubmitSuc('编辑')
               })
-            } else if (res.data.code === 308) {
-              this.isAlert = true
-              this.alertList('编辑业态', '名称重复，请重新填写', '#00A0E9', false)
-              this.formatsName = ''
+            } else {
+              updateFormateData({ id: this.currentData.id, name: this.form.formatsName }).then(res => {
+                this.$refs.modal.resetOkButton()
+                if (res.data.code === 200) {
+                  Promise.all([saveFormateRelatedStore(leftData), saveFormateRelatedStore(rightData)]).then(() => {
+                    this.handleSubmitSuc('编辑')
+                  })
+                } else if (res.data.code === 308) {
+                  this.$message.warning(this.$t('业态名称重复'))
+                  this.form.formatsName = ''
+                }
+              })
             }
-          })
+          }
+        }else {
+          this.$refs.modal.resetOkButton()
         }
-      }
+      })
+
     },
     handleSubmitSuc (status) {
-      this.isAlert = true
-      this.alertList(`${status}业态`, `${status}成功`, '#00A0E9', false)
-      this.isAddAndEdit = false
+      this.$message.success(this.$t('fn.successTo', [this.$t(`${status}业态`)]))
       this.dataList()
       this.$store.commit('isGetDict', true)
-      this.formatsName = ''
+      this.form.formatsName = '';
+      this.closeAddAndEdit()
     },
     addFormats () {
       this.formTitle = this.$t('添加业态')
-      this.formatsName = ''
+      this.$refs.modal.showModal()
+      this.form.formatsName = ''
       this.editAndAddType = 'add'
-      this.isAddAndEdit = true
       this.getTransferData()
     },
     editData (value) {
       this.formTitle = this.$t('编辑业态')
       if (value.data.name === '其他') {
-        this.isAlert = true
-        this.alertList(this.$t('编辑业态'), this.$t('notices.editOtherBusinessPattern'), '#00A0E9', false)
-        return false
+        this.$message.warning(this.$t('notices.editOtherBusinessPattern'))
+        return
       }
-      this.formatsName = ''
       this.editAndAddType = 'edit'
-      this.isAddAndEdit = true
       this.currentData = value.data
       this.originFormatsName = value.data.name
-      this.formatsName = value.data.name
-      this.getTransferData(value.data.name)
+      this.form.formatsName = value.data.name
+      this.getTransferData(value.data.name);
+      this.$refs.modal.showModal()
     },
     deleteData (value) {
       if (value.data.name === '其他') {
-        this.isAlert = true
-        this.alertList(this.$t('删除业态'), this.$t('notices.deleteOtherBusinessPattern'), '#00A0E9', false)
+        this.$message.warning(this.$t('notices.deleteOtherBusinessPattern'))
       } else {
-        this.isAlert = true
-        this.alertList(this.$t('删除业态'), this.$t('fn.askConfirm', [this.$t('删除', [value.data.name])]), '#00A0E9', true)
-        this.currentData = value.data
-        this.deleteSelect = 'single'
+        this.$alert({
+          content: this.$t('fn.askConfirm', [this.$t('删除', [value.data.name])]),
+          cancel () {
+          },
+          confirm: () => {
+            deleteFormateData(value.data.id, this.propertyId).then(res => {
+              if (res.data.code == 200) {
+                this.$message.success(this.$t('删除成功'))
+                this.dataList()
+                this.$store.commit('isGetDict', true)
+              }
+            })
+          }
+        })
+
       }
     },
     tableSelect (value) {
       this.selected = value
     },
     closeAddAndEdit () {
-      this.isAddAndEdit = false
-    },
-    closeAlert () {
-      this.isAlert = false
-    },
-    alertConfirm (value) {
-      if (value == false) {
-        this.isAlert = false
-      } else {
-        this.isAlert = false
-        if (this.deleteSelect == 'single') {
-          deleteFormateData(this.currentData.id, this.propertyId).then(res => {
-            if (res.data.code == 200) {
-              this.isAlert = true
-              this.alertList(this.$t('删除业态'), this.$t('删除成功'), '#00A0E9', false)
-              this.dataList()
-              this.$store.commit('isGetDict', true)
-            }
-          })
-        } else {
-          let curLe = this.selected.length
-          this.selected.forEach(list => {
-            deleteFormateData(list.id, this.propertyId).then(res => {
-              if (res.data.code == 200) {
-                this.selected.splice(0, this.selected.length)
-                curLe--
-                if (curLe == 0) {
-                  this.isAlert = true
-                  this.alertList(this.$t('删除业态'), this.$t('删除成功'), '#00A0E9', false)
-                  this.dataList()
-                  this.$store.commit('isGetDict', true)
-                }
-              }
-            })
-          })
-        }
-      }
+      this.$refs.formInline.resetFields()
+      this.$refs.modal.closeModal()
     },
     deleteMultiple () {
-      if (this.selected.length == 0) {
-        this.isAlert = true
-        this.alertList(this.$t('删除业态'), this.$t('notices.notChoosePatter'), '#00A0E9', false)
+      console.log(this.selected)
+      if (!this.selected.length) {
+        this.$message.warning(this.$t('notices.notChoosePatter'))
       } else {
-        if (_.find(this.selected, (v) => v.name == '其他')) {
-          this.isAlert = true
-          this.alertList(this.$t('删除业态'), this.$t('notices.deleteOtherBusinessPattern'), '#00A0E9', false)
+        if (_.find(this.selected, (v) => v.name === '其他')) {
+          this.$message.warning(this.$t('notices.deleteOtherBusinessPattern'))
         } else {
-          this.isAlert = true
-          this.alertList(this.$t('删除业态'), this.$t('notices.confirmDeleteAllPattern'), '#00A0E9', true)
-          this.deleteSelect = 'multiple'
+          this.$alert({
+            content: this.$t('notices.confirmDeleteAllPattern'),
+            cancel () {
+            },
+            confirm: () => {
+              let curLe = this.selected.length
+              this.selected.forEach(list => {
+                deleteFormateData(list.id, this.propertyId).then(res => {
+                  if (res.data.code === 200) {
+                    this.selected.splice(0, this.selected.length)
+                    curLe--;
+                    if (!curLe) {
+                      this.$message.success(this.$t('删除成功'))
+                      this.dataList()
+                      this.$store.commit('isGetDict', true)
+                    }
+                  }
+                })
+              })
+            }
+          })
         }
       }
-    },
-    alertList (title, text, bg, confirm) {
-      this.alertText.title = title
-      this.alertText.text = text
-      this.alertText.bg = bg
-      this.alertText.confirm = confirm
     },
     filterMethod (data, query) {
       return data.label && data.label.indexOf(query) > -1
@@ -365,6 +321,7 @@ export default {
 <style scoped lang="scss">
 .formats-center {
   margin-top: 20px;
+  position: relative;
   .formats-table{
     .formats-header{
       position: absolute;
@@ -391,105 +348,6 @@ export default {
             background-color: #FEB33D;
         }
       }
-    }
-  }
-  .add-edit-formats {
-      position: fixed;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 51005;
-      .add-edit-bg {
-          width: 100%;
-          height: 100%;
-          background-color: #000;
-          opacity: 0.3;
-      }
-      .add-edit-text {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        background: #fff;
-        border: 1px solid #d7dfe3;
-        -webkit-box-shadow: 1px 2px 10px 0 hsla(0, 0%, 75.7%, .2);
-        box-shadow: 1px 2px 10px 0 hsla(0, 0%, 75.7%, .2);
-        border-radius: 8px;
-        .add-edit-close {
-          position: absolute;
-          right: -5px;
-          top: -5px;
-          background: #fff;
-          width: 33px;
-          height: 33px;
-          box-shadow: 0 5px 20px 0 rgba(0, 0, 0, .1);
-          border-radius: 5px;
-          text-align: center;
-          line-height: 33px;
-          cursor: pointer;
-          transition: all .23s ease .1s;
-          &:hover {
-            transform: translate(5px, -5px);
-            box-shadow: 0 0 0 0 rgba(0, 0, 0, .1)
-          }
-          i {
-            font-size: 20px;
-          }
-        }
-        h4 {
-          width: 100%;
-          height: 53px;
-          line-height: 53px;
-          padding-left: 20px;
-          background: #f2f2f2;
-          font-size: 18px;
-          font-family: PingFangSC-Medium;
-          font-weight: 500;
-          color: #5b5959;
-        }
-
-        .form-data {
-          padding: 30px 40px;
-
-          .form-item {
-              display: flex;
-              align-content: center;
-
-              span {
-                  width: 130px;
-                  text-align: right;
-                  line-height: 32px;
-              }
-          }
-          .form-item + .form-item {
-              margin-top: 30px;
-          }
-          .add-edit-buttom {
-            margin-top: 30px;
-            text-align: right;
-            .ivu-btn {
-              width: 90px;
-              color: #fff;
-              outline: none;
-              &:nth-child(1) {
-                margin-right: 20px;
-                background-color: #00a0e9;
-                &:hover {
-                  border: 1px solid #00a0e9;
-                }
-              }
-              &:nth-child(2) {
-                background-color: #fff;
-                color: #515a6e;
-                &:hover {
-                  color: #57a3f3;
-                }
-              }
-            }
-          }
-        }
-
     }
   }
 }

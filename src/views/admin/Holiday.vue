@@ -35,18 +35,11 @@
 			ref="editActive"
 			@initData="initData"
 		></holidayEdit>
-		<alert
-			v-if="isAlert"
-			@closeAlert="closeAlert"
-			@alertConfirm="alertConfirm"
-			:alertText="alertText"
-		></alert>
 	</div>
 </template>
 
 <script>
   import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
-  import alert from '@/components/alert.vue'
   import holidayEdit from '@/components/holiday-manage/holiday-edit.vue'
   import { getActiveDays, deleteActiveDays } from '@/api/manager.js'
   import { yearList } from '@/libs/util.js'
@@ -55,7 +48,6 @@
     components: {
       TableMultipleSelected,
       holidayEdit,
-      alert
     },
     data () {
       return {
@@ -73,17 +65,9 @@
         currentx: 1,
         currentActive: 1,
         years: [],
-        isAlert: false,
-        alertText: {
-          title: '',
-          text: '',
-          bg: '',
-          confirm: false
-        },
         id: '',
         currentPropertyId: '',
         selected: [],
-        deleteSelect: 'multiple'
       }
     },
     watch: {
@@ -149,17 +133,6 @@
           }
         })
       },
-      closeAlert () {
-        this.isAlert = false
-      },
-      showAlert (show, color, title, text, confirm) {
-        var that = this
-        that.isAlert = show
-        that.alertText.bg = color
-        that.alertText.title = title
-        that.alertText.text = text
-        that.alertText.confirm = confirm
-      },
       tableData (value) {
         this.$refs.editActive.$refs.modal.showModal()
         var that = this
@@ -177,37 +150,6 @@
             that.$refs.editActive.showBelong = checklist.length > 1
           }
         })
-      },
-      alertConfirm (value) {
-        var that = this
-        if (value) {
-          that.isAlert = false
-          if (this.deleteSelect === 'single') {
-            var id = this.id
-            deleteActiveDays(id).then((res) => {
-              if (res.data.code === 200) {
-                this.$message.success(this.$t('删除成功'))
-                that.initData(21, false)
-              } else {
-                that.$alert({ content: res.data.message })
-              }
-            })
-          } else {
-            let curLe = this.selected.length
-            this.selected.forEach(list => {
-              deleteActiveDays(list.id).then(res => {
-                this.selected.splice(0, this.selected.length)
-                curLe--
-                if (curLe == 0) {
-                  this.$message.success(this.$t('删除成功'))
-                  this.initData(21, false)
-                }
-              })
-            })
-          }
-        } else {
-          this.isAlert = false
-        }
       },
       removeData (value) {
         this.$alert({
@@ -254,16 +196,7 @@
               })
             }
           })
-          // this.isAlert = true
-          // this.alertList(this.$t('删除活动管理'), this.$t('确定要删除所选中的活动管理？'), '#00A0E9', true)
-          // this.deleteSelect = 'multiple'
         }
-      },
-      alertList (title, text, bg, confirm) {
-        this.alertText.title = title
-        this.alertText.text = text
-        this.alertText.bg = bg
-        this.alertText.confirm = confirm
       },
       initData (type, isInit) {
         var that = this
@@ -331,19 +264,6 @@
     }
   }
 </script>
-<style lang="less">
-	.vs-pagination--buttons {
-		z-index: 1;
-	}
-	
-	.vs-pagination--li span {
-		z-index: 1;
-	}
-	
-	.vs-pagination--li .effect {
-		z-index: 1;
-	}
-</style>
 <style lang="scss" scoped>
 	.holiday {
 		.headerSelect {

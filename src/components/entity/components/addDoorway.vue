@@ -92,20 +92,6 @@
       gateTypeList () {
         return this.getGateTypeList() || []
       },
-      marginTops () {
-        if (this.userLvl == 'common_admin') {
-          return '-154px'
-        } else {
-          return '-190px'
-        }
-      },
-      heights () {
-        if (this.userLvl == 'common_admin') {
-          return '368px'
-        } else {
-          return '440px'
-        }
-      }
     },
     components:{Modal},
     methods: {

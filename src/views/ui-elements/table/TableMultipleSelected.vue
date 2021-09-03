@@ -44,7 +44,7 @@
 					</vs-td>
 					<!-- 等级 -->
 					<vs-td :data="data[indextr].rank" v-if="data[indextr].rank">
-						{{data[indextr].rank}}
+						{{$t(data[indextr].rank)}}
 					</vs-td>
 					<!-- 年龄 -->
 					<vs-td :data="data[indextr].age" v-if="data[indextr].age">
@@ -52,7 +52,7 @@
 					</vs-td>
 					<!-- 性别 -->
 					<vs-td :data="data[indextr].gender" v-if="data[indextr].gender">
-						{{data[indextr].gender}}
+						{{$t(data[indextr].gender)}}
 					</vs-td>
 					<!-- 电话 -->
 					<vs-td :data="data[indextr].mobile" v-if="data[indextr].mobile">

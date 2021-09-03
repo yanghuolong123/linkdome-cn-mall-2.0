@@ -73,6 +73,7 @@ module.exports =  {
 	minute: "minute",
 	second: "second",
 	enter: "enter",
+  发送成功: "Sent successfully",
   账户信息: "Account",
   退出: "Exit",
 	客流量: "Enter",
@@ -205,6 +206,8 @@ module.exports =  {
   名称: "Name",
   入客流: "Incoming",
   出客流: "Outbound",
+  累计出客流: "Cumulative Outbound",
+  出客流峰值: "Peak Outbound",
   小时: "Hour",
   默认: "Default",
   人次: "person-time",
@@ -418,6 +421,7 @@ module.exports =  {
   城市: "Sity",
   父节点: "Parent Node",
   业态: "Bussiness Pattern",
+  业态名称: "Bussiness Pattern Name",
   面积: "the measure of area",
   选择年份: "Select year",
   客流目标: "Enter Target",
@@ -429,6 +433,8 @@ module.exports =  {
   销售额目标: "Sales target",
   销售坪效: "Sales floor effect",
   // formats.vue
+  当前业态: "Current",
+  othersBussinessParttern: "Others",
   添加业态: "Add business pattern",
   编辑业态: "Edit business pattern",
   关联商铺: "Associated shops",
@@ -436,6 +442,7 @@ module.exports =  {
   删除业态: "Delete business pattern",
   删除成功: "Delete successfully",
   删除失败: "Delete failed",
+  业态名称重复: "Duplicate business name, please fill in again",
   // mrketlist.vue
   删除实体: "Delete Entity",
   确认删除实体: "Are you sure to delete this store information?",
@@ -443,6 +450,7 @@ module.exports =  {
   时段客流分布: "Passenger flow distribution in different periods",
   客流热力图: "Passenger flow heat map",
   平均热力值: "Mean thermal value",
+  全天: "All day",
   // holiday-edit.vue
   全部节假日活动:"All Holiday activities",
   添加活动: "Add Activity",
@@ -457,6 +465,7 @@ module.exports =  {
   添加用户: "Add User",
   编辑用户: "Edit User",
   密码: "Password",
+  找回密码: "Retrieve password",
   确认密码: "Confirm password",
   用户名已存在:'The user name already exists',
   邮箱已被占用:'The E-mail is occupied',
@@ -519,9 +528,20 @@ module.exports =  {
   "删除活动管理请选择最少一个！": "Please select at least one activity management to delete!",
   "删除活动管理": "Delete activity management",
   "确定要删除所选中的活动管理？": "Are you sure you want to delete the selected activity management?",
-
-
-
+  // forgetPassword
+  填写邮箱:'E-Mail',
+  重置密码:'Reset Password',
+  完成:'Finish',
+  密码修改成功:'Password reset complete',
+  密码已找回:'Your password has been retrieved and modified successfully',
+  返回登录页:'Return to login',
+  发送中:'Sending...',
+  没有此用户:'No such user',
+  不正确的邮箱地址:'Incorrect email address',
+  请再次输入修改的密码:'Please enter the modified password again',
+  请确认修改后的密码:'Please confirm the modified password',
+  请输入修改的密码:'Please enter the modified password',
+  修改失败:'Fail to edit',
   "1月":"Jan",
   "2月":"Feb",
   "3月":"Mar",
@@ -534,7 +554,13 @@ module.exports =  {
   "10月":"Oct",
   "11月":"Nov",
   "12月":"Dec",
-
+  "周一": "Mon",
+  "周二": "Tue",
+  "周三": "Wed",
+  "周四": "Thur",
+  "周五": "Fri",
+  "周六": "Sat",
+  "周日": "Sun",
 
 
 
@@ -572,6 +598,7 @@ module.exports =  {
     ChooseEntityTooMuch: "At most 40 entities can be selected due to page effect. Please re select entities",
     customer: "New customers: the number of people who have been here only once in the selected time period\nRegular customers: the number of people who have been here 2 or more times in the selected time period",
     configGate: "There are no gates configured under this shopping mall, please configure first",
+    imgFormat:'Please upload pictures in jpg, jpeg, png format!'
   },
 
 	passages: {
@@ -584,4 +611,10 @@ module.exports =  {
     tootipText7: "Total passenger flow: the sum of passenger flow in the selected time period \nPeak passenger flow: the maximum passenger flow and time point in the selected time period \nPeak passenger volume: the maximum number of people staying in the shopping center and time point in the selected time period \nEffective passenger flow: the only passenger flow of users in the shopping center in the selected time period \nSales: the sum of sales in the shopping center in the selected time period \nFloor efficiency : sales in the selected time period divided by the area of the shopping center \n transaction rate: the number of transaction orders in the shopping center in the selected time period divided by the passenger flow entering the shopping center \n customer unit price: the sales in the shopping center in the selected time period divided by the number of transaction orders in the shopping center",
     tipContent1: "The other business pattern is the system default business pattern and cannot be deleted or edited. New shops are classified as \"other\" by default,",
 	},
+
+  error:{
+    tokenExpired:'Login expired, please log in again',
+    timeout:'Time out',
+    serverError:'Server error, please try again later'
+  }
 }

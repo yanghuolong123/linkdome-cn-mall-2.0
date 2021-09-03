@@ -1065,8 +1065,8 @@ export default {
     },
     yAxis: {
       type: 'category',
-      data:  ['周日', '周六', '周五',
-        '周四', '周三', '周二', '周一'],
+      data:  [ i18n.t('周日'),  i18n.t('周六'), i18n.t( '周五'),
+        i18n.t('周四'),  i18n.t('周三'),  i18n.t('周二'),  i18n.t('周一')],
       splitArea: {
         show: true
       }

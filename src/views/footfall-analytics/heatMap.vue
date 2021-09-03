@@ -70,7 +70,7 @@
         style='width:230px'
       ></DatePicker>
       <Select v-model="hourTime" :disabled="!isSingleDay" class="selectExample">
-        <Option v-for="item in hourList" :value="item.value" :key="item.label">{{ item.label }}</Option>
+        <Option v-for="item in hourList" :value="item.value" :key="$t(item.label)">{{ $t(item.label) }}</Option>
       </Select>
       <Select v-model="floor" class="selectExample selectFloor">
         <Option v-for="item in floorList" :value="item.value" :key="item.label">{{ item.label }}
@@ -149,8 +149,8 @@
         tabsList: [],
         hourTime: '-1',
         hourList: [
-          { 'label': '全天', 'value': '-1'},
-          { 'label': '小时', 'value':'0' }
+          { label: '全天', value: '-1'},
+          { label: '小时', value:'0' }
         ],
         floor: '',
         floorList:[],

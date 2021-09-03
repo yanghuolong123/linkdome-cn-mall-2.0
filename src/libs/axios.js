@@ -2,6 +2,7 @@ import axios from 'axios'
 import { getToken } from '@/libs/util'
 import store from '@/store/store.js'
 import router from '@/router'
+import i18n from '@/i18n/i18n'
 const alertfn = _.debounce((text) => {
   alert(text)
 }, 500)
@@ -68,7 +69,7 @@ class HttpRequest {
           router.push({ name: 'Login' })
           let outSize = store.state.home.outSize
           if (outSize == 0) {
-            alertfn('登录过期，请重新登录')
+            alertfn(i18n.t('error.tokenExpired'))
             store.commit('outSize', 1)
           }
         }

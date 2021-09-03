@@ -362,7 +362,6 @@ export default {
     margin: 0px 0px 10px 3px;
     .left-floor{
       background:rgba(255,255,255,1);
-      // box-shadow:0px 2px 9px 1px rgba(175,175,176,0.25);
       border-radius:6px;
       margin-top: 30px;
       .areas{
@@ -377,7 +376,6 @@ export default {
     margin: 0px 3px 10px 0px;
     float: right;
     background:rgba(255,255,255,1);
-    // box-shadow:0px 2px 9px 1px rgba(175,175,176,0.25);
     border-radius:6px;
     margin-top: 30px;
   }
