@@ -2,6 +2,13 @@ import naxios from '@/libs/api.request'
 import axios from 'axios'
 
 import qs from 'qs'
+//获取pdf_center请求地址
+export const getPdfCenterUrl = ()=>{
+  return naxios.request({
+    url: 'init/config',
+    method: 'get'
+  })
+}
 // 获取集团组织架构
 export const getGroupOrganization = async(_this={}) => {
   const CancelToken= axios.CancelToken

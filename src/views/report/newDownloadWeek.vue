@@ -81,9 +81,7 @@ import Bus from '@/libs/bus.js'
 import { setToken } from '@/libs/util'
 import axios from 'axios'
 import mixins from './reportMixin.js'
-import config from '@/config/index'
 import reportGateTable from '@/components/report/newReport/new_report_week_gateTable'
-
 // api
 import { newReportEnter, newReportSuggest, newReportGate, newReportShop } from '@/api/report'
 import { getanalysiseeo, getGroupOrganization } from '@/api/home'
@@ -97,6 +95,7 @@ import {
   newReportDwellFormat,
   newReportGateLast
 } from '@/api/new_report'
+import {mapState} from 'vuex'
 export default {
   name: 'new-download-report-week',
   mixins: [mixins],
@@ -170,6 +169,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      pdfBaseUrl: state => state.report.pdfBaseUrl,
+    }),
     oneListData () {
       return [
         {
@@ -275,10 +277,6 @@ export default {
     }
 
   },
-  watch: {
-  },
-  activated () {
-  },
   mounted () {
     let token = this.$route.query.token
     setToken(token, 1)
@@ -380,12 +378,15 @@ export default {
       })
     },
     handleDownload(){
-      let ht = window.location.href.split('://')[0]
-      setTimeout(() => {
-        axios.get(ht +config.pdfBaseUrl+ '/pdf/finish', {
-          params: { filename: this.callData }
-        })
-      }, 3000)
+      if(!this.pdfBaseUrl){
+        this.$Message.warning('未获取到pdf_center服务器地址')
+      }else {
+        setTimeout(() => {
+          axios.get(this.pdfBaseUrl+ '/pdf/finish', {
+            params: { filename: this.callData }
+          })
+        }, 3000)
+      }
     },
     gateTableDataList(data){
       data = data.data.data

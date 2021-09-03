@@ -16,7 +16,6 @@ export default {
     dev: '',
     pro: '/api/v1'
   },
-  pdfBaseUrl:'://pdfcenter.linkdome.cn',
   // pdfBaseUrl:process.env.NODE_ENV === 'development' ?'://127.0.0.1:6990':'://192.168.3.185:6990',
   // pdfBaseUrl:'://127.0.0.1:6990',
   /**

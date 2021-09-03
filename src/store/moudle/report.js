@@ -9,7 +9,8 @@ export default {
     companyName: '',
     companyDateTime: '',
     coverDateTime: '',
-    leftWidth: false
+    leftWidth: false,
+    pdfBaseUrl:localStorage.getItem('pdfBaseUrl')
   },
   mutations: {
     leftWidth (state, value) {
@@ -41,6 +42,10 @@ export default {
     },
     customizeReportHeader (state, value) {
       state.customizeReportHeader = value
+    },
+    setPdfBaseUrl(state, value){
+      state.pdfBaseUrl = value;
+      localStorage.setItem('pdfBaseUrl',value)
     }
   },
   actions: {}

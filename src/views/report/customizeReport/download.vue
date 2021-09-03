@@ -76,7 +76,6 @@
   import { setToken } from '@/libs/util'
   import axios from 'axios'
   import mixins from '../reportMixin.js'
-  import config from '@/config/index'
   // api
   import { newReportEnter, newReportSuggest, newReportGate, newReportShop } from '@/api/report'
   import { getanalysiseeo, getGroupOrganization } from '@/api/home'
@@ -89,7 +88,7 @@
     newReportDwellFormat
   } from '@/api/new_report'
   import { getHeatMapDistribution, getHeatMapFloorData } from '@/api/analysis'
-
+  import {mapState} from 'vuex'
   export default {
     name: 'new-download-report-week',
     mixins: [customizeMixin, mixins,],
@@ -97,7 +96,9 @@
       callData () {
         return this.$route.query.date
       },
-
+      ...mapState({
+        pdfBaseUrl: state => state.report.pdfBaseUrl,
+      }),
     },
 
     async mounted () {
@@ -249,12 +250,15 @@
         })
       },
       handleDownload () {
-        let ht = window.location.href.split('://')[0]
-        setTimeout(() => {
-          axios.get(ht + config.pdfBaseUrl + '/pdf/finish', {
-            params: { filename: this.callData }
-          })
-        }, 3000)
+        if(!this.pdfBaseUrl){
+          this.$Message.warning('未获取到pdf_center服务器地址')
+        }else{
+          setTimeout(() => {
+            axios.get(this.pdfBaseUrl + '/pdf/finish', {
+              params: { filename: this.callData }
+            })
+          }, 3000)
+				}
       },
     }
   }
