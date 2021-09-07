@@ -34,7 +34,7 @@ export default {
       enabled: true,
       custom: ({ series, seriesIndex, dataPointIndex, w }) => {
         let number = series[seriesIndex] / _.sum(series) * 100
-        return `<p style=background-color:${w.common.colors[seriesIndex]} class='p-2'><span class='pr-4'>${w.common.labels[seriesIndex]}:</span>${_.round(number, 2)}%</p>`
+        return `<p style=background-color:${w.config.colors[seriesIndex]} class='p-2'><span class='pr-4'>${w.config.labels[seriesIndex]}:</span>${_.round(number, 2)}%</p>`
       }
     }
   },
@@ -149,7 +149,7 @@ export default {
       enabled: true,
       custom: ({ series, seriesIndex, dataPointIndex, w }) => {
         let sumArr = _.sum(series)
-        return `<p style=background-color:${w.common.colors[seriesIndex]} class='p-2'><span class='pr-4'>${w.common.labels[seriesIndex]}:</span>${NP.times(NP.round(series[seriesIndex] / sumArr, 3), 100)}%</p>`
+        return `<p style=background-color:${w.config.colors[seriesIndex]} class='p-2'><span class='pr-4'>${w.config.labels[seriesIndex]}:</span>${NP.times(NP.round(series[seriesIndex] / sumArr, 3), 100)}%</p>`
       }
     }
   },
