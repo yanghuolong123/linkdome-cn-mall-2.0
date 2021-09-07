@@ -104,7 +104,7 @@ export default {
   computed: {
     othersId () { // ‘其他’业态的id
       const data = this.tableData.find(o => {
-        return o.name === '其他'
+        return o.name === this.$t('其他')
       })
       return data ? data.id : ''
     },
@@ -120,12 +120,12 @@ export default {
     dataList () {
       let id = this.propertyId
       getFormateData(id).then(res => {
-        if (res.data.code == 200) {
+        if (res.data.code === 200) {
           let data = res.data.data
           this.tableData = []
           data.map(list => {
             let obj = {
-              name: list.name,
+              name: this.$t(list.name),
               operation: true,
               id: list.id
             }
@@ -205,7 +205,7 @@ export default {
     },
     editData (value) {
       this.formTitle = this.$t('编辑业态')
-      if (value.data.name === '其他') {
+      if (value.data.name === this.$t('其他')) {
         this.$message.warning(this.$t('notices.editOtherBusinessPattern'))
         return
       }
@@ -217,7 +217,7 @@ export default {
       this.$refs.modal.showModal()
     },
     deleteData (value) {
-      if (value.data.name === '其他') {
+      if (value.data.name === this.$t('其他')) {
         this.$message.warning(this.$t('notices.deleteOtherBusinessPattern'))
       } else {
         this.$alert({
@@ -249,7 +249,7 @@ export default {
       if (!this.selected.length) {
         this.$message.warning(this.$t('notices.notChoosePatter'))
       } else {
-        if (_.find(this.selected, (v) => v.name === '其他')) {
+        if (_.find(this.selected, (v) => v.name === this.$t('其他'))) {
           this.$message.warning(this.$t('notices.deleteOtherBusinessPattern'))
         } else {
           this.$alert({

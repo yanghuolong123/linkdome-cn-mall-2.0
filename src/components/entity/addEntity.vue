@@ -31,7 +31,7 @@
                 <FormItem :label="$t('类型')" prop="spc">
                   <Select v-model="formValidate.spc" :disabled="disabledSpc"
                     @on-change="getSelectValue">
-                    <Option v-for="item in list" :value="item.value" :key="item.value">
+                    <Option v-for="item in list" :disabled="item.disabled" :value="item.value" :key="item.value">
                       {{ $t(item.label) }}
                     </Option>
                   </Select>
@@ -420,11 +420,6 @@ export default {
       sumFlowMonth: '', // 月客流目标总和
       sumSaleYear: '', // 年销售目标
       sumSaleMonth: '', // 月销售目标
-      list: [
-        { value: 1, label: '购物中心' },
-        { value: 2, label: '楼层' },
-        { value: 3, label: '商铺' }
-      ],
       formats: [],
       floors: [
         { value: -5, label: '负五楼' },
@@ -488,7 +483,9 @@ export default {
       }
     },
     propertyId () {
-      if (this.propertyId != 0) this.getZones()
+      if (this.propertyId != 0){
+        this.getZones()
+      }
     }
   },
   computed: {
@@ -553,6 +550,13 @@ export default {
             }
           })
       }
+    },
+    list(){
+      return [
+        { value: 1, label: '购物中心',disabled:!this.isModify },
+        { value: 2, label: '楼层' },
+        { value: 3, label: '商铺' }
+      ]
     }
   },
   mounted () {

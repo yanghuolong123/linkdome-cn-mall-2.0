@@ -12,7 +12,7 @@
 										change-on-select @on-change="caseDidChange" class="cascader">
 					</Cascader>
 					<div class="stall-header-right">
-                      <span class="stall-add" v-if="isSuperAdmin" :title="$t('添加')" @click="addEntity">
+                      <span class="stall-add" v-if="isSuperAdmin &&addType !== 1" :title="$t('添加')" @click="addEntity">
                         <Icon type="md-add"/>
                       </span>
 						<span class="stall-add" v-if="isSuperAdmin" :title="$t('删除')" @click="delEntity">
@@ -949,7 +949,7 @@
         // this.editTitle = '添加购物中心';
         var that = this
         let formValidate = {
-          spc: 1,
+          spc: this.addType,
           name: '',
           floor: '',
           timerange: ['', ''],
@@ -962,10 +962,10 @@
           modal5: '',
           area: ''
         }
-        setTimeout(function () {
+        this.$nextTick(()=>{
           that.$refs.entityModal.isModify = false
           that.$refs.entityModal.disabledSpc = false
-          that.$refs.entityModal.getSelectValue(1)
+          that.$refs.entityModal.getSelectValue(this.addType)
           that.$refs.entityModal.disabledFloor = false
           that.$refs.entityModal.disabledParentNode = false
           that.$refs.entityModal.disabledZones = false
@@ -977,7 +977,7 @@
           let monthsSale = _.cloneDeep(monthsGoal)
           that.$refs.entityModal.monthsGoal = monthsGoal
           that.$refs.entityModal.monthsSale = monthsSale
-        }, 200)
+				})
       },
       editFloor (values) {
         var value = _.cloneDeep(values)
