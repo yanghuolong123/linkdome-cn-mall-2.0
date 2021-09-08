@@ -95,7 +95,6 @@ import {
   newReportDwellFormat,
   newReportGateLast
 } from '@/api/new_report'
-import {mapState} from 'vuex'
 export default {
   name: 'new-download-report-week',
   mixins: [mixins],
@@ -165,13 +164,11 @@ export default {
       },
       allDwellFormatStore:[],
       gateTableColumn:[],
-      gateTableData:[]
+      gateTableData:[],
+      pdfBaseUrl:''
     }
   },
   computed: {
-    ...mapState({
-      pdfBaseUrl: state => state.report.pdfBaseUrl,
-    }),
     oneListData () {
       return [
         {
@@ -279,6 +276,7 @@ export default {
   },
   mounted () {
     let token = this.$route.query.token
+    this.pdfBaseUrl = this.$route.query.pdfUrl
     setToken(token, 1)
     this.parameterData()
   },

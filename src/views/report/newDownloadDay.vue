@@ -63,7 +63,6 @@ import reportBackCover from '@/components/report/newReport/report_back_cover'
 import reportTable from '@/components/report/newReport/report_table'
 import reportChartMulti from '@/components/report/newReport/report_chart_multi'
 import moment from 'moment'
-import {mapState} from 'vuex'
 import _ from 'lodash'
 import Bus from '@/libs/bus.js'
 import { setToken } from '@/libs/util'
@@ -144,13 +143,11 @@ export default {
         option:{},
         remarkData: []
       },
-      allDwellFormatStore:[]
+      allDwellFormatStore:[],
+      pdfBaseUrl:''
     }
   },
   computed: {
-    ...mapState({
-      pdfBaseUrl: state => state.report.pdfBaseUrl,
-    }),
     selectDateText () {
       return this.$route.query.date
     },
@@ -239,6 +236,7 @@ export default {
   },
   mounted () {
     let token = this.$route.query.token
+    this.pdfBaseUrl = this.$route.query.pdfUrl
     setToken(token, 1)
     this.parameterData()
   },

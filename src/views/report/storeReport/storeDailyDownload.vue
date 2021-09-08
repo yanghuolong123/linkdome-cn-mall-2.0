@@ -181,7 +181,6 @@
   import { setToken } from '@/libs/util'
   import axios from 'axios'
   import storeMixin from './mixin'
-  import {mapState} from 'vuex'
   export default {
     components: {
       reportCover,
@@ -198,13 +197,11 @@
       return {
         showPDF: false,
         bzids: '',
-        storeName:''
+        storeName:'',
+        pdfBaseUrl:''
       }
     },
     computed: {
-      ...mapState({
-        pdfBaseUrl: state => state.report.pdfBaseUrl,
-      }),
       selectDateText () {
         return this.$route.query.date
       },
@@ -214,7 +211,8 @@
     },
     mixins: [mixins, storeMixin],
     mounted () {
-      const { token, bzid } = this.$route.query
+      const { token, bzid,pdfUrl } = this.$route.query
+			this.pdfBaseUrl = pdfUrl
 			this.storeName = decodeURI(this.$route.query.storeNames)
       this.bzids = bzid
       setToken(token, 1)

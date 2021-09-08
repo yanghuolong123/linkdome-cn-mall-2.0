@@ -63,7 +63,6 @@ import reportHeatMap from '@/components/report/newReport/report_heat_map'
 import reportTable from '@/components/report/newReport/report_table'
 import reportRemark from '@/components/report/newReport/report_remark'
   import reportMonthTable from '@/components/report/newReport/new_report_month_table'
-  import {mapState} from 'vuex'
   // api
 import { getanalysiseeo, getGroupOrganization } from '@/api/home'
 import {
@@ -179,12 +178,10 @@ export default {
       allDwellFormatStore:[],
       gateTableColumn: [],
       gateTableData:[],
+      pdfBaseUrl:''
     }
   },
   computed: {
-    ...mapState({
-      pdfBaseUrl: state => state.report.pdfBaseUrl,
-    }),
     oneListData () {
       return [
         {
@@ -294,6 +291,7 @@ export default {
   },
   mounted () {
     let token = this.$route.query.token
+    this.pdfBaseUrl = this.$route.query.pdfUrl
     setToken(token, 1)
     this.parameterData()
   },

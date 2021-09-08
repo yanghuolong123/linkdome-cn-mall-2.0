@@ -88,21 +88,23 @@
     newReportDwellFormat
   } from '@/api/new_report'
   import { getHeatMapDistribution, getHeatMapFloorData } from '@/api/analysis'
-  import {mapState} from 'vuex'
   export default {
     name: 'new-download-report-week',
     mixins: [customizeMixin, mixins,],
+		data(){
+      return{
+        pdfBaseUrl:''
+			}
+		},
     computed: {
       callData () {
         return this.$route.query.date
       },
-      ...mapState({
-        pdfBaseUrl: state => state.report.pdfBaseUrl,
-      }),
     },
 
     async mounted () {
       let token = this.$route.query.token
+      this.pdfBaseUrl = this.$route.query.pdfUrl
       this.selectDateTime = this.$route.query.date.split(',')
       setToken(token, 1)
       const floors = await getHeatMapFloorData({ property_id: this.propertyId, type: 'is_heatmap' })

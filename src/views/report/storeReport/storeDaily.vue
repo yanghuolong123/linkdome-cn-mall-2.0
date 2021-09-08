@@ -269,7 +269,7 @@
         let pdfUrl = window.location.href.split('/#/')[0]
         let token = getToken()
         let objName = (pdfUrl.split('://')[1]).split('.')[0]
-        let url = pdfUrl + '/#/downloadStoreDayPdf?propertyId=' + this.propertyId + '&date=' + time + '&token=' + token + '&bzid=' + this.storeBzids+'&storeNames='+encodeURI(this.storeNames)
+        let url = pdfUrl + '/#/downloadStoreDayPdf?propertyId=' + this.propertyId + '&date=' + time + '&token=' + token + '&bzid=' + this.storeBzids+'&storeNames='+encodeURI(this.storeNames) + '&pdfUrl=' + this.pdfBaseUrl
         this.$vs.loading()
         const datelist = time.split(',')
         const filename = datelist[0] === datelist[1] ? datelist[0] : time
