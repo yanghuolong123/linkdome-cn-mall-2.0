@@ -347,8 +347,7 @@ export default {
           name = '自定义报告'
           break
       }
-      let url = pdfUrl + '/#/' + download + '?propertyId=' + this.propertyId + '&date=' + time + '&token=' + token
-      // let url = 'http://ship.linkdome.cn:8092' + '/#/' + download + '?propertyId=' + this.propertyId + '&date=' + time + '&token=' + token
+      let url = `${pdfUrl}/#/${download}?propertyId=${this.propertyId}&date=${time}&token=${token}&pdfUrl=${this.pdfBaseUrl}`
       this.$vs.loading()
       const datelist = time.split(',')
       const filename = datelist[0] === datelist[1] ? datelist[0] : time
