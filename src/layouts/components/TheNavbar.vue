@@ -244,14 +244,8 @@ export default {
           })
           this.comprotList = currList
         }
-        if (this.comprotList.length > 1) {
-          this.showCompany = true
-        }else {
-          this.showCompany = false;
-          if(this.comprotList.length){//当登录用户只有一个购物中心权限时，则不存在切换购物中心，则不会触发comprotChange，这里手动更新headerData
-            this.$store.commit('headerData', this.comprotList[0])
-          }
-        }
+        this.$store.commit('headerData', this.comprotList[0] || {})
+        this.showCompany = this.comprotList.length > 1
         this.comprotModel = this.comprotList[0].value
         this.$store.commit('headerImg', this.comprotList[0].img)
         this.$store.commit('saveComprotList', this.comprotList)
