@@ -37,6 +37,7 @@ class HttpRequest {
         notTarget && store.commit('UPDATE_LOADING_STATUS', true)
         this.queue[url] = true
         config.headers['Authorization'] = 'Bearer ' + getToken()
+        config.headers['language'] =store.state.language
         reqNum++
         return config
       },
