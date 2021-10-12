@@ -198,9 +198,11 @@ export default {
       }
       let modal = _.filter(data.property, (o) => { return o.property_id === this.$store.state.home.headerAction })
       this.comprotModel = modal.length === 0 ? 0 : this.$store.state.home.headerAction
-      var that = this
-      var img = _.find(this.comprotList, function (list) { return list.value == that.actionIndex }).img
-      this.$store.commit('headerImg', img)
+      const index = this.comprotList.findIndex(o=>{
+        return o.value == this.actionIndex
+      })
+      this.$store.commit('headerImg', this.comprotList[index].img)
+      this.$store.commit('headerData', this.comprotList[index] || {})
       this.$store.commit('saveComprotList', this.comprotList)
     } else {
       _.indexOf(this.$store.state.user.access, GroupCompany) > -1 ? showCompany = true : showCompany = false // 判断是否显示集团
