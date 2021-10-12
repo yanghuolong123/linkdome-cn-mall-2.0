@@ -151,7 +151,7 @@ const selectMixin = {
   },
   methods: {
     getGateTypeList(){
-      getGateTypeList().then(res=>{
+      getGateTypeList({ property_id: this.$store.state.home.headerAction }).then(res=>{
         this.gateCascadeOpiton = res.data.data || [];
       })
     },

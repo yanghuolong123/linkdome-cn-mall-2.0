@@ -202,7 +202,7 @@ export default {
         return o.value == this.actionIndex
       })
       this.$store.commit('headerImg', this.comprotList[index].img)
-      this.$store.commit('headerData', this.comprotList[index] || {})
+      this.$store.commit('headerData', this.comprotList[0] || {})
       this.$store.commit('saveComprotList', this.comprotList)
     } else {
       _.indexOf(this.$store.state.user.access, GroupCompany) > -1 ? showCompany = true : showCompany = false // 判断是否显示集团

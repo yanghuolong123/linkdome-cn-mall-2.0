@@ -479,8 +479,9 @@ export const getCameraImageUrl =  (params) => {
   })
 }
 //出入口类型
-export const getGateTypeList =  () => {
+export const getGateTypeList =  (params) => {
   return  axios.request({
     url: '/mananger/gate',
+    params
   })
 }
