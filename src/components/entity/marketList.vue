@@ -63,10 +63,10 @@
           return f.year === currentYear
         })
         const flowType = goalFlow.is_year
-        if (!flowType) obj.enterGoal = '0人'
+        if (!flowType) obj.enterGoal = '0'+this.$t('人')
         switch (flowType) {
           case 'year':
-            obj.enterGoal = goalFlow.flow_year ? goalFlow.flow_year.toLocaleString() + '人' : '0人'
+            obj.enterGoal = goalFlow.flow_year ? goalFlow.flow_year.toLocaleString() + this.$t('人') : '0'+this.$t('人')
             break
           case 'month':
             const month = goalFlow.detail.months
@@ -74,7 +74,7 @@
               return formatNumber(Object.values(m)[0])
             })
             const sumMonthFlow = thousandSeparator(_.sum(number))
-            obj.enterGoal = sumMonthFlow + '人'
+            obj.enterGoal = sumMonthFlow + this.$t('人')
             break
         }
 
@@ -83,10 +83,10 @@
           return s.year === currentYear
         })
         const saleType = goalSale.is_year
-        if (!saleType) obj.saleGoal = '0元'
+        if (!saleType) obj.saleGoal = '0'+this.$t('元')
         switch (saleType) {
           case 'year':
-            obj.saleGoal = goalSale.sale_year ? goalSale.sale_year.toLocaleString() + '元' : '0元'
+            obj.saleGoal = goalSale.sale_year ? goalSale.sale_year.toLocaleString() + this.$t('元') : '0'+this.$t('元')
             break
           case 'month':
             const monthSale = goalSale.detail.months
@@ -94,10 +94,11 @@
               return formatNumber(Object.values(m)[0])
             })
             const sumMonthSale = thousandSeparator(_.sum(numberSale))
-            obj.saleGoal = sumMonthSale + '元'
+            obj.saleGoal = sumMonthSale +this.$t('元')
         }
         obj.address = obj.address ? obj.address : ' '
         obj.describe = obj.description ? obj.description : ' '
+        console.log(obj)
         this.tableList.push(obj)
       },
       imgConfig () {
@@ -108,8 +109,8 @@
       },
       delMail (value) {
         let alertText = {}
-        alertText.title = '删除实体'
-        alertText.text = '确认删除此商场信息？'
+        alertText.title = this.$t('删除实体')
+        alertText.text = this.$t('确认删除实体')
         alertText.bg = '#00A0E9'
         alertText.confirm = true
         this.$emit('delMail', true, alertText, value.data)

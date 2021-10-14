@@ -8,8 +8,8 @@ footFall:客流
 <template>
   <div class="p-6 bg-white box-card" style="margin-top:20px">
     <div class="ranking-selector-box flex items-center">
-      <span class="mr-3">{{selectTitle}}</span>
-      <vs-select v-model="bussinessType" autocomplete placeholder="请选择" noDataText="暂无数据">
+      <span class="mr-3">{{$t(selectTitle)}}</span>
+      <vs-select v-model="bussinessType" autocomplete :placeholder="$t('请选择')" :noDataText="$t('暂无数据')">
         <vs-select-item
           v-for="item in withAllOptions"
           :value="item.value"
@@ -33,16 +33,15 @@ footFall:客流
           @getShopTableCoumn="leftTableCoumn"
           @getShopTableData="letfTableData"
         >
-          <span class="mx-4 text-sm" style="line-height:37px">数据指标:</span>
+          <span class="mx-4 text-sm">{{ $t('fx.Data_indicators') }}</span>
           <vs-select
             autocomplete
             v-model="bizIndicator"
-            class="chartSelector"
             v-if="indicatorSelector"
           >
             <vs-select-item
               v-for="(item,index) in indicators "
-              :text="item.name"
+              :text="$t(item.name)"
               :key="index"
               :value="item.value"
             />
@@ -66,16 +65,15 @@ footFall:客流
           key="shopTop"
         >
           <export-menu slot="export" @onchange="exportShoptop"></export-menu>
-          <span class="mx-4 text-sm"  style="line-height:37px">数据指标:</span>
+          <span class="mx-4 text-sm" >{{ $t('fx.Data_indicators') }}</span>
           <vs-select
             autocomplete
             v-model="shopIndicator"
-            class="chartSelector"
             v-if="indicatorSelector"
           >
             <vs-select-item
               v-for="(item,index) in indicators"
-              :text="item.name"
+              :text="$t(item.name)"
               :key="index"
               :value="item.value"
             />
@@ -294,7 +292,7 @@ export default {
       return Object.keys(this.bussinessDictList).map(e => ({ text: this.bussinessDictList[e], value: Number(e) }))
     },
     withAllOptions () {
-      const allType = { text: '所有业态', value: 'all' }
+      const allType = { text: this.$t('所有业态'), value: 'all' }
       return [allType, ...this.bussinessTypes]
     },
     indicators () {
@@ -323,7 +321,7 @@ export default {
       }
       return {
         xAxis: {
-          name: '名称',
+          name:this.$t('名称'),
           key: 'bussiness',
           data: Object.values(Object.values(tml)[0]).map(e => e.name)
         },
@@ -379,7 +377,7 @@ export default {
       })
       return {
         xAxis: {
-          name: '名称',
+          name:this.$t('名称'),
           key: 'shop',
           data: Object.values(sortedObj)[0].map(e => {
             if (_.isArray(e.name)) return e.name[0]
@@ -425,15 +423,15 @@ export default {
     tooltipUnit (type) { // 业态排行tooltip显示的单位
       switch (type) {
         case 'enter':
-          return '人次'
+          return this.$t('人次')
         case 'SquaerMetre':
-          return '元/m²'
+          return this.$t('元/m²')
         case 'SaleAmount':
-          return '元'
+          return this.$t('元')
         case 'CloseRate':
           return '%'
         case 'UnitPrice':
-          return '元'
+          return this.$t('元')
       }
     },
     // 业态数据
@@ -457,7 +455,7 @@ export default {
     },
     leftTableCoumn(value){
       value.map(list=>{
-        if(list.title!=='名称'){
+        if(list.title!==this.$t('名称')){
           let newTime =  list.title.split(' - ')
           if(newTime[0]===newTime[1]){
             list.title = newTime[0]
@@ -471,7 +469,7 @@ export default {
     },
     rightTableCoumn(value){
       value.map(list=>{
-        if(list.title!=='名称'){
+        if(list.title!==this.$t('名称')){
           let newTime =  list.title.split(' - ')
           if(newTime[0]===newTime[1]){
             list.title = newTime[0]
@@ -553,24 +551,24 @@ export default {
     },
     exportBiztop () {
       let name
-      if(this.$store.state.home.headerAction===0) name='集团业态排行'
+      if(this.$store.state.home.headerAction===0) name=this.$t('集团业态排行')
       else{
         if(this.$router.currentRoute.name==='SalesAnalytics'){
-            name='销售业态排行'
+            name=this.$t('销售业态排行')
         }else{
-           name='业态排行'
+           name=this.$t('业态排行')
         }
       }
       downloadEx(exportEx,name,[this.tableList.coumnOne,this.tableList.dataOne])
     },
     exportShoptop (type) {
       let name
-      if(this.$store.state.home.headerAction===0) name='购物中心业态排行'
+      if(this.$store.state.home.headerAction===0) name=this.$t('购物中心业态排行')
       else
         if(this.$router.currentRoute.name==='SalesAnalytics'){
-            name='销售商铺排行'
+            name=this.$t('销售商铺排行')
         }else{
-           name='商铺排行'
+           name=this.$t('商铺排行')
         }
       downloadEx(exportEx,name,[this.tableList.coumnTwo,this.tableList.dataTwo])
     },

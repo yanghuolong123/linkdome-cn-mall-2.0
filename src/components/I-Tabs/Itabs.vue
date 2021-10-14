@@ -3,13 +3,14 @@
     <div class="tab-bar">
       <div class="tab-bar-left">
         <span v-if="!isNowTime">
-          {{titleList[value]}}
-          <Tooltip v-if="titleList[0]=='新老顾客占比'"
-                   :content="tootipText"
-                   placement="bottom"
-                   theme="light"
-                   transfer
-                   max-width="600">
+          {{ $t(titleList[value]) }}
+          <Tooltip
+            v-if="titleList[0]=='新老顾客占比'"
+            :content="$t('notices.customer')"
+            placement="bottom"
+            theme="light"
+            transfer
+            max-width="600">
             <icons type="wenhao" />
           </Tooltip>
         </span>
@@ -25,8 +26,7 @@
             v-for="(item,index) in navList"
             @click="handleClick(index,item)"
             :key="index"
-            :title="iconTitle[item.icon] ? iconTitle[item.icon] :''"
-          >
+            :title="$t(iconTitle[item.icon] ? iconTitle[item.icon] : '')">
             <span class="navitemIcon">
               <icons
                 :type="item.icon"
@@ -41,7 +41,7 @@
       </div>
     </div>
     <div class="tab-con"
-         :style="contentStyle">
+      :style="contentStyle">
       <slot></slot>
     </div>
   </div>
@@ -70,7 +70,6 @@ export default {
   },
   data () {
     return {
-      tootipText: '新顾客：在所选时间段内仅来过1次的人数\n老顾客：在所选时间段内来过2次及以上的人数',
       navList: [],
       titleList: [],
       currentIndex: 0,
@@ -172,6 +171,7 @@ export default {
       display flex
       flex-wrap wrap
       justify-content space-between
+      align-items center
       >div
         margin-right 50px
       >ul

@@ -1,14 +1,16 @@
 <template>
   <div class="CheckboxGroups">
     <div class="checkAll">
-        <Checkbox
-            :indeterminate="indeterminate"
-            :value="checkAll"
-            :disabled="disabled"
-            @click.prevent.native="handleCheckAll">{{checkDatas.cname}}</Checkbox>
+      <Checkbox
+        :indeterminate="indeterminate"
+        :value="checkAll"
+        :disabled="disabled"
+        @click.prevent.native="handleCheckAll">
+        {{ checkDatas.cname }}
+      </Checkbox>
     </div>
     <CheckboxGroup v-model="checkValues" class="checkList" @on-change="onchange">
-        <Checkbox :label="item.cname" :disabled="disabled" v-for=" item in checkDatas.subpagesList"></Checkbox>
+      <Checkbox :label="item.cname" :disabled="disabled" v-for=" item in checkDatas.subpagesList"></Checkbox>
     </CheckboxGroup>
   </div>
 </template>

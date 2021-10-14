@@ -1,6 +1,7 @@
 <template>
   <div v-if="canshow">
-    <chart-tabs ref="charts"
+    <chart-tabs
+      ref="charts"
       :xAxis="xAxisObj"
       :series="finnalSeries"
       :extraOptions="extraOptWithYaxis"
@@ -10,24 +11,22 @@
       :tooltipUnit="tooltipUnit(curretIndicator)"
       class="bg-white box-card"
       :totalData="totalData"
-      id='trendLine'
-    >
+      id='trendLine'>
       <export-menu slot="export" @onchange="exportBiztop"></export-menu>
       <template>
         <div class="flex justify-between items-center mr-10">
-          <span class="whitespace-no-wrap mx-4 text-sm">数据指标:</span>
+          <span class="whitespace-no-wrap mx-4 text-sm">{{ $t('fx.Data_indicators') }}</span>
           <!-- multiple -->
           <vs-select autocomplete   v-model="curretIndicator" @change="curretIndicatorChange" :max-selected="2" id="chartSelect">
             <vs-select-item
               v-for="(item,index) in filteredSelectList "
-              :text="item.name"
+              :text="$t(item.name)"
               :key="index"
               :value="item.value"
             />
           </vs-select>
         </div>
       </template>
-
     </chart-tabs>
   </div>
 </template>
@@ -286,7 +285,7 @@ export default {
 
             dataKeys.map(list => {
               let obj = {}
-              obj.name = list+'-'+findKey(this.filteredSelectList,'value',this.curretIndicator,'name')
+              obj.name = list+'-'+this.$t(findKey(this.filteredSelectList,'value',this.curretIndicator,'name'))
               obj.key = this.curretIndicator + '_' + list + '_' + that.time1
               obj.data = []
               if (time[0] == time[1]) {
@@ -315,7 +314,7 @@ export default {
             _.forIn(data.data,(value,key)=>{
               let obj = {
                 key:`${this.curretIndicator}_${key}_${Object.keys(value)[0]}`,
-                name: key+'_'+findKey(this.filteredSelectList,'value',this.curretIndicator,'name'),
+                name: key+'_'+this.$t(findKey(this.filteredSelectList,'value',this.curretIndicator,'name')),
 								data:Object.values(value[Object.keys(value)[0]]).map(val=>{
                   if(this.curretIndicator === 'CloseRate'){
                     return parseInt(val*100)
@@ -364,15 +363,15 @@ export default {
     tooltipUnit (type) { // 业态排行tooltip显示的单位
       switch (type) {
         case 'enter':
-          return '人次'
+          return this.$t('人次')
         case 'SquaerMetre':
-          return '元/m²'
+          return this.$t('元/m²')
         case 'SaleAmount':
-          return '元'
+          return this.$t('元')
         case 'CloseRate':
           return '%'
         case 'UnitPrice':
-          return '元'
+          return this.$t('元')
       }
     },
     getTrendData: _.debounce(function (params) {

@@ -34,6 +34,7 @@
               </Badge>
           </div> -->
           <!-- <div class="BIButton" v-show="showBI" v-on:click="openBILarge">点击开启BI大屏</div> -->
+					<LanguageBtn style="margin: 0 16px 0 0;"/>
           <div class="text-right leading-tight hidden sm:block">
             <p class="font-semibold">{{user.userName}}</p>
           </div>
@@ -54,14 +55,14 @@
                   @click="isAccount=true"
                 >
                   <Icon type="md-person" size="16"/>
-                  <span class="ml-2">账户信息</span>
+                  <span class="ml-2">{{$t('账户信息')}}</span>
                 </li>
                 <li
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
                   @click="accountOut"
                 >
                   <feather-icon icon="LogOutIcon" svgClasses="w-4 h-4"></feather-icon>
-                  <span class="ml-2">退出</span>
+                  <span class="ml-2">{{$t('退出')}}</span>
                 </li>
               </ul>
             </vs-dropdown-menu>
@@ -88,24 +89,24 @@
       </div>
       <ul class="account-text">
         <li>
-          <span>角色：</span>
-          <span>{{roleName}}</span>
+          <span>{{$t('角色')}}：</span>
+          <span>{{$t(roleName)}}</span>
         </li>
         <li>
-          <span>姓名：</span>
+          <span>{{$t('姓名')}}：</span>
           <span>{{user.realName}}</span>
         </li>
         <li>
-          <span>性别：</span>
-          <span v-if="user.sex == 1">男</span>
-          <span v-if="user.sex == 0">女</span>
+          <span>{{$t('性别')}}：</span>
+          <span v-if="user.sex == 1">{{$t('男性')}}</span>
+          <span v-if="user.sex == 0">{{$t('女性')}}</span>
         </li>
         <li>
-          <span>手机号：</span>
+          <span>{{$t('手机号')}}：</span>
           <span>{{user.mobile}}</span>
         </li>
         <li>
-          <span>邮箱：</span>
+          <span>{{$t('邮箱')}}：</span>
           <span>{{user.email}}</span>
         </li>
       </ul>
@@ -121,12 +122,14 @@ import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import { getGroupOrganization, getUrl } from '@/api/home.js'
 import _ from 'lodash'
 import Cookies from 'js-cookie'
+import LanguageBtn from '@/components/LanguageBtn.vue'
 export default {
   name: 'the-navbar',
   components: {
     VxAutoSuggest,
     VuePerfectScrollbar,
-    headerAccount
+    headerAccount,
+		LanguageBtn
   },
 
   props: {

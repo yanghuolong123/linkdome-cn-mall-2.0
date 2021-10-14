@@ -2,31 +2,32 @@
   <div class="bg-white box-card box-cardss">
     <i-tabs  class="chartsTable" v-model="current">
       <tab-item :icon="icon1" class="chart-div" >
-          <div class="left-title">
-            <p class="title">{{title1}}</p>
-            <span v-if="isText">
-              <hr v-if="dataType"></hr><p>{{dataType}}</p>
-            </span>
-          </div>
-          <vue-apex-charts v-if="isChart"  :height="height1" :options="options1" :series="series1"></vue-apex-charts>
+        <div class="left-title">
+          <p class="title">{{ $t(title1) }}</p>
+          <span v-if="isText">
+            <hr v-if="dataType"></hr><p>{{dataType}}</p>
+          </span>
+        </div>
+        <vue-apex-charts v-if="isChart"  :height="height1" :options="options1" :series="series1"></vue-apex-charts>
       </tab-item>
       <tab-item :icon="icon2" class="chart-div" >
         <div class="left-title">
-            <p class="title">{{title1}}</p>
-            <span v-if="isText">
-              <hr v-if="dataType"></hr><p>{{dataType}}</p>
-            </span>
-          </div>
-          <vue-apex-charts ref="graphBar" :type="type2" :height="height1" :options="options2" :series="series2"></vue-apex-charts>
+          <p class="title">{{ $t(title1) }}</p>
+          <span v-if="isText">
+            <hr v-if="dataType"></hr><p>{{dataType}}</p>
+          </span>
+        </div>
+        <vue-apex-charts ref="graphBar" :type="type2" :height="height1" :options="options2" :series="series2"></vue-apex-charts>
       </tab-item>
       <tab-item :icon="icon3" class="chart-div">
         <div class="left-title">
-            <p class="title">{{title1}}</p>
-            <span v-if="isText">
-              <hr v-if="dataType"></hr><p>{{dataType}}</p>
-            </span>
-          </div>
-          <TableMultipleSelected  style="overflow-y:scroll;" :style="{height:height3}" :tableName="columns" :tableList="tableList"></TableMultipleSelected>
+          <p class="title">{{ $t(title1) }}</p>
+          <span v-if="isText">
+            <hr v-if="dataType"></hr>
+            <p>{{dataType}}</p>
+          </span>
+        </div>
+        <TableMultipleSelected  style="overflow-y:scroll;" :style="{height:height3}" :tableName="columns" :tableList="tableList"></TableMultipleSelected>
       </tab-item>
     </i-tabs>
   </div>
@@ -36,6 +37,8 @@ import tabItem from '_c/I-Tabs/TabItem.vue'
 import VueApexCharts from 'vue-apexcharts'
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import iTabs from '_c/I-Tabs/Itabs.vue'
+import i18n from '@/i18n/i18n'
+
 export default {
   name: 'goalCharts',
   props: {
@@ -77,7 +80,7 @@ export default {
     },
     columns: {
       type: Array,
-      default: () => ['日期', '客流量 ( 人次 )', '目标客流量 ( 人次 )']
+      default: () => ['日期',i18n.t('fn.EnterUnit',[i18n.t('人次')]), i18n.t('fn.TargetEnterUnit',[i18n.t('人次')])]
     },
     tableList: {
       type: Array,

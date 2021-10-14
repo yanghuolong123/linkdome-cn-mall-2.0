@@ -253,7 +253,7 @@
       },
       handleDownload () {
         if(!this.pdfBaseUrl){
-          this.$Message.warning('未获取到pdf_center服务器地址')
+          this.$message.warning(this.$t('error.pdfError'))
         }else{
           setTimeout(() => {
             axios.get(this.pdfBaseUrl + '/pdf/finish', {

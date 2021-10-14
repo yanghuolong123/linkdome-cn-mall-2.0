@@ -1,53 +1,51 @@
 <template>
-    <div>
-      <flow-selector @paramsPrepare="paramsPrepare"></flow-selector>
-      <div class="dewll_graph flex-column">
-        <div class="dewll_graph_title">
-          <span>停留时间分布</span>
-          <div class="dwell-time-icon" @click="iconClick">
-            <icons
-                     v-for="(icon,index) in iconList"
-                     :key="index"
-                     :data-value="icon.value"
-                    :title="iconTitle[icon.type]"
-                    :type="icon.type"
-                    :size="20"
-                    :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
-            ></icons>
-          </div>
+  <div>
+    <flow-selector @paramsPrepare="paramsPrepare"></flow-selector>
+    <div class="dewll_graph flex-column">
+      <div class="dewll_graph_title">
+        <span>{{ $t('停留时间分布') }}</span>
+        <div class="dwell-time-icon" @click="iconClick">
+          <icons
+            v-for="(icon,index) in iconList"
+            :key="index"
+            :data-value="icon.value"
+            :title="iconTitle[icon.type]"
+            :type="icon.type"
+            :size="20"
+            :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
+          ></icons>
         </div>
-        
-        <div class="dwell-chart-box" >
-          <vue-apex-charts
-              v-show="iconIndex == 1"
-              height='100%'
-              ref="graphBar"
-              type="bar"
-              :options="graphData.chartOptions"
-              :series="graphData.series"
-          ></vue-apex-charts>
-          <vue-apex-charts
-            class="chartsStyleTwo"
-            v-show="iconIndex == 0"
-            ref="graphLine"
-            height='100%'
-            width="100%"
-            type="line"
-            :options="lineData.chartOptions"
-            :series="lineData.series"
-          ></vue-apex-charts>
-          <div class=" dwell-chart-table"
-          v-show="iconIndex == 2"
-          >
-            <dwell-table maxHeight='400px' :columns='columnsList' :data='chartTableList'></dwell-table>
-          </div>
+      </div>
+      
+      <div class="dwell-chart-box" >
+        <vue-apex-charts
+          v-show="iconIndex == 1"
+          height='100%'
+          ref="graphBar"
+          type="bar"
+          :options="graphData.chartOptions"
+          :series="graphData.series"
+        ></vue-apex-charts>
+        <vue-apex-charts
+          class="chartsStyleTwo"
+          v-show="iconIndex == 0"
+          ref="graphLine"
+          height='100%'
+          width="100%"
+          type="line"
+          :options="lineData.chartOptions"
+          :series="lineData.series"
+        ></vue-apex-charts>
+        <div class=" dwell-chart-table" v-show="iconIndex == 2">
+          <dwell-table maxHeight='400px' :columns='columnsList' :data='chartTableList'></dwell-table>
         </div>
+      </div>
 
-      </div>
-      <div class="dwell-time-table">
-        <table-default :tableTitle='tableTitle' :tableName='tableName'  :tableList='tableList'></table-default>
-      </div>
     </div>
+    <div class="dwell-time-table">
+      <table-default :tableTitle='tableTitle' :tableName='tableName'  :tableList='tableList'></table-default>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -71,9 +69,7 @@ export default {
     FlowSelector
   },
   data () {
-    let that = this
     return {
-
       tableTitle: '详细数据信息',
       isGraph: false,
       isTableDate: false,
@@ -131,7 +127,7 @@ export default {
           },
           yaxis: {
             title: {
-              text: '时间'
+              text: this.$t('时间')
             },
             labels: {
               show: true,
@@ -313,8 +309,7 @@ export default {
           that.lineData.chartOptions.xaxis.categories.push(n)
         })
         if (res.data.data.charts.series.length !== 0) {
-          // that.graphData.series = res.data.data.charts.series
-          res.data.data.charts.series.map(function (d) {
+          res.data.data.charts.series.map( (d)=> {
             var obj = {}
             const arr = d.name.split(',');
             let name =  d.name.replace(/,/g, ' - ')
@@ -323,7 +318,7 @@ export default {
                 name = arr[0]
               }
             }
-            obj.name = name
+            obj.name = this.$t(name)
             obj.data = []
             d.data.map((num, index) => { obj.data.push(num) })
             that.lineData.series.push(obj)
@@ -354,10 +349,10 @@ export default {
         that.chartTableData(res.data.data.charts.categories, res.data.data.charts.series, charType)
         // 表格数据
         that.tableList = []
-        res.data.data.zones.map(function (d) {
+        res.data.data.zones.map( (d)=> {
           var obj = {}
           obj.name = d.name
-          obj.type = d.type == null ? '出入口' : d.type
+          obj.type = this.$t(d.type == null ? '出入口' : d.type)
           if (that.isTableDate === false) obj.time = ''
           else {
             let date;
@@ -415,7 +410,7 @@ export default {
       var that = this
       that.columnsList = [
         {
-          title: '时间',
+          title: this.$t('时间'),
           key: 'time'
         }
       ]
@@ -428,11 +423,11 @@ export default {
           that.columnsList.push(obj)
         })
         var timeType = that.compareData.compareType
-        series.map(function (list, index) {
+        series.map( (list, index) =>{
           var obj = {}
           if (['time','onYear','onChain'].includes(timeType)) {
             var num = Number(index) + 1
-            obj.time = '第' + num + '天'
+            obj.time = this.$t('fn.第_天',[num])
           } else {
             obj.time = that.compareData.date1Array[0]
           }

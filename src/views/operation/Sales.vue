@@ -67,7 +67,7 @@ import salesDict from '@/views/home/components/salesIndicatorDict.js'
         name: '客流量',
         yaxis: {
           title: {
-            text: '客流量（人）'
+            text:  `${this.$t('客流量')}(${this.$t('人')})`
           },
           labels: {
             formatter (value) {

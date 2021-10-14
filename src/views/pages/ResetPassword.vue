@@ -13,21 +13,21 @@
         v-if="!isresetSuccess"
         class="reserForm"
       >
-        <FormItem prop="newPassword" label="密码">
+        <FormItem prop="newPassword" :label="$t('密码')">
           <Input
             v-model="formData.newPassword"
             size="large"
             autofocus
-            placeholder="请输入修改的密码"
+            :placeholder="$t('请输入修改的密码')"
             type="password"
           />
         </FormItem>
-        <FormItem prop="aginPassword" label="请确认修改后的密码" style="margin-top:20px;">
+        <FormItem prop="aginPassword" :label="$t('请确认修改后的密码')" style="margin-top:20px;">
           <Input
             v-model="formData.aginPassword"
             size="large"
             autofocus
-            placeholder="请再次输入修改的密码"
+            :placeholder="$t('请再次输入修改的密码')"
             type="password"
           />
         </FormItem>
@@ -35,11 +35,11 @@
           <Row type="flex" justify="space-between" class="footButton">
             <i-col :sm="8" :xs="24">
               <Button type="primary" size="large" class="commitButton" @click="handleSubmit" :loading="loading">
-                <span v-if="!loading">提交</span>
-                <span v-else>发送中...</span>
+                <span v-if="!loading">{{$t('提交')}}</span>
+                <span v-else>{{$t('发送中')}}</span>
               </Button>
             </i-col>
-            <Button size="large" class="resetButtom" @click="resetForm">重置</Button>
+            <Button size="large" class="resetButtom" @click="resetForm">{{ $t('重置') }}</Button>
           </Row>
         </FormItem>
       </Form>
@@ -48,26 +48,19 @@
           <p>
             <Icon type="md-checkmark-circle" :size="50" color="#40ddd4"/>
           </p>
-          <p>密码修改成功</p>
-          <p>您的密码已经找回并修改成功</p>
-          <Button type="primary" size="large" @click="backLogin">返回登录页</Button>
+          <p>{{$t('密码修改成功')}}</p>
+          <p>{{$t('密码已找回')}}</p>
+          <Button type="primary" size="large" @click="backLogin">{{$t('返回登录页')}}</Button>
         </div>
       </template>
     </Content>
   </Layout>
-  <alert
-    v-if="isAlert"
-    @closeAlert ='closeAlert'
-    @alertConfirm ='alertConfirm'
-    :alertText='alertText'
-  ></alert>
 </div>
 
 </template>
 <script>
 import headerBar from '_c/password/headerbar.vue'
 import steps from '_c/password/steps.vue'
-import alert from '@/components/alert.vue'
 import { resetPassword } from '@/api/user'
 import { getParams } from '@/libs/util'
 import md5 from 'md5'
@@ -76,14 +69,13 @@ export default {
   components: {
     headerBar,
     steps,
-    alert
   },
   data () {
     const validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入密码'))
+        callback(new Error(this.$t('密码不能为空')))
       } else if (value.length < 6) {
-        callback(new Error('密码不能少于 6 位'))
+        callback(new Error(this.$t('密码长度不得小于6个字符')))
       } else {
         if (this.formData.newPassword !== '') {
           // 对第二个密码框单独验证
@@ -94,21 +86,14 @@ export default {
     }
     const validatePassCheck = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'))
+        callback(new Error(this.$t('请再次输入修改的密码')))
       } else if (value !== this.formData.newPassword) {
-        callback(new Error('两次输入密码不一致'))
+        callback(new Error(this.$t('两次密码不一致!')))
       } else {
         callback()
       }
     }
     return {
-      isAlert: false,
-      alertText: {
-        title: '',
-        text: '',
-        bg: '',
-        confirm: false
-      },
       formData: {
         newPassword: '',
         aginPassword: ''
@@ -132,7 +117,6 @@ export default {
     try {
       this.userInfo = getParams(url)
     } catch (error) {
-    //   this.$router.push('/login')
     }
   },
   methods: {
@@ -150,24 +134,14 @@ export default {
               this.current = 3
               this.isresetSuccess = true
             } else if (res.data.code === 304 || res.data.code === 307) {
-              // alert('没有此用户')
-              that.isAlert = true
-              that.alertText.bg = '#00A0E9'
-              that.alertText.title = '重置密码'
-              that.alertText.text = '没有此用户'
-              that.alertText.confirm = false
+              this.$message.warning(this.$t('没有此用户'))
             } else {
-              that.isAlert = true
-              that.alertText.bg = '#00A0E9'
-              that.alertText.title = '重置密码'
-              that.alertText.text = '修改失败'
-              that.alertText.confirm = false
-              // alert('修改失败')
+              this.$message.error(this.$t('修改失败'))
             }
           }).catch(err => {
             this.loading = false
-            if (!err.response)alert('请求超时')
-            else if (err.response.status === 500) alert('服务器错误，请稍后重试')
+            if (!err.response)this.$message.error(this.$t('error.timeout'))
+            else if (err.response.status === 500)this.$message.error(this.$t('error.serverError'))
           })
         }
       })
@@ -178,12 +152,6 @@ export default {
     backLogin () {
       this.$router.push('/login')
     },
-    closeAlert () {
-      this.isAlert = false
-    },
-    alertConfirm (valuer) {
-      this.isAlert = false
-    }
   }
 }
 </script>

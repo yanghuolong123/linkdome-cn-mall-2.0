@@ -3,7 +3,7 @@
          <div class="account-edit-bg" v-on:click="closeEdit"></div>
          <div class="account-edit-text" :style="{marginTop:marginTops+'px'}">
                 <div class="edit-title">
-                    编辑用户
+                    {{$t('编辑用户')}}
                 </div>
                 <div class="edit-close" v-on:click="closeEdit">
                     <Icon type="md-close" />
@@ -16,28 +16,28 @@
                         <uploadImg @changeImg="changeImg"></uploadImg>
                     </div>
                     <div class="model-right">
-                        <div class="edit-right-title">详细信息</div>
+                        <div class="edit-right-title">{{ $t('详细信息') }}</div>
                         <Form ref="formInline" :model="userForm" :rules="ruleInline" inline>
                             <div class="flex">
                                 <div class="half">
-                                    <FormItem prop="username" label="用户名">
-                                        <Input :disabled="true" :maxlength="45" placeholder="请输入用户名" v-model="userForm.username"></Input>
+                                    <FormItem prop="username" :label="$t('用户名')">
+                                        <Input :disabled="true" :maxlength="45" :placeholder="$t('holder.请输入用户名')" v-model="userForm.username"></Input>
                                     </FormItem>
                                 </div>
                                 <div class="half">
-                                    <FormItem prop="realname" label="姓名">
-                                        <Input v-model="userForm.realname" :maxlength="128" placeholder="请输入用户姓名"/>
+                                    <FormItem prop="realname"  :label="$t('姓名')">
+                                        <Input v-model="userForm.realname" :maxlength="128" :placeholder="$t('holder.请输入用户姓名')"/>
                                     </FormItem>
                                 </div>
                             </div>
                             <div class="flex password">
                                 <div class="half">
-                                <FormItem prop="password" label="密码">
+                                <FormItem prop="password" :label="$t('密码')">
                                     <Input v-model="userForm.password" type="password" placeholder/>
                                 </FormItem>
                                 </div>
                                 <div class="half">
-                                <FormItem prop="password2" label="确认密码">
+                                <FormItem prop="password2" :label="$t('确认密码')">
                                     <Input v-model="userForm.password2" type="password" placeholder/>
                                 </FormItem>
                                 </div>
@@ -45,41 +45,41 @@
                             <div class="flex" v-if="showLvl">
                               <div class="flex left">
                               <div class="more" v-if="showRolePermission">
-                                <FormItem prop="role"  label="角色">
+                                <FormItem prop="role"  :label="$t('角色')">
                                 <Select v-model="userForm.role" :disabled="disabledRole">
                                         <Option
                                     v-for="item in roleList"
                                         :value="item.value"
                                         :key="item.value"
-                                        >{{ item.label }}</Option>
+                                        >{{ $t(item.label) }}</Option>
                                     </Select>
                                     </FormItem>
                                 </div>
                                 <div class="more">
-                                    <FormItem prop="sex" label="性别">
+                                    <FormItem prop="sex" :label="$t('性别')">
                                     <Select v-model="userForm.sex">
                                         <Option
                                         v-for="item in sexList"
                                         :value="item.value"
                                         :key="item.value"
-                                        >{{ item.label }}</Option>
+                                        >{{ $t(item.label) }}</Option>
                                     </Select>
                                     </FormItem>
                                 </div>
                                 <div class="more">
-                                    <FormItem prop="mobile" label="手机号">
+                                    <FormItem prop="mobile" :label="$t('手机号')">
                                     <Input v-model="userForm.mobile" placeholder/>
                                     </FormItem>
                                 </div>
                                 <div class="more">
-                                    <FormItem prop="email" label="邮箱">
+                                    <FormItem prop="email" :label="$t('邮箱')">
                                     <Input v-model="userForm.email" type="email" placeholder/>
                                     </FormItem>
                                 </div>
                                 </div>
                                 <div class="flex right">
                                 <div class="more"  v-if="showRolePermission">
-                                  <FormItem prop="bzidList"  label="实体权限" style="position:relative">
+                                  <FormItem prop="bzidList"  :label="$t('实体权限')" style="position:relative">
                                     <el-cascader
                                     v-model="userForm.bzidList"
                                     :disabled="disabledRole"
@@ -94,25 +94,25 @@
                             </div>
                             <div class="flex" v-if="!showLvl">
                                 <div class="half">
-                                <FormItem prop="sex" label="性别">
+                                <FormItem prop="sex" :label="$t('性别')">
                                     <Select v-model="userForm.sex">
                                     <Option
                                         v-for="item in sexList"
                                         :value="item.value"
                                         :key="item.value"
-                                    >{{ item.label }}</Option>
+                                    >{{ $t(item.label) }}</Option>
                                     </Select>
                                 </FormItem>
                                 </div>
                                 <div class="half">
-                                <FormItem prop="mobile" label="手机号">
+                                <FormItem prop="mobile" :label="$t('手机号')">
                                     <Input v-model="userForm.mobile" placeholder/>
                                 </FormItem>
                                 </div>
                             </div>
                             <div class="flex" v-if="!showLvl">
                                 <div class="more">
-                                <FormItem prop="email" label="邮箱">
+                                <FormItem prop="email" :label="$t('邮箱')" >
                                     <Input v-model="userForm.email" type="email" placeholder/>
                                 </FormItem>
                                 </div>
@@ -120,8 +120,8 @@
                             <div class="flex">
                                 <div class="control">
                                 <FormItem>
-                                    <Button  @click="handleSubmit('formInline')">提交</Button>
-                                    <Button class="buttonCel" @click.native="closeEdit">取消</Button>
+                                    <Button  @click="handleSubmit('formInline')">{{$t('提交')}}</Button>
+                                    <Button class="buttonCel" @click.native="closeEdit">{{$t('取消')}}</Button>
                                 </FormItem>
                                 </div>
                             </div>
@@ -129,18 +129,11 @@
                     </div>
                 </div>
             </div>
-          <alert
-            v-if="isAlert"
-            @closeAlert ='closeAlert'
-            @alertConfirm ='alertConfirm'
-            :alertText='alertText'
-          ></alert>
     </div>
 </template>
 
 <script>
 import { validateTel, validateSelectMore } from '@/libs/util'
-import alert from '@/components/alert.vue'
 import uploadImg from '_c/common/uploadImg.vue'
 import md5 from 'md5'
 import { updateUserData, getbusinessDate } from '@/api/manager.js'
@@ -153,18 +146,17 @@ export default {
     editData: Object
   },
   components: {
-    alert,
     uploadImg
   },
   data () {
     // 验证密码
     const validatePass = (rule, value, callback) => {
       if (value === undefined || value === '') {
-        callback(new Error('密码不能为空'))
+        callback(new Error(this.$t('密码不能为空')))
       } else if (value.length < 6) {
-        callback(new Error('密码长度不得小于6个字符'))
+        callback(new Error(this.$t('密码长度不得小于6个字符')))
       } else if (value.length > 255) {
-        callback(new Error('密码长度不得大于255个字符'))
+        callback(new Error(this.$t('密码长度不得大于255个字符')))
       } else {
         callback()
       }
@@ -172,11 +164,11 @@ export default {
     // 验证用户名
     const validUserName = (rule, value, callback) => {
       if (value === undefined || value === '') {
-        callback(new Error('用户名不能为空'))
+        callback(new Error(this.$t('用户名不能为空')))
       } else if (value.length < 2) {
-        callback(new Error('用户名长度不得小于2个字符'))
+        callback(new Error(this.$t('长度不得小于2个字符')))
       } else if (value.length > 10) {
-        callback(new Error('用户名不得大于10个字符'))
+        callback(new Error(this.$t('最多输入10个字符')))
       } else {
         callback()
       }
@@ -186,9 +178,9 @@ export default {
       if (value === undefined || value === '' || value === null) {
         callback()
       } else if (value.length < 2) {
-        callback(new Error('用户姓名长度不得小于2个字符'))
+        callback(new Error(this.$t('长度不得小于2个字符')))
       } else if (value.length > 10) {
-        callback(new Error('用户姓名不得大于10个字符'))
+        callback(new Error(this.$t('最多输入10个字符')))
       } else {
         callback()
       }
@@ -196,13 +188,13 @@ export default {
     // 验证确认密码
     const validatePassCheck = (rule, value, callback) => {
       if (value === undefined || value === '') {
-        callback(new Error('请输入密码'))
+        callback(new Error(this.$t('密码不能为空')))
       } else if (value.length < 6) {
-        callback(new Error('密码长度不得小于6个字符'))
+        callback(new Error(this.$t('密码长度不得小于6个字符')))
       } else if (value.length > 255) {
-        callback(new Error('密码长度不得大于50个字符'))
+        callback(new Error(this.$t('密码长度不得大于50个字符')))
       } else if (value !== this.userForm.password) {
-        callback(new Error('两次密码不一致!'))
+        callback(new Error(this.$t('两次密码不一致!')))
       } else {
         callback()
       }
@@ -213,13 +205,6 @@ export default {
       disabledRole: false,
       showRolePermission: true,
       checklists: [],
-      isAlert: false,
-      alertText: {
-        title: '',
-        text: '',
-        bg: '',
-        confirm: false
-      },
       marginTop: 0,
       uploadImg: require('@/assets/images/fixation_img/rest/who.png'),
       userForm: {
@@ -243,13 +228,12 @@ export default {
         mobile: [{ required: false, validator: validateTel, trigger: 'blur' }],
         checklist: [{ required: true, validator: validateSelectMore, trigger: 'change' }],
         lvl: [{ required: true, validator: validateSelectMore, trigger: 'change' }],
-        email: [{ required: true, message: '邮箱不能为空', trigger: 'blur' },
-          { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }],
+        email: [{ required: true, message:  this.$t('邮箱不能为空'), trigger: 'blur' },
+          { type: 'email', message:this.$t('邮箱格式不正确'), trigger: 'blur' }],
         password: [{ required: true, validator: validatePass, trigger: 'blur' }],
         password2: [{ required: true, validator: validatePassCheck, trigger: 'blur' }]
       },
-      sexList: [{ 'label': '男', 'value': 1 }, { 'label': '女', 'value': 0 }],
-      isAdminList: [{ 'label': '是', 'value': 22 }, { 'label': '否', 'value': 23 }],
+      sexList: [{ 'label': '男性', 'value': 1 }, { 'label': '女性', 'value': 0 }],
       showLvl: true
     }
   },
@@ -369,10 +353,6 @@ export default {
     closeEdit () {
       this.$emit('closeEdit')
     },
-    alertConfirm (valuer) {
-      var that = this
-      valuer == true ? that.$emit('closeEdit') : that.isAlert = false
-    },
     changeImg (img) {
       this.userForm.avatar = img
       this.uploadImg = img
@@ -393,16 +373,11 @@ export default {
       if (user.checklist.indexOf('all') > -1) {
         var checklists = _.cloneDeep(that.checklists)
         checklists.shift()
-        let checklist = checklists.map(function (m, index) {
+        let checklist = checklists.map( (m, index)=> {
           return m.value
         })
         user.checklist = checklist.join(',')
       }
-      // user.checklist = this.userForm.bzidList.map(function(m){
-      //   return m[0]
-      // })
-      // user.checklist = _.uniq(user.checklist)
-      // user.checklist = user.checklist.join(',')
       user.realname = this.userForm.realname
       user.sex = this.userForm.sex
       user.mobile = this.userForm.mobile
@@ -415,7 +390,7 @@ export default {
             if (user.avatar === require('@/assets/images/fixation_img/rest/who.png')) user.avatar = ''
             that.$store.commit('setAvator', user.avatar)
             user.checklist = user.checklist.split(',')
-            user.checklist.forEach(function (e, index) {
+            user.checklist.forEach( (e, index)=> {
               user.checklist[index] = Number(e)
             })
             that.$store.commit('setchecklist', user.checklist)
@@ -424,17 +399,10 @@ export default {
             that.$store.commit('setmobile', user.mobile)
             that.$store.commit('setSex', user.sex)
             user.lvl === 22 ? that.$store.commit('setlvl', 'admin') : that.$store.commit('setlvl', 'normal')
-            that.isAlert = true
-            that.alertText.bg = '#00A0E9'
-            that.alertText.title = '编辑用户'
-            that.alertText.text = '修改用户成功'
-            that.alertText.confirm = true
+            this.$message.success(this.$t('fn.successTo', [this.$t('编辑用户')]))
+            that.$emit('closeEdit')
           } else if (res.data.code === 307) {
-            that.isAlert = true
-            that.alertText.bg = '#00A0E9'
-            that.alertText.title = '编辑用户'
-            that.alertText.text = '该邮箱已被占用!'
-            that.alertText.confirm = false
+            this.$message.warning(this.$t('邮箱已被占用'))
           }
         })
     }

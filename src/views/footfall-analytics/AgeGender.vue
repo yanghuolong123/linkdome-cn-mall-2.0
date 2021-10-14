@@ -10,7 +10,7 @@
                     :type="agechartData.type"
                     :chartWidth='ageChartWidth'
                     title="年龄分布"
-                    tooltipUnit="人"
+                    :tooltipUnit="$t('人')"
                     @tableChage="ageTableChange">
           <export-menu slot="export"
                        @onchange="ageExportBiztop"></export-menu>
@@ -23,7 +23,7 @@
                     :type="genderChartData.type"
                     :chartWidth='ageChartWidth'
                     title="性别分布"
-                    tooltipUnit="人"
+                    :tooltipUnit="$t('人')"
                     @tableChage="genderTableChange">
           <export-menu slot="export"
                        @onchange="genderExportBiztop"></export-menu>
@@ -39,7 +39,6 @@ import { getEntityFlowBatch } from '@/api/analysis'
 import exportMenu from '@/views/operation/components/ExportMenu.vue'
 import chartTabs from '@/components/common/CopyChartsTabs.vue'
 import FlowSelector from '_c/flow-selector/age-gender-flow-selector'
-import moment from 'moment'
 export default {
   name: 'ageGender',
   components: {
@@ -55,17 +54,17 @@ export default {
       canshow: false,
       genderName: {
         '0': {
-          name: '女',
+          name: this.$t('女性'),
           icon: 'female'
         },
         '1': {
-          name: '男',
+          name: this.$t('男性'),
           icon: 'male'
         }
       },
       genderDict: {
-        male: '男性',
-        female: '女性'
+        male: this.$t('男性'),
+        female: this.$t('女性')
       },
       chartData: { age: {}, gender: {} },
       extraOptions: {
@@ -143,9 +142,9 @@ export default {
       })
       if(ageCollection[0].data){
         ageLabels = {
-          name: '年龄',
+          name: this.$t('年龄'),
           key: 'age',
-          data: Object.keys(ageCollection[0].data).map(e => { return e.replace('_', '-').replace('less-', '小于').replace(/more-/, '大于') })
+          data: Object.keys(ageCollection[0].data).map(e => { return e.replace('_', '-').replace('less-',  this.$t('小于')).replace(/more-/,  this.$t('大于')) })
         }
       }
     
@@ -153,14 +152,14 @@ export default {
         const { labels, ...rest } = this.getGenderChartData(genderCollection, ['id'])
         genderChartData = {
           xAxis: {
-            name: '实体',
+            name: this.$t('实体'),
             key: 'id',
             data: labels
           },
           ...rest
         }
         ageXaxis = {
-          name: '实体',
+          name: this.$t('实体'),
           key: 'id',
           data: this.getAgeXaxis(ageCollection, ['id'])// `${this.entitys.find(o => Number(o.id) === Number(e.id)).label}`
         }
@@ -169,14 +168,14 @@ export default {
         const { labels, ...rest } = this.getGenderChartData(genderCollection, ['id', 'time'])
         genderChartData = {
           xAxis: {
-            name: '名称',
+            name: this.$t('名称'),
             key: 'name',
             data: labels
           },
           ...rest
         }
         ageXaxis = {
-          name: '类别',
+          name: this.$t('类别'),
           key: 'id_key',
           data: this.getAgeXaxis(ageCollection, ['id', 'time'])
         }
@@ -186,7 +185,7 @@ export default {
         if (singleTime) { // 单个实体单个时间，饼图，labels,series,年龄为radiabar
           genderChartData = {
             labels: {
-              name: '性别',
+              name: this.$t('性别'),
               key: 'gender',
               data: Object.keys(genderCollection[0].data).map(e => this.genderName[e].name),
               icons: Object.keys(genderCollection[0].data).map(e => this.genderName[e].icon)
@@ -203,14 +202,14 @@ export default {
           const { labels, ...rest } = this.getGenderChartData(genderCollection, ['time'])
           genderChartData = {
             xAxis: {
-              name: '时间',
+              name:  this.$t('时间'),
               key: 'time',
               data: labels
             },
             ...rest
           }
           ageXaxis = {
-            name: '时间',
+            name: this.$t('时间'),
             key: 'time',
             data: this.getAgeXaxis(ageCollection, ['time'])
           }
@@ -221,14 +220,14 @@ export default {
           const { labels, ...rest } = this.getGenderChartData(genderCollection, ['id'])
           genderChartData = {
             xAxis: {
-              name: '实体',
+              name:  this.$t('实体'),
               key: 'id',
               data: labels
             },
             ...rest
           }
           ageXaxis = {
-            name: '实体',
+            name:  this.$t('实体'),
             key: 'id',
             data: this.getAgeXaxis(ageCollection, ['id'])// `${this.entitys.find(o => Number(o.id) === Number(e.id)).label}`
           }
@@ -237,14 +236,14 @@ export default {
           const { labels, ...rest } = this.getGenderChartData(genderCollection, ['id', 'time'])
           genderChartData = {
             xAxis: {
-              name: '名称',
+              name:  this.$t('名称'),
               key: 'name',
               data: labels
             },
             ...rest
           }
           ageXaxis = {
-            name: '类别',
+            name: this.$t('类别'),
             key: 'id_key',
             data: this.getAgeXaxis(ageCollection, ['id', 'time'])
           }
@@ -319,7 +318,7 @@ export default {
         res.push(tml)
       })
       res.map(list=>{
-        list.name = list.name.replace('_', '-').replace('less-', '小于').replace(/more-/, '大于')
+        list.name = list.name.replace('_', '-').replace('less-', this.$t('小于')).replace(/more-/,  this.$t('大于'))
       })
       return res
     },

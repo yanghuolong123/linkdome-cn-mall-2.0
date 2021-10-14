@@ -20,6 +20,7 @@ const state = {
   bodyOverlay: false,
   sidebarItemsMin: false,
   theme: themeConfig.theme || 'light',
+  language:localStorage.getItem('lang')||'zh-CN',
   navbarSearchAndPinList: navbarSearchAndPinList,
   AppActiveUser: {
     id: 0,

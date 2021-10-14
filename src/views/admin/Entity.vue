@@ -12,10 +12,10 @@
 										change-on-select @on-change="caseDidChange" class="cascader">
 					</Cascader>
 					<div class="stall-header-right">
-                      <span class="stall-add" v-if="isSuperAdmin" title="添加" @click="addEntity">
+                      <span class="stall-add" v-if="isSuperAdmin " :title="$t('添加')" @click="addEntity">
                         <Icon type="md-add"/>
                       </span>
-						<span class="stall-add" v-if="isSuperAdmin" title="删除" @click="delEntity">
+						<span class="stall-add" v-if="isSuperAdmin" :title="$t('删除')" @click="delEntity">
                           <Icon type="md-remove"/>
                       </span>
 					</div>
@@ -46,13 +46,12 @@
 			ref="entityModal"
 			:addmall='addmall'
 			:mallList='mallList'
-			:editTitle="editTitle"
+			:editTitle="$t(editTitle)"
 			:isEmptyPage="isEmptyPage"
 			:userLvl="userLvl"
 			:propertyId="addmall.property_id"
 			@changeEditTitle="changeEditTitle"
 			@init="init"
-			@alertMessage="alertMessage"
 			@closeEdit="closeEdit"
 			@getData="getData"
 			@addTypeData="addTypeData"
@@ -63,13 +62,8 @@
 			@updateStoreData="updateStoreData"
 			v-cloak
 		></add-Entity>
-		<alert
-			v-if="isAlert"
-			@closeAlert='closeAlert'
-			@alertConfirm='alertConfirm'
-			:alertText='alertText'
-		></alert>
-		<imgconfig-modal ref="imgcofig" title="配置图片" :footerHide="true" :width="1350">
+	
+		<imgconfig-modal ref="imgcofig" :title="$t('图片配置')" :footerHide="true" :width="1350">
 			<div class="img-config" @mousemove="handleMouseMove">
 				<div class="part">
 					<div class="img-container" ref="imgContainer"
@@ -95,11 +89,11 @@
 								 src="../../assets/images/fixation_img/bg/symbol.png"
 								 v-show="addStatus">
 					</div>
-					<p>图片建议尺寸:1000×800像素</p>
+					<p>{{$t('图片建议尺寸')}}:1000×800</p>
 				</div>
 				<div class="part">
-					<span>操作</span>
-					<span v-if="addType===1">首页实体展示图配置</span>
+					<span>{{$t('操作')}}</span>
+					<span v-if="addType===1">{{$t('首页实体展示图配置')}}</span>
 					<div class="flex-center">
 						<Select v-if="addType===1" :disabled="!isConfigDataSame"
 										v-model="property" style="width:200px"
@@ -109,11 +103,11 @@
 						</Select>
 						<uploadImg @changeImg="changeImg" :disabled="property === ''&&addType===1"
 											 v-if="currentWay.itype&&currentWay.itype !== 'property'"
-											 :style="{marginLeft:addType===1?'20px':''}">上传图片
+											 :style="{marginLeft:addType===1?'20px':''}">{{$t('上传')}}
 						</uploadImg>
 					</div>
-					<span v-if="addType===1">首页展示图出入口坐标配置</span>
-					<span v-else>{{floorInfo[1] && floorInfo[1].name}}下属出入口店铺坐标配置</span>
+					<span v-if="addType===1">{{$t('首页展示图出入口坐标配置')}}</span>
+					<span v-else>{{floorInfo[1] && floorInfo[1].name}}{{$t('下属出入口店铺坐标配置')}}</span>
 					<div class="flex-center">
 						<Select v-model="way" :disabled="!isConfigDataSame" style="width:160px" @on-change="wayChange">
 							<Option v-for="item in wayList" :value="item.id" :key="item.id">{{
@@ -122,30 +116,31 @@
 						</Select>
 						<Button type="primary" style="margin-left: 20px"
 										:disabled="!way" :loading="uploadLoading" @click="setClick">
-							{{hasSymbol?'删除坐标':'放置坐标'}}
+							{{hasSymbol?$t('删除坐标'):$t('放置坐标')}}
 						</Button>
-						<Button v-if="addType === 3" :disabled="!way" style="margin-left: 20px" @click="previewClick">预览</Button>
+						<Button v-if="addType === 3" :disabled="!way" style="margin-left: 20px" @click="previewClick">{{$t('预览')}}
+						</Button>
 					</div>
 					<div class="part" v-if="['gate','store'].includes(currentWay.itype)">
-						<span>是否为热力图</span>
+						<span>{{$t('是否为热力图')}}</span>
 						<i-switch :disabled="!way" :true-value="1" :false-value="0"
 											v-model="configData.is_heatmap"></i-switch>
-						<span>是否为路径动线点</span>
+						<span>{{$t('是否为路径动线点')}}</span>
 						<i-switch :disabled="!way" :true-value="1" :false-value="0"
 											v-model="configData.is_keypath"></i-switch>
 					</div>
 					
 					<div class="btn-box">
-						<Button type="primary" :disabled="!Object.keys(currentWay).length" @click="handleReset">重置
+						<Button type="primary" :disabled="!Object.keys(currentWay).length" @click="handleReset">{{$t('重置')}}
 						</Button>
 						<Button :disabled="isConfigDataSame" type="primary" @click="handleSave" :loading="saveLoading">
-							保存
+							{{$t('保存')}}
 						</Button>
 					</div>
 				</div>
 			</div>
 		</imgconfig-modal>
-		<imgconfig-modal ref="preview" title="预览" :footerHide="true" :width="650">
+		<imgconfig-modal ref="preview" :title="$t('预览')" :footerHide="true" :width="650">
 			<div class="flex-column">
 				<div ref="viewContainer" id="viewContainer">
 					<img v-if="cameraImageUrl" width="500" height="400" :src="cameraImageUrl">
@@ -220,7 +215,6 @@
         gateTypeList: [],
         noBuy: require('@/assets/images/pages/noBuy.png'),
         isEmptyPage: false,
-        isAlert: false,
         alertText: {
           title: '',
           text: '',
@@ -491,7 +485,7 @@
         configData.position_y = ((configData.position_y * img.offsetHeight + 35) / img.offsetHeight).toFixed(4)
         data = _.merge(data, configData)
         configEntity(data).then(async res => {
-          this.$Message.success('保存成功')
+          this.$message.success(this.$t('fn.successTo',[this.$t('保存')]))
           if (this.currentWay.itype === 'property') {
             const orgData = await getGroupOrganization()
             this.$store.commit('saveOrganizationData', orgData.data.data)
@@ -505,7 +499,7 @@
           this.saveLoading = false
         }).catch(err => {
           this.saveLoading = false
-          this.$Message.error(err)
+          this.$message.error(err)
         })
       },
       //重置图片配置
@@ -722,7 +716,7 @@
           })
 					if(!this.wayList.length){
             this.way = ''
-					  this.$Message.warning('该购物中心下未配置出入口，请先配置！')
+					  this.$message.warning(this.$t('notices.configGate'))
 					  return
 					}
         }
@@ -850,13 +844,6 @@
           console.log(err)
         })
       },
-      closeAlert () {
-        this.isAlert = false
-      },
-      alertMessage (value, alertText) {
-        this.isAlert = value
-        this.alertText = alertText
-      },
       caseDidChange (value, selectedData) {
         let that = this
         that.nowEntity = selectedData
@@ -962,7 +949,7 @@
         // this.editTitle = '添加购物中心';
         var that = this
         let formValidate = {
-          spc: 1,
+          spc: this.addType===1?2:this.addType,
           name: '',
           floor: '',
           timerange: ['', ''],
@@ -975,10 +962,10 @@
           modal5: '',
           area: ''
         }
-        setTimeout(function () {
+        this.$nextTick(()=>{
           that.$refs.entityModal.isModify = false
           that.$refs.entityModal.disabledSpc = false
-          that.$refs.entityModal.getSelectValue(1)
+          that.$refs.entityModal.getSelectValue(formValidate.spc)
           that.$refs.entityModal.disabledFloor = false
           that.$refs.entityModal.disabledParentNode = false
           that.$refs.entityModal.disabledZones = false
@@ -990,7 +977,7 @@
           let monthsSale = _.cloneDeep(monthsGoal)
           that.$refs.entityModal.monthsGoal = monthsGoal
           that.$refs.entityModal.monthsSale = monthsSale
-        }, 200)
+				})
       },
       editFloor (values) {
         var value = _.cloneDeep(values)
@@ -1115,130 +1102,102 @@
         }, 200)
       },
       delMail (value, alertText, obj) {
-        this.isAlert = value
-        this.alertText = alertText
-        this.delType = 'mall'
-        this.theMail = obj
-      },
-      delFloor (value, alertText, obj) {
-        this.isAlert = value
-        this.alertText = alertText
-        this.delType = 'floor'
-        this.theFloor = obj
-      },
-      delStore (value, alertText, obj) {
-        this.isAlert = value
-        this.alertText = alertText
-        this.delType = 'store'
-        this.theStore = obj
-        //
-      },
-      alertConfirm (value) {
-        var that = this
-        if (value === true) {
-          that.isAlert = false
-          if (that.delType == 'mall') {
-            var property_id = this.theMail.property_id
-            var bzid = this.theMail.bzid
-            var itype = 'mall'
-            deletemall(itype, property_id, bzid).then(function (res) {
+        this.$alert({
+          content:this.$t('确认删除此购物中心信息？'),
+          cancel(){},
+          confirm:()=>{
+            deletemall( 'mall', obj.property_id, obj.bzid).then((res)=> {
               if (res.data.code === 200) {
-                that.isAlert = true
-                that.alertText.bg = '#00A0E9'
-                that.alertText.title = '删除购物中心'
-                that.alertText.text = '删除购物中心成功'
-                that.alertText.confirm = false
-                that.defaultValue = []
-                that.getData()
-              }
-            })
-          } else if (that.delType == 'floor') {
-            let bzid = that.theFloor.id
-            let itype = 'floor'
-            deleteFloor(itype, bzid).then(function (res) {
-              if (res.data.code === 200) {
-                that.isAlert = true
-                that.alertText.bg = '#00A0E9'
-                that.alertText.title = '删除楼层'
-                that.alertText.text = '删除楼层成功'
-                that.alertText.confirm = false
-                that.defaultValue = [that.defaultValue[0]]
-
-                that.getData()
-              }
-            })
-          } else if (that.delType == 'store') {
-            let bzid = that.theStore.id
-            deleteData(bzid).then(function (res) {
-              if (res.data.code === 200) {
-                that.isAlert = true
-                that.alertText.bg = '#00A0E9'
-                that.alertText.title = '删除商铺'
-                that.alertText.text = '删除商铺成功'
-                that.alertText.confirm = false
-                that.defaultValue = [that.defaultValue[0], that.defaultValue[1]]
-                that.addType = 2
-                that.getData()
+                this.$message.success(this.$t('删除成功'))
+                this.defaultValue = []
+                this.getData()
               }
             })
           }
-        } else {
-          this.isAlert = false
-        }
+        })
+      },
+      delFloor (obj) {
+        this.$alert({
+          content:this.$t('确认删除此楼层信息？'),
+          cancel(){},
+          confirm:()=>{
+            deleteFloor('floor', obj.id).then( (res)=> {
+              if (res.data.code === 200) {
+                this.$message.success(this.$t('删除成功'))
+                this.defaultValue = [this.defaultValue[0]]
+                this.getData()
+              }
+            })
+          }
+        })
+      },
+      delStore (value, alertText, obj) {
+        this.$alert({
+          content:this.$t('确认删除此商铺？'),
+          cancel(){},
+          confirm:()=>{
+            deleteData(obj.id).then((res)=> {
+              if (res.data.code === 200) {
+                this.$message.success(this.$t('删除成功'))
+                this.defaultValue = [this.defaultValue[0], this.defaultValue[1]]
+                this.addType = 2
+                this.getData()
+              }
+            })
+          }
+        })
       },
       delEntity () {
-        if (this.nowEntity.length == 1) {
-          let alertText = {}
-          alertText.title = this.editTitle
-          alertText.text = '确认删除此购物中心信息？'
-          alertText.bg = '#00A0E9'
-          alertText.confirm = true
+        if (this.nowEntity.length === 1) {
           this.theMail = this.addmall
           this.theMail.bzid = this.theMail.id
-          this.delMail(true, alertText, this.theMail)
-        } else if (this.nowEntity.length == 2) {
-          let alertText = {}
-          alertText.title = '删除楼层'
-          alertText.text = '确认删除此楼层信息？'
-          alertText.bg = '#00A0E9'
-          alertText.confirm = true
-          this.delFloor(true, alertText, { id: this.defaultValue[1] })
-          // this.$Modal.confirm({
-          //   title: '提示',
-          //   content: '<p>删除楼层</p>',
-          //   onOk: () => {
-          //     deleteFloor(floor, floor_id).then(function (res) {
-          //     })
-          //   }
-          // })
-        } else if (this.nowEntity.length == 3) {
-          let alertText = {}
-          alertText.title = '删除商铺'
-          alertText.text = '确认删除此商铺？'
-          alertText.bg = '#00A0E9'
-          alertText.confirm = true
-          this.delStore(true, alertText, { id: this.defaultValue[2] })
-          // this.$Modal.confirm({
-          //   title: '提示',
-          //   content: '<p>删除店铺</p>',
-          //   onOk: () => {
-          //     deleteFloor(store, floor_id).then(function (res) {
-          //     })
-          //   }
-          // })
-        } else {
-          let alertText = {}
-          alertText.title = '提示'
-          alertText.text = '请选择商场/楼层/店铺'
-          alertText.bg = '#00A0E9'
-          alertText.confirm = false
-          // this.$Modal.confirm({
-          //   title: '提示',
-          //   content: '<p>请选择商场/楼层/店铺</p>',
-          //   onOk: () => {
+          this.$alert({
+						content:this.$t('确认删除此购物中心信息？'),
+						cancel(){},
+						confirm:()=>{
+              var property_id = this.theMail.property_id
+              var bzid = this.theMail.bzid
+              deletemall('mall', property_id, bzid).then( (res)=> {
+                if (res.data.code === 200) {
+                  this.$message.success(this.$t('删除成功'))
+                  this.defaultValue = []
+                  this.getData()
+                }
+              })
+						}
+					})
+        } else if (this.nowEntity.length === 2) {
+          this.$alert({
+            content:this.$t('确认删除此楼层信息？'),
+            cancel(){},
+            confirm:()=>{
+              deleteFloor('floor', this.defaultValue[1]).then( (res)=> {
+                if (res.data.code === 200) {
+                  this.$message.success(this.$t('删除成功'))
+                  this.defaultValue = [this.defaultValue[0]]
+                  this.getData()
+                }
+              })
+            }
+          })
+        } else if (this.nowEntity.length === 3) {
+          this.$alert({
+            content:this.$t('确认删除此商铺？'),
+            cancel(){},
+            confirm:()=>{
+              deleteData(this.defaultValue[2]).then((res)=> {
+                if (res.data.code === 200) {
+                  this.$message.success(this.$t('删除成功'))
+                  this.defaultValue = [this.defaultValue[0], this.defaultValue[1]]
+                  this.addType = 2
+                  this.getData()
+                }
+              })
+            }
+          })
 
-          //   }
-          // })
+        } else {
+          this.$message.warning(this.$t('请选择商场/楼层/店铺'))
         }
       },
       changeDoorway () {
@@ -1248,7 +1207,7 @@
   }
 </script>
 
-<style scope lang="scss">
+<style scoped lang="scss">
 	.topArea {
 		.ivu-input {
 			font-size: 14px;

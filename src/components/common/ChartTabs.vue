@@ -1,12 +1,11 @@
 <template>
   <i-tabs v-model="current" v-if="canshow" >
-     <slot slot="select"></slot>
+		<slot slot="select"></slot>
     <tab-item
       :icon="iconCheck[item.type]"
       :titles="item.title"
       v-for="(item,index) in tabsInfo"
-      :key="index"
-    >
+      :key="index">
       <vue-apex-charts
         :type="item.type"
         height="400"
@@ -15,9 +14,9 @@
       ></vue-apex-charts>
     </tab-item>
     <tab-item icon="biaoge-copy" :titles="title[0]" id="table-item">
-      <vs-table :data="tableData.data" maxHeight="400px" :noDataText="nodata">
+      <vs-table :data="tableData.data" maxHeight="400px" :noDataText="$t(nodata)">
         <template slot="thead">
-          <vs-th :key="index" v-for="(item,index) in tableData.column" class="px-2">{{item.title}}</vs-th>
+          <vs-th :key="index" v-for="(item,index) in tableData.column" class="px-2">{{$t(item.title)}}</vs-th>
         </template>
         <template slot-scope="{data}">
           <vs-tr :key="indextr" v-for="(tr, indextr) in data">
@@ -30,8 +29,7 @@
       v-if="showChakan"
       :title="item.title"
       v-for="(item,index) in tabsInfo"
-      :key="index"
-    >
+      :key="index">
       <div style="height:400px; width:100%; overflow-y: auto;overflow-x: hidden" >
         <!-- <div class="allTable"></div> -->
         <vue-apex-charts
@@ -183,7 +181,7 @@ export default {
       this.mergeData.forEach((e, dindex) => {
         let { name: title, key } = e
         if(dindex > 0){
-          title = title +' ( 人次 ) '
+          title = this.$t(title) +' ( '+this.$t('人次')+' ) '
           column.push({ title, key })
         }else{
           column.push({ title, key })
@@ -195,7 +193,7 @@ export default {
         column.forEach((k, kindex) => {
           let value = this.mergeData[kindex].data[dindex]
           if (typeof value === 'number') {
-            value = value.toLocaleString() 
+            value = value.toLocaleString()
           }
           tml[k.key] = value
         })
@@ -247,10 +245,10 @@ export default {
           tooltip: {
             y: {
               formatter: (val) => {
-                if(val===0) return 0 +'人次'
+                if(val===0) return 0 +this.$t('人次')
                 if (val == undefined || val == null || val == '')  return ''
-                if (typeof val === 'number') return val.toLocaleString() + '人次'
-                else  return val + '人次'
+                if (typeof val === 'number') return val.toLocaleString() + this.$t('人次')
+                else  return val + this.$t('人次')
                 
               }
             }

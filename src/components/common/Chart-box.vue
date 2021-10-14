@@ -1,7 +1,7 @@
 <template>
 	<div class="chart-box flex-column">
 		<div class="flex-between chart-title">
-			<span>{{toolList[tool]&&toolList[tool].name}}</span>
+			<span>{{ $t(toolList[tool]&&toolList[tool].name) }}</span>
 			<div class="flex-center">
 				<slot></slot>
 				<span class="icon" @click="changeTab(index)" v-for="(item,index) in toolList" :key="index">
@@ -80,7 +80,7 @@
         if (isEmpty(option)) return []
         let data = []
         if (this.showSummary) {
-          option.xAxis.data.push('合计')
+          option.xAxis.data.push(this.$t('合计'))
         }
         let sum = []
         option.xAxis.data.forEach((o, i) => {
@@ -96,7 +96,7 @@
               if (i !== option.xAxis.data.length - 1) {
                 data[i][`entity${sI}`] = isEmpty(s.data[i]) ? '-' : (s.data[i].toLocaleString() )
               } else {//最后一个是合计
-                data[i][`entity${sI}`] = sum[sI].toLocaleString() 
+                data[i][`entity${sI}`] = sum[sI].toLocaleString()
               }
 			}else {
               data[i][`entity${sI}`] = isEmpty(s.data[i]) ? '-' : (s.data[i].toLocaleString() )
@@ -112,7 +112,7 @@
         if (isEmpty(option)) return []
         let column = [
           {
-            title: option.legend.data.includes('出客流' || '入客流') ? '实体' : '时间',
+            title: option.legend.data.includes('出客流' || '入客流') ?this.$t('实体') : this.$t('时间'),
             key: 'time',
             fixed: option.legend.data.length > 10 ? 'left' : '',
             width: option.legend.data.length > 10 ? 120 : '',
@@ -122,7 +122,7 @@
           return {
             key: 'entity' + i,
             width: option.legend.data.length > 10 ? this.isDateCompare?(o.length * 15):(o.length * 20) : '',
-            title: o  + ' ( 人次 ) '
+            title: o  +`(${this.$t('人次')})`
           }
         }))
         return column

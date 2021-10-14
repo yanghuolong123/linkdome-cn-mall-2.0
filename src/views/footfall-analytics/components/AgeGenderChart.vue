@@ -5,7 +5,7 @@
                   :series="agechartData.series"
                   :type="agechartData.type"
                   title="年龄分布"
-                    tooltipUnit='人'
+                  :tooltipUnit="$t('人')"
                   :extraOptions="agechartData.extraOptions"
                   @tableChage="ageTabChange">
         <export-menu slot="export"
@@ -17,7 +17,7 @@
                   :series="genderChartData.series"
                   :type="genderChartData.type"
                   title="性别分布"
-                    tooltipUnit='人'
+                  :tooltipUnit="$t('人')"
                   :extraOptions="genderChartData.extraOptions"
                   @tableChage="genderTabChange">
         <export-menu slot="export"
@@ -123,24 +123,24 @@ export default {
       const { age_distribution: ageData, gender_propotion: genderData } = sourceData
       const genderName = {
         '0': {
-          name: '女',
+          name:this.$t('女性'),
           icon: 'female'
         },
         '1': {
-          name: '男',
+          name: this.$t('男性'),
           icon: 'male'
         }
       }
       const genderDict = {
-        male: '男性',
-        female: '女姓'
+        male: this.$t('男性'),
+        female:this.$t('女性')
       }
       let ageChartData = null
       let genderChartData = null
       let ageLabels = {
         name: '年龄',
         key: 'age',
-        data: Object.keys(ageData).map(e => { return e.replace('_', '-').replace('less-', '小于').replace(/more-/, '大于') })
+        data: Object.keys(ageData).map(e => { return e.replace('_', '-').replace('less-',  this.$t('小于')).replace(/more-/,  this.$t('大于')) })
       }
       let genderLabels = {
         name: '性别',

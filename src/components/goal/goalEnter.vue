@@ -1,45 +1,44 @@
 <template>
   <div class="bg-white box-card box-cardss" style=" position: relative;">
-      <div class="enterType">
-          <div class="enterYear"
-            v-bind:class="{selectAction:typeAction==index}"
-            :key="index"
-            v-for="(iten,index) in enterTypeList"
-            v-on:click='enterTypeClick(index)'
-            >
-            {{iten}}
-          </div>
-          <div class="lineBox"></div>
+    <div class="enterType">
+      <div class="enterYear"
+        v-for="(item,index) in enterTypeList"
+        :key="index"
+        v-bind:class="{selectAction:typeAction==index}"
+        v-on:click='enterTypeClick(index)'>
+        {{ $t(item) }}
       </div>
-        <ul class="enterIcon">
-          <li :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(index)">
-            <icons
-            :title="iconTitle[icon.type]"
-            :type="icon.type"
-            :size="20"
-            :color="iconIndex === index ? iconColor :'#9D9D9DFF'"
-            ></icons>
-          </li>
-        </ul>
+      <div class="lineBox"></div>
+    </div>
+      <ul class="enterIcon">
+        <li :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(index)">
+          <icons
+          :title="iconTitle[icon.type]"
+          :type="icon.type"
+          :size="20"
+          :color="iconIndex === index ? iconColor :'#9D9D9DFF'"
+          ></icons>
+        </li>
+      </ul>
     <i-tabs  class="chartsTable" v-model="current">
-        <tab-item  class="chart-div" v-if="typeAction==0"  >
-            <div class="left-title">
-              <p class="title">{{titleText}}</p>
-            </div>
-            <vue-apex-charts type="line" height="530" :options="options1" :series="series1" class="ape-chart"></vue-apex-charts>
-        </tab-item>
-        <tab-item  class="chart-div" v-if="typeAction==1" >
-            <div class="left-title">
-              <p class="title">{{titleText}}</p>
-            </div>
-            <gola-enter-analysis :xAxis='options2.xaxis.categories' :options="options2" :series='series2'></gola-enter-analysis>
-        </tab-item>
-        <tab-item  class="chart-div">
-            <div class="left-title">
-                <p class="title">{{titleText}}</p>
-            </div>
-            <TableMultipleSelected style="height:530px" class="table-chart" :tableName="columns" :tableList="tableList"></TableMultipleSelected>
-        </tab-item>
+      <tab-item  class="chart-div" v-if="typeAction==0">
+        <div class="left-title">
+          <p class="title">{{ $t(titleText) }}</p>
+        </div>
+        <vue-apex-charts type="line" height="530" :options="options1" :series="series1" class="ape-chart"></vue-apex-charts>
+      </tab-item>
+      <tab-item  class="chart-div" v-if="typeAction==1">
+        <div class="left-title">
+          <p class="title">{{ $t(titleText) }}</p>
+        </div>
+        <gola-enter-analysis :xAxis='options2.xaxis.categories' :options="options2" :series='series2'></gola-enter-analysis>
+      </tab-item>
+      <tab-item  class="chart-div">
+        <div class="left-title">
+          <p class="title">{{ $t(titleText) }}</p>
+        </div>
+        <TableMultipleSelected style="height:530px" class="table-chart" :tableName="columns" :tableList="tableList"></TableMultipleSelected>
+      </tab-item>
     </i-tabs>
   </div>
 </template>
@@ -49,6 +48,8 @@ import tabItem from '_c/I-Tabs/TabItem.vue'
 import VueApexCharts from 'vue-apexcharts'
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import iTabs from '_c/I-Tabs/Itabs.vue'
+import i18n from '@/i18n/i18n'
+
 import golaEnterAnalysis from '@/components/goal-achievement/enterAnalysis.vue'
 export default {
   name: 'goalCharts',
@@ -75,7 +76,7 @@ export default {
     },
     columns: {
       type: Array,
-      default: () => ['日期', '客流量 ( 人次 )', '目标客流量 ( 人次 )']
+      default: () => ['日期', i18n.t('fn.EnterUnit',[i18n.t('人次')]), i18n.t('fn.TargetEnterUnit',[i18n.t('人次')])]
     },
     tableList: {
       type: Array,
@@ -148,7 +149,6 @@ export default {
       else title = '销售额总览'
       index == 1 ? this.titleText = '详细数据' : this.titleText = title
     }
-
   }
 }
 </script>
@@ -160,15 +160,15 @@ export default {
     .chart-div{
       position: relative;
         .ape-chart{
-            padding-top: 55px;
+          padding-top: 55px;
         }
         .table-chart{
-            overflow-y:scroll;
-            margin-top:60px;
+          overflow-y:scroll;
+          margin-top:60px;
         }
     }
     .tab-bar{
-       height: 50px;
+      height: 50px;
     }
     .left-title{
       position: absolute;
@@ -193,7 +193,6 @@ export default {
           color: #2bd9cf;
         }
       }
-
       hr{
         display: inline-block;
         height: 1.25rem;
@@ -223,43 +222,43 @@ export default {
     //     box-shadow:0px 0px 9px 0px rgba(166, 168, 169, .8);
     // }
     .enterYear{
-        width: auto;
-        height: 36px;
+      width: auto;
+      height: 36px;
       padding: 0 15px;
-        line-height: 36px;
-        font-size: 14px;
-        float: left;
-        color: #666;
-        cursor: pointer;
-        &:nth-child(1){
-            margin-right: 20px;
-        }
-        // &:hover{
-        //     background-color: rgba(0, 160, 233, 0.1)
-        // }
+      line-height: 36px;
+      font-size: 14px;
+      float: left;
+      color: #666;
+      cursor: pointer;
+      &:nth-child(1){
+        margin-right: 20px;
+      }
+      // &:hover{
+      //     background-color: rgba(0, 160, 233, 0.1)
+      // }
     }
     .selectAction{
-        // background-color: #00a0e9;
-         color: #33b3ed;
-        border-bottom: 2px solid #33b3ed;
-         &:hover{
-            // background-color: #00a0e9
-        }
+      // background-color: #00a0e9;
+      color: #33b3ed;
+      border-bottom: 2px solid #33b3ed;
+      &:hover{
+        // background-color: #00a0e9
+      }
     }
 }
 .enterIcon{
-    position: absolute;
-    right: 50px;
-    top: 60px;
-    z-index: 1;
-    li{
-        float:left;
-        &:nth-child(1){
-            margin-right: 10px;
-        }
-        i{
-            cursor: pointer;
-        }
+  position: absolute;
+  right: 50px;
+  top: 60px;
+  z-index: 1;
+  li{
+    float:left;
+    &:nth-child(1){
+      margin-right: 10px;
     }
+    i{
+      cursor: pointer;
+    }
+  }
 }
 </style>

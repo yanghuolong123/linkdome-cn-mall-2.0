@@ -1,62 +1,60 @@
 <template>
   <div class="pathTrend">
-      <div class="path-picker flex-center">
-          <DatePicker
-              type="date"
-              v-model="drainageDate"
-              placeholder="选择日期"
-              class="select-date"
-              :options="disabledDate"
-              format="yyyy-MM-dd"
-          ></DatePicker>
+    <div class="path-picker flex-center">
+      <DatePicker
+        type="date"
+        v-model="drainageDate"
+        :placeholder="$t('holder.选择日期')"
+        class="select-date"
+        :options="disabledDate"
+        format="yyyy-MM-dd"
+      ></DatePicker>
 
-          <Select v-model="floor" class="selectExample selectFloor">
-              <Option v-for="item in allMoveData" :value="item.floor_index" :key="item.floor_index">{{ item.name }}</Option>
-          </Select>
-          <Button size="large" type="primary" class="m-l-20" @click="searchData">查询</Button>
+      <Select v-model="floor" class="selectExample selectFloor" :placeholder="$t('holder.select')">
+        <Option v-for="item in allMoveData" :value="item.floor_index" :key="item.floor_index">{{ item.name }}</Option>
+      </Select>
+      <Button size="large" type="primary" class="m-l-20" @click="searchData">{{ $t('查询') }}</Button>
 
+    </div>
+    <!-- 中间内容 -->
+    <div class="flexs">
+      <new-path ref="newPath" v-if="isNewPath"></new-path>
+      <div class="paths"  v-else >
+        <div class="header">
+          <p class="title">{{$t('路径动向图')}}</p>
+          <p class="icons">
+            <icons :type="leftIcon"   :color="mainColor" :size=24  :title="titlePath" style="cursor:pointer;" @click.native="changePath"></icons>
+          </p>
+        </div>
+        <div class="svgs" :width="canvasWidth" :height="canvasHeight" v-for="item in svgLists" v-if="showPath">
+          <svg :width="canvasWidth" :height="canvasHeight" version="1.1">
+            <path fill="transparent" :stroke="item.color" :stroke-width="item.width" :d="item.d" class="path"></path>
+          </svg>
+          <svg :width="canvasWidth"  :height="canvasHeight"  width="16" height="16" class="ball" :style="{transform:item.transform,offsetPath:item.path,animation:item.animation}"  viewBox="0 0 1024 1024" version="1.1">
+            <path d="M 521.813 874.862 s 85.7783 -0.571021 85.77 -45.2698 L 607.456 199.988 c 0 -46.4123 -100.506 -53.0938 -100.506 -53.0938 s 136.923 -5.54963 151.473 45.633 c 14.7673 51.9001 67.1772 107.457 112.135 155.205 c 97.1147 103.133 228.052 159.266 228.052 159.266 s -116.378 70.1674 -215.041 159.309 a 618.749 618.749 0 0 0 -129.944 170.21 c -23.8016 47.6745 -131.81 38.3431 -131.81 38.3431 Z" fill="#2bd9cf" p-id="3058"></path>
+            <path d="M 611.191 377.294 l 110.296 134.806 l -107.844 122.55 l -590.693 -120.099 Z" fill="#2bd9cf" p-id="3059"></path>
+          </svg>
+        </div>
+        <div class="canvas">
+          <canvas id="canvasCircle" :height="canvasHeight" :width="canvasWidth"></canvas>
+          <img  class="imgs" v-if="map" :src="map">
+          <div class="noData" v-else>{{ $t('holder.暂无数据') }}</div>
+          <div class="colorBar">
+            <p class="maxNumber">{{maxNumber}}</p>
+            <p class="minNumber">{{minNumber}}</p>
+            <img :src="colorBar" width="20">
+          </div>
+          <div  v-for="item in titleLists" class="titleList" :title="item.name" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}"></div>
+        </div>
       </div>
 
-<!-- 中间内容 -->
-
-      <div class="flexs">
-          <new-path ref="newPath" v-if="isNewPath"></new-path>
-          <div class="paths"  v-else >
-            <div class="header">
-                <p class="title">路径动向图</p>
-                <p class="icons">
-                    <icons :type="leftIcon"   :color="mainColor" :size=24  :title="titlePath" style="cursor:pointer;" @click.native="changePath"></icons>
-                </p>
-            </div>
-            <div class="svgs" :width="canvasWidth" :height="canvasHeight" v-for="item in svgLists" v-if="showPath">
-              <svg :width="canvasWidth" :height="canvasHeight" version="1.1">
-                  <path fill="transparent" :stroke="item.color" :stroke-width="item.width" :d="item.d" class="path"></path>
-              </svg>
-              <svg :width="canvasWidth"  :height="canvasHeight"  width="16" height="16" class="ball" :style="{transform:item.transform,offsetPath:item.path,animation:item.animation}"  viewBox="0 0 1024 1024" version="1.1">
-                <path d="M 521.813 874.862 s 85.7783 -0.571021 85.77 -45.2698 L 607.456 199.988 c 0 -46.4123 -100.506 -53.0938 -100.506 -53.0938 s 136.923 -5.54963 151.473 45.633 c 14.7673 51.9001 67.1772 107.457 112.135 155.205 c 97.1147 103.133 228.052 159.266 228.052 159.266 s -116.378 70.1674 -215.041 159.309 a 618.749 618.749 0 0 0 -129.944 170.21 c -23.8016 47.6745 -131.81 38.3431 -131.81 38.3431 Z" fill="#2bd9cf" p-id="3058"></path>
-                <path d="M 611.191 377.294 l 110.296 134.806 l -107.844 122.55 l -590.693 -120.099 Z" fill="#2bd9cf" p-id="3059"></path>
-              </svg>
-            </div>
-            <div class="canvas">
-              <canvas id="canvasCircle" :height="canvasHeight" :width="canvasWidth"></canvas>
-              <img  class="imgs" v-if="map" :src="map">
-              <div class="noData" v-else>暂无数据</div>
-              <div class="colorBar">
-                <p class="maxNumber">{{maxNumber}}</p>
-                <p class="minNumber">{{minNumber}}</p>
-                <img :src="colorBar" width="20">
-              </div>
-              <div  v-for="item in titleLists" class="titleList" :title="item.name" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}"></div>
-            </div>
-          </div>
-
-          <div class="maps">
-            <pathTab :title="title1" :numbers="number1"></pathTab>
-            <!-- <pathTab :parking="isParking" :title="title2" :numbers="number2" :right="right"></pathTab> -->
-          </div>
+      <div class="maps">
+        <pathTab :title="title1" :numbers="number1"></pathTab>
+        <!-- <pathTab :parking="isParking" :title="title2" :numbers="number2" :right="right"></pathTab> -->
       </div>
+    </div>
 
-        <div>
+    <div>
     <!-- 排行占比分析 -->
     <Ranking
     v-if="false"

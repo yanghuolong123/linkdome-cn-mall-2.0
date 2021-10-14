@@ -1,255 +1,277 @@
 <template>
-    <div class="addEntity">
-        <div class="dialogs-edit">
-            <div class="dialogs-edit-bg"></div>
-            <div class="dialogs-edit-text"
-                 :class="{largeScroll:formValidate.spc===1,noscroll:formValidate.spc!==1}"
-                 :style="{width:mWidth}"
-                 id="addEntity">
-                <div class="edit-title">{{editTitle}}</div>
-                <div class="edit-close" v-on:click="closeEdit">
-                    <Icon type="md-close"/>
-                </div>
-                <div class="edit-text">
-                    <section class="modal-card-body">
-                        <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" class="formmail"
-                              v-if="isEmptyPage">
-                            <div class="flexs">
-                                <FormItem label="名称" prop="name" v-if="formValidate.spc!=2">
-                                    <Input type="text" v-model="formValidate.name"></Input>
-                                </FormItem>
-                            </div>
-                            <div class="flexs">
-                                <FormItem label="地址" prop="address" v-if="formValidate.spc==1">
-                                    <Input type="text" v-model="formValidate.address"></Input>
-                                </FormItem>
-                            </div>
-                        </Form>
-                        <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" class="formmail"
-                              v-bind:class="{stores:formValidate.spc==3}" v-show="!isEmptyPage">
-                            <div class="left">
-                                <FormItem label="类型" prop="spc">
-                                    <Select v-model="formValidate.spc" :disabled="disabledSpc"
-                                            @on-change="getSelectValue">
-                                        <Option v-for="item in list" :value="item.value" :key="item.value">{{ item.label
-                                            }}
-                                        </Option>
-                                    </Select>
-                                </FormItem>
-
-                                <FormItem label="名称" prop="name" v-if="formValidate.spc!=2">
-                                    <Input type="text" v-model="formValidate.name"></Input>
-                                </FormItem>
-
-                                <FormItem label="楼层" prop="floor" v-if="formValidate.spc==2">
-                                    <Select @on-change="changeFloor" :disabled="userLvl=='common_admin'?true:false"
-                                            v-model="formValidate.floor">
-                                        <Option
-                                                v-for="item in floors"
-                                                :value="item.value"
-                                                :key="item.value"
-                                        >{{ item.label }}
-                                        </Option>
-                                    </Select>
-                                </FormItem>
-
-                                <FormItem label="营业时间" prop="timerange" v-if="formValidate.spc==1">
-                                    <TimePicker
-                                            confirm
-                                            type="timerange"
-                                            v-model="formValidate.timerange"
-                                            placement="bottom-end"
-                                            placeholder="选择营业时间"
-                                            style="width:100%"
-                                    ></TimePicker>
-                                </FormItem>
-
-                                <FormItem label="区域关联" prop="zones" v-if="isSuperAdmin">
-                                    <Select multiple @on-change="changeZones" :disabled="disabledZones"
-                                            v-model="formValidate.zones">
-                                        <Option
-                                                v-for="item in zonelist"
-                                                :value="item.value"
-                                                :key="item.value"
-                                        >{{item.label}}
-                                        </Option>
-                                    </Select>
-                                </FormItem>
-
-                                <FormItem label="省份" prop="province" v-if="formValidate.spc==1">
-                                    <Select
-                                            v-model="formValidate.province"
-                                            placeholder="请选择省份"
-                                            @on-change="changeProvince"
-                                            style="width:100%"
-                                    >
-                                        <Option
-                                                v-for="item in provinceArr"
-                                                :key="item.value"
-                                                :value="item.value"
-                                        >{{ item.label}}
-                                        </Option>
-                                    </Select>
-                                </FormItem>
-
-                                <FormItem label="城市" prop="city" v-if="formValidate.spc==1">
-                                    <Select
-                                            v-model="formValidate.city"
-                                            placeholder="请选择城市"
-                                            @on-change="changeCity"
-                                            style="width:100%"
-                                    >
-                                        <Option v-for="item in cities" :key="item.value" :value="item.value">
-                                            {{item.label}}
-                                        </Option>
-                                    </Select>
-                                </FormItem>
-
-                                <FormItem label="地址" prop="address" v-if="formValidate.spc==1">
-                                    <Input type="text" v-model="formValidate.address"></Input>
-                                </FormItem>
-
-                                <FormItem label="父节点" prop="parentNode" v-if="formValidate.spc!=1&&userLvl=='admin'">
-                                    <Select v-model="formValidate.parentNode" :disabled="disabledParentNode">
-                                        <Option
-                                                v-for="item in addfloor"
-                                                :value="item.value"
-                                                :key="item.value"
-                                        >{{item.label}}
-                                        </Option>
-                                    </Select>
-                                </FormItem>
-                                <FormItem label="业态" prop="modal5" v-if="formValidate.spc==3">
-                                    <Select v-model="formValidate.modal5" :disabled="disabledModal5">
-                                        <Option
-                                                v-for="item in formats"
-                                                :value="item.value"
-                                                :key="item.value"
-                                        >{{item.label }}
-                                        </Option>
-                                    </Select>
-                                </FormItem>
-
-                                <FormItem label="面积" prop="area" v-if="formValidate.spc!=2">
-                                    <Input type="text" v-model="formValidate.area"></Input>
-                                </FormItem>
-
-                                <FormItem label="描述" prop="description">
-                                    <Input type="text" v-model="formValidate.description"></Input>
-                                </FormItem>
-
-                                <FormItem v-if="userLvl!='admin'&&formValidate.spc!=3">
-                                    <div :style="{height:hideHeight}"></div>
-                                </FormItem>
-                            </div>
-
-                            <div class="right">
-                                <div class="form-control addsub flex-center">
-                                    <FormItem label="选择年份" style="width: auto;word-break: keep-all"></FormItem>
-                                    <Select v-model="currentYear"
-                                            @on-change="currentYearChange">
-                                        <Option v-for="year in yearlist" :value="year" :key="year">{{ year }}
-                                        </Option>
-                                    </Select>
-                                </div>
-                                <FormItem label="客流目标"></FormItem>
-                                <div class="form-control addsub">
-                                    <label></label>
-                                    <row>
-                                        <i-col span="3" class="flex-center">
-                                            <FormItem label="全年目标"></FormItem>
-                                            <Radio v-model="flowYear" @on-change="setFlowYearGoal"></Radio>
-                                        </i-col>
-                                        <i-col span="9" style="width:34.5%!important">
-                                            总 <Input type="number" style="margin-left:4px;width:270px"
-                                                     :disabled="!disabled" v-model="sumFlowYear"></Input>
-                                        </i-col>
-                                        <i-col span="12" offset="0" class="fs16">
-                                            人,平均每月{{Math.floor(sumFlowYear/12).toLocaleString()}} 人
-                                        </i-col>
-                                    </row>
-                                </div>
-
-                                <div class="form-control addsub">
-                                    <row class="m-t-20">
-                                        <i-col span="3" class="flex-center">
-                                            <FormItem label="每月目标"></FormItem>
-                                            <Radio v-model="flowMonth" @on-change="setFlowMonthGoal"></Radio>
-                                        </i-col>
-                                        <div  class="flex-wrap">
-                                            <row class="omonth" v-for="(item,index) in monthsGoal" :key="index">
-                                                <i-col span="5" style="margin-left: -6px;">
-                                                    <FormItem :label="item.name"></FormItem>
-                                                </i-col>
-                                                <i-col span="16">
-                                                    <Input type="number" :disabled="disabled"
-                                                           v-model="item.modal"></Input>
-                                                </i-col>
-                                                <i-col span="2" offset="1">人</i-col>
-                                            </row>
-                                            <row span="24" offset="0" class="fs16">全年总计 {{totals.toLocaleString()}} 人
-                                            </row>
-                                        </div>
-                                    </row>
-                                </div>
-
-                                <FormItem label="销售额目标"></FormItem>
-                                <div class="form-control addsub">
-                                    <label></label>
-                                    <row>
-                                        <i-col span="3" style="display:flex;">
-                                            <FormItem label="全年目标"></FormItem>
-                                            <Radio v-model="saleYear" @on-change="setSaleYearGoal"></Radio>
-                                        </i-col>
-                                        <i-col span="9" style="width:34.5%!important">
-                                            总<Input type="number" :disabled="!disabledSale"
-                                                    style="margin-left:4px;width:270px" v-model="sumSaleYear"></Input>
-                                        </i-col>
-                                        <i-col span="12" offset="0" class="fs16">
-                                            元,平均每月{{Math.floor(sumSaleYear/12).toLocaleString()}} 元
-                                        </i-col>
-                                    </row>
-                                </div>
-
-                                <div class="form-control addsub">
-                                    <row class="m-t-20">
-                                        <i-col span="3" class="flex-center">
-                                            <FormItem label="每月目标"></FormItem>
-                                            <Radio v-model="saleMonth" @on-change="setSaleMonthGoal"></Radio>
-
-                                        </i-col>
-                                        <div class="flex-wrap m-b-40">
-                                            <row class="omonth" v-for="(item,index) in monthsSale" :key="index">
-                                                <i-col span="5" style="margin-left: -6px;">
-                                                    <FormItem :label="item.name"></FormItem>
-                                                </i-col>
-                                                <i-col span="16">
-                                                    <Input type="number" :disabled="disabledSale"
-                                                           v-model="item.modal"></Input>
-                                                </i-col>
-                                                <i-col span="2" offset="1">元</i-col>
-                                            </row>
-                                            <row span="8" offset="1" class="fs16">全年总计 {{totalSales.toLocaleString()}}
-                                                元
-                                            </row>
-                                        </div>
-                                    </row>
-                                </div>
-                            </div>
-
-                        </Form>
-                        <div class="control" v-bind:class="{addFloorShop:formValidate.spc!=1}">
-                            <Button @click="handleSubmit('formValidate')">提交</Button>
-                            <Button class="buttonCel" @click.native="closeEdit">取消</Button>
-                        </div>
-                    </section>
-                </div>
-            </div>
+  <div class="addEntity">
+    <div class="dialogs-edit">
+      <div class="dialogs-edit-bg"></div>
+      <div class="dialogs-edit-text"
+        :class="{largeScroll:formValidate.spc===1,noscroll:formValidate.spc!==1}"
+        :style="{width:mWidth}"
+        id="addEntity">
+        <div class="edit-title">{{ $t(editTitle) }}</div>
+        <div class="edit-close" v-on:click="closeEdit">
+          <Icon type="md-close"/>
         </div>
+        <div class="edit-text">
+          <section class="modal-card-body">
+            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" class="formmail"
+              v-if="isEmptyPage">
+              <div class="flexs">
+                <FormItem :label="$t('名称')" prop="name" v-if="formValidate.spc!=2">
+                  <Input maxlength="20" type="text" v-model="formValidate.name"></Input>
+                </FormItem>
+              </div>
+              <div class="flexs">
+                <FormItem :label="$t('地址')" prop="address" v-if="formValidate.spc==1">
+                  <Input maxlength="20" type="text" v-model="formValidate.address"></Input>
+                </FormItem>
+              </div>
+            </Form>
+            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" class="formmail"
+              v-bind:class="{stores:formValidate.spc==3}" v-show="!isEmptyPage">
+              <div class="left">
+                <FormItem :label="$t('类型')" prop="spc">
+                  <Select v-model="formValidate.spc" :disabled="disabledSpc"
+                    @on-change="getSelectValue">
+                    <Option v-for="item in list" :value="item.value" :key="item.value">
+                      {{ $t(item.label) }}
+                    </Option>
+                  </Select>
+                </FormItem>
+
+                <FormItem :label="$t('名称')" prop="name" v-if="formValidate.spc!=2">
+                  <Input maxlength="20" type="text" v-model="formValidate.name"></Input>
+                </FormItem>
+
+                <FormItem :label="$t('楼层')" prop="floor" v-if="formValidate.spc==2">
+                  <Select @on-change="changeFloor" :disabled="userLvl=='common_admin'?true:false"
+                    :placeholder="$t('fn._', [$t('holder.请选择'), $t('楼层')])"
+                    v-model="formValidate.floor">
+                    <Option
+                      v-for="item in floors"
+                      :value="item.value"
+                      :key="item.value">
+                      {{ item.label }}
+                    </Option>
+                  </Select>
+                </FormItem>
+
+                <FormItem :label="$t('营业时间')" prop="timerange" v-if="formValidate.spc==1">
+                  <TimePicker
+                    confirm
+                    type="timerange"
+                    v-model="formValidate.timerange"
+                    placement="bottom-end"
+                    :placeholder="$t('fn._', [$t('holder.请选择'), $t('营业时间')])"
+                    style="width:100%"
+                  ></TimePicker>
+                </FormItem>
+
+                <FormItem :label="$t('区域关联')" prop="zones" v-if="isSuperAdmin">
+                  <Select multiple @on-change="changeZones" :disabled="disabledZones"
+                    :placeholder="$t('holder.请选择')"
+                    v-model="formValidate.zones">
+                    <Option
+                      v-for="item in zonelist"
+                      :value="item.value"
+                      :key="item.value">
+                      {{item.label}}
+                    </Option>
+                  </Select>
+                </FormItem>
+
+                <FormItem :label="$t('省份')" prop="province" v-if="formValidate.spc==1">
+                  <Select
+                    v-model="formValidate.province"
+                    :placeholder="$t('fn._', [$t('holder.请选择'), $t('省份')])"
+                    @on-change="changeProvince"
+                    style="width:100%">
+                    <Option
+                      v-for="item in provinceArr"
+                      :key="item.value"
+                      :value="item.value">
+                    {{ item.label}}
+                    </Option>
+                  </Select>
+                </FormItem>
+
+                <FormItem :label="$t('城市')" prop="city" v-if="formValidate.spc==1">
+                  <Select
+                    v-model="formValidate.city"
+                    :placeholder="$t('fn._', [$t('holder.请选择'), $t('城市')])"
+                    @on-change="changeCity"
+                    style="width:100%">
+                    <Option v-for="item in cities" :key="item.value" :value="item.value">
+                      {{item.label}}
+                    </Option>
+                  </Select>
+                </FormItem>
+
+                <FormItem :label="$t('地址')" prop="address" v-if="formValidate.spc==1">
+                  <Input maxlength="20" type="text" v-model="formValidate.address"></Input>
+                </FormItem>
+
+                <FormItem :label="$t('父节点')" prop="parentNode" v-if="formValidate.spc!=1&&userLvl=='admin'">
+                  <Select v-model="formValidate.parentNode" :disabled="disabledParentNode"
+                    :placeholder="$t('fn._', [$t('holder.请选择'), $t('父节点')])">
+                    <Option
+                      v-for="item in addfloor"
+                      :value="item.value"
+                      :key="item.value">
+                      {{item.label}}
+                    </Option>
+                  </Select>
+                </FormItem>
+                <FormItem :label="$t('业态')" prop="modal5" v-if="formValidate.spc==3">
+                  <Select v-model="formValidate.modal5" :disabled="disabledModal5"
+                    :placeholder="$t('fn._', [$t('holder.请选择'), $t('业态')])">>
+                    <Option
+                      v-for="item in formats"
+                      :value="item.value"
+                      :key="item.value">
+                    {{item.label }}
+                    </Option>
+                  </Select>
+                </FormItem>
+
+                <FormItem :label="$t('面积')" prop="area" v-if="formValidate.spc!=2">
+                  <Input type="text" v-model="formValidate.area"></Input>
+                </FormItem>
+
+                <FormItem :label="$t('描述')" prop="description">
+                  <Input maxlength="50" type="text" v-model="formValidate.description"></Input>
+                </FormItem>
+
+                <FormItem v-if="userLvl!='admin'&&formValidate.spc!=3">
+                  <div :style="{height:hideHeight}"></div>
+                </FormItem>
+              </div>
+
+              <div class="right">
+                <div class="form-control addsub flex-center">
+                  <FormItem :label="$t('选择年份')" style="width: auto;word-break: keep-all"></FormItem>
+                  <Select v-model="currentYear"
+                    @on-change="currentYearChange">
+                    <Option v-for="year in yearlist" :value="year" :key="year">
+                      {{ year }}
+                    </Option>
+                  </Select>
+                </div>
+                <FormItem :label="$t('客流目标')"></FormItem>
+                <div class="form-control addsub">
+                  <label></label>
+                  <row>
+                    <i-col span="3" class="flex-center">
+                      <FormItem :label="$t('全年目标')"></FormItem>
+                      <Radio v-model="flowYear" @on-change="setFlowYearGoal"></Radio>
+                    </i-col>
+                    <i-col span="9" style="width:34.5%!important">
+                      {{ $t('fn.total', ['']) }}
+                      <Input
+                        type="number"
+                        style="margin-left:4px;width:270px"
+                        :disabled="!disabled"
+                        v-model="sumFlowYear"
+                      ></Input>
+                    </i-col>
+                    <i-col span="12" offset="0" class="fs16">
+                      {{ $t('人') }},
+                      {{ $t('fn.平均每月', [$t('fn._', [Math.floor(sumFlowYear/12).toLocaleString(), $t('人')])]) }}
+                    </i-col>
+                  </row>
+                </div>
+
+                <div class="form-control addsub">
+                  <row class="m-t-20">
+                    <div class="flex-center">
+                      <FormItem :label="$t('每月目标')"></FormItem>
+                      <Radio v-model="flowMonth" @on-change="setFlowMonthGoal"></Radio>
+                    </div>
+                    <div  class="flex-wrap">
+                      <row class="omonth" v-for="(item,index) in monthsGoal" :key="index">
+                        <i-col span="5" style="margin-left: -6px;">
+                          <FormItem :label="$t(item.name)"></FormItem>
+                        </i-col>
+                        <i-col span="16">
+                          <Input
+                            type="number"
+                            :disabled="disabled"
+                            v-model="item.modal"
+                          ></Input>
+                        </i-col>
+                        <i-col span="2" offset="1">{{ $t('人') }}</i-col>
+                      </row>
+                      <row span="24" offset="0" class="fs16">
+                        {{ $t('全年总计') }}
+                        {{totals.toLocaleString()}}
+                        {{ $t('人') }}
+                      </row>
+                    </div>
+                  </row>
+                </div>
+
+                <FormItem :label="$t('销售额目标')"></FormItem>
+                <div class="form-control addsub">
+                  <label></label>
+                  <row>
+                    <i-col span="3" style="display:flex;">
+                      <FormItem :label="$t('全年目标')"></FormItem>
+                      <Radio v-model="saleYear" @on-change="setSaleYearGoal"></Radio>
+                    </i-col>
+                    <i-col span="9" style="width:34.5%!important">
+                      {{ $t('fn.total', ['']) }}
+                      <Input type="number" :disabled="!disabledSale"
+                        style="margin-left:4px;width:270px" v-model="sumSaleYear"></Input>
+                    </i-col>
+                    <i-col span="12" offset="0" class="fs16">
+                      {{ $t('yuan') }},
+                      {{ $t('fn.平均每月', [Math.floor(sumSaleYear/12).toLocaleString() + $t('yuan')]) }}
+                    </i-col>
+                  </row>
+                </div>
+
+                <div class="form-control addsub">
+                  <row class="m-t-20">
+                    <div class="flex-center">
+                      <FormItem :label="$t('每月目标')"></FormItem>
+                      <Radio v-model="saleMonth" @on-change="setSaleMonthGoal"></Radio>
+                    </div>
+                    <div class="flex-wrap m-b-40">
+                      <row class="omonth" v-for="(item,index) in monthsSale" :key="index">
+                        <i-col span="5" style="margin-left: -6px;">
+                          <FormItem :label="$t(item.name)"></FormItem>
+                        </i-col>
+                        <i-col span="16">
+                          <Input
+                            type="number"
+                            :disabled="disabledSale"
+                            v-model="item.modal"
+                          ></Input>
+                        </i-col>
+                        <i-col span="2" offset="1">{{ $t('yuan') }}</i-col>
+                      </row>
+                      <row span="8" offset="1" class="fs16">
+                        {{ $t('全年总计') }}
+                        {{ totalSales.toLocaleString() }}
+                        {{ $t('yuan') }}
+                      </row>
+                    </div>
+                  </row>
+                </div>
+              </div>
+
+            </Form>
+            <div class="control" v-bind:class="{addFloorShop:formValidate.spc!=1}">
+              <Button @click="handleSubmit('formValidate')">{{ $t('提交') }}</Button>
+              <Button class="buttonCel" @click.native="closeEdit">{{ $t('取消') }}</Button>
+            </div>
+          </section>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
+  import i18n from '@/i18n/i18n'
 import data from '@/assets/json/province.json'
 import { initMonthsData } from '@/libs/util'
 import {
@@ -293,14 +315,14 @@ export default {
   data () {
     const validSelectTime = (rule, value, callback) => {
       if (value[0] === '' && value[1] === '') {
-        callback(new Error('请选择营业时间'))
+        callback(new Error(i18n.t('fn.请选择',[i18n.t('营业时间')])))
       } else {
         callback()
       }
     }
     const validSelect = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请选择' + rule.tips))
+        callback(new Error(i18n.t('fn.请选择',[i18n.t(rule.tips)])))
       } else {
         callback()
       }
@@ -309,10 +331,10 @@ export default {
       // 模拟异步验证效果
       setTimeout(() => {
         if (!Number.isFinite(Number(value))) {
-          callback(new Error('面积数要为数字'))
+          callback(new Error(i18n.t('面积数要为数字')))
         } else {
           if (value < 0) {
-            callback(new Error('面积数不能为负'))
+            callback(new Error(i18n.t('面积数不能为负')))
           } else {
             callback()
           }
@@ -343,36 +365,18 @@ export default {
       ruleValidate: {
         name: [{
           required: true,
-          message: '名称不能为空',
-          trigger: 'blur'
-        },
-        {
-          type: 'string',
-          max: 20,
-          message: '名称长度不得大于20个字符',
+          message: this.$t('名称不能为空'),
           trigger: 'blur'
         }],
         address: [{
           required: true,
-          message: '地址不能为空',
+          message: this.$t('fn._不能为空',[this.$t('地址')]),
           trigger: 'blur'
         },
         {
           type: 'string',
           min: 6,
-          message: '地址长度不得少于6个字符',
-          trigger: 'blur'
-        },
-        {
-          type: 'string',
-          max: 20,
-          message: '地址长度不得大于20个字符',
-          trigger: 'blur'
-        }],
-        description: [{
-          type: 'string',
-          max: 50,
-          message: '描述长度不得大于50个字符',
+          message: this.$t('fn.cantLessThan',[this.$t('地址'),6]),
           trigger: 'blur'
         }],
         floor: [{ required: true, tips: '楼层', validator: validSelect, trigger: 'change' }],
@@ -416,11 +420,6 @@ export default {
       sumFlowMonth: '', // 月客流目标总和
       sumSaleYear: '', // 年销售目标
       sumSaleMonth: '', // 月销售目标
-      list: [
-        { value: 1, label: '购物中心' },
-        { value: 2, label: '楼层' },
-        { value: 3, label: '商铺' }
-      ],
       formats: [],
       floors: [
         { value: -5, label: '负五楼' },
@@ -484,7 +483,9 @@ export default {
       }
     },
     propertyId () {
-      if (this.propertyId != 0) this.getZones()
+      if (this.propertyId != 0){
+        this.getZones()
+      }
     }
   },
   computed: {
@@ -549,6 +550,14 @@ export default {
             }
           })
       }
+    },
+    list(){//不允许添加购物中心
+      let arr =  [{ value: 2, label: '楼层' },
+        { value: 3, label: '商铺' }];
+      if(this.isModify){
+        arr.unshift({ value: 1, label: '购物中心' })
+      }
+      return arr
     }
   },
   mounted () {
@@ -719,7 +728,7 @@ export default {
       this.formValidate.spc = val
       var titleNames
       if (val == 2) {
-        titleNames = this.isModify ? '编辑楼层' : '添加楼层'
+        titleNames = this.isModify ? this.$t('fn.编辑', [this.$t('楼层')]) : this.$t('fn.添加', [this.$t('楼层')])
         this.mWidth = '500px'
         this.mHeight = '530px'
         this.marginLeft = '-250px'
@@ -733,7 +742,7 @@ export default {
         document.getElementsByClassName('right')[0].style.display = 'none'
         document.getElementsByClassName('left')[0].style.width = '100%'
       } else if (val == 3) {
-        titleNames = this.isModify ? '编辑商铺' : '添加商铺'
+        titleNames = this.isModify ? this.$t('fn.编辑', [this.$t('商铺')]) : this.$t('fn.添加', [this.$t('商铺')])
         this.mWidth = '570px'
         this.mHeight = '686px'
         this.marginLeft = '-285px'
@@ -748,7 +757,7 @@ export default {
         document.getElementsByClassName('right')[0].style.display = 'none'
         document.getElementsByClassName('left')[0].style.width = '100%'
       } else if (val == 1) {
-        titleNames = this.isModify ? '编辑购物中心' : '添加购物中心'
+        titleNames = this.isModify ? this.$t('fn.编辑', [this.$t('购物中心')]) : this.$t('fn.添加', [this.$t('购物中心')])
         this.mWidth = '1286px'
         this.mHeight = '686px'
         this.marginLeft = '-643px'
@@ -809,7 +818,6 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           this.addEntity()
-        } else {
         }
       })
     },
@@ -891,12 +899,7 @@ export default {
                 that.formValidate.address, that.formValidate.description, flowType, sumFlow, saleType, sumSale, that.zone_id,
                 daily_start, daily_end, that.flow_month, that.sale_month, Number(that.formValidate.area), years).then(res=> {
                   that.closeEdit()
-                  var alertText = {}
-                  alertText.bg = '#00A0E9'
-                  alertText.title = '添加购物中心'
-                  alertText.text = '添加购物中心成功'
-                  alertText.confirm = false
-                  that.$emit('alertMessage', true, alertText)
+                  this.$message.success(this.$t('fn.successTo', [this.$t('添加购物中心')]))
                   var data = {}
                   data.children = []
                   data.name = that.formValidate.name
@@ -915,12 +918,7 @@ export default {
                       that.$store.commit('saveOrganizationData', res.data.data)
                   })
                   that.closeEdit()
-                  var alertText = {}
-                  alertText.bg = '#00A0E9'
-                  alertText.title = '编辑购物中心'
-                  alertText.text = '编辑购物中心成功'
-                  alertText.confirm = false
-                  that.$emit('alertMessage', true, alertText)
+                  this.$message.success(this.$t('fn.successTo', [this.$t('编辑购物中心')]))
                   var data = {}
                   data.name = that.formValidate.name
                   data.label = that.formValidate.name
@@ -934,16 +932,12 @@ export default {
             }
         })
       } else if (that.formValidate.spc == 2) {
+       
         // 添加楼层
         if (!that.isModify) {
           addtype(that.floor, that.addmall.property_id, that.floornum, that.addmall.id, that.zone_id, that.floorindex, that.formValidate.description).then(res=> {
               that.closeEdit()
-              var alertText = {}
-              alertText.bg = '#00A0E9'
-              alertText.title = that.editTitle
-              alertText.text = '添加楼层成功'
-              alertText.confirm = false
-              that.$emit('alertMessage', true, alertText)
+              this.$message.success(this.$t('fn.successTo', [this.$t('添加楼层')]))
               var data = {}
               data.itype = 'floor'
               data.id = res.data.data.bzid
@@ -965,16 +959,11 @@ export default {
           let description = that.formValidate.description
           let bzid = that.formValidate.id
           let parent_id = that.formValidate.parentNode
-          let zones = that.formValidate.zones.join(',')
+          let zones = that.formValidate.zones && that.formValidate.zones.join(',')
           let zone_index = thefloor.value
           updateFloorData(name, parent_id, zones, zone_index, description, bzid).then(res=> {
               that.closeEdit()
-              var alertText = {}
-              alertText.bg = '#00A0E9'
-              alertText.title = that.editTitle
-              alertText.text = '编辑楼层成功'
-              alertText.confirm = false
-              that.$emit('alertMessage', true, alertText)
+              this.$message.success(this.$t('fn.successTo', [this.$t('编辑楼层')]))
               var data = {}
               data.itype = 'floor'
               data.id = bzid
@@ -1002,12 +991,7 @@ export default {
         if (!that.isModify) {
           addAreas('store', that.addmall.property_id, name, parent_id, that.zone_id, business_type_id, area_size, description).then(res=> {
               that.closeEdit()
-              var alertText = {}
-              alertText.bg = '#00A0E9'
-              alertText.title = that.editTitle
-              alertText.text = '添加商铺成功'
-              alertText.confirm = false
-              that.$emit('alertMessage', true, alertText)
+              this.$message.success(this.$t('fn.successTo', [this.$t('添加商铺')]))
               var data = {}
               data.itype = 'store'
               data.id = res.data.data.bzid
@@ -1025,12 +1009,7 @@ export default {
           var bzid = that.formValidate.id
           updateAreas('store', that.addmall.property_id, name, parent_id, that.zone_id, business_type_id, area_size, description, bzid).then(res=>{
               that.closeEdit()
-              var alertText = {}
-              alertText.bg = '#00A0E9'
-              alertText.title = that.editTitle
-              alertText.text = '修改商铺成功'
-              alertText.confirm = false
-              that.$emit('alertMessage', true, alertText)
+              this.$message.success(this.$t('fn.successTo', [this.$t('编辑商铺')]))
               var data = {}
               data.itype = 'store'
               data.id = bzid

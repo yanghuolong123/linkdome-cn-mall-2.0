@@ -3,13 +3,20 @@
     <flow-selector ref="selectData" @paramsPrepare="paramsPrepare"></flow-selector>
     <div class="chartContent" v-if="isShowChart">
       <div ref="effCahrt" class="eff-box">
-        <goalCharts   class="charts" id='tendencyLine' :height1="chartheight" :height3="chartheight" title1="有效客流趋势"
-        :options1="trendAndAvg.trendLineOption" :series1="trendAndAvg.trendLineSeries"
-        :options2="trendAndAvg.trendBarOption" :series2="trendAndAvg.trendBarSeries" :columns="trendAndAvg.trendColumn"
-        :tableList="trendAndAvg.trendTable"></goalCharts>
-       
+        <goalCharts
+          class="charts"
+          id='tendencyLine'
+          title1="有效客流趋势"
+          :height1="chartheight"
+          :height3="chartheight"
+          :options1="trendAndAvg.trendLineOption"
+          :options2="trendAndAvg.trendBarOption"
+          :series1="trendAndAvg.trendLineSeries"
+          :series2="trendAndAvg.trendBarSeries"
+          :columns="trendAndAvg.trendColumn"
+          :tableList="trendAndAvg.trendTable"
+        ></goalCharts>
       </div>
-      
       <div class="cardContent">
         <Cards style="height: 165px;" :isTime="isTime" :isUp="isUp1" :item="effective"></Cards>
         <Cards style="height: 165px;" :isTime="isTime" :isUp="isUp2" :item="repeat" margin="20px 0px"></Cards>
@@ -34,12 +41,10 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import goalCharts from '@/components/goal/goalCharts.vue'
 import Cards from './components/Cards.vue'
 import storeChart from '@/components/charts/storeChart.vue'
 import VueApexCharts from 'vue-apexcharts'
-import VxBreadcrumb from '@/layouts/components/VxBreadcrumb.vue'
 import { getEffective } from '@/api/analysis'
 import { getEntityFlow } from '@/api/home'
 
@@ -48,7 +53,6 @@ import _ from 'lodash'
 import { lineOptions, formatNumber, storeOption1, storeOption2, } from '@/libs/util'
 import { options2 } from '@/libs/chart.js'
 import FlowSelector from '_c/flow-selector/effective-flow-selector'
-Vue.component(VxBreadcrumb.name, VxBreadcrumb)
 export default {
   name: 'DwellTime',
 
@@ -178,12 +182,12 @@ export default {
         // 处理series
         var lineSeries = []
         var obj = {}
-        obj.name = '全部客流'
+        obj.name = this.$t('全部客流')
         obj.data = data.map(function (m) {
           return m.visits
         })
         var obj2 = {}
-        obj2.name = '有效客流'
+        obj2.name = this.$t('有效客流')
         obj2.data = []
         if(xaxisCategories != undefined){
           xaxisCategories.forEach((element,index) => {
@@ -243,11 +247,11 @@ export default {
           obj.end = m.unique_visits ? m.unique_visits.toLocaleString() : ' '
           return obj
         })
-        trendAndAvg.trendColumn = ['日期', '全部客流量 ( 人 )', '有效客流量 ( 人 )']
+        trendAndAvg.trendColumn = ['日期', 'TotalEnterUnit', 'EffectEnterUnit']
 
         var avgSeries = []
         var obj3 = {}
-        obj3.name = '平均到访频次'
+        obj3.name = this.$t('平均到访频次')
         obj3.data = []
         if(xaxisCategories != undefined){
           xaxisCategories.forEach((element,index) => {
@@ -318,7 +322,7 @@ export default {
     initCircle (resCircle) {
       var that = this
       if (resCircle.status == 200) {
-        that.chartColumns = [{ 'key': 'name', 'title': '类型', 'align': 'center' }, { 'key': 'enter', 'title': '客流量 ( 人 )', 'align': 'center' }]
+        that.chartColumns = [{ 'key': 'name', 'title': this.$t('类型'), 'align': 'center' }, { 'key': 'enter', 'title': this.$t('fn.EnterUnit',[this.$t('人')]), 'align': 'center' }]
         var resCircleData = resCircle.data.data.arrival_distribution
         var circleSeries = []
         var chartTable = []
@@ -327,9 +331,9 @@ export default {
           count++
           let obj = {}
           if (count == 5) {
-            obj.name = j + '次及以上'
+            obj.name = this.$t(j + '次及以上')
           } else {
-            obj.name = j + '次'
+            obj.name =  this.$t('fn.times',[this.$t(j)])
           }
           obj.enter = resCircleData[j]
           chartTable.push(obj)
@@ -358,6 +362,8 @@ export default {
         this.isTime = false
         this.pieType = 'pie'
         this.chartOptions = storeOption1
+        this.chartOptions.labels=[this.$t('fn.times',[1]), this.$t('fn.times',[2]), this.$t('fn.times',[3]), this.$t('fn.times',[4]), this.$t('5次及以上')]
+    
         var startTime = value.date1Array[0]
         var endTime = value.date1Array[1]
         var range = value.date1Array.join(',')
@@ -392,7 +398,6 @@ export default {
         let innerRange
         if (innerOne == 'Month' || innerTwo == 'Month') innerRange = 'Month'
         else innerRange = 'Date'
-        let dateType = innerRange == 'Month' ? '月' : '天'
         initRes = await Promise.all([
           getEffective(bzid, startTime1, endTime1, innerRange),
           getEffective(bzid, starTime2, endTime2, innerRange),
@@ -411,7 +416,7 @@ export default {
         diff++
         var xaxisCategories = []
         for (let i = 1; i < diff; i++) {
-          xaxisCategories.push('第' + i + dateType)
+          xaxisCategories.push(innerRange === 'Month' ?this.$t('fn.第_月',[i]):this.$t('fn.第_天',[i]))
         }
         var trendAndAvg = that.initTrend(initRes[0], xaxisCategories)
         var trendAndAvg2 = that.initTrend(initRes[1], xaxisCategories)
@@ -556,12 +561,12 @@ export default {
           resCircleData2 = _.cloneDeep(resCircleData)
         }
         that.chartColumns = [
-          { 'key': 'name', 'title': '时间', 'align': 'center' },
-          { 'key': 'value1', 'title': '1次', 'align': 'center' },
-          { 'key': 'value2', 'title': '2次', 'align': 'center' },
-          { 'key': 'value3', 'title': '3次', 'align': 'center' },
-          { 'key': 'value4', 'title': '4次', 'align': 'center' },
-          { 'key': 'value5', 'title': '5次及以上', 'align': 'center' }
+          { 'key': 'name', 'title': this.$t('时间'), 'align': 'center' },
+          { 'key': 'value1', 'title': this.$t('fn.times',[1]), 'align': 'center' },
+          { 'key': 'value2', 'title':this.$t('fn.times',[2]), 'align': 'center' },
+          { 'key': 'value3', 'title':this.$t('fn.times',[3]), 'align': 'center' },
+          { 'key': 'value4', 'title':this.$t('fn.times',[4]), 'align': 'center' },
+          { 'key': 'value5', 'title':this.$t('5次及以上'), 'align': 'center' }
         ]
         var chartTable = []
         var tableRow1 = {}
@@ -581,7 +586,8 @@ export default {
         chartTable.push(tableRow1)
         chartTable.push(tableRow2)
         that.chartTable = chartTable
-        var circleNames = ['1 次', '2 次', '3 次', '4 次', '5次及以上']
+        var circleNames = [this.$t('fn.times',[1]), this.$t('fn.times',[2]), this.$t('fn.times',[3]), this.$t('fn.times',[4]), this.$t('5次及以上')];
+  
         var circleSeries = circleNames.map(function (m, index) {
           let obj = {}
           obj.name = m
@@ -592,6 +598,7 @@ export default {
         chartOptions.xaxis.categories = [name1, name2]
         this.chartOptions = chartOptions
         this.circleSeries = circleSeries
+        console.log(circleSeries)
         this.showCharts = true
       }
     },

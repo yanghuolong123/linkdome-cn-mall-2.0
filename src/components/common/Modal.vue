@@ -3,7 +3,9 @@
 			:title="title"
 			class-name="cn-modal"
 			ref="modal"
+			:loading="loading"
 			@on-ok="handleOk"
+			@on-cancel="onCancel"
 			:width="width"
 			:footer-hide="footerHide"
 			v-model="modalShow"
@@ -30,13 +32,29 @@
     },
     data(){
       return{
-        modalShow:false
+        modalShow:false,
+        loading:true
       }
     },
     methods:{
+      //对话框校验失败，取消loading状态
+      resetOkButton() {
+        this.loading = false;
+        setTimeout(() => {
+          this.$nextTick(() => {
+            this.loading = true;
+          });
+        }, 100);
+      },
       handleOk(){
         this.$emit('onOk')
       },
+      onCancel(){
+        this.$emit('onCancel')
+      },
+			closeModal(){
+        this.modalShow = false
+			},
       showModal() {
         this.modalShow = true
       }

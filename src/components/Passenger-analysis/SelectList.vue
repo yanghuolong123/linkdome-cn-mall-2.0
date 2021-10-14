@@ -1,7 +1,7 @@
 <template>
     <div class="cd-1">
         <div class="tx" v-on:click="showList">{{showText}}</div>
-        <!-- <div class="query" v-on:click="queryData">查询</div> -->
+        <!-- <div class="query" v-on:click="queryData">{{ $t('查询') }}</div> -->
         <div class="list" v-if="showSelect"
              v-bind:class="{actionSelect:showSelect}"
         >

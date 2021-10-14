@@ -1,54 +1,54 @@
 <template>
   <div class="relevance">
     <div class="selector-container bg-white box-card">
-        <div class="flex-center">
-          <DatePicker
-            type="daterange"
-            v-model="relevanceDate"
-            class="w-select"
-            placement="bottom-end"
-            placeholder="选择日期"
-           :options="disabledDate"
-          ></DatePicker>
-        </div>
-        <div class="flex-center">
-            <el-cascader v-model="relevanceValue"
-                         v-if="isSelected"
-                         class="cascade-dom w-select"
-                         collapse-tags
-                         popper-class="relevance-cascade-dom"
-                         :props="{ multiple: true,expandTrigger:'hover'}"
-                         :options="relevanceList">
-            </el-cascader>
-            <div class="cascade" v-else></div>
-            <Button size="large" class="m-l-20" type="primary" @click="relevanceDataClick">查询 </Button>
-            <Button size="large" class="m-l-20" @click="resetData">重置 </Button>
-        </div>
+      <div class="flex-center">
+        <DatePicker
+          type="daterange"
+          v-model="relevanceDate"
+          class="w-select"
+          placement="bottom-end"
+          :placeholder="$t('holder.请选择')"
+          :options="disabledDate"
+        ></DatePicker>
+      </div>
+      <div class="flex-center">
+        <el-cascader
+          v-if="isSelected"
+          v-model="relevanceValue"
+          class="cascade-dom w-select"
+          collapse-tags
+          popper-class="relevance-cascade-dom"
+          :props="{ multiple: true,expandTrigger:'hover'}"
+          :options="relevanceList"
+        ></el-cascader>
+        <div class="cascade" v-else></div>
+        <Button size="large" class="m-l-20" type="primary" @click="relevanceDataClick">{{ $t('查询') }}</Button>
+        <Button size="large" class="m-l-20" @click="resetData">{{ $t('重置') }}</Button>
+      </div>
     </div>
     <div class="relevance-container">
       <relevance-tab v-model="drainageType" ref="relecanceTotle" :tabs="tabsList"></relevance-tab>
       <vs-row style="margin:20px 0;padding:0 10px">
         <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="8">
           <div class="relevance-graph">
-            <h3 v-show="isData == true"> 暂无数据</h3>
+            <h3 v-show="isData == true">{{ $t('holder.暂无数据') }}</h3>
             <h3 v-show="isTotalData == true">
-              实体客流无关联
+              {{ $t('实体客流无关联') }}
             </h3>
             <div class="relevance-svg">
               <div class="relevance-left">
                 <dependencywheel
-                v-bind:class="{dependencywheelAction:drainageType==0}"
-                class="relevanceChart"
-                ref='graph'
-                v-show="isData == false&&isTotalData==false"
-                >
-                </dependencywheel>
+                  v-bind:class="{dependencywheelAction:drainageType==0}"
+                  class="relevanceChart"
+                  ref='graph'
+                  v-show="isData == false&&isTotalData==false"
+                ></dependencywheel>
                 <div id="d3Chart"
-                v-bind:class="{d3ChartChartaAction:drainageType==1}"
-                class="relevanceChart"
-                ref="relevanceChart"
-                v-show="isData == false&&isTotalData==false"
-                style="margin:-15px 0 0 -15px"
+                  v-bind:class="{d3ChartChartaAction:drainageType==1}"
+                  class="relevanceChart"
+                  ref="relevanceChart"
+                  v-show="isData == false&&isTotalData==false"
+                  style="margin:-15px 0 0 -15px"
                 ></div>
               </div>
               <ul class='d3NameList'>
@@ -88,12 +88,12 @@
             </ul>
           </div>
           <div v-else class="relevanceTOP3">
-            <h3>关联度TOP3：</h3>
+            <h3>{{ $t('关联度TOP3：') }}</h3>
             <h4 v-if="isData == true">
               <ul>
-                <li>暂无数据</li>
-                <li>暂无数据</li>
-                <li>暂无数据</li>
+                <li>{{ $t('holder.暂无数据') }}</li>
+                <li>{{ $t('holder.暂无数据') }}</li>
+                <li>{{ $t('holder.暂无数据') }}</li>
               </ul>
             </h4>
             <ul v-else>
@@ -275,10 +275,10 @@ export default {
       let time = moment(this.relevanceDate[0]).format('YYYY-MM-DD') + ',' +
       moment(this.relevanceDate[1]).format('YYYY-MM-DD')
       if (this.relevanceValue.length <= 1) {
-        this.$alert({ content:'请选择最少两个实体' })
+        this.$alert({ content: this.$t('notices.notChooseEntity') })
         return false
       }if (this.relevanceValue.length >= 40){
-        this.$alert({ content:'因页面效果最多选择40个实体, 请重新选择实体' })
+        this.$alert({ content: this.$t('notices.ChooseEntityTooMuch') })
         return false
       }
       let ListId = _.clone(this.relevanceValue)

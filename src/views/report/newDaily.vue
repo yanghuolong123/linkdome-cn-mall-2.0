@@ -11,7 +11,7 @@
             v-model="selectDateTime"
           >
           </DatePicker>
-        <div class="report-query" v-on:click="reportQuery">查询</div>
+        <div class="report-query" v-on:click="reportQuery">{{ $t('查询') }}</div>
         <div class="icon-download" v-on:click="downloadReport('day',selectDateText)" title="下载报告">
 			  <icons type="daoru" color="#2a7dc1" :size=20 ></icons>
       </div>

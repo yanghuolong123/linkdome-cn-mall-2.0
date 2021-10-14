@@ -1,10 +1,11 @@
+import i18n from '@/i18n/i18n'
 export default {
   newNum: {
-    name: '新顾客',
+    name: i18n.t('新顾客'),
     icon: 'kehulianxiren1'
   },
   oldNum: {
-    name: '老顾客',
+    name:  i18n.t('老顾客'),
     icon: 'kehulianxiren'
   },
   ordinaryNum: {
@@ -24,23 +25,23 @@ export default {
     icon: 'Group-'
   },
   '1': {
-    name: '1次',
+    name: i18n.t('fn.times',[i18n.t(1)]),
     icon: 'circle'
   },
   '2': {
-    name: '2次',
+    name:i18n.t('fn.times',[i18n.t(2)]),
     icon: 'circle'
   },
   '3': {
-    name: '3次',
+    name: i18n.t('fn.times',[i18n.t(3)]),
     icon: 'circle'
   },
   '4': {
-    name: '4次',
+    name: i18n.t('fn.times',[i18n.t(4)]),
     icon: 'circle'
   },
   '5': {
-    name: '5次及以上',
+    name: i18n.t('5次及以上'),
     icon: 'circle'
   }
 }

@@ -1,44 +1,53 @@
 <template>
-<div class="addArea">
-  <div class="dialogs-edit">
-      <div class="dialogs-edit-bg"></div>
-      <div class="dialogs-edit-text" :style="{height:heights,marginTop:marginTops}">
-          <div class="edit-title">
-              {{editAreaTitle}}
-          </div>
-          <div class="edit-close" v-on:click="closeEdit">
-                <Icon type="md-close" />
-            </div>
-          <div class="edit-text">
-                <Form :model="formData" label-position="right" :label-width="85" ref="formData" :rules="ruleInline">
-                    <FormItem label="区域名称" prop="name">
-                        <Input type ="text" v-model="formData.name" placeholder="请输入区域名称"></Input>
-                    </FormItem>
-                    <FormItem label="区域关联" prop="zone"  v-if="userLvl=='admin'">
-                        <i-select v-model="formData.zone" multiple @on-change="getItemValue">
-                            <i-option v-for="item in zoneList" :value="item.value" :key="item.value">{{item.label}}</i-option>
-                        </i-select>
-                    </FormItem>
-                    <FormItem label="描述" prop="description" :label-width="85">
-                        <Input  type="textarea" v-model="formData.description" :rows="4"></Input>
-                    </FormItem>
-                </Form>
-                <div class="control">
-                    <Button  @click="handleSubmit('formData')">提交</Button>
-                    <Button class="buttonCel" @click.native="closeEdit">取消</Button>
-                </div>
-          </div>
-      </div>
-  </div>
-</div>
+  <modal ref="modal"
+        :width="500"
+        :title="$t(editAreaTitle)"
+        @onOk="handleSubmit('formData')"
+        @onCancel="closeEdit">
+    <Form :model="formData" label-position="right"
+					:label-width="85"
+					ref="formData" :rules="ruleInline">
+      <FormItem :label="$t('区域名称')" prop="name">
+        <Input type ="text" v-model="formData.name" :placeholder="$t('fn.请输入', [$t('区域名称')])"></Input>
+      </FormItem>
+      <FormItem :label="$t('区域关联')" prop="zone"  v-if="userLvl=='admin'">
+				<Select v-model="formData.zone" multiple >
+					<Option v-for="item in zoneList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+				</Select>
+      </FormItem>
+      <FormItem :label="$t('描述')" prop="description" :label-width="85">
+        <Input  type="textarea" v-model="formData.description" :rows="4"></Input>
+      </FormItem>
+    </Form>
+  </modal>
+<!--<div class="addArea">-->
+<!--  <div class="dialogs-edit">-->
+<!--      <div class="dialogs-edit-bg"></div>-->
+<!--      <div class="dialogs-edit-text" :style="{height:heights,marginTop:marginTops}">-->
+<!--          <div class="edit-title">-->
+<!--              {{editAreaTitle}}-->
+<!--          </div>-->
+<!--          <div class="edit-close" v-on:click="closeEdit">-->
+<!--                <Icon type="md-close" />-->
+<!--            </div>-->
+<!--          <div class="edit-text">-->
+
+<!--                <div class="control">-->
+<!--                    <Button  @click="handleSubmit('formData')">提交</Button>-->
+<!--                    <Button class="buttonCel" @click.native="closeEdit">取消</Button>-->
+<!--                </div>-->
+<!--          </div>-->
+<!--      </div>-->
+<!--  </div>-->
+<!--</div>-->
 </template>
 
 <script>
 import _ from "lodash";
-import axios from "axios";
+import Modal from '_c/common/Modal.vue'
+
 import {
    addAreas,
-   addGate,
    updateFloorData
 } from "@/api/manager.js";
 export default {
@@ -72,19 +81,20 @@ export default {
             isModify:false,
             formData: {
                 name: '',
-                zone: 0,
+                zone:[],
                 description: '',
             },
             ruleInline: {
                 name: [{
                     required: true,
-                    message: '区域名称不能为空',
+                    message: this.$t('fn.请输入',[this.$t('区域名称')]),
                     trigger: 'blur'
                 }, ],
                 zone: [{
                     required: true,
-                    message: '至少选择一项'
-                
+                    message: this.$t('请选择'),
+                  	trigger: 'change',
+                  	type: 'array'
                 }],
             }
         }
@@ -115,19 +125,19 @@ export default {
         *@return null
         */
         handleSubmit (name) {
-            var that = this;
-            that.$refs[name].validate((valid) => {
-                if (valid) {
-                    that.addArea();
-                }
-            })
-          },
-       closeEdit(){
-           this.$emit("closeEdit");
-       },
-        getItemValue(val) {
-            this.formData.zone = val
+          this.$refs[name].validate((valid) => {
+            if (valid) {
+              this.addArea();
+            }else {
+              this.$refs.modal.resetOkButton()
+            }
+          })
         },
+       closeEdit(){
+         this.$refs.formData.resetFields()
+         this.$refs.modal.closeModal()
+       },
+
         addArea() {
             var that = this;
             var property_id = that.floorInfo[0].property_id;
@@ -138,44 +148,37 @@ export default {
             data.zones = that.formData.zone.join(",")
             data.type = 'area';
             if(!that.isModify){
-                addAreas(data.type,property_id,data.name,parent_id,data.zones,data.description).then(function (res) {
-                    if (res.data.code == 200) {
+                addAreas(data.type,property_id,data.name,parent_id,data.zones,data.description).then( (res) =>{
+                  this.$refs.modal.resetOkButton()
+                  if (res.data.code == 200) {
                         data.id = res.data.data.bzid;
                         if(Boolean(data.zones)){
                             data.zones = data.zones.split(",")
-                            data.zones = data.zones.map(function(m){
+                            data.zones = data.zones.map((m)=>{
                                 return Number(m)
                             })
                         }
                         that.closeEdit();
-                        var alertText = {};
-                        alertText.bg = '#00A0E9'
-                        alertText.title = that.editTitle
-                        alertText.text = '添加区域成功'
-                        alertText.confirm = false
-                        that.$emit("alertMessage",true,alertText)
+                      	this.$message.success(this.$t('fn.successTo', [this.$t('添加区域')]))
                         that.$emit('addTypeData',data)
                     }
                 });
             }
             else{
                 var bzid = that.formData.id;
-                updateFloorData(data.name,parent_id,data.zones,"",data.description,bzid).then(function (res) {
-                    if (res.data.code == 200) {
+                updateFloorData(data.name,parent_id,data.zones,"",data.description,bzid).then((res)=> {
+                  this.$refs.modal.resetOkButton()
+                  if (res.data.code == 200) {
                         data.id = that.formData.id;
                         that.closeEdit();
-                        var alertText = {};
-                        alertText.bg = '#00A0E9'
-                        alertText.title = that.editTitle
-                        alertText.text = '编辑区域成功'
-                        alertText.confirm = false
-                        that.$emit("alertMessage",true,alertText)
+                      this.$message.success(this.$t('fn.successTo', [this.$t('编辑区域')]))
                         that.$emit('updateTypeData',data)
                     }
                 });
             }
         },
     },
+    components:{Modal}
 }
 </script>
 

@@ -8,24 +8,23 @@
 				   class="common-card m-t-20 chart-1"
 				   :toolList="toolList">
 			<div class="flex-center quota">
-				<span>数据指标：</span>
+				<span class="quota-label">{{ $t('fx.Data_indicators') }}</span>
 				<Select v-model="enterSelect" multiple :max-tag-count="1" @on-change="enterSelectChange">
-					<Option v-for="item in enterFlowList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+					<Option v-for="item in enterFlowList" :value="item.value" :key="item.value">{{ $t(item.name) }}</Option>
 				</Select>
 				<i-switch
-						:disabled="(oParams && oParams.isSingleDay())||(enterSelect.length>1&&(oParams&&oParams.params.entitys.length>1))"
-						v-if="oParams && !oParams.isDateCompare()"
-						class="ml-20"
+						v-if="oParams && !oParams.isDateCompare() && !((oParams && oParams.isSingleDay())||(enterSelect.length>1&&(oParams&&oParams.params.entitys.length>1)))"
+						class="ml-20 switch"
 						size="large"
 						@on-change="compareTypeChange" v-model="isHour">
-					<span slot="open">小时</span>
-					<span slot="close">天</span>
+					<span slot="open">{{ $t('小时') }}</span>
+					<span slot="close">{{ $t('fx.day') }}</span>
 				</i-switch>
 			</div>
 		</chart-box>
 		<div class="common-card m-t-20" ref="enterTable" v-show="enterSelect.length === 1">
-			<div class="detail-title">客流量详细数据信息</div>
-			<Table stripe height="400" :columns="enterTable.columns" :data="enterTable.tableData">
+			<div class="detail-title">{{ $t('fn.detailData', [$t('enter')]) }}</div>
+			<Table stripe height="400" :columns="enterTableColumnsTrans" :data="enterTable.tableData">
 				<template slot-scope="{row}" slot="entityType">
 					<span>{{getItype(row.entityName)}}</span>
 				</template>
@@ -36,8 +35,8 @@
 				   ref="chartOccu" class="common-card m-t-20 chart-1"
 				   :toolList="occuTool"></chart-box>
 		<div class="common-card m-t-20" ref="occuTable" v-show="showOccu">
-			<div class="detail-title">集客量详细数据信息</div>
-			<Table stripe height="400" :columns="occuTable.columns" :data="occuTable.tableData">
+			<div class="detail-title">{{ $t('fn.detailData', [$t('集客量')]) }}</div>
+			<Table stripe height="400" :columns="occuTableColumnsTrans" :data="occuTable.tableData">
 				<template slot-scope="{row}" slot="entityType">
 					<span>{{getItype(row.entityName)}}</span>
 				</template>
@@ -111,6 +110,32 @@
         if (!this.oParams) return false
         return !isEmpty(this.oParams.getSelectedShopId()) && this.oParams.isSingleDay()&&this.oParams.params.compareType!=="businessType"
       },
+      // 这里实现对表头内容的翻译
+      enterTableColumnsTrans() {
+        let newArrey =[]
+        this.enterTable.columns.forEach((a) => {
+          let part={
+            title: this.$t(a.title),
+            key: a.key,
+            slot: a.slot
+          }
+          newArrey.push(part)
+        })
+        return newArrey
+      },
+      // 第二个表头内容的翻译
+      occuTableColumnsTrans() {
+        let newArrey =[]
+        this.occuTable.columns.forEach((a) => {
+          let part={
+            title: this.$t(a.title),
+            key: a.key,
+            slot: a.slot
+          }
+          newArrey.push(part)
+        })
+        return newArrey
+      }
     },
     methods: {
       //按小时开关
@@ -275,7 +300,7 @@
 					if(!data.length) return;
           const entityName = d.split('|')[0]
           const highestIndex = getMaxIndex(data)
-          const total = _.sum(data).toLocaleString() + '人次'
+          const total = _.sum(data).toLocaleString() + this.$t('人次')
           let time
           if (this.oParams.isDateCompare()) {
             time = d.split('|')[2]
@@ -293,7 +318,7 @@
           tableData.push({
             entityName,
             entityType: entityName,
-            highest: `${data[highestIndex].toLocaleString()}人次 ${highestTime}`,
+            highest: `${data[highestIndex].toLocaleString()} ${this.$t('人次')} ${highestTime}`,
             total,
             time
           })
@@ -308,7 +333,7 @@
           return o.name === name
         }, 'children')
         if (node) {
-          return findKey(config.dictionary, 'value', node.itype, 'name') || '购物中心'
+          return this.$t(findKey(config.dictionary, 'value', node.itype, 'name')) || this.$t('购物中心')
         } else {
           return ''
         }
@@ -328,12 +353,18 @@
 		.quota {
 			font-size: 14px;
 			margin-right: 50px;
-			width: 360px;
 			word-break: keep-all;
-			
-			.ml-20 {
-				width: 100px;
+			white-space: nowrap;
+			.quota-label {
+				margin-right: 20px;
+      }
+
+			.switch {
+				width: 145px;
 				margin-left: 20px;
+				&.ivu-switch-large.ivu-switch-checked:after{
+					left: 50px;
+				}
 			}
 		}
 	}

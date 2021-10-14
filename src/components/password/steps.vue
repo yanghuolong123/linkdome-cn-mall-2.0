@@ -4,7 +4,7 @@
       <template v-for="(item,index) in list">
         <div :key="index">
           <span :class="{actived:index < current}">{{index + 1}}</span>
-          <p>{{item.title}}</p>
+          <p>{{$t(item.title)}}</p>
         </div>
         <span :key="`line_${index}`" v-if="index < list.length - 1"></span>
       </template>

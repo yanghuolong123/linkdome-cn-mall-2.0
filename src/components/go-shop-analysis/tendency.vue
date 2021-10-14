@@ -2,106 +2,97 @@
   <div class="go-shop">
     <div class="selector-container bg-white box-card">
       <!-- <h1>趋势分析</h1> -->
-          <div class="flex-center">
-              <DatePicker
-                type="daterange"
-                v-model="crossDate"
-                placement="bottom-end"
-                :options="disabledDate"
-                placeholder="选择日期"
-                class="w-select"
-              ></DatePicker>
-              <vs-select
-                class="w-select m-l-20"
-                autocomplete
-                v-model="selectType"
-              >
-                <vs-select-item
-                  :value="item.value"
-                  :text="item.text"
-                  :key="index"
-                  v-for="(item,index) in typeList"
-                />
-              </vs-select>
-            <DatePicker
-              type="daterange"
-              v-model="crossDateTwo"
-              placement="bottom-end"
-              :options="disabledDate"
-              placeholder="选择日期"
-              class="w-select m-l-20"
-              v-if="selectType == 1"
-            ></DatePicker>
-          </div>
-          <div class="flex-center">
-              <el-cascader
-               collapse-tags
-               class="w-select"
-                v-model="activities"
-                :props="{ multiple: true,expandTrigger:'hover' }"
-                :options="activitiesType">
-              </el-cascader>
-              <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">查询</Button>
-              <Button size="large" class="m-l-20" @click="resetData">重置</Button>
-          </div>
+      <div class="flex-center">
+        <DatePicker
+          type="daterange"
+          v-model="crossDate"
+          placement="bottom-end"
+          :options="disabledDate"
+          placeholder="选择日期"
+          class="w-select"
+        ></DatePicker>
+        <vs-select
+          class="w-select m-l-20"
+          autocomplete
+          v-model="selectType">
+          <vs-select-item
+            v-for="(item,index) in typeListCom"
+            :value="item.value"
+            :text="item.text"
+            :key="index"
+          />
+        </vs-select>
+        <DatePicker
+          type="daterange"
+          v-model="crossDateTwo"
+          placement="bottom-end"
+          :options="disabledDate"
+          placeholder="选择日期"
+          class="w-select m-l-20"
+          v-if="selectType == 1"
+        ></DatePicker>
+      </div>
+      <div class="flex-center">
+        <el-cascader
+          collapse-tags
+          class="w-select"
+          v-model="activities"
+          :props="{ multiple: true,expandTrigger:'hover' }"
+          :options="activitiesType">
+        </el-cascader>
+        <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('查询') }}</Button>
+        <Button size="large" class="m-l-20" @click="resetData">{{ $t('重置') }}</Button>
+      </div>
     </div>
     <div class="go-shop-chart-list"  >
-        <div class="go-shop-time-icon">
-          <span>进店率趋势分析</span>
-          <p class="flex-center">
-            <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(icon.value)">
-              <icons
-                :title="iconTitle[icon.type]"
-                :type="icon.type"
-                :size="20"
-                :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
-              ></icons>
-            </span>
-          </p>
-        </div>
-         <div v-if="isData" class="noData">暂无数据</div>
-         <vue-apex-charts
-          v-bind:class="{ lineAction: iconIndex == 1 }"
-            class=" tendencyBar"
-            ref="graphLine"
-            height='90%'
-            width="100%"
-            id='tendencyLine'
-            type="line"
-            :options="lineData.chartOptions"
-            :series="lineData.series"
-          ></vue-apex-charts>
-          <vue-apex-charts
-          v-bind:class="{ barAction: iconIndex == 0 }"
-            class="tendencyLine"
-            ref="graphBar"
-            height='90%'
-            width="100%"
-            type="bar"
-            :options="graphData.chartOptions"
-            :series="graphData.series"
-          ></vue-apex-charts>
-          <table-default
-          v-bind:class="{ tableAction: iconIndex == 2 }"
-          class="tendencyTable"
-            :tableTitle='goTitle'
-            :tableName='goName'
-            :tableList='goTableList'
-          ></table-default>
+      <div class="go-shop-time-icon">
+        <span>{{ $t('进店率趋势分析') }}</span>
+        <p class="flex-center">
+          <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(icon.value)">
+            <icons
+              :title="iconTitleCom[icon.type]"
+              :type="icon.type"
+              :size="20"
+              :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
+            ></icons>
+          </span>
+        </p>
+      </div>
+        <div v-if="isData" class="noData">{{ $t('holder.暂无数据') }}</div>
+        <vue-apex-charts
+      v-bind:class="{ lineAction: iconIndex == 1 }"
+        class=" tendencyBar"
+        ref="graphLine"
+        height='90%'
+        width="100%"
+        id='tendencyLine'
+        type="line"
+        :options="lineData.chartOptions"
+        :series="lineData.series"
+      ></vue-apex-charts>
+      <vue-apex-charts
+        v-bind:class="{ barAction: iconIndex == 0 }"
+        class="tendencyLine"
+        ref="graphBar"
+        height='90%'
+        width="100%"
+        type="bar"
+        :options="graphData.chartOptions"
+        :series="graphData.series"
+      ></vue-apex-charts>
+      <table-default
+        v-bind:class="{ tableAction: iconIndex == 2 }"
+        class="tendencyTable"
+        :tableTitle='goTitle'
+        :tableName='goName'
+        :tableList='goTableList'
+      ></table-default>
     </div>
-    <alert
-      v-if="isAlert"
-      @closeAlert ='closeAlert'
-      @alertConfirm ='alertConfirm'
-      :alertText='alertText'
-    ></alert>
   </div>
 </template>
 <script>
 import TableDefault from '@/views/ui-elements/table/TableDefault.vue'
-import alert from '@/components/alert.vue'
 import VueApexCharts from 'vue-apexcharts'
-import { getBussinessTree, getBussinessCommon } from '@/api/passenger'
 import { getCascadeList } from '@/api/passenger.js'
 import { goShopTrend } from '@/api/analysis'
 import { goShowFlowTend ,exportEx} from '@/api/home.js'
@@ -114,8 +105,6 @@ export default {
   components: {
     TableDefault,
     VueApexCharts,
-    alert
-
   },
   data () {
     return {
@@ -129,18 +118,8 @@ export default {
       crossDateTwo: [],
       selectType: 0,
       selectAll: 0,
-      typeList: [
-        {
-          text: '无对比',
-          value: 0
-        },
-        {
-          text: '时间对比',
-          value: 1
-        }
-      ],
+      typeList: [],
       iconList: [
-       
         {
           type: '62',
           color: '#9D9D9DFF',
@@ -161,16 +140,7 @@ export default {
           value: 3
         }
       ],
-      iconTitle: {
-        'zhexiantu': '折线图',
-        '62': '柱状图',
-        'biaoge-copy': '详细数据',
-        'xiangxia': '查看全部实体排行',
-        'ditu': '出入口客流',
-        'fenxi': '饼状图',
-        'chakan': '查看所有',
-        'daoru': '下载'
-      },
+      iconTitle: {},
       iconIndex: 0,
       iconColor: 'rgb(34, 128, 215)',
       goTitle: '',
@@ -210,7 +180,7 @@ export default {
           },
           yaxis: {
             title: {
-              text: '百分比（%）'
+              text: this.$t('百分比')+'（%）'
             },
             labels: {
               show: true,
@@ -258,7 +228,7 @@ export default {
           colors: ['#33B3ED', '#2BD9CF', '#94E2FF', '#FBAB40', '#8D82F0', '#E8585A'],
           yaxis: {
             title: {
-              text: '百分比（%）'
+              text: this.$t('百分比')+'（%）'
             },
             tickAmount: 5,
             // min: 0,
@@ -303,14 +273,34 @@ export default {
         time2: '',
         id: ''
       },
-      isAlert: false,
-      alertText: {
-        title: '',
-        text: '',
-        bg: '',
-        confirm: false
-      },
-
+    }
+  },
+  computed: {
+    typeListCom() {
+      this.typeList = [
+        {
+          text: this.$t('无对比'),
+          value: 0
+        },
+        {
+          text: this.$t('时间对比'),
+          value: 1
+        }
+      ]
+      return this.typeList
+    },
+    iconTitleCom() {
+      this.iconTitle = {
+        'zhexiantu': this.$t('折线图'),
+        '62': this.$t('柱状图'),
+        'biaoge-copy': this.$t('详细数据'),
+        'xiangxia': this.$t('查看全部实体排行'),
+        'ditu': this.$t('出入口客流'),
+        'fenxi': this.$t('饼状图'),
+        'chakan': this.$t('查看所有'),
+        'daoru': this.$t('下载')
+      }
+      return this.iconTitle
     }
   },
   activated () {
@@ -393,15 +383,21 @@ export default {
       else range = 'Date'
       // 提示
       if (that.activities.length === 0) {
-        this.alertShow('商铺不能为空，请选择商铺')
+        this.$alert({
+          content:this.$t('fn.请选择',[this.$t('商铺')])
+        })
         return false
       }
       if (that.activities.length > 25) {
-        this.alertShow('商铺个数不能超过25个，请重新选择')
+        this.$alert({
+          content:this.$t('fn.entityLimit',[25])
+        })
         return false
       }
       if(time1===time2){
-        this.alertShow('对比时间相等,请重新选择时间')
+        this.$alert({
+          content:this.$t('compareTimeSame')
+        })
         return false
       }
       var listId = _.clone(that.activities)
@@ -512,11 +508,9 @@ export default {
       let allData
       if (value1 > value2) allData = Object.values(date1)[0]
       else allData = Object.values(date2)[0]
-      let dateType
-      type == 'Month' ? dateType = '月' : dateType = '天'
-      allData.map(function (d, index) {
+      allData.map( (d, index)=> {
         var size = Number(index) + 1
-        var num = '第' + size + dateType
+        var num = type == 'Month' ?this.$t('fn.第_月',[ size ]):this.$t('fn.第_天',[ size])
         that.lineData.chartOptions.xaxis.categories.push(num)
         that.graphData.chartOptions.xaxis.categories.push(num)
       })
@@ -568,10 +562,10 @@ export default {
       if (value1 > value2) {
         var list = Object.values(date1)
         var listTwo = Object.values(date2)
-        list[0].map(function (listData, listIndex) {
+        list[0].map((listData, listIndex)=> {
           var tableObj = {}
           var size = listIndex + 1
-          tableObj.name = '第' + size + dateType
+          tableObj.name = type == 'Month' ?this.$t('fn.第_月',[ size ]):this.$t('fn.第_天',[ size])
           tableObj.percentList = []
           list.map(function (all, allIdnex) {
             var d = list[allIdnex][listIndex].rate
@@ -582,7 +576,7 @@ export default {
             var td = listTwo[allIdnex][listIndex]
             var sizeT
             if (td) {
-              sizeT = td === 0 ? '0' : NP.times(td.rate, 100) 
+              sizeT = td === 0 ? '0' : NP.times(td.rate, 100)
             } else {
               sizeT = ' '
             }
@@ -593,10 +587,10 @@ export default {
       } else {
         var list = Object.values(date2)
         var listTwo = Object.values(date1)
-        list[0].map(function (listData, listIndex) {
+        list[0].map((listData, listIndex) =>{
           var tableObj = {}
           var size = listIndex + 1
-          tableObj.name = '第' + size + dateType
+          tableObj.name = type == 'Month' ?this.$t('fn.第_月',[ size ]):this.$t('fn.第_天',[ size])
           tableObj.percentList = []
           list.map(function (all, allIdnex) {
             var td = listTwo[allIdnex][listIndex]
@@ -689,8 +683,6 @@ export default {
         this.iconIndex = index
       }
     },
-    alertConfirm () { this.isAlert = false },
-    closeAlert () { this.isAlert = false },
     shopActionList (value) {
       var that = this
       let totalLength = that.activitiesType.length
@@ -711,13 +703,6 @@ export default {
         this.selectAll = 1
         that.activities = arr
       }
-    },
-    alertShow(text){
-      this.isAlert = true
-      this.alertText.bg = '#00A0E9'
-      this.alertText.title = '趋势分析'
-      this.alertText.text = text
-      this.alertText.confirm = false
     },
     gotInnerRange (date) {
       const [start, end] = date

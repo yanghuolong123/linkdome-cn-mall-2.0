@@ -5,7 +5,7 @@
           <p class="parking" v-if="parking">P</p>
       </div>
       <div class="right">
-        <p class="title">{{title}}</p>
+        <p class="title">{{ $t(title) }}</p>
         <p class="number" :style="{right:right}">{{numbers}}</p>
       </div>
     

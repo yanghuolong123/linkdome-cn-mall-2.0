@@ -23,7 +23,7 @@
                    :key="index">
                 <div class="circle"
                      :style="{backgroundColor:colors[index]}"></div>
-                <span class="names">&nbsp;{{labels[index]}}&nbsp;</span>
+                <span class="names">&nbsp;{{index < 4 ? $t('fn.times',[$t(labels[index])]) : $t(labels[index])}}&nbsp;</span>
                 <span class="number">{{series[index]?Number(series[index]).toLocaleString():''}}</span>
               </div>
               <div class="noData"
@@ -46,12 +46,9 @@
 </template>
 
 <script>
-// import _ from 'lodash'
 import tabItem from '_c/I-Tabs/TabItem.vue'
 import VueApexCharts from 'vue-apexcharts'
-import { storeOption1, storeOption2 } from '@/libs/util'
 import iTable from '@/views/footfall-analytics/components/iTable.vue'
-// import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import iTabs from '_c/I-Tabs/Itabs.vue'
 export default {
   components: {
@@ -59,7 +56,6 @@ export default {
     tabItem,
     iTabs,
     iTable
-    // TableMultipleSelected
   },
   props: {
     series: {
@@ -122,7 +118,7 @@ export default {
       isNoData: false,
       current: 0,
       colors: ['#E85A5A', '#00A0E9', '#2BD9CF', '#F9A143', '#857AEF'],
-      labels: ['1 次', '2 次', '3 次', '4 次', '5次及以上']
+      labels: ['1', '2', '3', '4', '5次及以上']
     }
   },
   methods: {

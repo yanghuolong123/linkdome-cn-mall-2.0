@@ -1,3 +1,4 @@
+import i18n from '@/i18n/i18n'
 // 目标达成分析折线图
 export const options0 = {
   chart: {
@@ -59,9 +60,9 @@ export const options0 = {
   tooltip: {
     y: {
       formatter: function (val) {
-        if(val===0) return 0 + "人次"
+        if(val===0) return 0 + i18n.t('人次')
         if (val == undefined || val == null || val == '') return ''
-        else  return val.toLocaleString() + '人次'
+        else  return val.toLocaleString() +i18n.t('人次')
       }
     }
   },
@@ -140,9 +141,9 @@ export const options2 = {
   tooltip: {
     y: {
       formatter: function (val) {
-        if(val===0) return 0+ '人次'
+        if(val===0) return 0+ i18n.t('人次')
         if (val == undefined || val == null || val == '')  return ''
-        else return val.toLocaleString() + '人次'
+        else return val.toLocaleString() + i18n.t('人次')
       }
     }
   }

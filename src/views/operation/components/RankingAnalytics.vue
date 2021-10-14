@@ -8,8 +8,8 @@ footFall:客流
 <template>
   <div class="mt-6 p-6 bg-white box-card">
     <div class="ranking-selector-box flex items-center">
-      <span class="mr-3">{{selectTitle}}</span>
-      <vs-select v-model="bussinessType" autocomplete placeholder="请选择" noDataText="暂无数据">
+      <span class="mr-3">{{$t(selectTitle)}}</span>
+      <vs-select v-model="bussinessType" autocomplete :placeholder="$t(请选择)" :noDataText="$t(暂无数据)">
         <vs-select-item
           v-for="item in withAllOptions"
           :value="item.value"
@@ -28,17 +28,15 @@ footFall:客流
           :extraOptions="bizExtraOptions"
           :istotal='istotal'
           title="业态排行"
-          key="bizTop"
-        >
+          key="bizTop">
           <vs-select
             autocomplete
             v-model="bizIndicator"
             class="chartSelector"
-            v-if="indicatorSelector"
-          >
+            v-if="indicatorSelector"s>
             <vs-select-item
               v-for="(item,index) in indicators "
-              :text="item.name"
+              :text="$t(item.name)"
               :key="index"
               :value="item.value"
             />
@@ -67,7 +65,7 @@ footFall:客流
           >
             <vs-select-item
               v-for="(item,index) in indicators"
-              :text="item.name"
+              :text="$t(item.name)"
               :key="index"
               :value="item.value"
             />
@@ -251,7 +249,7 @@ export default {
       return Object.keys(sourceData).map(e => ({ text: sourceData[e], value: Number(e) }))
     },
     withAllOptions () {
-      const allType = { text: '所有业态', value: 'all' }
+      const allType = { text: this.$t('所有业态'), value: 'all' }
       return [allType, ...this.bussinessTypes]
     },
     indicators () {

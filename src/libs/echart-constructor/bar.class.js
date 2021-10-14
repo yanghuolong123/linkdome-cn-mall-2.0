@@ -1,6 +1,6 @@
 import { config } from '@/config/echarts-config/bar-chart'
 import { BasicData } from '@/libs/echart-constructor/basicData.class.js'
-
+import i18n from '@/i18n/i18n'
 export class BarChartConstructor extends BasicData {
   constructor (responseData = [], Params, quta = []) {
     super(responseData, Params, quta)
@@ -9,7 +9,7 @@ export class BarChartConstructor extends BasicData {
       const title = params[0].axisValueLabel + '<br>'
       let result = ''
       params.forEach(o => {
-        result += o.marker + o.seriesName + '：' + o.value.toLocaleString() + '人次<br>'
+        result += o.marker + o.seriesName + '：' + o.value.toLocaleString() +i18n.t('人次')+ '<br>'
       })
       return title + result
     }

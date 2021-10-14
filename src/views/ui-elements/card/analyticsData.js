@@ -7,7 +7,7 @@
 	Author: Pixinvent
 	Author URL: hhttp://www.themeforest.net/user/pixinvent
 ========================================================================================== */
-
+import i18n from '@/i18n/i18n'
 export default {
   // LINE CHART
   siteTraffic: {
@@ -1065,8 +1065,8 @@ export default {
     },
     yAxis: {
       type: 'category',
-      data:  ['周日', '周六', '周五',
-        '周四', '周三', '周二', '周一'],
+      data:  [ i18n.t('周日'),  i18n.t('周六'), i18n.t( '周五'),
+        i18n.t('周四'),  i18n.t('周三'),  i18n.t('周二'),  i18n.t('周一')],
       splitArea: {
         show: true
       }
@@ -1083,7 +1083,7 @@ export default {
       }
     },
     series: [{
-      name: '平均热力值',
+      name: i18n.t('平均热力值'),
       type: 'heatmap',
       data: [],
       label: {
@@ -1166,7 +1166,7 @@ export default {
       }
     },
     series: [{
-      name: '平均热力值',
+      name: i18n.t('平均热力值'),
       type: 'heatmap',
       data:[],
       label: {

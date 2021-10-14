@@ -3,29 +3,29 @@
     <div v-if="hasCover == 1" style="position:absolute;left:0;top:0;background:rgba(0, 0, 0, .3);z-index:999;width:100%;height:100%"></div>
       <div class="stall-seach-header">
         <div class="staff-seach-text">
-            <input type='text' class='vie-model-text'  v-model="searchName" placeholder='姓名'>
-            <input type='text' class='vie-model-text' v-model="searchTel" placeholder='手机号'>
-            <div class='button' @click="initData(0)">查询</div>
+          <input type='text' class='vie-model-text'  v-model="searchName" placeholder='姓名'>
+          <input type='text' class='vie-model-text' v-model="searchTel" placeholder='手机号'>
+          <div class='button' @click="initData(0)">{{ $t('查询') }}</div>
         </div>
         <div class="stall-header-right">
-            <span class="stall-add" title="添加" @click="addVIP">
-              <Icon type="md-add" />
+          <span class="stall-add" title="添加" @click="addVIP">
+            <Icon type="md-add" />
+          </span>
+          <span class="stall-add" title="删除" @click="delMoreVIP">
+            <Icon type="md-remove" />
+          </span>
+          <span class="stall-add" title="上传">
+            <Icon type="md-arrow-up" />
+          </span>
+          <Dropdown trigger="click"  @on-click="changeExport">
+            <span class="vip-add" >
+              <Icon type="md-arrow-down" />
             </span>
-            <span class="stall-add" title="删除" @click="delMoreVIP">
-              <Icon type="md-remove" />
-            </span>
-            <span class="stall-add" title="上传">
-             <Icon type="md-arrow-up" />
-            </span>
-            <Dropdown trigger="click"  @on-click="changeExport">
-              <span class="vip-add" >
-                <Icon type="md-arrow-down" />
-              </span>
-              <DropdownMenu slot="list">
-                  <DropdownItem :name=1>当前</DropdownItem>
-                  <DropdownItem :name=2>全部</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+            <DropdownMenu slot="list">
+              <DropdownItem :name=1>当前</DropdownItem>
+              <DropdownItem :name=2>全部</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
       </div>
 

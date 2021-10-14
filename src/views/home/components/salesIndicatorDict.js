@@ -1,3 +1,4 @@
+import i18n from '@/i18n/i18n'
 export default {
 
   // RepeatPurchaseRate: {
@@ -22,7 +23,7 @@ export default {
     unit: '（元）',
     yaxis: {
       title: {
-        text: '销售额（元）'
+        text: i18n.t('销售额（元）')
       },
       labels: {
         formatter (value) {
@@ -38,7 +39,7 @@ export default {
     unit: '（元/平方米）',
     yaxis: {
       title: {
-        text: '坪效（元/平方米）'
+        text: i18n.t('坪效（元/平方米）')
       },
       labels: {
         formatter (value) {
@@ -53,7 +54,7 @@ export default {
     color: '#857AEF',
     yaxis: {
       title: {
-        text: '成交率（%）'
+        text:  i18n.t('成交率')+'（%）'
       },
       labels: {
         formatter (value) {
@@ -70,7 +71,7 @@ export default {
     unit: '（元）',
     yaxis: {
       title: {
-        text: '客单价（元）'
+        text: i18n.t('客单价（元）')
       },
       labels: {
         formatter (value) {

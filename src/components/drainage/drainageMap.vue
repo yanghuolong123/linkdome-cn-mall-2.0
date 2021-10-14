@@ -1,110 +1,110 @@
 <template>
   <div class="drainage-map">
-      <h1>引流图
-        <Tooltip  :content="tootipText"  placement="right" theme="light" transfer max-width="500">
-            <icons type="wenhao"/>
-        </Tooltip>
-      </h1>
-      <div class="drainage-map-text" :style="{margin:mapMargin}">
-          <div class="drainage-map-left">
-              <div class="drainage-map-left-top">
-                  <ul>
-                    <li  :key="index" v-for="(item,index) in dataList.direct">
-                        <div class="drainage-enter">
-                            <p>客流占比：{{item.value}}%</p>
-                            <p>
-                                环比
-                                <Icon type="md-arrow-dropdown" v-if="item.action" />
-                                <Icon type="md-arrow-dropup" v-else  />
-                                <span v-bind:class="{ clolorAction: item.action }">{{item.link}}%</span>
-                            </p>
-                        </div>
-                        <div class="drainage-name" style="padding-left:10%;">{{item.name}}</div>
-                        <div class="drainage-img" >
-                            <img :src="accessImg" alt="">
-                        </div>
-                    </li>
-                  </ul>
+    <h1>{{ $t('引流图') }}
+      <Tooltip  :content="$t('passages.tootipText4')"  placement="right" theme="light" transfer max-width="500">
+        <icons type="wenhao"/>
+      </Tooltip>
+    </h1>
+    <div class="drainage-map-text" :style="{margin:mapMargin}">
+      <div class="drainage-map-left">
+        <div class="drainage-map-left-top">
+          <ul>
+            <li  :key="index" v-for="(item,index) in dataList.direct">
+              <div class="drainage-enter">
+                <p>{{ $t('fn.客流占比', [item.value]) }}</p>
+                <p>
+                  {{ $t('环比') }}
+                  <Icon type="md-arrow-dropdown" v-if="item.action" />
+                  <Icon type="md-arrow-dropup" v-else  />
+                  <span v-bind:class="{ clolorAction: item.action }">{{item.link}}%</span>
+                </p>
               </div>
-              <div class="drainage-map-left-bottom">
-                    <ul>
-                    <li :key="index" v-for="(item,index) in dataList.radiation">
-                       <div class="drainage-enter">
-                            <p>客流占比：{{item.value}}%</p>
-                            <p>
-                                环比
-                                <Icon type="md-arrow-dropdown" v-if="item.action" />
-                                <Icon type="md-arrow-dropup" v-else  />
-                                <span v-bind:class="{ clolorAction: item.action }">{{item.link}}%</span>
-                            </p>
-                        </div>
-                        <div class="drainage-name" style="padding-left:10%;">{{item.name}}</div>
-                        <div class="drainage-img" >
-                            <img :src="shopImg" alt="">
-                        </div>
-                    </li>
-                  </ul>
+              <div class="drainage-name" style="padding-left:10%;">{{item.name}}</div>
+              <div class="drainage-img" >
+                <img :src="accessImg" alt="">
               </div>
+            </li>
+          </ul>
+        </div>
+        <div class="drainage-map-left-bottom">
+          <ul>
+            <li :key="index" v-for="(item,index) in dataList.radiation">
+              <div class="drainage-enter">
+                <p>{{ $t('fn.客流占比', [item.value]) }}</p>
+                <p>
+                  {{ $t('环比') }}
+                  <Icon type="md-arrow-dropdown" v-if="item.action" />
+                  <Icon type="md-arrow-dropup" v-else  />
+                  <span v-bind:class="{ clolorAction: item.action }">{{item.link}}%</span>
+                </p>
+              </div>
+              <div class="drainage-name" style="padding-left:10%;">{{item.name}}</div>
+              <div class="drainage-img" >
+                <img :src="shopImg" alt="">
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="drainage-map-center">
+        <img class="drainage-map-center-bg" :src="centerImg" alt="">
+        <div class="drainage-map-center-text">
+          <div>
+            <img :src="shopImg">
+            <p class="drainage-shop-name">{{presentData.name}}</p>
           </div>
-          <div class="drainage-map-center">
-              <img class="drainage-map-center-bg" :src="centerImg" alt="">
-              <div class="drainage-map-center-text">
-                  <div>
-                        <img :src="shopImg">
-                        <p class="drainage-shop-name">{{presentData.name}}</p>
-                  </div>
+        </div>
+        <div class="text-location" v-for="item in centerData" >
+          <p>{{ $t(item.text) }}：{{ item.value }}%</p>
+          <p>
+            {{ $t('环比') }}
+            <Icon type="md-arrow-dropdown" v-if="item.action" />
+            <Icon type="md-arrow-dropup" v-else  />
+            <span v-bind:class="{ clolorAction: item.action }">{{item.link}}%</span>
+          </p>
+        </div>
+      </div>
+      <div class="drainage-map-right">
+        <div class="drainage-map-left-top">
+          <ul>
+            <li :key="index" v-for="(item,index) in dataList.indirect">
+              <div class="drainage-img" >
+                <img :src="shopImg" alt="">
               </div>
-              <div class="text-location" v-for="item in centerData" >
-                  <p>{{item.text}}：{{item.value}}%</p>
+              <div class="drainage-name" style="padding-right:10%;">{{item.name}}</div>
+              <div class="drainage-enter">
+                <p>{{ $t('fn.客流占比', [item.value]) }}</p>
+                <p>
+                  {{ $t('环比') }}
+                  <Icon type="md-arrow-dropdown" v-if="item.action" />
+                  <Icon type="md-arrow-dropup" v-else  />
+                  <span v-bind:class="{ clolorAction: item.action }">{{item.link}}%</span>
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="drainage-map-left-bottom">
+          <ul>
+            <li :key="index" v-for="(item,index) in dataList.departure">
+                <div class="drainage-img" >
+                  <img :src="accessImg" alt="">
+                </div>
+                <div class="drainage-name" style="padding-right:10%;">{{item.name}}</div>
+                <div class="drainage-enter">
+                  <p>{{ $t('fn.客流占比', [item.value]) }}</p>
                   <p>
-                      环比
+                    {{ $t('环比') }}
                     <Icon type="md-arrow-dropdown" v-if="item.action" />
                     <Icon type="md-arrow-dropup" v-else  />
                     <span v-bind:class="{ clolorAction: item.action }">{{item.link}}%</span>
                   </p>
-              </div>
-          </div>
-          <div class="drainage-map-right">
-              <div class="drainage-map-left-top">
-                   <ul>
-                    <li :key="index" v-for="(item,index) in dataList.indirect">
-                        <div class="drainage-img" >
-                            <img :src="shopImg" alt="">
-                        </div>
-                        <div class="drainage-name" style="padding-right:10%;">{{item.name}}</div>
-                        <div class="drainage-enter">
-                            <p>客流占比：{{item.value}}%</p>
-                            <p>
-                                环比
-                                <Icon type="md-arrow-dropdown" v-if="item.action" />
-                                <Icon type="md-arrow-dropup" v-else  />
-                                <span v-bind:class="{ clolorAction: item.action }">{{item.link}}%</span>
-                            </p>
-                        </div>
-                    </li>
-                  </ul>
-              </div>
-              <div class="drainage-map-left-bottom">
-                    <ul>
-                    <li :key="index" v-for="(item,index) in dataList.departure">
-                        <div class="drainage-img" >
-                            <img :src="accessImg" alt="">
-                        </div>
-                        <div class="drainage-name" style="padding-right:10%;">{{item.name}}</div>
-                        <div class="drainage-enter">
-                            <p>客流占比：{{item.value}}%</p>
-                            <p>
-                                环比
-                                <Icon type="md-arrow-dropdown" v-if="item.action" />
-                                <Icon type="md-arrow-dropup" v-else  />
-                                <span v-bind:class="{ clolorAction: item.action }">{{item.link}}%</span>
-                            </p>
-                        </div>
-                    </li>
-                  </ul>
-              </div>
-          </div>
+                </div>
+            </li>
+          </ul>
+        </div>
       </div>
+    </div>
   </div>
 </template>
 <script>
@@ -177,7 +177,7 @@ export default {
       centerImg: require('@/assets/images/fixation_img/bg/draniage_center.png'),
       shopImg: require('@/assets/images/fixation_img/rest/shop.png'),
       accessImg: require('@/assets/images/fixation_img/rest/access.png'),
-      tootipText: '该引流图包括出入口引入客流、店铺引入客流、辐射店铺客流和离场客流，其中：\n出入口引入客流：从出入口直接进入所选店铺的转化客流\n店铺引入客流：从其他店铺到所选店铺的转化客流\n辐射店铺客流：从所选店铺到其他店铺转化客流\n离场客流：从所选店铺直接离开购物中心的客流'
+      tootipText: 'tootipText4'
     }
   },
   mounted () {

@@ -1,12 +1,12 @@
 <template>
   <div v-if="showData">
-    <shopping-dashboard v-if="headerType"></shopping-dashboard>
-    <group-dashboard v-else></group-dashboard>
+    <shopping-dashboard v-if="headerType"/>
+    <group-dashboard v-else/>
   </div>
 </template>
 <script>
-import shoppingDashboard from './dashboard-module/shoppingDashboard.vue'
-import groupDashboard from './dashboard-module/groupDashboard.vue'
+import shoppingDashboard from '@/views/dashboard-module/shoppingDashboard.vue'
+import groupDashboard from '@/views/dashboard-module/groupDashboard.vue'
 export default {
   name: 'dashboardHome',
   components: {

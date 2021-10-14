@@ -15,7 +15,7 @@
       <Row>
         <i-col span="24">
           <div style="text-align:center">
-            <Button @click="addEntity" type="primary">请添加实体信息</Button>
+            <Button @click="addEntity" type="primary">{{ $t('请添加实体信息') }}</Button>
           </div>
         </i-col>
       </Row>

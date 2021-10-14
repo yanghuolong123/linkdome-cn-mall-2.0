@@ -6,7 +6,7 @@
                 width: 360px;
                 margin: 0 auto ;
                 white-space:nowrap;
-            ">浙江凌图科技有限公司</h2>
+            ">苏州凌图科技有限公司</h2>
 			<p style="
                 font-size: 26px;
                 width: 360px;

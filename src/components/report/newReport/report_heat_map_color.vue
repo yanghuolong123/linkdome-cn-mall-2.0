@@ -23,7 +23,7 @@
 						<!--热力分布图-->
 						<heatmapjs-vue id="heat-grid" :max="maxValue" :min="minValue" :options='mapOptions' :data="heatMapDataList"></heatmapjs-vue>
 						<img  @load="initChart" :src="mapUrl" v-if="mapUrl" id="mapImg"/>
-						<div class="noData" v-else>暂无数据</div>
+						<div class="noData" v-else>{{ $t('holder.暂无数据') }}</div>
 					</div>
 				</div>
 			</div>

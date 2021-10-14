@@ -10,6 +10,17 @@
 
 <template>
   <div class="layout--main" :class="[navbarClasses, footerClasses, {'app-page': isAppPage}]">
+    <!-- <the-customizer
+      @updateNavbar="updateNavbar"
+      @updateNavbarColor="updateNavbarColor"
+      :navbarType="navbarType"
+      :navbarColor="navbarColor"
+      :footerType="footerType"
+      @updateFooter="updateFooter"
+      :routerTransition="routerTransition"
+      @updateRouterTransition="updateRouterTransition"
+      v-if="!disableCustomizer"
+    /> -->
     <vx-sidebar
       :sidebarItems="menuList"
       :logo="require('@/assets/images/fixation_img/logo/logo.png')"
@@ -37,13 +48,53 @@
               <div
                 class="router-header flex flex-wrap items-center"
                 v-if="$route.meta.breadcrumb || $route.meta.pageTitle"
-                style="margin:0 0 22px 12px">
+                style="margin:0 0 22px 12px"
+              >
                 <div
                   class="content-area__heading"
-                  :class="{'pr-4 border-0 md:border-r border-t-0 border-b-0 border-l-0 border-solid border-grey-light' : $route.meta.breadcrumb}">
-                  <h2 class="mb-1">{{ $t(routeTitle) }}</h2>
+                  :class="{'pr-4 border-0 md:border-r border-t-0 border-b-0 border-l-0 border-solid border-grey-light' : $route.meta.breadcrumb}"
+                >
+                  <h2 class="mb-1">{{ routeTitle }}</h2>
                 </div>
+                <!-- {{$store.state.sidebarItemsMin}} -->
                 <vx-breadcrumb class="ml-4 md:block hidden" v-if="$route.meta.breadcrumb"/>
+                <!-- <vs-dropdown class="ml-auto md:block hidden" vs-trigger-click>
+                  <vs-button radius icon="icon-settings" icon-pack="feather"></vs-button>
+
+                  <vs-dropdown-menu class="w-32">
+                    <vs-dropdown-item>
+                      <router-link to="/pages/profile" class="flex items-center">
+                        <feather-icon
+                          icon="UserIcon"
+                          class="inline-block mr-2"
+                          svgClasses="w-4 h-4"
+                        />
+                        <span>Profile</span>
+                      </router-link>
+                    </vs-dropdown-item>
+                    <vs-dropdown-item>
+                      <router-link to="/apps/todo" class="flex items-center">
+                        <feather-icon
+                          icon="CheckSquareIcon"
+                          class="inline-block mr-2"
+                          svgClasses="w-4 h-4"
+                        />
+                        <span>Tasks</span>
+                      </router-link>
+                    </vs-dropdown-item>
+                    <vs-dropdown-item>
+                      <router-link to="/apps/email" class="flex items-center">
+                        <feather-icon
+                          icon="MailIcon"
+                          
+                          class="inline-block mr-2"
+                          svgClasses="w-4 h-4"
+                        />
+                        <span>Inbox</span>
+                      </router-link>
+                    </vs-dropdown-item>
+                  </vs-dropdown-menu>
+                </vs-dropdown> -->
               </div>
             </transition>
             <div class="content-area__content">
@@ -56,6 +107,8 @@
           </div>
         </div>
       </div>
+
+      <!-- <the-footer></the-footer> -->
     </div>
   </div>
 </template>
@@ -230,7 +283,9 @@ export default {
 .vs-sidebar{
   width: 223px;
 }
-
+#content-area{
+  margin-left:223px;
+}
 #vipDiv{
     width: 100%;
     position: fixed;

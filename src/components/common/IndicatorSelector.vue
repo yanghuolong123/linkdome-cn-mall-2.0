@@ -2,7 +2,7 @@
   <div class="flex justify-between items-center mr-10">
     <span class="whitespace-no-wrap mx-4 text-sm">数据指标:</span>
     <vs-select autocomplete :multiple="multiple" v-model="typeArr" class="chartSelector" :max-selected="2" key="chartSelector">
-      <vs-select-item v-for="(item,index) in selectList " :text="item.name" :key="index" :value="item.value"/>
+      <vs-select-item v-for="(item,index) in selectList " :text="$t(item.name)" :key="index" :value="item.value"/>
     </vs-select>
   </div>
 </template>

@@ -6,10 +6,10 @@
               <vs-select-item  :value="item.value" :text="item.key" :key="index" v-for="(item,index) in years" />
             </vs-select>
             <vs-select class="w-select m-l-20" autocomplete v-model="selectHoliday" >
-              <vs-select-item  :value="item.value" :text="item.key" :key="index" v-for="(item,index) in holidays" />
+              <vs-select-item  :value="item.value" :text="$t(item.key)" :key="index" v-for="(item,index) in holidays" />
             </vs-select>
-            <Button size="large" class="m-l-20" type="primary" @click="handleSearch">查询 </Button>
-            <Button size="large" class="m-l-20" @click="trendResetData">重置 </Button>
+            <Button size="large" class="m-l-20" type="primary" @click="handleSearch">{{ $t('查询') }}</Button>
+            <Button size="large" class="m-l-20" @click="trendResetData">{{ $t('重置') }}</Button>
             </div>
         </div>
         <HolidayAnalysis
@@ -43,8 +43,8 @@
                 <vs-select   class="w-select m-l-20" autocomplete v-model="compareHoliday2" >
                     <vs-select-item  :value="item.value" :text="item.key" v-for="(item,index) in holidayActives2" />
                 </vs-select>
-                <Button size="large" class="m-l-20" type="primary" @click="handleSearchCompare">查询 </Button>
-                <Button size="large" class="m-l-20" @click="HolidaysResetData">重置 </Button>
+                <Button size="large" class="m-l-20" type="primary" @click="handleSearchCompare">{{ $t('查询') }}</Button>
+                <Button size="large" class="m-l-20" @click="HolidaysResetData">{{ $t('重置') }}</Button>
             </div>
         </div>
         <HolidayAnalysis
@@ -179,10 +179,10 @@ export default {
         },
         tooltip: {
           y: {
-            formatter: function (val) {
+            formatter: (val) =>{
               if (val === null) return ''
               else {
-                return '客流量 ' + val.toLocaleString() + '人次'
+                return this.$t('客流量')+':' + val.toLocaleString() + this.$t('人次')
               }
             }
           }
@@ -249,10 +249,10 @@ export default {
         },
         tooltip: {
           y: {
-            formatter: function (val) {
-              if(val===0) return  '客流量 ' + 0 +  '人次'
+            formatter: (val)=> {
+              if(val===0) return  this.$t('客流量')+':' + 0 +  this.$t('人次')
               if (val === null) return ''
-              else return '客流量 ' + val.toLocaleString() + '人次'
+              else return this.$t('客流量')+':' + val.toLocaleString() + this.$t('人次')
             }
           }
         },
@@ -314,10 +314,10 @@ export default {
         },
         tooltip: {
           y: {
-            formatter: function (val) {
-              if(val===0) return '客流量 ' + 0 + '人次'
+            formatter: (val)=> {
+              if(val===0) return this.$t('客流量')+':' + 0 + this.$t('人次')
               if (val === null) return ''
-              else return '客流量 ' + val.toLocaleString() + '人次'
+              else return this.$t('客流量')+':' + val.toLocaleString() + this.$t('人次')
             }
           }
         }
@@ -524,10 +524,10 @@ export default {
             that.series[0].data = series
             var tableList = res.data.data
             tableList.forEach(function (m) {
-              m.enter = m.enter == 0 ? ' ' : m.enter.toLocaleString() 
+              m.enter = m.enter == 0 ? ' ' : m.enter.toLocaleString()
             })
             that.tableList = tableList
-            that.columns = ['节日', '客流量  ( 人次 )']
+            that.columns = ['节日', that.$t('fn.EnterUnit',[that.$t('人次')])]
           })
       } else {
         let holiday = _.find(this.AllHolidayData, { 'id': this.selectHoliday })
@@ -575,10 +575,10 @@ export default {
             } else {
               obj.begin = m.begin.split(' ')[0]
             }
-            obj.enter = m.enter == 0 ? ' ' : m.enter.toLocaleString() 
+            obj.enter = m.enter == 0 ? ' ' : m.enter.toLocaleString()
             tableData.push(obj)
           })
-          that.columns = ['日期', '客流量 ( 人次 )']
+          that.columns = ['日期', that.$t('fn.EnterUnit',[that.$t('人')])]
           that.tableList = tableData
         })
       }
@@ -606,14 +606,15 @@ export default {
         type: 'enter',
         bzid: this.selectEntity
       }
-      that.columns2.push(Moment(compare1.begin).format('YYYY')+compare1.name +' ( 人次 )') 
-      that.columns2.push(Moment(compare2.begin).format('YYYY')+compare2.name +' ( 人次 )') 
+      that.columns2.push(Moment(compare1.begin).format('YYYY')+compare1.name +' ( '+this.$t('人次')+' )')
+      that.columns2.push(Moment(compare2.begin).format('YYYY')+compare2.name +' ( '+this.$t('人次')+' )')
       that.contrastExcel.data = params
-      getDateCompare(params).then(function (res) {
+      getDateCompare(params).then( (res)=> {
         var data = res.data.data
         var xaxis = []
-        data.forEach(function (m, index) {
-          xaxis.push('第' + (index + 1) + '天')
+        data.forEach( (m, index)=> {
+            xaxis.push(this.$t('fn.第_天',[this.$t(index+1)]))
+            
         })
         var resData1 = []
         if (Moment(compare1.begin).isAfter(Moment(new Date()))) {

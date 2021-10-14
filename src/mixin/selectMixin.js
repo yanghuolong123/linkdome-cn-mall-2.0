@@ -8,8 +8,9 @@ import {
   deepFind,
   getCompareDate,
   getUnique,
+  isEmpty
 } from '@/libs/util'
-import {isEmpty} from '../libs/util'
+import i18n from '@/i18n/i18n'
 import { getBussinessTree,  getCascadeList } from '@/api/passenger.js'
 import {  getGateTypeList } from '@/api/manager.js'
 
@@ -38,27 +39,27 @@ const selectMixin = {
       typeOptions: [
         {
           value: 'not',
-          label: '无对比'
+          label: i18n.t('无对比')
         }, {
           value: 'entity',
-          label: '实体对比'
+          label: i18n.t('实体对比')
         }, {
           value: 'time',
-          label: '自定义时间对比'
+          label: i18n.t('自定义时间对比')
         },
         {
           value: 'onYear',
-          label: '同比'
+          label: i18n.t('同比')
         },
         {
           value: 'onChain',
-          label: '环比'
+          label: i18n.t('环比')
         }
       ],
       customType: [
         {
           value: '0',
-          label: '全部客流'
+          label: this.$t('全部客流')
         }
       ],
       storeCascadeOpiton: [],//商铺级联数据
@@ -140,7 +141,7 @@ const selectMixin = {
     selectOptions(){
       const all = {
         id: -1,
-        label: '全部实体'
+        label: i18n.t('全部实体')
       }
       if(this.entitySelectObj[this.entityType]){
         return [all,...this.entitySelectObj[this.entityType]]
@@ -238,7 +239,7 @@ const selectMixin = {
           }
           if (this.$store.state.home.headerAction != 0) {
             if (!copySelect) {
-              alert('请选择实体')
+              alert(i18n.t('fn.请选择',[i18n.t('实体')]))
               return
             }
           } else {
@@ -251,7 +252,7 @@ const selectMixin = {
         }
       }else if(this.compareType === 'businessType'){//实体客流中有业态对比
         if(!this.queryParams.bussinessType.length){
-          alert('请选择业态');
+          alert(i18n.t('fn.请选择',[i18n.t('业态')]));
           return
         }
         entitys = this.queryParams.bussinessType.filter(o=>{
@@ -296,12 +297,12 @@ const selectMixin = {
       }
       if(entitys.length===0){
         this.$alert({
-          content:'请选择实体'
+          content:i18n.t('fn.请选择',[i18n.t('实体')])
         })
         return false
       }else if(this.maxEntity && entitys.length>25){
         this.$alert({
-          content:'为保证页面展示效果，选择的实体数量不能超过25个'
+          content:i18n.t('fn.entityLimit',[25])
         })
         return false
       }
@@ -331,7 +332,7 @@ const selectMixin = {
     bussinessTreeReq () {
       return new Promise((resolve, reject) => {
         if (!this.$store.state.home.headerAction) {
-          reject('请选择购物中心')
+          reject(i18n.t('fn.请选择',[i18n.t('购物中心')]))
           return
         }
         getBussinessTree({ entity: 52 }).then(res => {
@@ -393,7 +394,7 @@ const selectMixin = {
         const parent_id = levelNode[levelNode.length - 1].parent_id
         levelNode.unshift({
           value: 'all' + parent_id,
-          label: '全部'
+          label: i18n.t('全部')
         })
       }
     },

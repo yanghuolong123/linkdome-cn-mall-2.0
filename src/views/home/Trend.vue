@@ -1,27 +1,27 @@
 <template>
   <div v-if="canshow">
-    <chart-tabs ref="charts"
-                :xAxis="xAxisObj"
-                :series="finnalSeries"
-                :extraOptions="extraOptWithYaxis"
-                :istotal='istotal'
-                :tooltipUnit="tooltipUnit(curretIndicator)"
-                :totalData="totalData"
-                @tableChage='TableChageList'
-                class="bg-white box-card"
-                id='trendLine'
-                title="购物中心趋势分析"
-    >
+    <chart-tabs
+      ref="charts"
+      :xAxis="xAxisObj"
+      :series="finnalSeries"
+      :extraOptions="extraOptWithYaxis"
+      :istotal='istotal'
+      :tooltipUnit="tooltipUnit(curretIndicator)"
+      :totalData="totalData"
+      @tableChage='TableChageList'
+      class="bg-white box-card"
+      id='trendLine'
+      title="购物中心趋势分析">
       <export-menu  slot="export" @onchange="enterExportBiztop"></export-menu>
       <template>
         <div class="flex justify-between items-center mr-10">
-          <span class="whitespace-no-wrap mx-4 text-sm">数据指标:</span>
+          <span class="whitespace-no-wrap mx-4 text-sm">{{ $t('fx.Data_indicators') }}</span>
           <vs-select autocomplete :multiple='canSelectMulti' v-model="curretIndicator" :max-selected="2" id="chartSelect" @change="curretIndicatorChange">
             <vs-select-item
-                    v-for="(item,index) in filteredSelectList "
-                    :text="item.name"
-                    :key="index"
-                    :value="item.value"
+              v-for="(item,index) in filteredSelectList"
+              :text="$t(item.name)"
+              :key="index"
+              :value="item.value"
             />
           </vs-select>
         </div>
@@ -124,7 +124,7 @@ export default {
   },
   computed: {
     totalData () { // 合计数据
-      let obj = { time: '合计' }
+      let obj = { time: this.$t('合计') }
       _.forIn(this.chartData, (val, key) => {
         if (this.curretIndicator.includes(key)) {
           Object.assign(obj, val.total)
@@ -235,6 +235,7 @@ export default {
             }
           }
         }
+        console.log(tmlYaxis)
         return tmlYaxis
       })
       // 同一类的只需要保留一个轴,分组之后,将第一个除外其余隐藏
@@ -282,14 +283,14 @@ export default {
         switch (type) {
           case 'enter':
           case 'occupancy':
-            name = '人次'
+            name = this.$t('人次')
             break
           case 'SquaerMetre':
-            name = '元/m²'
+            name = this.$t('元/m²')
             break
           case 'UnitPrice':
           case 'SaleAmount':
-            name = '元'
+            name = this.$t('元')
             break
           case 'CloseRate':
             name = '%'
@@ -332,7 +333,7 @@ export default {
             if (['CloseRate', 'RepeatPurchaseRate'].includes(indicatorKey)) seriesData = seriesData.map(e => NP.times(e, 100))// 复购率和成交率需要乘以100
             seriesData = seriesData.map(val => Number(val) < 0 ? 0 : parseInt(val))
             return {
-              name: time2 ? `${indicatorData[indicatorKey].name} ${date.split(',').join(' - ')}` : indicatorData[indicatorKey].name,
+              name: time2 ? `${indicatorData[indicatorKey].name} ${date.split(',').join(' - ')}` : this.$t(indicatorData[indicatorKey].name),
               key: `${indicatorKey}_${date}`,
               data: seriesData
             }
@@ -377,7 +378,7 @@ export default {
         _.forIn(tml, (val, key) => {
           val.total = {}
           let series = val.series[0]
-          if(series) val.total[`${series.key}`] = _.sum(series.data).toLocaleString() 
+          if(series) val.total[`${series.key}`] = _.sum(series.data).toLocaleString()
         })
         this.chartData = tml
         this.canshow = true

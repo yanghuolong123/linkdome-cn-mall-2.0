@@ -352,7 +352,7 @@ export default {
       const datelist = time.split(',')
       const filename = datelist[0] === datelist[1] ? datelist[0] : time
       if(!this.pdfBaseUrl){
-        this.$Message.warning('未获取到pdf_center服务器地址');
+        this.$message.warning(this.$t('error.pdfError'));
         return
       }
       axios.post(this.pdfBaseUrl + '/pdf/execute', {

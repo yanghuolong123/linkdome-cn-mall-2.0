@@ -1,5 +1,5 @@
 <template>
-  <li title='下载'>
+  <li :title='$t("下载")'>
     <span class="navitemIcon"
           @click="handleClik('current')">
       <icons type="daoru"
@@ -14,16 +14,7 @@ export default {
   name: 'exportMenu',
   data () {
     return {
-      menus: [
-        {
-          key: 'current',
-          name: '导出当前'
-        },
-        {
-          key: 'all',
-          name: '导出所有'
-        }
-      ]
+ 
     }
   },
   methods: {

@@ -104,7 +104,7 @@ module.exports = {
     // proxy: 'https://peacebird_v4.linkdome.cn/api/v1'
     // proxy: 'https://ai_mall_dev.linkdome.cn/api/v1'
     // proxy: 'https://taikoo.linkdome.cn/api/v1'
-    // proxy: 'https://huijia.linkdome.cn/api/v1'
+    // proxy: 'https://huijia.linkdome.shop/api/v1'
     // proxy:'https://csgc.linkdome.cn/api/v1'
     // proxy:'http://ship.linkdome.cn:8092/api/v1'
   }

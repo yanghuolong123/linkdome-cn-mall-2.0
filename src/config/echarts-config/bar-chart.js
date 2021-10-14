@@ -2,7 +2,7 @@ export const config= {
   tooltip: {
     trigger: 'axis',
     axisPointer: {
-      type: 'shadow'
+      type: 'none'
     }
   },
   color:['#37b5ed','#FBB03B','#2BD9CF','#E30113'],

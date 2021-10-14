@@ -56,17 +56,17 @@ import 'prismjs/themes/prism.css'
 import '@/assets/css/sundry.css'
 import '@/assets/css/components-style.less'
 
-import ViewUI  from 'view-design'
 
+import ViewUI  from 'view-design'
+import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import { Cascader,Select,DatePicker,Option } from 'element-ui'
 import heatmapjsVue from 'heatmapjs-vue'
 Vue.use(ViewUI)
+Vue.use(ElementUI,{
+  i18n: (key, value) => i18n.t(key, value)
+})
 import './my-theme/index.less';
-Vue.use(Cascader)
-Vue.use(Option)
-Vue.use(Select)
-Vue.use(DatePicker)
+
 import Alert from '@/components/alert/index'
 Vue.prototype.$alert = Alert.install;
 Vue.component('icons', icons)
@@ -95,10 +95,6 @@ VueAMap.initAMapApiLoader({
   v: '1.4.4'
 })
 // Feather font icon
-
-// 思源宋体
-// require('./assets/fonts/Roboto/style.css')
-// require('./assets/fonts/soucehasfont/style.css')
 Vue.config.productionTip = false
 
 const config = {

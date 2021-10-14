@@ -1,7 +1,7 @@
 <template>
   <div class="pathTrend" >
     <div class="noData" v-if="floorList.length<=0">
-      <p>暂无数据</p>
+      <p>{{ $t('holder.暂无数据') }}</p>
     </div>
     <div class="floorImg"  v-else>
       <div class="pathContent" id="pathContent" >
@@ -55,8 +55,6 @@
           ></drainage-map>
       </div>
     </div>
-
-    <alert v-if="isAlert" @closeAlert='closeAlert' @alertConfirm='closeAlert' :alertText='alertText'></alert>
   </div>
 </template>
 <script>
@@ -65,7 +63,6 @@ import pathTab from './components/components/PathTab.vue'
 import { formatNode } from '@/libs/drawline.js'
 import Ranking from '@/views/operation/components/RankingAnalytics.vue'
 import { PathMovingData, drainageData } from '@/api/analysis'
-import alert from '@/components/alert.vue'
 
 import { formatEntityData } from '@/libs/util.js'
 
@@ -77,7 +74,6 @@ export default {
   components: {
     Ranking,
     pathTab,
-    alert,
     drainageMap
   },
   data () {
@@ -100,7 +96,6 @@ export default {
       svgList: [],
       floorAllClass: ' floorAllClass',
       currentPropertyId: '',
-      isAlert: false,
       svgHeight: 0,
       title1: '游逛深度（个）',
       title2: '平均停留时间',
@@ -108,12 +103,6 @@ export default {
       number2: '  ',
       isParking: true,
       right: '18%',
-      alertText: {
-        title: '',
-        text: '',
-        bg: '',
-        confirm: false
-      },
       tree: [],
       floor_id: '',
       colors: ['#ec1313', '#e8585a', '#feb33d', '#86ef40', '#2bd9cf', '#33b3ed', '#7367f0', '#6343eb', '#ababab', '#000'],
@@ -402,21 +391,6 @@ export default {
         }
       })
       return allNodeList
-    },
-    /*
-    *@method 弹出框
-    *@param {obj} text 弹出框文字
-    */
-    alert (text) {
-      this.isAlert = true
-      this.alertText.bg = '#00A0E9'
-      this.alertText.title = '路径动向分析'
-      this.alertText.text = text
-      this.alertText.confirm = false
-    },
-    /* 关闭提示框 */
-    closeAlert () {
-      this.isAlert = false
     },
     /*
     *@method 切换路径

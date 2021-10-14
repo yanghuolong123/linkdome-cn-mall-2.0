@@ -4,7 +4,7 @@
 			<i-date-picker class="w-select" :value='queryParams.date1Array' :dType="1"
 						   @selectDate="dateSelect"></i-date-picker>
 			<Select v-model="compareType" class="w-select m-l-20" @on-change="compareTypeChange">
-				<Option v-for="item in typeOptions"
+				<Option v-for="item in typeOptionsCom"
 						:value="item.value"
 						:key="item.value">{{ item.label }}
 				</Option>
@@ -17,7 +17,7 @@
 						   @selectDate="dateSelect"></i-date-picker>
 		</div>
 		<div class="flex-center raido-group" v-show="compareType === 'entity'">
-			<vs-radio v-model="entityType" :vs-value="item.value" :key="item.value" v-for="item in entityOptions"
+			<vs-radio v-model="entityType" :vs-value="item.value" :key="item.value" v-for="item in entityOptionsCom"
 					  class="mr-4">{{item.label}}
 			</vs-radio>
 		</div>
@@ -32,6 +32,7 @@
 			<el-cascader
 					v-show="compareType === 'entity'&& entityType === 'store'"
 					class="w-select"
+					:placeholder=" $t('holder.请选择') "
 					v-model="storeCascadeData"
 					filterable
 					collapse-tags
@@ -41,6 +42,7 @@
 			</el-cascader>
 			<el-cascader
 					v-show="compareType === 'entity'&& entityType === 'gate'"
+					:placeholder=" $t('holder.请选择') "
 					class="w-select"
 					v-model="gateCascadeData"
 					collapse-tags
@@ -50,6 +52,7 @@
 			</el-cascader>
 			<el-cascader
 					v-show="compareType !== 'entity'&&compareType !== 'businessType'"
+					:placeholder=" $t('holder.请选择') "
 					v-model="entityCascaderData"
 					collapse-tags
 					class="w-select "
@@ -70,8 +73,8 @@
 						:key="item.value">{{ item.label }}
 				</Option>
 			</Select>
-			<Button size="large" type="primary" class="m-l-20" @click="handleClick">查询</Button>
-			<Button size="large" @click="resetClick" class="m-l-20">重置</Button>
+			<Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('查询') }}</Button>
+			<Button size="large" @click="resetClick" class="m-l-20">{{ $t('重置') }}</Button>
 		</div>
 	</div>
 </template>
@@ -87,49 +90,62 @@
     data () {
       return {
         bussinessTypeOptions: [],//业态
-        typeOptions: [
-          {
-            value: 'not',
-            label: '无对比'
-          }, {
-            value: 'entity',
-            label: '实体对比'
-          }, {
-            value: 'businessType',
-            label: '业态对比'
-          }, {
-            value: 'time',
-            label: '自定义时间对比'
-          },
-          {
-            value: 'onYear',
-            label: '同比'
-          },
-          {
-            value: 'onChain',
-            label: '环比'
-          }
-        ],
-        entityOptions: [
-          {
-            label: '楼层',
-            value: 'floor'
-          }, {
-            label: '商铺',
-            value: 'store'
-          }, {
-            label: '区域',
-            value: 'area'
-          }, {
-            label: '出入口',
-            value: 'gate'
-          },
-        ],
+        typeOptions: [],
+        entityOptions: [],
         cascadeProps: {
           multiple: true,
           checkStrictly: true,
           expandTrigger: 'hover'
         },
+      }
+    },
+    computed: {
+      typeOptionsCom() {
+        this.typeOptions = [
+          {
+            value: 'not',
+            label: this.$t('无对比')
+          }, {
+            value: 'entity',
+            label: this.$t('实体对比')
+          }, {
+            value: 'businessType',
+            label: this.$t('业态对比')
+          }, {
+            value: 'time',
+            label: this.$t('自定义对比')
+          },
+          {
+            value: 'onYear',
+            label: this.$t('同比')
+          },
+          {
+            value: 'onChain',
+            label: this.$t('环比')
+          }
+        ]
+        return this.typeOptions
+      },
+      entityOptionsCom() {
+        this.entityOptions =  [
+          {
+            label: this.$t('楼层'),
+            value: 'floor'
+          },
+          {
+            label: this.$t('商铺'),
+            value: 'store'
+          },
+          {
+            label: this.$t('区域'),
+            value: 'area'
+          },
+          {
+            label: this.$t('出入口'),
+            value: 'gate'
+          },
+        ]
+        return this.entityOptions
       }
     },
     methods: {

@@ -1,5 +1,6 @@
 import { transNegToPos, findKey } from '@/libs/util'
 import config from '@/config/index'
+import i18n from '@/i18n/i18n'
 export class BasicData {
   constructor (responseData = [], Params, quta = []) {
     this.responseData = responseData
@@ -44,7 +45,7 @@ export class BasicData {
     const date2 = Object.keys(obj.time2).length
     const max = Math.max(date1, date2)
     for (let i = 0; i < max; i++) {
-      arr.push(`第${i + 1}${unit}`)
+      arr.push(i18n.t(unit,[i+1]))
     }
     return arr
   }
@@ -55,10 +56,10 @@ export class BasicData {
         this.getConfigByHour1()
         break
       case 'Date':
-        this.getConfig1('天')
+        this.getConfig1('fn.第_天')
         break
       case 'Month':
-        this.getConfig1('月')
+        this.getConfig1('fn.第_月')
         break
     }
   }
@@ -72,9 +73,9 @@ export class BasicData {
       const qutaName = findKey(config.dictionary, 'value', quta, 'name')
       this.responseData[quta].forEach((o) => {
         for(let key in o.list){
-          legend.push(`${o.name}|${qutaName}|${this.dateDisplayFormat()[key]()}`)
+          legend.push(`${o.name}|${i18n.t(qutaName)}|${this.dateDisplayFormat()[key]()}`)
           series.push({
-            name:`${o.name}|${qutaName}|${this.dateDisplayFormat()[key]()}`,
+            name:`${o.name}|${i18n.t(qutaName)}|${this.dateDisplayFormat()[key]()}`,
             data:Object.values(o.list[key]).map(data=>{
               return transNegToPos(data)
             })
@@ -93,12 +94,12 @@ export class BasicData {
       const qutaName = findKey(config.dictionary, 'value', quta, 'name')
       this.responseData[quta].forEach(o => {
         for(let key in o.list){
-          legend.push(`${o.name}|${qutaName}|${this.dateDisplayFormat()[key]()}`)
+          legend.push(`${o.name}|${i18n.t(qutaName)}|${this.dateDisplayFormat()[key]()}`)
           category = Object.keys(o.list[key]).map(time=>{
             return time.substring(11, 16)
           })
           series.push({
-            name:`${o.name}|${qutaName}|${this.dateDisplayFormat()[key]()}`,
+            name:`${o.name}|${i18n.t(qutaName)}|${this.dateDisplayFormat()[key]()}`,
             data:Object.values(o.list[key]).map(data=>{
               return transNegToPos(data)
             })
@@ -137,7 +138,7 @@ export class BasicData {
         name = findKey(config.dictionary, 'value', quta, 'name')
         legend.push(name)
         series[index] = {
-          name: name,
+          name: i18n.t(name),
           data: []
         }
         this.responseData[quta].forEach(o => {
@@ -147,7 +148,7 @@ export class BasicData {
         category = _.uniq(category)
       }else {
         this.responseData[quta].forEach(o=>{
-          name = `${o.name}|${findKey(config.dictionary, 'value', quta, 'name')}`
+          name = `${o.name}|${i18n.t(findKey(config.dictionary, 'value', quta, 'name'))}`
           legend.push(name)
           category = Object.keys(o.list.time1).map(date=>{
             return date.substring(begin, end)

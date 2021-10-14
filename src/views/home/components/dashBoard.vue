@@ -6,14 +6,14 @@
         <div>
           <p class="title flex-box">
             <i class="iconfont iconenter_total"></i>
-            <span class="text-size" >当日累积客流(人次)</span>
+            <span class="text-size" >{{$t('cumulativePassengerFlowOfTheDay')}}</span>
           </p>
           <div class="value-size" style="color: #3E3C3C"><b>{{dayTotalEnter | tenthousandFormat}}</b></div>
         </div>
         <div>
           <p class="title flex-box">
             <i class="iconfont icondangrixiaoshoue"></i>
-            <span class="text-size">当日累积销售额(元)</span>
+            <span class="text-size">{{$t('cumulativeSalesOfTheDay')}}</span>
           </p>
           <div class="value-size"><b>{{ saleData.sale_today| tenthousandFormat}}</b></div>
         </div>
@@ -22,14 +22,14 @@
         <div>
           <p class="title flex-box">
             <i class="iconfont iconyuekeliu-copy"></i>
-            <span class="text-size" >本月累积客流(人次)</span>
+            <span class="text-size" >{{$t('cumulativePassengerFlowOfTheMonth')}}</span>
           </p>
           <div class="value-size" ><b>{{ monthEnter| tenthousandFormat}}</b></div>
         </div>
         <div>
           <p class="title flex-box">
             <i class="iconfont iconyuexiaoshoue"></i>
-            <span class="text-size" >本月累积销售额(元)</span>
+            <span class="text-size" >{{$t('cumulativeSalesOfTheMonth')}}</span>
           </p>
           <div class="value-size" ><b>{{ saleData.sale_month| tenthousandFormat}}</b></div>
         </div>
@@ -44,7 +44,7 @@
                 :options="chartOptions"
                 :series="chartData(target,monthEnter)"
         />
-        <span>月达标值(人次)</span>
+        <span>{{$t('monthlyStandardValue')}}</span>
         <span>{{ target| tenthousandFormat}}</span>
       </div>
      <div class="chart-b">
@@ -54,7 +54,7 @@
                :options="chartOptions2"
                :series="chartData(saleData.sale_target,saleData.sale_month)"
        />
-       <span>月达标值(元)</span>
+       <span>{{$t('monthlyStandardValues')}}</span>
        <span>{{ saleData.sale_target| tenthousandFormat}}</span>
      </div>
     </div>
@@ -164,7 +164,7 @@ export default {
             left: 0
           }
         },
-        labels: ['本月销售达成率'],
+        labels: [this.$t('salesachievementRateOfThisMonth')],
         responsive: [
           {
             breakpoint: 1700,
@@ -279,7 +279,7 @@ export default {
         stroke: {
           dashArray: 4
         },
-        labels: ['本月客流达成率'],
+        labels: [this.$t('passengerFlowachievementRateOfThisMonth')],
         responsive: [
           {
             breakpoint: 1700,

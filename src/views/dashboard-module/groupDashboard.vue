@@ -1,39 +1,47 @@
 <template>
   <div>
     <!-- 实时数据区域 -->
-    <real-time-data @interValChange="intervalClick"
-                    @refresh="updateRealTimezone">
-      <template slot="map">
-        <map-carousel :center="center"
-                      :zooms="zooms"
-                      :markers="markers"
-                      :shopData="shopData"
-                      :gateData="gateData"
-                      :window="window"
-                      :timingValue='$store.state.home.intervalTime'
-                      :id="currentMenuName"
-                      @markClick="selectMenuByName"></map-carousel>
-      </template>
-      <template slot="dashboard">
-        <right-data @isRightImg='isRightImg'
-                    :rightShoppingList='rightShoppingList'
-                    ref="dashBoard"></right-data>
+    <real-time-data
+			@interValChange="intervalClick"
+			@refresh="updateRealTimezone"
+		>
+			<template slot="map">
+				<map-carousel
+					:center="center"
+					:zooms="zooms"
+					:markers="markers"
+					:shopData="shopData"
+					:gateData="gateData"
+					:window="window"
+					:timingValue='$store.state.home.intervalTime'
+					:id="currentMenuName"
+					@markClick="selectMenuByName"
+				></map-carousel>
       </template>
 
-        <template slot="cards" v-if="isKipShow == false" class="">
-            <indicator-cards
-              :indicatorList="kpiData"
-              :propertyId="currentPropertyId"
-              ref="currentKpi"
-              textName='group-current'
-              class='group-right-list groupStyle'
-              :moveWidth='0.024'
-            >
-            <template slot-scope="{item}">
-                <singleCard :isShowText='true' :item="item" :innerRange="innerRange"></singleCard>
-            </template>
-            </indicator-cards>
-        </template>
+      <template slot="dashboard">
+        <right-data
+					@isRightImg='isRightImg'
+					:rightShoppingList='rightShoppingList'
+					ref="dashBoard"
+				></right-data>
+      </template>
+
+			<template slot="cards" v-if="isKipShow == false" class="">
+				<indicator-cards
+					:indicatorList="kpiData"
+					:propertyId="currentPropertyId"
+					ref="currentKpi"
+					textName='group-current'
+					class='group-right-list groupStyle'
+					:moveWidth='0.024'
+				>
+					<template slot-scope="{item}">
+						<singleCard :isShowText='true' :item="item" :innerRange="innerRange"></singleCard>
+					</template>
+				</indicator-cards>
+			</template>
+
     </real-time-data>
     <!-- 历史数据区域 -->
     <template>
@@ -47,51 +55,56 @@
           textName='group-histrry'
           scaleCards
           :defaultCountsOfCards="4"
-           :moveWidth='0.013'
+					:moveWidth='0.013'
         >
+					<template slot="title">
+						<span class="text-xl text-black font-medium hidden sm:block" style="padding-left:18px;">
+							{{ $t('历史数据查询') }}
+							<Tooltip
+								:content="tootipText"
+								placement="right"
+								theme="light"
+								transfer
+								max-width="500">
+								<icons type="wenhao" />
+							</Tooltip>
+						</span>
+					</template>
+					<template slot="dateSelector">
+						<i-date-picker
+							@selectDate="selectDate"
+							:value="historyDate"
+							class="mr-8 history-date-picker"
+						></i-date-picker>
+					</template>
           <template slot-scope="{item}">
             <!-- 历史数据 卡片 列表  -->
             <!-- 平均客流量 客流峰值 总客流 集客量峰值 销售额 有效客流 -->
-            <singleCard :isShowText='false'
-                        :item="item"
-                        :innerRange="innerRange"
-                        :isLiveData="false"></singleCard>
-          </template>
-          <template>
-            <template slot="title">
-              <span class="text-xl text-black font-medium hidden sm:block" style="padding-left:18px;">
-                历史数据查询
-                <Tooltip :content="tootipText"
-                         placement="right"
-                         theme="light"
-                         transfer
-                         max-width="500">
-                  <icons type="wenhao" />
-                </Tooltip>
-              </span>
-            </template>
-            <template slot="dateSelector">
-              <i-date-picker @selectDate="selectDate"
-                             :value="historyDate"
-                             class="mr-8 history-date-picker"></i-date-picker>
-            </template>
+            <singleCard
+							:isShowText='false'
+							:item="item"
+							:innerRange="innerRange"
+							:isLiveData="false"
+						></singleCard>
           </template>
         </indicator-cards>
       </div>
       <!-- 趋势对比 -->
-      <group-trend style="margin-top:20px"
-                   :time1="outRange"
-                   :innerRange="innerRange"
-                   :companyId="companyId"
-                   :indicatorData="trendIndicators">
-      </group-trend>
+      <group-trend
+				class="m-t-20"
+				:time1="outRange"
+				:innerRange="innerRange"
+				:companyId="companyId"
+				:indicatorData="trendIndicators"
+			></group-trend>
       <!-- 排行占比 -->
-      <Ranking :time1="outRange"
-               :propertyId="currentPropertyId"
-               :indicatorData="rankingIndicators"
-               :defaultBizIndicator='rankingDataShowType'
-               :defaultShopIndicator='rankingDataShowType'>
-      </Ranking>
+      <ranking-group
+				:time1="outRange"
+				:propertyId="currentPropertyId"
+				:indicatorData="rankingIndicators"
+				:defaultBizIndicator='rankingDataShowType'
+				:defaultShopIndicator='rankingDataShowType'
+			></ranking-group>
       <!-- 顾客类型数据 -->
       <group-age-gender :outRange='outRange'></group-age-gender>
     </template>
@@ -113,7 +126,7 @@ import {
 } from '@/api/home.js'
 import groupTrend from '@/views/group/groupTrend'
 import groupAgeGender from '@/views/group/groupAgeGender'
-import Ranking from '@/views/operation/components/RankingGroup.vue'
+import RankingGroup from '@/views/operation/components/RankingGroup.vue'
 import singleCard from '@/views/home/components/singleCard.vue'
 import CustomerCharts from '_c/common/CopyChartsTabs'
 import { getBussinessTree } from '@/api/passenger'
@@ -132,7 +145,7 @@ export default {
   components: {
     realTimeData,
     mapCarousel,
-    Ranking,
+    RankingGroup,
     indicatorCards,
     rightData,
     iDatePicker,
@@ -178,7 +191,7 @@ export default {
         {
           data: 0,
           id: 'enteravg',
-          name: '平均客流量',
+          name: this.$t('平均客流'),
           type: {
             icon: 'avg',
             color: '#1dd9d1'
@@ -191,7 +204,7 @@ export default {
             timeRange: '00:00-00:59'
           },
           id: 'enterhighest',
-          name: '客流峰值',
+          name: this.$t('总客流量'),
           type: {
             icon: 'highest',
             color: '#e8585a'
@@ -204,7 +217,7 @@ export default {
             timeRange: '00:00-00:59'
           },
           id: 'occupancyhighest',
-          name: '集客量峰值',
+          name: this.$t('fn.peak', [this.$t('集客量')]),
           type: {
             icon: 'occu_highest',
             color: '#e8585a'
@@ -213,7 +226,7 @@ export default {
         {
           data: 0,
           id: 'occupancytotal',
-          name: '集客量',
+          name: this.$t('集客量'),
           type: {
             icon: 'liuliang',
             color: '#857aef'
@@ -259,7 +272,7 @@ export default {
 
   computed: {
     tootipText () {
-      return '平均客流量：所选时间段内所有购物中心累计客流量除以购物中心个数\n总客流： 所选时间段内的所有购物中心客流之和\n客流峰值：所选时间段内的所有购物中心当中客流峰值的最大值\n集客量峰值：所选时间段内所有购物中心当中集客量峰值的最大值\n有效客流：所选时间段内所有购物中心的唯一客流人数之和\n销售额：所选时间段内所有购物中心销售额之和'
+      return this.$t('passages.tootipText3')
     },
     companyId () {
       return this.$store.state.user.companyId
@@ -268,38 +281,6 @@ export default {
     historyIndicators () {
       var arr = [...this.historyKpiData, ...this.summarySalse]
       return arr // 合并数组 组成一个新的数组
-    },
-    historyNewKpi () {
-      const { new_old_proportion, gender_propotion } = this.footFallTypeRes
-      let manAndWomen = {
-        id: 'entermanAndWomen',
-        name: '性别人数',
-        data: {
-          name1: '女性',
-          name2: '男性',
-          data1: gender_propotion[0],
-          data2: gender_propotion[1]
-        },
-        type: {
-          icon: 'xingbie',
-          color: '#E8585A'
-        }
-      }
-      let newAndOld = {
-        id: 'enternewAndOld',
-        name: '新老顾客',
-        data: {
-          name1: '新顾客',
-          name2: '老顾客',
-          data1: new_old_proportion.newNum,
-          data2: new_old_proportion.oldNum
-        },
-        type: {
-          icon: 'xinlaoguke',
-          color: '#857aef'
-        }
-      }
-      return [manAndWomen, newAndOld]
     },
     rankingIndicators () {
       return { ...{ enter: { name: '入客流' } }, ...salesDict }
@@ -322,7 +303,7 @@ export default {
       if (this.clickTimeName === 'y') return _.dropRight([...tmlEnterKPI, ...tmlOccuKPI])
       let validObj = {
         id: 'entervalid',
-        name: '有效客流',
+        name: this.$t('有效客流'),
         data: Number(enter.unique) < 0 ? 0 : enter.unique,
         type: {
           icon: 'youxiaokeliu',
@@ -338,7 +319,7 @@ export default {
           name: '客流量',
           yaxis: {
             title: {
-              text: '客流量（人次）'
+              text:  `${this.$t('客流量')}(${this.$t('人次')})`
             },
             labels: {
               formatter (value) {
@@ -348,10 +329,10 @@ export default {
           }
         },
         occupancy: {
-          name: '集客量',
+          name: this.$t('集客量'),
           yaxis: {
             title: {
-              text: '集客量（人次）'
+              text: `${this.$t('集客量')}(${this.$t('人次')})`
             },
             labels: {
               formatter (value) {
@@ -535,7 +516,7 @@ export default {
       let companyKpi = [
         {
           id: 'enteravg',
-          name: '平均客流量',
+          name: this.$t('平均客流'),
           data: currentCompany ? currentCompany.avg : 0,
           type: {
             icon: 'avg',
@@ -544,7 +525,7 @@ export default {
         },
         {
           id: 'enterhighest',
-          name: '客流峰值',
+          name: this.$t('总客流量'),
           data: {
             number: currentCompany ? Number(currentCompany.highest.number) < 0 ? 0 : currentCompany.highest.number : 0,
             timeRange: currentCompany ? currentCompany.highest.timeRange : '',
@@ -557,7 +538,7 @@ export default {
         },
         {
           id: 'occupancyhighest',
-          name: '集客量峰值',
+          name: this.$t('fn.peak', [this.$t('集客量')]),
           data: {
             number: currentCompany ? Number(currentCompany.occupancy_highest.number) < 0 ? 0 : currentCompany.occupancy_highest.number : 0,
             timeRange: currentCompany ? currentCompany.occupancy_highest.timeRange : '',
@@ -570,7 +551,7 @@ export default {
         },
         {
           id: 'occupancytotal',
-          name: '集客量',
+          name: this.$t('集客量'),
           data: currentCompany ? Number(currentCompany.occupancy_total) < 0 ? 0 : currentCompany.occupancy_total : 0,
           type: {
             icon: 'liuliang',
@@ -595,13 +576,13 @@ export default {
       // data.isexist ? pic = '今日' : pic = ''
       let checkNameObj = {
         enter: {
-          avg: pic + '平均客流量',
-          highest: pic + '客流峰值',
-          total: pic + '总客流'
+          avg: pic + this.$t('平均客流'),
+          highest: pic + this.$t('总客流量'),
+          total: pic + this.$t('总客流量')
         },
         occupancy: {
-          highest: pic + '集客量峰值',
-          total: pic + '集客量'
+          highest: pic + this.$t('集客峰值'),
+          total: pic + this.$t('集客量')
 
         }
       }
@@ -700,11 +681,11 @@ export default {
     updateRealTimezone () {
       let companyId = this.companyId // 公司id
       getCurrent({ time: this.today, companyId, offset: 60 }).then(res => {
-          this.$set(this.initRes, 0, res)
-          this.mapDataInit(this.initRes)
-        }).catch(err => {
-          console.log(err)
-        })
+				this.$set(this.initRes, 0, res)
+				this.mapDataInit(this.initRes)
+			}).catch(err => {
+				console.log(err)
+			})
     },
     async initRequest () {
       // in 1.0 version has 'company'

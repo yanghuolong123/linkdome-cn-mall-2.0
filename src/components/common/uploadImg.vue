@@ -10,10 +10,10 @@
         :on-format-error="formatType"
         :show-upload-list="false"
         name="file">
-            <Button v-show ="showUpload" type="primary" :disabled="disabled" class="buttons">
-             <Icon type="md-cloud-upload"  />
-             <slot>上传头像</slot>
-            </Button>
+          <Button v-show ="showUpload" type="primary" :disabled="disabled" class="buttons">
+            <Icon type="md-cloud-upload"  />
+            <slot>{{$t('上传')}}</slot>
+          </Button>
       </Upload>
       <!-- <div style="text-align:center;">
         <Button class="buttons"><icons :type="face":size="20"></icons>人脸采集</Button>
@@ -51,14 +51,19 @@ export default {
     handleSuccess (res, file, data) { // 上传成功
       var img = res.data.url
       if (res.code == 200) {
-        if (res.data.url.error != undefined && res.data.url.error.length > 0) {
+        if(!img){
+          this.$vs.loading.close();
+          this.$message.error(this.$t('fn.failedTo',[this.$t('上传')]))
+          return
+        }
+        if ( res.data.url.error != undefined && res.data.url.error.length > 0) {
           this.$vs.loading.close()
           // alert(res.data.url.error)
           this.$vs.dialog({
             color: this.colorAlert,
-            title: `上传图片`,
+            title:this.$t('上传图片'),
             text: res.data.url.error,
-            acceptText: '确定'
+            acceptText: this.$t('确定')
           })
         } else {
           this.$emit('changeImg', img)
@@ -66,12 +71,11 @@ export default {
         }
       } else if (res.code == 502) {
         this.$vs.loading.close()
-        // alert(res.message)
         this.$vs.dialog({
           color: this.colorAlert,
-          title: `上传图片`,
+          title:this.$t('上传图片'),
           text: res.message,
-          acceptText: '确定'
+          acceptText:  this.$t('确定')
         })
       }
     },
@@ -85,9 +89,9 @@ export default {
       // alert('请上传jpg、jpeg、png格式的头像')
       this.$vs.dialog({
         color: this.colorAlert,
-        title: `上传图片`,
-        text: '请上传jpg、jpeg、png格式的头像？',
-        acceptText: '确定'
+        title: this.$t('上传图片'),
+        text: this.$t('notices.imgFormat'),
+        acceptText: this.$t('确定')
       })
     }
   }

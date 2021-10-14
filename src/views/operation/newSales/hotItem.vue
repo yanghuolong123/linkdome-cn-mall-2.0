@@ -5,19 +5,19 @@
           <Select v-model="selectType" @on-change=selectTypeData style="width:200px;margin-left:15px;">
             <Option v-for="(item,index) in typeOptions"
                 :value="item.value"
-                :key="index">{{ item.label }}</Option>
+                :key="index">{{ $t(item.label) }}</Option>
           </Select>
           <Select v-model="typeAction" multiple :max-tag-count="1" style="width:200px;margin-left:15px;" >
             <Option v-for="(item,index) in typeList"
                 :value="item.value"
                 :key="index">{{ item.label }}</Option>
           </Select>
-          <Button style="margin-left:15px;" size="large" type="primary"  @click="handleClick" >查询</Button>
+          <Button style="margin-left:15px;" size="large" type="primary"  @click="handleClick" >{{ $t('查询') }}</Button>
         </div>
         <div class="box-card bg-white hotItem" style="margin-top: 20px">
             <div class="hotItem-chart" v-if="isChart">
-                <p class="name1">销售额</p>
-                <p class="name2">订单数</p>
+                <p class="name1">{{$t('销售额')}}</p>
+                <p class="name2">{{$t('订单数')}}</p>
                 <vChart   style="width:100%;height:600px"  ref="graphChart" :options="polar"/>
             </div>
         </div>
@@ -59,7 +59,7 @@ export default {
       polar: {
         tooltip: {
           formatter: (val) => {
-            return '商品名称：' + val.data[3] + '<br>销售额：' + val.data[0].toLocaleString() + '元' + '<br>订单数：' + val.data[1].toLocaleString()
+            return `${this.$t('商品名称')}：` + val.data[3] + `<br>${this.$t('销售额')}：` + val.data[0].toLocaleString() + this.$t('元') + `<br>${this.$t('订单数')}：` + val.data[1].toLocaleString()
           }
         },
         backgroundColor: new echarts.graphic.RadialGradient(0.3, 0.3, 0, [{
@@ -200,11 +200,11 @@ export default {
         if (res.data.code === 200) {
           let newHotData = []
           res.data.data.map(list => {
-            newHotData.push([list.amount, list.order_num, list.ratio, list.goods_name, '商品热度'])
+            newHotData.push([list.amount, list.order_num, list.ratio, list.goods_name, this.$t('商品热度')])
           })
           this.polar.series = []
           this.polar.series.push({
-            name: '商品热度',
+            name: this.$t('商品热度'),
             data: newHotData,
             type: 'scatter',
             symbolSize: function (data) {
@@ -223,6 +223,7 @@ export default {
               }])
             }
           })
+          this.polar.legend.data = [this.$t('商品热度')]
         }
       })
     },

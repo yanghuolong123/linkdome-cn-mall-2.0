@@ -1,76 +1,74 @@
-
 <template>
   <div>
-      <div class="selector-container bg-white box-card">
-          <div class="flex-center">
-              <DatePicker
-                type="daterange"
-                @on-change="dateChange"
-                v-model="crossDate"
-                placement="bottom-end"
-                :options="disabledDate"
-                placeholder="选择日期"
-                class="w-select"
-              ></DatePicker>
-              <vs-select
-                class="w-select m-l-20"
-                autocomplete
-                @change="selectTypeChange"
-                v-model="selectType"
-              >
-                <vs-select-item
-                  :value="item.value"
-                  :text="item.text"
-                  :key="index"
-                  v-for="(item,index) in typeList"
-                />
-              </vs-select>
-            <DatePicker
-              type="daterange"
-              v-model="crossDateTwo"
-              placement="bottom-end"
-              placeholder="选择日期"
-              :options="disabledDate"
-              :disabled="[2,3].includes(selectType)"
-              class="w-select m-l-20"
-              v-if="selectType !== 0"
-            ></DatePicker>
-
-          </div>
-          <div class="flex-center">
-
-              <el-cascader v-model="startValue"
-                           placeholder="选择起点"
-                           popper-class="cascade-dom"
-                           class="w-select"
-                           collapse-tags
-                           @change="selectStart()"
-                           :props="{ multiple: true, checkStrictly: true,expandTrigger:'hover'}"
-                           :options="startList">
-              </el-cascader>
-              <el-cascader v-model="endValue"
-                           popper-class="cascade-dom"
-                           placeholder="选择终点"
-                           @change="selectEnd('endValue')"
-                           class="w-select m-l-20"
-                           collapse-tags
-                           :props="{ multiple: true, checkStrictly: true,expandTrigger:'hover'}"
-                           :options="endList">
-              </el-cascader>
-
-          <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">查询</Button>
-          <Button size="large" class="m-l-20" @click="resetData">重置</Button>
-          </div>
-        </div>
+    <div class="selector-container bg-white box-card">
+      <div class="flex-center">
+        <DatePicker
+          type="daterange"
+          @on-change="dateChange"
+          v-model="crossDate"
+          placement="bottom-end"
+          :options="disabledDate"
+          :placeholder="$t('holder.选择日期')"
+          class="w-select"
+        ></DatePicker>
+        <vs-select
+          class="w-select m-l-20"
+          autocomplete
+          @change="selectTypeChange"
+          v-model="selectType"
+        >
+        <vs-select-item
+          v-for="(item,index) in typeListCom"
+          :value="item.value"
+          :text="$t(item.text)"
+          :key="index"
+        />
+        </vs-select>
+        <DatePicker
+          type="daterange"
+          v-model="crossDateTwo"
+          placement="bottom-end"
+          :placeholder="$t('holder.选择日期')"
+          :options="disabledDate"
+          :disabled="[2,3].includes(selectType)"
+          class="w-select m-l-20"
+          v-if="selectType !== 0"
+        ></DatePicker>
+      </div>
+      <div class="flex-center">
+        <el-cascader
+          v-model="startValue"
+          :placeholder="$t('holder.选择起点')"
+          popper-class="cascade-dom"
+          class="w-select"
+          collapse-tags
+          @change="selectStart()"
+          :props="{ multiple: true, checkStrictly: true,expandTrigger:'hover'}"
+          :options="startList">
+        </el-cascader>
+        <el-cascader
+          v-model="endValue"
+          popper-class="cascade-dom"
+          :placeholder="$t('holder.选择终点')"
+          @change="selectEnd('endValue')"
+          class="w-select m-l-20"
+          collapse-tags
+          :props="{ multiple: true, checkStrictly: true,expandTrigger:'hover'}"
+          :options="endList">
+        </el-cascader>
+        <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('查询') }}</Button>
+        <Button size="large" class="m-l-20" @click="resetData">{{ $t('重置') }}</Button>
+      </div>
+    </div>
     <!-- 标题数据 -->
     <div class="cross_analysis_time">
       <div :key="index" v-for="(item,index) in timeList">
         <img :src="item.icon" alt="">
         <div class="tootipsTitle">
-            <span class="cross_time_name">{{item.name}}</span>
-              <Tooltip class="m-l-20"  :content="item.tootipText"  placement="bottom" theme="light" transfer max-width="600">
-                <icons type="wenhao"/>
-              </Tooltip>
+          <span class="cross_time_name">{{ $t(item.name) }}</span>
+          <Tooltip class="m-l-20"  :content="$t(item.tootipText)"  placement="bottom" theme="light" transfer max-width="600">
+            <icons type="wenhao"/>
+          </Tooltip>
         </div>
         <p class="cross_time_data"><span>{{showTimeOne}}</span> {{item.data}}</p>
         <p class="scale-data" v-if="selectTyepConfirm !==0" v-bind:class="{ scaleAction: item.isActive }">
@@ -82,20 +80,20 @@
       </div>
     </div>
     <div v-if="selectTyepConfirm == 0" class="cross_analysis">
-      <p v-if="noData" class="noData">暂无数据</p>
-      <div class="cross_analysis_title"><p>交叉客流路径</p></div>
-        <!-- 最大客流 -->
+      <p v-if="noData" class="noData">{{ $t('holder.暂无数据') }}</p>
+      <div class="cross_analysis_title"><p>{{ $t('交叉客流路径') }}</p></div>
+      <!-- 最大客流 -->
       <div class="cross_analysis_title" style="margin-top:30px;">
-        <p>最大客流路径</p>
+        <p>{{ $t('最大客流路径') }}</p>
       </div>
       <div class="progress-title">
         <div class="progress-text" :key="index" v-for="(item,index)  in maxEnterList">
-          <p>{{item.name}}</p>
-          <span>累计客流{{item.data}}人</span>
+          <p>{{ $t(item.name) }}</p>
+          <span>{{ $t('fn.累计客流', [item.data]) }}</span>
         </div>
         <div style='clear:both;'></div>
         <div class="progress-center" :style='{left:marginLeft+"%"}'>
-          转化率{{percentData}}%
+          {{ $t('fn.转化率', [percentData]) }}
         </div>
         <div class="arrows">
 
@@ -107,7 +105,7 @@
     </div>
     <div class="cross_analysis">
       <div class="cross_analysis_title">
-        <p>数据指标趋势</p>
+        <p>{{ $t('数据指标趋势') }}</p>
       </div>
       <div class="dwell-time-icon">
         <vs-select
@@ -117,10 +115,10 @@
           @change="selectLineType"
         >
           <vs-select-item
-            :value="item.value"
-            :text="item.text"
-            :key="index"
             v-for="(item,index) in lineTypeList"
+            :value="item.value"
+            :text="$t(item.text)"
+            :key="index"
           />
         </vs-select>
         <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(index)">
@@ -134,7 +132,7 @@
       </div>
       <div style="height:415px;overflow: hidden;position:relative">
         <div class="line-show" v-bind:class="{ crossLineActive: iconIndex ==0 }">
-        <p v-if="lineNoData" class="noData">暂无数据</p>
+        <p v-if="lineNoData" class="noData">{{ $t('holder.暂无数据') }}</p>
         <vue-apex-charts
           v-bind:class="{ crossLineChart: lineType ==0 }"
           class="chartLine"
@@ -163,12 +161,6 @@
       </div>
       </div>
     </div>
-    <alert
-      v-if="isAlert"
-      @closeAlert ='closeAlert'
-      @alertConfirm ='closeAlert'
-      :alertText='alertText'
-    ></alert>
   </div>
 </template>
 <script>
@@ -176,7 +168,6 @@ import VueApexCharts from 'vue-apexcharts'
 import { getBussinessTree } from '@/api/passenger.js'
 import { crossData } from '@/api/analysis'
 import TableDefault from '../ui-elements/table/TableDefault.vue'
-import alert from '@/components/alert.vue'
 import moment from 'moment'
 import NP from 'number-precision'
 import _ from 'lodash'
@@ -186,34 +177,18 @@ export default {
   components: {
     VueApexCharts,
     TableDefault,
-    alert,
     vChart: VueECharts
   },
   data () {
     let that = this
     return {
       selectType: 0,
-	  selectTyepConfirm:0,
+	    selectTyepConfirm:0,
       noData: true,
       lineNoData: true,
       showTimeOne: '',
       showTimeTwo: '',
-      typeList: [
-        {
-          text: '无对比',
-          value: 0
-        },
-        {
-          text: '自定义时间对比',
-          value: 1
-        }, {
-          text: '同比',
-          value: 2
-        }, {
-          text: '环比',
-          value: 3
-        }
-      ],
+      typeList: [],
       isGraph: false,
       isLine: false,
       percentData: 0,
@@ -432,7 +407,7 @@ export default {
             }
         }
         
-          
+        
         }
       },
       siteTrafficAvg: {
@@ -502,14 +477,7 @@ export default {
       startList: [],
       endValue: [],
       endList: [],
-      isAlert: false,
       allData: '',
-      alertText: {
-        title: '',
-        text: '',
-        bg: '',
-        confirm: false
-      },
       disabledDate: ''
     }
   },
@@ -519,7 +487,26 @@ export default {
     },
     toBzid () {
       return this.endValue.map(o => { return o[1] }).flat()
-    }
+    },
+    typeListCom() {
+      this.typeList = [
+        {
+          text: this.$t('无对比'),
+          value: 0
+        },
+        {
+          text: this.$t('自定义对比'),
+          value: 1
+        }, {
+          text: this.$t('同比'),
+          value: 2
+        }, {
+          text: this.$t('环比'),
+          value: 3
+        }
+      ]
+      return this.typeList
+    },
   },
   created () {
     this.disabledDate = disabledDate
@@ -580,11 +567,11 @@ export default {
     paramsPrepare () { // 点击查询
       var time1, time2
       if (this.startValue.length === 0) {
-        this.alert('起点不能为空，请选择起点')
+        this.$message.warning(this.$t('请选择起点'))
         return false
       }
       if (this.endValue.length === 0) {
-        this.alert('终点不能为空，请选择终点')
+        this.$message.warning(this.$t('请选择终点'))
         return false
       }
       this.iconIndex = 0
@@ -774,7 +761,7 @@ export default {
       var dataList = this.allData
       if (value === 0) {
         that.tableList = []
-        that.tableName = ['时间', '客流转化深度 ( % )']
+        that.tableName = ['时间', that.$t('客流转化深度')+' ( % )']
         dataList.everyDateConvrRate.map(function (m) {
           m.data.map(function (d) {
             var table = {}
@@ -802,7 +789,7 @@ export default {
       that.siteTraffic.series = []
       that.siteTraffic.chartOptions.xaxis.categories = []
       that.tableList = []
-      that.tableName = ['时间', '客流转化深度 ( % )']
+      that.tableName = ['时间',that.$t('客流转化深度')+' ( % )']
       data.everyDateConvrRate.map(function (m, kIndexs) {
         var obj = {}
         obj.name = m.name
@@ -827,14 +814,14 @@ export default {
               table.time = m.name + '(' + d.date + ')'
             }
           }
-          table.avg = NP.times(Number(d.convetRate), 100) 
+          table.avg = NP.times(Number(d.convetRate), 100)
           that.tableList.push(table)
         })
         that.siteTraffic.series.push(obj)
         that.lineNoData = false
       })
       if(that.siteTraffic.series[1]){
-        let maxLength 
+        let maxLength
         if(that.siteTraffic.series[0].data.length> that.siteTraffic.series[1].data.length){
           maxLength = that.siteTraffic.series[0].data
         }else{
@@ -860,12 +847,10 @@ export default {
       }
       var dataList
       data1.length > data2.length ? dataList = data1 : dataList = data2
-      dataList.map(function (n, index) {
-        var num, size = Number(index) + 1, dayStyle
-        dayStyle = range == 'Month' ? '月' : '天'
-        var dateList = '第' + size + dayStyle
+      dataList.map( (n, index)=> {
+        var num, size = Number(index) + 1, dateList
+        dateList = range == 'Month' ? this.$t('fn.第_月',[ size ]):this.$t('fn.第_天',[ size])
         type === 0 ? num = n.date : num = dateList
-
         that.siteTraffic.chartOptions.xaxis.categories.push(num)
       })
       that.$refs.lineChart.updateOptions({
@@ -981,16 +966,7 @@ export default {
         })
       })
     },
-    closeAlert () { this.isAlert = false },
     iconClick (index) { this.iconIndex = index },
-    // 弹框
-    alert (text) {
-      this.isAlert = true
-      this.alertText.bg = '#00A0E9'
-      this.alertText.title = '交叉客流'
-      this.alertText.text = text
-      this.alertText.confirm = false
-    },
     //  更新 线的  x 轴 位置
     avgLineXaxisType (size, type) {
       var that = this

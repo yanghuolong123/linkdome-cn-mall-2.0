@@ -16,7 +16,7 @@
         <!-- 区域 -->
         <div class="areas">
           <div class="stall-header-right">
-              <span class="stall-add" v-if="userLvl=='admin'" title="添加" @click="addArea">
+              <span class="stall-add" v-if="userLvl=='admin'" :title="$t('添加')" @click="addArea">
                 <Icon type="md-add" />
               </span>
           </div>
@@ -33,19 +33,11 @@
           </div>
         </div>
       </div>
-      <!-- <div class="left-floor">
-        <table-multiple-selected
-            :tableName='tableName'
-            :tableList='lineUpTable'
-            :titleName='lineUpTitle'
-        >
-        </table-multiple-selected>
-      </div> -->
     </div>
 
     <div class="area-list-right">
         <div class="stall-header-right">
-            <span class="stall-add" v-if="userLvl=='admin'" title="添加" @click="adDoorway">
+            <span class="stall-add" v-if="userLvl=='admin'" :title="$t('添加')" @click="adDoorway">
               <Icon type="md-add" />
             </span>
         </div>
@@ -59,12 +51,10 @@
             @removeData='delDoorWay'
         >
         </table-multiple-selected>
-        <addDoorway v-if="showDoorway"
+        <addDoorway
             ref="addDoorway"
-            @closeEdit="closeEdit"
             @addTypeData="addTypeData"
             @updateTypeData="updateTypeData"
-            @alertMessage="alertMessage"
             :userLvl="userLvl"
             :gateList="gateList"
             :floorInfo="floorInfo"
@@ -72,12 +62,10 @@
             :editDoorWayTitle="editDoorWayTitle"
         >
         </addDoorway>
-        <addArea v-if="showArea"
+        <addArea
             ref="addArea"
-            @closeEdit="closeEdit"
             @addTypeData="addTypeData"
             @updateTypeData="updateTypeData"
-            @alertMessage="alertMessage"
             :userLvl="userLvl"
             :zoneList="zoneList"
             :floorInfo="floorInfo"
@@ -86,12 +74,6 @@
         >
         </addArea>
     </div>
-    <alert
-      v-if="isAlert"
-      @closeAlert ='closeAlert'
-      @alertConfirm ='alertConfirm'
-      :alertText='alertText'
-    ></alert>
   </div>
 </template>
 
@@ -101,27 +83,17 @@ import { zones, deleteData } from '@/api/manager.js'
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import addDoorway from '_c/entity/components/addDoorway.vue'
 import addArea from '_c/entity/components/addArea.vue'
-import alert from '@/components/alert.vue'
-import { setTimeout } from 'timers'
 
 export default {
   components: {
     TableMultipleSelected,
     addDoorway,
     addArea,
-    alert
   },
   data () {
     return {
       theDoorWay: '', // 当前选中的出入口
       theArea: '',
-      isAlert: false,
-      alertText: {
-        title: '',
-        text: '',
-        bg: '',
-        confirm: false
-      },
       editDoorWayTitle: '添加出入口',
       editAreaTitle: '添加区域',
       floorTitle: '基本信息',
@@ -130,7 +102,6 @@ export default {
       lineUpTable: [],
       inletTitle: '出入口信息',
       showAddCompany: false,
-      showDoorway: false,
       showArea: false,
       delCompany: false,
       addAreas: false,
@@ -238,32 +209,15 @@ export default {
         }
       })
     },
-    alertMessage (value, alertText) {
-      this.isAlert = value
-      this.alertText = alertText
-    },
     adDoorway () {
-      console.log(1)
-      this.showDoorway = true
-      var that = this
-      setTimeout(() => {
-        if (that.$refs.addDoorway) that.$refs.addDoorway.isModify = false
-      }, 200)
+      this.$refs.addDoorway.$refs.modal.showModal()
     },
     addArea () {
-      this.showArea = true
-      var that = this
-      setTimeout(() => {
-        if (that.$refs.addArea) that.$refs.addArea.isModify = false
-      }, 200)
+      this.$refs.addArea.$refs.modal.showModal()
     },
       imgConfig(){
           this.$emit('imgConfig')
       },
-    closeEdit () {
-      this.showDoorway = false
-      this.showArea = false
-    },
     /* 格式化选择器数据
     *@method addValuesToEle2
     *@param {obj} pArray 需要格式化的数据对象
@@ -326,111 +280,64 @@ export default {
       this.$emit('changeDoorway')
     },
     editDoorWay (value) {
-      var that = this
-        console.log(value)
-        this.showDoorway = true
+      this.$refs.addDoorway.$refs.modal.showModal();
+      this.editDoorWayTitle = '编辑出入口'
       var data = _.cloneDeep(value.data)
       data.description = data.describe
-      var gate = _.find(that.gateList, ['id', data.id])
-      this.editDoorWayTitle = '编辑出入口'
-      setTimeout(function () {
-        if (that.$refs.addDoorway) {
-          that.$refs.addDoorway.formData = data
-          that.$refs.addDoorway.isModify = true
-        }
-      }, 200)
+      data.gate_id = data.gate[0]
+      this.$refs.addDoorway.formData = data
+      this.$refs.addDoorway.isModify = true
     },
     editArea (value) {
-      var that = this
-      this.showArea = true
+      this.$refs.addArea.$refs.modal.showModal()
       var data = _.cloneDeep(value.data)
       data.description = data.describe
       this.editAreaTitle = '编辑区域'
-      setTimeout(function () {
-        if (that.$refs.addArea) {
-          that.$refs.addArea.formData = data
-          that.$refs.addArea.isModify = true
-        }
-      }, 200)
+      this.$refs.addArea.formData = data
+      this.$refs.addArea.isModify = true
     },
     delArea (value) {
-      this.delType = 'area'
-      let alertText = {}
-      alertText.title = '删除区域'
-      alertText.text = '确认删除此区域信息？'
-      alertText.bg = '#00A0E9'
-      alertText.confirm = true
-      this.alertText = alertText
-      this.isAlert = true
-      this.theArea = value.data
+      this.$alert({
+        content: this.$t('确认删除此区域信息'),
+        cancel () {
+        },
+        confirm: () => {
+          deleteData(value.data.id).then((res)=> {
+            if (res.data.code == 200) {
+              this.floorInfo[1].area = _.remove(this.floorInfo[1].area, (o, i)=> {
+                return o.id != value.data.id
+              })
+              this.$message.success(this.$t('删除成功'))
+              this.$emit('changeDoorway')
+            }
+          })
+        }
+      })
     },
     delDoorWay (value) {
-      this.delType = 'gate'
-      let alertText = {}
-      alertText.title = '删除出入口'
-      alertText.text = '确认删除此出入口信息？'
-      alertText.bg = '#00A0E9'
-      alertText.confirm = true
-      this.alertText = alertText
-      this.isAlert = true
-      this.theDoorWay = value.data
+      this.$alert({
+        content: this.$t('确认删除此出入口信息'),
+        cancel () {
+        },
+        confirm: () => {
+          deleteData(value.data.id,'gate').then((res)=> {
+            if (res.data.code == 200) {
+              this.floorInfo[1].gate = _.remove(this.floorInfo[1].gate,  (o, i)=> {
+                return i != value.data.index
+              })
+              this.$message.success(this.$t('删除成功'))
+              this.$emit('changeDoorway')
+            }
+          })
+        }
+      })
     },
     editFloor (value) {
       this.$emit('editFloor', value.data)
     },
     delFloor (value) {
-      let alertText = {}
-      alertText.title = '删除楼层'
-      alertText.text = '确认删除此楼层信息？'
-      alertText.bg = '#00A0E9'
-      alertText.confirm = true
-      console.log(value)
-      this.$emit('delFloor', true, alertText, value.data)
+      this.$emit('delFloor', value.data)
     },
-    closeAlert () {
-      this.isAlert = false
-    },
-    alertConfirm (value) {
-      var that = this
-      if (value === true) {
-        that.isAlert = false
-        if (this.delType == 'gate') {
-          var id = that.theDoorWay.id
-          var form = 'gate'
-          var index = that.theDoorWay.index
-          deleteData(id, form).then(function (res) {
-            if (res.data.code == 200) {
-              that.floorInfo[1].gate = _.remove(that.floorInfo[1].gate, function (o, i) {
-                return i != index
-              })
-              that.isAlert = true
-              that.alertText.bg = '#00A0E9'
-              that.alertText.title = '删除出入口'
-              that.alertText.text = '删除出入口成功'
-              that.alertText.confirm = false
-              that.$emit('changeDoorway')
-            }
-          })
-        } else if (this.delType == 'area') {
-          var id = that.theArea.id
-          deleteData(id).then(function (res) {
-            if (res.data.code == 200) {
-              that.floorInfo[1].area = _.remove(that.floorInfo[1].area, function (o, i) {
-                return o.id != id
-              })
-              that.isAlert = true
-              that.alertText.bg = '#00A0E9'
-              that.alertText.title = '删除区域'
-              that.alertText.text = '删除区域成功'
-              that.alertText.confirm = false
-              that.$emit('changeDoorway')
-            }
-          })
-        }
-      } else {
-        this.isAlert = false
-      }
-    }
   },
   mounted () {
     this.getZones()
@@ -447,7 +354,6 @@ export default {
     margin: 0px 0px 10px 3px;
     .left-floor{
       background:rgba(255,255,255,1);
-      // box-shadow:0px 2px 9px 1px rgba(175,175,176,0.25);
       border-radius:6px;
       margin-top: 30px;
       .areas{
@@ -462,7 +368,6 @@ export default {
     margin: 0px 3px 10px 0px;
     float: right;
     background:rgba(255,255,255,1);
-    // box-shadow:0px 2px 9px 1px rgba(175,175,176,0.25);
     border-radius:6px;
     margin-top: 30px;
   }

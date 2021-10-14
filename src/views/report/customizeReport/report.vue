@@ -10,7 +10,7 @@
 				:options="options3"
 				placeholder="选择日期">
 			</DatePicker>
-			<Button type="primary" class="m-l-20" @click="reportQuery" size="large">查询</Button>
+			<Button type="primary" class="m-l-20" @click="reportQuery" size="large">{{ $t('查询') }}</Button>
 			<div class="icon-download" @click="downloadReport('customize',callData)" title="下载报告">
 				<icons type="daoru" color="#2a7dc1" :size=20></icons>
 			</div>

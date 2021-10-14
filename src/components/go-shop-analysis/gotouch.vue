@@ -2,93 +2,76 @@
   <div class="go-shop">
     <div class="selector-container bg-white box-card">
       <!-- <h1>货架分析</h1> -->
-          <div class="flex-center">
-              <DatePicker
-                type="daterange"
-                v-model="crossDate"
-                placement="bottom-end"
-                :options="disabledDate"
-                placeholder="选择日期"
-                class="w-select"
-              ></DatePicker>
-          </div>
-          <div class="flex-center">
-<!--              <el-cascader-->
-<!--               collapse-tags-->
-<!--               class="w-select"-->
-<!--                v-model="activities"-->
-<!--                :props="{ multiple: true,expandTrigger:'hover' }"-->
-<!--                :options="activitiesType">-->
-<!--              </el-cascader>-->
-            <vs-select
-              class="w-select"
-              autocomplete
-              v-model="activities"
-              placeholder="选择排队名"
-              style="width:14.375rem;"
-              multiple
-            >
-              <vs-select-item
-                :value="item.value"
-                :text="item.text"
-                :key="index"
-                v-for="(item,index) in activitiesType"
-              />
-            </vs-select>
-              <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">查询</Button>
-              <Button size="large" class="m-l-20" @click="resetData">重置</Button>
-          </div>
+      <div class="flex-center">
+        <DatePicker
+          type="daterange"
+          v-model="crossDate"
+          placement="bottom-end"
+          :options="disabledDate"
+          :placeholder="$t('holder.选择日期')"
+          class="w-select"
+        ></DatePicker>
+      </div>
+      <div class="flex-center">
+        <vs-select
+          class="w-select"
+          autocomplete
+          v-model="activities"
+          :placeholder="$t('fn.请选择',[$t('货架')])"
+          style="width:14.375rem;"
+          multiple>
+          <vs-select-item
+            v-for="(item,index) in activitiesType"
+            :value="item.value"
+            :text="item.text"
+            :key="index"
+          />
+        </vs-select>
+        <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('查询') }}</Button>
+        <Button size="large" class="m-l-20" @click="resetData">{{ $t('重置') }}</Button>
+      </div>
     </div>
     <div class="go-shop-chart-list"  >
-        <div class="go-shop-time-icon">
-          <span>货架触摸分析</span>
-          <p class="flex-center">
-            <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(icon.value)">
-              <icons
-                :title="iconTitle[icon.type]"
-                :type="icon.type"
-                :size="20"
-                :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
-              ></icons>
-            </span>
-          </p>
-        </div>
-         <div v-if="isData" class="noData">暂无数据</div>
-         <vue-apex-charts
-          v-bind:class="{ lineAction: iconIndex == 0 }"
-            class=" tendencyBar"
-            ref="graphLine"
-            height='90%'
-            width="100%"
-            id='tendencyLine'
-            type="line"
-            :options="lineData.chartOptions"
-            :series="lineData.series"
-          ></vue-apex-charts>
-          <table-default
-          v-bind:class="{ tableAction: iconIndex == 1 }"
-          class="tendencyTable"
-            :tableTitle='goTitle'
-            :tableName='goName'
-            :tableList='goTableList'
-          ></table-default>
+      <div class="go-shop-time-icon">
+        <span>{{ $t('货架触摸分析') }}</span>
+        <p class="flex-center">
+          <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(icon.value)">
+            <icons
+              :title="iconTitle[icon.type]"
+              :type="icon.type"
+              :size="20"
+              :color="iconIndex === icon.value ? iconColor :'#9D9D9DFF'"
+            ></icons>
+          </span>
+        </p>
+      </div>
+      <div v-if="isData" class="noData">{{ $t('holder.暂无数据') }}</div>
+      <vue-apex-charts
+        v-bind:class="{ lineAction: iconIndex == 0 }"
+        class=" tendencyBar"
+        ref="graphLine"
+        height='90%'
+        width="100%"
+        id='tendencyLine'
+        type="line"
+        :options="lineData.chartOptions"
+        :series="lineData.series"
+      ></vue-apex-charts>
+      <table-default
+        v-bind:class="{ tableAction: iconIndex == 1 }"
+        class="tendencyTable"
+        :tableTitle='goTitle'
+        :tableName='goName'
+        :tableList='goTableList'
+      ></table-default>
     </div>
-    <alert
-      v-if="isAlert"
-      @closeAlert ='closeAlert'
-      @alertConfirm ='alertConfirm'
-      :alertText='alertText'
-    ></alert>
   </div>
 </template>
 <script>
 import TableDefault from '@/views/ui-elements/table/TableDefault.vue'
-import alert from '@/components/alert.vue'
 import VueApexCharts from 'vue-apexcharts'
-import { getBussinessTree, getBussinessCommon } from '@/api/passenger'
 import { getHuojiaList , getHuojiaAnalysis } from '@/api/passenger.js'
-import { goShopTrend } from '@/api/analysis'
-import { goShowFlowTend ,exportEx} from '@/api/home.js'
+import { exportEx} from '@/api/home.js'
 import { disabledDate,downloadEx } from '@/libs/util.js'
 import moment from 'moment'
 import NP from 'number-precision'
@@ -98,7 +81,6 @@ export default {
   components: {
     TableDefault,
     VueApexCharts,
-    alert
 
   },
   data () {
@@ -113,23 +95,12 @@ export default {
       crossDateTwo: [],
       selectType: 0,
       selectAll: 0,
-      typeList: [
+      iconList: [
         {
-          text: '无对比',
+          type: 'zhexiantu',
+          color: '#9D9D9DFF',
           value: 0
         },
-        {
-          text: '时间对比',
-          value: 1
-        }
-      ],
-      iconList: [
-      
-      {
-              type: 'zhexiantu',
-              color: '#9D9D9DFF',
-              value: 0
-          },
         {
           type: 'biaoge-copy',
           color: '#9D9D9DFF',
@@ -190,7 +161,7 @@ export default {
           },
           yaxis: {
             title: {
-              text: "次数"
+              text: this.$t("次数")
             },
             labels: {
               show: true,
@@ -229,7 +200,6 @@ export default {
             text: ''
           },
           stroke: {
-            //curve: 'smooth',
             width: 2
           },
           dataLabels: {
@@ -238,7 +208,7 @@ export default {
           colors: ['#33B3ED', '#2BD9CF', '#94E2FF', '#FBAB40', '#8D82F0', '#E8585A'],
           yaxis: {
             title: {
-              text: '次数'
+              text:this.$t("次数")
             },
             tickAmount: 5,
             min: 0,
@@ -276,21 +246,7 @@ export default {
         time2: '',
         id: ''
       },
-      isAlert: false,
-      alertText: {
-        title: '',
-        text: '',
-        bg: '',
-        confirm: false
-      },
-
     }
-  },
-  activated () {
-    // this.isHtml = true
-  },
-  deactivated () {
-    // this.isHtml = false
   },
   watch: {
     '$store.state.home.headerAction' () {
@@ -344,14 +300,17 @@ export default {
       var time1 = moment(that.crossDate[0]).format('YYYY-MM-DD') + ',' +
       moment(that.crossDate[1]).format('YYYY-MM-DD')
       let range = this.gotInnerRange(that.crossDate)
-      console.log(time1)
       // 提示
       if (that.activities.length === 0) {
-        this.alertShow('货架不能为空，请选择货架')
+        this.$alert({
+          content:this.$t('fn.请选择',[this.$t('货架')])
+        })
         return false
       }
       if (that.activities.length > 25) {
-        this.alertShow('货架个数不能超过25个，请重新选择')
+        this.$alert({
+          content:this.$t('fn.shelfLimit',[25])
+        })
         return false
       }
       // var bzid = "1,2,3"
@@ -365,7 +324,6 @@ export default {
       // that.goName = []
       // that.goTableList = []
       // that.goName.push('时间')
-      console.log(this.activities)
       let selectedIds = this.activities.join(',')
       getHuojiaAnalysis({property_id:propertyId, time1: time1, queue_id: selectedIds, type: range }).then(res => {
         that.isList = true
@@ -414,18 +372,17 @@ export default {
           data : txDataArray
         })
       }
-      console.log(xArray)
       that.lineData.chartOptions.xaxis.categories = xArray
       that.lineData.chartOptions.legend.data = legend
       that.lineData.series = xDataArray
       that.$refs.graphLine.updateOptions({
-        xaxis: { categories: that.lineData.chartOptions.xaxis.categories }
+        xaxis: { categories: that.lineData.chartOptions.xaxis.categories },
+        yaxis: {title:{text:this.$t("次数")}}
       })
      
       _.forEach(data,(ele)=>{
         that.goName.push(ele.name)
       })
-      console.log(that.goName)
       let timeArray = _.keys(data[0].list.time1)
       let resultArray = []
       for(let j = 0 ; j < timeArray.length ; j ++){
@@ -458,7 +415,8 @@ export default {
       // })
       if (that.$refs.graphLine) {
         that.$refs.graphLine.updateOptions({
-          xaxis: { categories: that.lineData.chartOptions.xaxis.categories }
+          xaxis: { categories: that.lineData.chartOptions.xaxis.categories },
+          yaxis: {title:{text:this.$t("次数")}}
         })
       }
 
@@ -678,8 +636,6 @@ export default {
         this.iconIndex = index
       }
     },
-    alertConfirm () { this.isAlert = false },
-    closeAlert () { this.isAlert = false },
     shopActionList (value) {
       var that = this
       let totalLength = that.activitiesType.length
@@ -700,13 +656,6 @@ export default {
         this.selectAll = 1
         that.activities = arr
       }
-    },
-    alertShow(text){
-      this.isAlert = true
-      this.alertText.bg = '#00A0E9'
-      this.alertText.title = '趋势分析'
-      this.alertText.text = text
-      this.alertText.confirm = false
     },
     gotInnerRange (date) {
       const [start, end] = date

@@ -7,10 +7,10 @@
           <Select v-model="compareType"  class="w-select m-l-20" >
             <Option v-for="(item,index) in typeOptions"
                 :value="item.value"
-                :key="index">{{ item.label }}</Option>
+                :key="index">{{ $t(item.label) }}</Option>
           </Select>
-          <Button size="large" type="primary" class="m-l-20"  @click="handleClick" >查询</Button>
-        </div>   
+          <Button size="large" type="primary" class="m-l-20"  @click="handleClick" >{{ $t('查询') }}</Button>
+        </div>
     </div>
     <!-- 销售 -->
     <market ref="market" :chartTitle = 'chartTitle' :parameter = marketParameter> </market>

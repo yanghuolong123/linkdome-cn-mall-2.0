@@ -1,25 +1,30 @@
 <template>
   <div class="cards" :style="{margin:margin}">
-        <div class="left" v-if="!isTime">
-          <div class="circles" :style="{backgroundColor:item.bg,}">
-            <icons :type="item.icon" :size='28'  :color="item.color" class="icons"></icons>
-          </div>
+
+    <template v-if="!isTime">
+      <div class="left">
+        <div class="circles" :style="{backgroundColor:item.bg,}">
+          <icons :type="item.icon" :size='28'  :color="item.color" class="icons"></icons>
         </div>
-        <div class="right" v-if="!isTime">
-          <p class="title">{{item.title}}</p>
-          <p class="number">{{Number(item.number).toLocaleString()}}</p>
-        </div>
-      <div class="header" v-if="isTime">
-         <div class="left">
+      </div>
+      <div class="right">
+        <p class="title">{{ $t(item.title) }}</p>
+        <p class="number">{{Number(item.number).toLocaleString()}}</p>
+      </div>
+    </template>
+
+    <template v-else>
+      <div class="header">
+        <div class="left">
           <div class="circles" :style="{backgroundColor:item.bg,}">
             <icons :type="item.icon" :size='28'  :color="item.color" class="icons"></icons>
           </div>
         </div>
         <div class="right">
-          <p class="title">{{item.title}}</p>
+          <p class="title">{{ $t(item.title) }}</p>
         </div>
       </div>
-      <div class="compares" v-if="isTime">
+      <div class="compares">
         <div class="left">
           <p class="time1">{{item.time1}}</p>
           <p class="time2">{{item.time2}}</p>
@@ -32,6 +37,8 @@
           </div>
         </div>
       </div>
+    </template>
+
   </div>
 </template>
 

@@ -50,8 +50,8 @@
 						:key="item.id">{{ item.label }}
 				</Option>
 			</Select> -->
-			<Button size="large" type="primary" class="m-l-20" @click="handleClick">查询</Button>
-			<Button size="large" @click="resetClick" class="m-l-20">重置</Button>
+			<Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('查询') }}</Button>
+			<Button size="large" @click="resetClick" class="m-l-20">{{ $t('重置') }}</Button>
 		</div>
 	</div>
 </template>

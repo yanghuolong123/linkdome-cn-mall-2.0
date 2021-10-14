@@ -19,7 +19,7 @@
 
 			<!-- card title -->
 			<div class="vx-card__title">
-				<h4 v-if="this.$props.title">{{ title }}
+				<h4 v-if="this.$props.title">{{ $t(title) }}
 					<Tooltip v-if="titleTip" :content="titleTip" placement="right" theme="light" transfer max-width="500">
 						<icons type="wenhao"/>
 					</Tooltip>

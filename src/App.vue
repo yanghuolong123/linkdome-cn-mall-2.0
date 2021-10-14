@@ -23,6 +23,10 @@ export default {
       this.toggleClassInBody(val)
     }
   },
+	created(){
+    this.$i18n.locale = this.$store.state.language
+    document.title = this.$t('mainTitle')
+	},
   methods: {
     toggleClassInBody (className) {
       if (className == 'dark') {
@@ -82,11 +86,6 @@ path{
 }
 .vs-select-primary .vs-select--item.activex{
     font-weight: 400!important
-  }
-.apexcharts-tooltip-title {
-  /* max-width: 200px;
-  white-space: normal; */
-  /* word-break: break-all; */
 }
 .box-card:hover,.dashboard-box:hover,.group-age-gender .left:hover,.group-age-gender .right:hover,
 .group-client .left:hover,.group-client .center:hover,.account-center .account-text .account-text-right .account-seach .data-picker:hover,
@@ -114,5 +113,4 @@ path{
  border-radius: 6px;
  box-shadow: 0px 0px 18px 0px rgba(160, 163, 164, .5)!important;
 }
-
 </style>

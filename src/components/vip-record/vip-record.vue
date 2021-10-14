@@ -25,7 +25,7 @@
                       <div class="vip-search-text">
                           <Icon size='24' type="ios-search" />
                           <input type="text" v-model="keyword" placeholder="搜索">
-                          <Button  @click="init(false)">查询</Button>
+                          <Button  @click="init(false)">{{ $t('查询') }}</Button>
                       </div>
                       <div class="control">
                         <Button :disabled="noData" class="clear" @click="clearAll">清空列表</Button>

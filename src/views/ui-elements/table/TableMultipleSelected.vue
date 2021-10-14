@@ -1,9 +1,11 @@
 <template>
-	<vx-card :title=titleName :titleTip="titleTip" class="mul-table">
-		<vs-table v-model="selected" :multiple="isMultiple" :noDataText="name" :data="tableList">
-			
+	<vx-card :title="titleName" :titleTip="titleTip" class="mul-table">
+		<vs-table v-model="selected"
+							:multiple="isMultiple"
+							:noDataText="$t('holder.暂无数据')"
+							:data="tableList">
 			<template slot="thead" #thead>
-				<vs-th :key="indexs" class="table-title" v-for="(item, indexs) in tableName">{{item}}</vs-th>
+				<vs-th :key="indexs" class="table-title" v-for="(item, indexs) in tableName">{{$t(item)}}</vs-th>
 			</template>
 			
 			<template slot-scope="{data}" #tbody>
@@ -38,11 +40,11 @@
 					</vs-td>
 					<!--图片配置-->
 					<vs-td v-if="data[indextr].imgConfig && userLvl=='admin'">
-						<Button type="primary" @click="imgConfig">图片配置</Button>
+						<Button type="primary" @click="imgConfig">{{$t('图片配置')}}</Button>
 					</vs-td>
 					<!-- 等级 -->
 					<vs-td :data="data[indextr].rank" v-if="data[indextr].rank">
-						{{data[indextr].rank}}
+						{{$t(data[indextr].rank)}}
 					</vs-td>
 					<!-- 年龄 -->
 					<vs-td :data="data[indextr].age" v-if="data[indextr].age">
@@ -50,7 +52,7 @@
 					</vs-td>
 					<!-- 性别 -->
 					<vs-td :data="data[indextr].gender" v-if="data[indextr].gender">
-						{{data[indextr].gender}}
+						{{$t(data[indextr].gender)}}
 					</vs-td>
 					<!-- 电话 -->
 					<vs-td :data="data[indextr].mobile" v-if="data[indextr].mobile">
@@ -89,12 +91,12 @@
 					</vs-td>
 					<!-- 操作 -->
 					<vs-td v-if="data[indextr].operation" :data="data[indextr].operation">
-          <span v-if="userLvl=='common_admin'||userLvl=='admin'" class="account-deit" title="编辑"
-				v-on:click.stop="tableData(data[indextr])">
+          <span v-if="userLvl=='common_admin'||userLvl=='admin'" class="account-deit" :title="$t('编辑')"
+				    v-on:click.stop="tableData(data[indextr])">
             <vs-icon icon="ivu-icon-md-create" icon-pack='ivu-icon'></vs-icon>
           </span>
-						<span v-if="userLvl=='admin'" class="account-remove" title="删除"
-							  v-on:click.stop="removeData(data[indextr])">
+						<span v-if="userLvl=='admin'" class="account-remove" :title="$t('删除')"
+              v-on:click.stop="removeData(data[indextr])">
             <Icon type="ios-trash"/>
           </span>
 						<div v-if="userLvl=='normal'"></div>
@@ -103,7 +105,7 @@
 			</template>
 		</vs-table>
 		<vs-pagination v-if="isPage" class='table-page' :color="pageColor" :total="40"
-					   v-model="currentx"></vs-pagination>
+      v-model="currentx"></vs-pagination>
 	</vx-card>
 </template>
 
@@ -146,7 +148,6 @@
         pageColor: '#00A0E9',
         currentx: 20,
         selected: [],
-        name: '暂无数据',
         disabled:false
       }
     },
@@ -184,7 +185,6 @@
   }
 </script>
 <style lang="scss" scoped>
-
 	.mul-table{
 		/deep/ .vs-table--tbody{
 			z-index: 1;
