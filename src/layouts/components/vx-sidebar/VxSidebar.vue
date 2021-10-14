@@ -293,7 +293,7 @@ export default {
   },
   created () {
     this.shopingList = []
-    if (this.$store.state.user.role_id < 3) {
+    // if (this.$store.state.user.role_id < 3) {
         const data = this.$store.state.home.organizationData
         if (data.property.length != 0) {
           data.property.map(list => {
@@ -307,7 +307,7 @@ export default {
             }
           })
         }
-    }
+    // }
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.handleWindowResize)
