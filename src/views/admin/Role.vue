@@ -324,12 +324,12 @@ export default {
     overflow-y:auto;
     display: block;
     text-align: center;
-    ul{
+    /deep/ .ivu-menu{
       padding-top:10px;
       text-align: left;
       margin-bottom: 20px;
       width: 100%!important;
-      li.ivu-menu-submenu.ivu-menu-opened,li.ivu-menu-submenu:hover{
+      .ivu-menu-submenu.ivu-menu-opened,.ivu-menu-submenu:hover{
         background: -webkit-linear-gradient(left,rgb(55, 181, 237), rgba(55, 181, 237, 0.7));
         background: -o-linear-gradient(right,rgb(55, 181, 237), rgba(55, 181, 237, 0.7));
         background: -moz-linear-gradient(right,rgb(55, 181, 237), rgba(55, 181, 237, 0.7));
@@ -339,6 +339,9 @@ export default {
           /deep/i{
               font-size: 16px!important;
           }
+      }
+      .ivu-menu-submenu-title:hover{
+        color:#fff;
       }
       li{
         font-size: 14px;
@@ -390,10 +393,7 @@ export default {
       }
     }
   }
-  .ivu-menu-vertical .ivu-menu-item, .ivu-menu-vertical .ivu-menu-submenu-title {
-    padding: 6px 14px;
-  }
-  .ivu-icon-ios-arrow-down:before {
+  /deep/ .ivu-icon-ios-arrow-down:before {
     content: "";
   }
 }
