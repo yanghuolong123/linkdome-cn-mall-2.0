@@ -65,4 +65,5 @@ export default {
       name: '实体客流分析客流量趋势'
     }
   ],
+  noPropertyPages:['Dashboard','EntityManage','HolidayManage','VipCustom','Account','Role'],//不需要选择购物中心的路由名称
 }

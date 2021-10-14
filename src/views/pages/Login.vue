@@ -1,6 +1,7 @@
 <template>
 	<div class="login-container" :class="themeClass">
-		<LanguageBtn style="margin: 8px 16px 0 auto;"/>
+		<!--国际化按钮-->
+<!--		<LanguageBtn style="margin: 8px 16px 0 auto;"/>-->
 		<div class="login">
 			<img src="@/assets/images/fixation_img/logo/logo.png" width="150" alt="">
 			<!--			<div class="system-select" @click="selectBoxShow=true">{{systemSelectName}} <Icon type="md-arrow-dropdown" />-->
@@ -26,7 +27,7 @@
 			<Button class="login-btn" :loading="loading" type="primary" @click="handleLogin('formValidate')">{{ $t('login') }}</Button>
 		</div>
 		<div class="bottom">
-			浙ICP备20009188号-1 苏州凌图科技有限公司 Copyright 2019-{{currentYear}}
+			苏ICP备2021044524号 苏州凌图科技有限公司 Copyright 2019-{{currentYear}}
 		</div>
 		<vs-alert :active="isalert" color="danger" icon-pack="feather" icon="icon-info">
 			<span>{{alertText}}</span>
@@ -39,9 +40,11 @@ import { login } from '@/api/user.js'
 import { getUrl,getGroupOrganization,getPdfCenterUrl } from '@/api/home.js'
 import moment from 'moment'
 import md5 from 'md5'
+import config from '@/config/index';
 import _ from 'lodash'
 import Cookies from 'js-cookie'
 import LanguageBtn from '@/components/LanguageBtn.vue'
+import {mapState} from 'vuex'
 export default {
 	components: {
 		LanguageBtn
@@ -66,6 +69,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      organizationData: state => state.home.organizationData,
+    }),
     systemSelectName () {
       return this.systemListCom.find(o => {
         return o.id === this.systemSelect
@@ -205,7 +211,9 @@ export default {
 										else{
                       Cookies.remove('userInfo')
 										}
-                    that.$router.push(names);
+                    //如果进入的页面需要选择购物中心
+                    if(!config.noPropertyPages.includes(names.name)) that.setHeaderAction()
+										that.$router.push(names)
                   }
 									else {
                     that.showHint(this.$t('notices.noPermission'))
@@ -228,6 +236,12 @@ export default {
         }
       })
     },
+    setHeaderAction(){
+      if (this.organizationData.property.length) {
+        const id = this.organizationData.property[0].property_id
+        this.$store.commit('headerAction', id)
+      }
+		},
     openBILarge () {
       this.getBiUrl().then(res => {
         this.loading = false

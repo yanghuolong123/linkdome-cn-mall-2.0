@@ -19,7 +19,7 @@
       <span class="flex items-center w-full">
         <feather-icon
           :icon="group.icon || 'CircleIcon'"
-          :svgClasses="{ 'w-3 h-3' : this.groupIndex % 1 != 0 }"
+          :svgClasses="{ 'w-3 h-3' : groupIndex % 1 != 0 }"
           v-if="group.icon || (this.groupIndex > Math.floor(this.groupIndex))"
         />
         <span v-show="!sidebarItemsMin" class="truncate mr-3">{{ $t(group.i18n) || group.name }}</span>
@@ -63,6 +63,7 @@
         </vx-sidebar-item>
       </li>
     </ul>
+    
     <div class="selectShopping" v-if="isSelect">
       <div class="select-bg"></div>
       <div class="select-text">
@@ -89,7 +90,7 @@
 
 <script>
 import VxSidebarItem from './VxSidebarItem.vue'
-
+import config from '@/config/index';
 export default {
   name: 'vx-sidebar-group',
   props: {
@@ -125,8 +126,7 @@ export default {
     routerFilter (url) {
       return function (url) {
         if (!this.headerType) {
-          const adminUrlList = [ 'EntityManage', 'HolidayManage', 'VipCustom', 'Account', 'Role']
-          return adminUrlList.includes(url) ? url : ''
+          return config.noPropertyPages.includes(url) ? url : ''
         } else {
           return url
         }
@@ -136,10 +136,7 @@ export default {
       return this.$store.state.sidebarItemsMin
     },
     headerType () {
-      let type
-      if (this.$store.state.home.headerAction == 0) type = false
-      else type = true
-      return type
+      return this.$store.state.home.headerAction !== 0
     },
     styleItems () {
       return { maxHeight: this.maxHeight }
@@ -234,12 +231,11 @@ export default {
     },
     openNew (index) {
       let name = this.group.submenu[index].name
-     
-      if (name == 'EntityManage' || name == 'HolidayManage' || name == 'VipCustom' || name == 'Account' || name == 'Role') {
+      if (config.noPropertyPages.includes(name)) {
         // this.$router.push({ name: name })
         this.adminName = name
       } else {
-        if (this.headerType == false) {
+        if (!this.headerType) {
           this.isSelect = true
           this.urlName = name
         }
