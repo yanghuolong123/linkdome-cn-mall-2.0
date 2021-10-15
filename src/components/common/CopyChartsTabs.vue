@@ -382,7 +382,7 @@ export default {
         if (this.extraOptions && this.extraOptions.plotOptions && this.extraOptions.plotOptions.bar.horizontal) {
           barOpt.plotOptions.bar.barHeight = categoriesLen < 5 ? '30%' : '70%'
         }
-        var optionsData = _.merge(cloneOpt, _.merge(this.extraOptions, barOpt))
+        var optionsData = _.merge(cloneOpt, _.merge( barOpt,this.extraOptions))
         var newX = []
         if (optionsData.xaxis.categories) {
           optionsData.xaxis.categories.forEach(function (list, index) {

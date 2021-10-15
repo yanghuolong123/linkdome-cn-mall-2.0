@@ -136,20 +136,20 @@ export default [
           pageTitle: '排队货架分析'
         }
       },
-      // { // 到店次数统计
-      //   path: 'arrival',
-      //   name: 'Arrival',
-      //   component: () =>
-      //     import ('@/views/footfall-analytics/Arrival.vue'),
-      //   meta: {
-      //     breadcrumb: [
-      //       { title: '客流分析', url: '/' },
-      //       { title: '客流分析', url: '/footfall' },
-      //       { title: '到店次数统计', active: true },
-      //     ],
-      //     pageTitle: '到店次数统计'
-      //   }
-      // }
+      { // 到店次数统计
+        path: 'arrival',
+        name: 'Arrival',
+        component: () =>
+          import ('@/views/footfall-analytics/Arrival.vue'),
+        meta: {
+          breadcrumb: [
+            { title: '客流分析', url: '/' },
+            { title: '客流分析', url: '/footfall' },
+            { title: '到店次数统计', active: true },
+          ],
+          pageTitle: '到店次数统计'
+        }
+      }
     ]
 
   },

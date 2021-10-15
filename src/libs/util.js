@@ -796,7 +796,6 @@ export const getCompareDate = (originDate,compateType) => {
         ]
       case 'onChain'://环比
         const diff = Moment(originDate[0]).diff(Moment(originDate[1]), 'days') - 1
-        console.log(diff)
         return [
           Moment(originDate[0]).add(diff, 'd').format('YYYY-MM-DD'),
           Moment(originDate[1]).add(diff, 'd').format('YYYY-MM-DD')

@@ -136,7 +136,7 @@ export default {
       return this.$store.state.sidebarItemsMin
     },
     headerType () {
-      return this.$store.state.home.headerAction !== 0
+      return this.$store.state.home.headerAction != 0
     },
     styleItems () {
       return { maxHeight: this.maxHeight }
