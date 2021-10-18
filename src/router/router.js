@@ -145,9 +145,9 @@ export default [
           breadcrumb: [
             { title: '客流分析', url: '/' },
             { title: '客流分析', url: '/footfall' },
-            { title: '到店次数统计', active: true },
+            { title: '到访次数统计', active: true },
           ],
-          pageTitle: '到店次数统计'
+          pageTitle: '到访次数统计'
         }
       }
     ]
