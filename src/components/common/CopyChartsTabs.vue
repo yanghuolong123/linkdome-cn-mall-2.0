@@ -382,7 +382,10 @@ export default {
         if (this.extraOptions && this.extraOptions.plotOptions && this.extraOptions.plotOptions.bar.horizontal) {
           barOpt.plotOptions.bar.barHeight = categoriesLen < 5 ? '30%' : '70%'
         }
-        var optionsData = _.merge(cloneOpt, _.merge( barOpt,this.extraOptions))
+        if(this.extraOptions && this.extraOptions.plotOptions && this.extraOptions.plotOptions.bar.columnWidth){
+          barOpt.plotOptions.bar.columnWidth = this.extraOptions.plotOptions.bar.columnWidth
+				}
+        var optionsData = _.merge(cloneOpt, _.merge( this.extraOptions,barOpt))
         var newX = []
         if (optionsData.xaxis.categories) {
           optionsData.xaxis.categories.forEach(function (list, index) {
@@ -394,6 +397,7 @@ export default {
           if(optionsData.xaxis.categories&&optionsData.xaxis.categories.length===0){
             optionsData.yaxis.labels.show = false
           }else{
+            console.log(_.cloneDeep(optionsData))
             optionsData.yaxis.labels.show = true
           }
         }

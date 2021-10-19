@@ -2,7 +2,7 @@
 	<div>
 		<flow-selector @paramsPrepare="paramsPrepare"></flow-selector>
 		<!-- enter -->
-		<div class="mt-6 age-chart-box" >
+		<div class="mt-6 newOld-chart-box" >
 			<div class="bg-white box-card pb-6">
 				<chart-tabs :xAxis="newOldChartData.xAxis"
 										:labels="newOldChartData.labels"
@@ -207,7 +207,7 @@
   }
 </script>
 <style lang="stylus">
-	.age-chart-box
+	.newOld-chart-box
 		display grid
 		grid-template-columns repeat(2, minmax(10px, 1fr))
 		grid-template-areas 'age gender'

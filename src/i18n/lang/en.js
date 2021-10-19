@@ -170,7 +170,7 @@ module.exports =  {
   热力图分析: "HeatMap",
   有效客流分析: "Effective",
   排队货架分析: "Queue",
-  到店次数统计: "Arrival",
+  到访次数统计: "Arrival",
   关联分析: "Relevance",
   交叉客流分析: "Cross",
   路径动向分析: "Path",
