@@ -149,7 +149,6 @@ export default {
         return [this.xaxisOrlabels, ...this.series]
       } else {
         // 饼图系列
-
         if (this.type[0] === 'salesPie') {
           let newObj = { name: '', key: this.typeParameter, data: this.series }
           if (this.typeParameter === 'SaleAmount') {

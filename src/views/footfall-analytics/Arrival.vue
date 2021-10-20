@@ -25,6 +25,7 @@
           :labels="arrivalChartData.labels"
           :series="arrivalChartData.series"
           :type="arrivalChartData.type"
+          :extraOptions="arrivalChartData.extraOptions"
           title="到店次数"
           :tooltipUnit="$t('人')"
           @tableChage="ageTableChange"
@@ -42,8 +43,10 @@ import { getEntityFlowBatch } from "@/api/analysis";
 import exportMenu from "@/views/operation/components/ExportMenu.vue";
 import chartTabs from "@/components/common/CopyChartsTabs.vue";
 import FlowSelector from "_c/flow-selector/age-gender-flow-selector";
+import labels from "../home/seriesDict";
+import { time } from "highcharts";
 export default {
-  name: "ageGender",
+  name: "Arrival",
   components: {
     FlowSelector,
     chartTabs,
@@ -52,10 +55,6 @@ export default {
   data() {
     return {
       chartData: { arrivalChartData: {}, personChartData: {} },
-      genderDict: {
-        oldNum: "老顾客",
-        newNum: "新顾客",
-      },
       entitys: {},
       arrivalLabels: [],
       personLabels: [],
@@ -67,6 +66,15 @@ export default {
     },
     personChartData() {
       return this.chartData.personChartData;
+    },
+    chartWidth() {
+      let width;
+      if (this.chartData.arrivalChartData.xAxis) {
+        let xSize = this.chartData.arrivalChartData.xAxis.data.length;
+        xSize < 10 ? (width = "100%") : (width = xSize * 60);
+      } else width = "100%";
+      console.log(width);
+      return width;
     },
   },
   methods: {
@@ -124,192 +132,226 @@ export default {
           });
         });
       });
-      console.log(data);
-      this.arrivalLabels = {
-        name: this.$t("到店次数"),
-        key: "arrival",
-        data: Object.keys(arrivalCollection[0].data).map((e, i) => {
-          return e == Object.keys(arrivalCollection[0].data).length
-            ? e + "次以上"
-            : "第" + e + "次";
-        }),
-      };
-      this.personLabels = {
-        name: this.$t("新老顾客"),
-        key: "arrival",
-        data: Object.keys(personCollection[0].data).map((val, i) => {
-          return i == 0 ? "新顾客" : "老顾客";
-        }),
-      };
-      if (data.length === 1) {
-        if (singleTime) {
-          arrivalSeries = Object.values(arrivalCollection[0].data);
-          personSeries = Object.values(personCollection[0].data);
-
-          return {
-            arrivalChartData: {
-              type: ["pie"],
-              series: arrivalSeries,
-              labels: this.arrivalLabels,
-              xAxis: {},
-            },
-            personChartData: {
-              type: ["donut"],
-              series: personSeries,
-              labels: this.personLabels,
-              xAxis: {},
-            },
-          };
-        } else {
-          personSeries = [
-            {
-              key: "newNum",
-              name: "新顾客",
-              data: Object.values(data[0].stat).map((label, index) => {
-                return label.new_old_proportion.newNum || 0;
-              }),
-            },
-            {
-              key: "oldNum",
-              name: "老顾客",
-              data: Object.values(data[0].stat).map((label, index) => {
-                console.log(label.oldNum);
-                console.log(label);
-                return label.new_old_proportion.oldNum || 0;
-              }),
-            },
-          ];
-          console.log(this.arrivalLabels);
-          console.log(arrivalSeries);
+      if (data.length === 1 && singleTime) {
+        this.arrivalLabels = {
+          name: this.$t("到店次数"),
+          key: "arrival",
+          data: Object.keys(arrivalCollection[0].data).map((e, i) => {
+            return labels[e].name;
+          }),
+          icons: Object.keys(arrivalCollection[0].data).map((e, i) => {
+            return labels[e].icon;
+          }),
+        };
+        this.personLabels = {
+          name: this.$t("新老顾客"),
+          key: "arrival",
+          data: Object.keys(personCollection[0].data).map((e, i) => {
+            return labels[e].name;
+          }),
+          icons: Object.keys(personCollection[0].data).map((e, i) => {
+            return labels[e].icon;
+          }),
+        };
+        arrivalSeries = Object.values(arrivalCollection[0].data);
+        personSeries = Object.values(personCollection[0].data);
+        return {
+          arrivalChartData: {
+            type: ["pie"],
+            series: arrivalSeries,
+            labels: this.arrivalLabels,
+          },
+          personChartData: {
+            type: ["donut"],
+            series: personSeries,
+            labels: this.personLabels,
+          },
+        };
+      } else {
+        delete this.arrivalLabels.icons;
+        delete this.personLabels.icons;
+        if (data.length == 1) {
           arrivalX = {
             name: this.$t("时间"),
             key: "time",
-            data: this.getArrivalx(data, ["time"]),
+            data: JSON.parse(JSON.stringify(this.getArrivalx(data, ["time"]))),
           };
           personX = {
             name: this.$t("时间"),
             key: "time",
-            data: this.getPersonX(data, ["time"]),
+            data: JSON.parse(JSON.stringify(this.getPersonX(data, ["time"]))),
           };
-          Object.values(data[0].stat).forEach((item, i) => {
-            arrivalSeries.push({
+          this.personLabels.data.forEach((item, i) => {
+            personSeries.push({
               key: i,
-              name: arrivalX.data[i],
-              data: Object.values(item.arrival_distribution) || 0,
+              name: item,
+              data:
+                Object.values(data[0].stat).map((person) => {
+                  let num = i == 0 ? "newNum" : "oldNum";
+                  return person.new_old_proportion[num];
+                }) || [],
             });
           });
-          return {
-            arrivalChartData: {
-              type: ["bar"],
-              series: arrivalSeries,
-              labels: this.arrivalLabels,
-              xAxis: arrivalX,
-            },
-            personChartData: {
-              type: ["bar"],
-              series: personSeries,
-              labels: this.personLabels,
-              xAxis: personX,
-            },
-          };
-        }
-      } else {
-        if (singleTime) {
-          arrivalX = {
-            name: this.$t("名称"),
-            key: "name",
-            data: this.getArrivalx(data, ["id"]),
-          };
-          personX = {
-            name: this.$t("名称"),
-            key: "name",
-            data: this.getPersonX(data, ["id"]),
-          };
+          this.arrivalLabels.data.forEach((item, i) => {
+            arrivalSeries.push({
+              key: i,
+              name: item,
+              data:
+                Object.values(data[0].stat).map((arrival) => {
+                  return arrival.arrival_distribution[i + 1];
+                }) || [],
+            });
+          });
         } else {
-          arrivalX = {
-            name: this.$t("类别"),
-            key: "id_type",
-            data: this.getArrivalx(data, ["id", "time"]),
-          };
-          personX = {
-            name: this.$t("类别"),
-            key: "id_type",
-            data: this.getPersonX(data, ["id", "time"]),
-          };
+          let arrA = [];
+          data.forEach((item) => {
+            arrA = arrA.concat(Object.values(item.stat));
+          });
+          this.personLabels.data.forEach((item, i) => {
+            personSeries.push({
+              key: i,
+              name: item,
+              data:
+                arrA.map((person) => {
+                  let num = i == 0 ? "newNum" : "oldNum";
+                  return person.new_old_proportion[num];
+                }) || [],
+            });
+          });
+          let arrP = [];
+          data.forEach((item) => {
+            arrP = arrP.concat(Object.values(item.stat));
+          });
+          this.arrivalLabels.data.forEach((item, i) => {
+            arrivalSeries.push({
+              key: i,
+              name: item,
+              data:
+                Object.values(arrP).map((arrival) => {
+                  return arrival.arrival_distribution[i + 1];
+                }) || [],
+            });
+          });
+          if (singleTime) {
+            arrivalX = {
+              name: this.$t("名称"),
+              key: "time",
+              data: JSON.parse(JSON.stringify(this.getArrivalx(data, ["id"]))),
+            };
+            personX = {
+              name: this.$t("名称"),
+              key: "time",
+              data: JSON.parse(JSON.stringify(this.getPersonX(data, ["id"]))),
+            };
+          } else {
+            arrivalX = {
+              name: this.$t("类别"),
+              key: "type",
+              data: JSON.parse(
+                JSON.stringify(this.getArrivalx(data, ["time", "id"]))
+              ),
+            };
+            personX = {
+              name: this.$t("类别"),
+              key: "type",
+              data: JSON.parse(
+                JSON.stringify(this.getPersonX(data, ["time", "id"]))
+              ),
+            };
+          }
         }
         return {
           arrivalChartData: {
             type: ["bar"],
             series: arrivalSeries,
-            labels: this.arrivalLabels,
             xAxis: arrivalX,
+            extraOptions: {
+              chart: {
+                stacked: true,
+              },
+              plotOptions: {
+                bar: {
+                  endingShape: "flat",
+                },
+              },
+              legend: {
+                show: true,
+              },
+            },
           },
           personChartData: {
             type: ["bar"],
             series: personSeries,
-            labels: this.personLabels,
             xAxis: personX,
           },
         };
       }
     },
-    getPersonX(data, type) {
-      let arrivalx = [];
-      data.forEach((e) => {
-        Object.keys(this.genderDict).forEach((k) => {
-          let names = [];
-          if (type) {
-            type.forEach((cate) => {
-              if (cate === "id")
-                names.push(
-                  `${
-                    this.entitys.find((o) => Number(o.id) === Number(e.bzid))
-                      .label
-                  }`
-                );
-              if (cate === "time")
-                names.push(
-                  Object.keys(e.stat).map((val) => val.split(",").join(" - "))
-                );
-            });
-          }
-          let name = names.length
-            ? `${names.join(" ")} ${this.genderDict[k]}`
-            : `${this.genderDict[k]}`;
-          arrivalx.push(name);
-        });
-      });
-      console.log(arrivalx);
-      return arrivalx;
-    },
+
     getArrivalx(data, type) {
-      let person = [];
+      let arrivalXA = [];
       data.forEach((e) => {
-        this.arrivalLabels.data.forEach((k) => {
-          let names = [];
-          if (type) {
-            type.forEach((cate) => {
-              if (cate === "id")
-                names.push(
-                  `${
-                    this.entitys.find((o) => Number(o.id) === Number(e.bzid))
-                      .label
-                  }`
-                );
-              if (cate === "time")
-                names.push(
-                  Object.keys(e.stat).map((val) => val.split(",").join(" - "))
-                );
-            });
-          }
-          console.log(names);
-          console.log(this.arrivalLabels);
-          let name = names.length ? `${names.join(" ")} ${k}` : `${k}`;
-          person.push(name);
-        });
+        let arrivalNames = [];
+        if (type) {
+          type.forEach((cate) => {
+            if (cate === "id")
+              arrivalNames.push(
+                `${
+                  this.entitys.find((o) => Number(o.id) === Number(e.bzid))
+                    .label
+                }`
+              );
+            if (cate === "time")
+              arrivalNames.push(
+                Object.keys(e.stat).map((val) => val.split(",").join(" - "))
+              );
+          });
+        }
+        let nameA = arrivalNames.length ? arrivalNames.join(" ") : "";
+
+        if (type.length == 2) {
+          arrivalXA = arrivalXA.concat([
+            arrivalNames[0][0] + arrivalNames[1],
+            arrivalNames[0][1] + arrivalNames[1],
+          ]);
+        } else {
+          arrivalXA.push(nameA);
+        }
       });
-      console.log(person);
-      return person;
+      return arrivalXA;
+    },
+    getPersonX(data, type) {
+      let personXA = [];
+      data.forEach((e) => {
+        let personNames = [];
+        if (type) {
+          type.forEach((cate) => {
+            if (cate === "id")
+              personNames.push(
+                `${
+                  this.entitys.find((o) => Number(o.id) === Number(e.bzid))
+                    .label
+                }`
+              );
+            if (cate === "time")
+              personNames.push(
+                Object.keys(e.stat).map((val) => val.split(",").join(" - "))
+              );
+          });
+        }
+        let nameP = personNames.length ? personNames.join(" ") : "";
+
+        if (type.length == 2) {
+          personXA = personXA.concat([
+            personNames[0][0] + personNames[1],
+            personNames[0][1] + personNames[1],
+          ]);
+        } else {
+          personXA.push(nameP);
+        }
+      });
+      console.log(personXA);
+      return personXA;
     },
     ageTableChange(value) {
       this.ageTableList = value.data;

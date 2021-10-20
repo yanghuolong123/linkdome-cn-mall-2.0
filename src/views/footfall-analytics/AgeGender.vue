@@ -308,6 +308,7 @@ export default {
           gender: genderChartData,
         };
       } else {
+        console.log(this.extraOptions);
         return {
           age: {
             xAxis: ageXaxis,
@@ -324,9 +325,6 @@ export default {
       let res = [];
       data.forEach((e) => {
         Object.keys(this.genderDict).forEach((k) => {
-          console.log(
-            this.entitys.find((o) => Number(o.id) === Number(e.id)).label
-          );
           let names = [];
           if (categoriesKeys) {
             categoriesKeys.forEach((cate) => {
@@ -337,6 +335,8 @@ export default {
                       .label
                   }`
                 );
+                console.log(e);
+                console.log(e[cate]);
               if (cate === "time") names.push(e[cate].split(",").join(" - "));
             });
           }
@@ -346,6 +346,7 @@ export default {
           res.push(name);
         });
       });
+      console.log(res);
       return res;
     },
     getAgeSeries(data) {

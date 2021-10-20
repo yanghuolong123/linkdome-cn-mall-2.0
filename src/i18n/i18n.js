@@ -28,7 +28,8 @@ const i18n = new VueI18n({
   messages: {
 		'zh-CN': Object.assign(zh, zhLocale,ivuZh),
 		'en-US': Object.assign(en, enLocale,ivuEn)
-	}
+	},
+  silentFallbackWarn: true
 })
 
 
