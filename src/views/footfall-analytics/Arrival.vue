@@ -287,7 +287,6 @@ export default {
         };
       }
     },
-
     getArrivalx(data, type) {
       let arrivalXA = [];
       data.forEach((e) => {
@@ -307,14 +306,16 @@ export default {
               );
           });
         }
-        let nameA = arrivalNames.length ? arrivalNames.join(" ") : "";
-
         if (type.length == 2) {
           arrivalXA = arrivalXA.concat([
             arrivalNames[0][0] + arrivalNames[1],
             arrivalNames[0][1] + arrivalNames[1],
           ]);
         } else {
+          let nameA = arrivalNames.length ? arrivalNames.join(" ") : "";
+          nameA.split(",")[1]
+            ? (arrivalXA = nameA.split(","))
+            : arrivalXA.push(nameA);
           arrivalXA.push(nameA);
         }
       });
@@ -339,15 +340,16 @@ export default {
               );
           });
         }
-        let nameP = personNames.length ? personNames.join(" ") : "";
-
         if (type.length == 2) {
           personXA = personXA.concat([
             personNames[0][0] + personNames[1],
             personNames[0][1] + personNames[1],
           ]);
         } else {
-          personXA.push(nameP);
+          let nameP = personNames.length ? personNames.join(" ") : "";
+          nameP.split(",")[1]
+            ? (personXA = nameP.split(","))
+            : personXA.push(nameP);
         }
       });
       console.log(personXA);
