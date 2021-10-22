@@ -542,16 +542,16 @@
           listData = listData.sort((a,b)=>{
             return Number(b.value)-Number(a.value)
           })
-          if(listData.length * 20 < this.maxValue){
-            listData.forEach((o,i)=>{
-              o.value = this.maxValue - (i*20)
-            })
-          }else {
-            listData.forEach((o,i)=>{
-              o.value = listData.length * 20 - (i*20)
-            })
-          }
-          this.minValue = listData[listData.length-1].value
+          // if(listData.length * 20 < this.maxValue){
+          //   listData.forEach((o,i)=>{
+          //     o.value = this.maxValue - (i*20)
+          //   })
+          // }else {
+          //   listData.forEach((o,i)=>{
+          //     o.value = listData.length * 20 - (i*20)
+          //   })
+          // }
+          // this.minValue = listData[listData.length-1].value
           this.heatMapDataList = listData;
           if (!this.maxValue) this.heatMapDataList = []
         }else{
