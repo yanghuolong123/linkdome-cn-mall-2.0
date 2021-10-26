@@ -3,7 +3,7 @@
 		<!--国际化按钮-->
 <!--		<LanguageBtn style="margin: 8px 16px 0 auto;"/>-->
 		<div class="login">
-			<img src="@/assets/images/fixation_img/logo/logo.png" width="150" alt="">
+<!--			<img src="@/assets/images/fixation_img/logo/logo.png" width="150" alt="">-->
 			<!--			<div class="system-select" @click="selectBoxShow=true">{{systemSelectName}} <Icon type="md-arrow-dropdown" />-->
 			<div class="system-select">{{systemSelectName}}
 				<div class="select-box" v-show="selectBoxShow">
@@ -26,9 +26,9 @@
 			</div>
 			<Button class="login-btn" :loading="loading" type="primary" @click="handleLogin('formValidate')">{{ $t('login') }}</Button>
 		</div>
-		<div class="bottom">
-			苏ICP备2021044524号 苏州凌图科技有限公司 Copyright 2019-{{currentYear}}
-		</div>
+<!--		<div class="bottom">-->
+<!--			苏ICP备2021044524号 苏州凌图科技有限公司 Copyright 2019-{{currentYear}}-->
+<!--		</div>-->
 		<vs-alert :active="isalert" color="danger" icon-pack="feather" icon="icon-info">
 			<span>{{alertText}}</span>
 		</vs-alert>
@@ -372,6 +372,7 @@ export default {
 				font-weight: bold;
 				cursor: pointer;
 				position: relative;
+				margin-top: 50px;
 				.select-box{
 					padding: 13px;
 					position: absolute;
