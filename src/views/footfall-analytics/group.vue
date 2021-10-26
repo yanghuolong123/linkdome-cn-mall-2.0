@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex-center common-card">
+    <!-- <div class="flex-center common-card">
       <i-date-picker
         class="w-select"
         v-model="time"
@@ -13,53 +13,14 @@
       <Button size="large" @click="resetClick" class="m-l-20">{{
         $t("重置")
       }}</Button>
-    </div>
-    <chart-box
-      chartId="enter"
-      :chart="enterChart"
-      ref="chartEnter"
-      :isDateCompare="false"
-      :showSummary="true"
-      @toolClick="
-        (chartName) => {
-          handletoolClick(chartName, 'chartEnter');
-        }
-      "
-      class="common-card m-t-20 chart-1"
-      :toolList="toolList"
-    >
-      <div class="flex-center quota">
-        <span class="quota-label">{{ $t("fx.Data_indicators") }}</span>
-        <Select
-          v-model="enterSelect"
-          multiple
-          :max-tag-count="1"
-          @on-change="enterSelectChange"
-        >
-          <Option
-            v-for="item in enterFlowList"
-            :value="item.value"
-            :key="item.value"
-            >{{ $t(item.name) }}</Option
-          >
-        </Select>
-        <i-switch
-          class="ml-20 switch"
-          size="large"
-          @on-change="compareTypeChange"
-          v-model="isHour"
-        >
-          <span slot="open">{{ $t("小时") }}</span>
-          <span slot="close">{{ $t("fx.day") }}</span>
-        </i-switch>
-      </div>
-    </chart-box>
+    </div> -->
+    <attributeFlowSelect></attributeFlowSelect>
     <Table
       stripe
       height="400"
       :columns="columns"
       :span-method="objectSpanMethod"
-      :data="tableData"
+      :data="arr"
     >
       <!-- <template slot-scope="{ row }" slot="entityType">
         <span>{{ getItype(row.entityName) }}</span>
@@ -70,6 +31,7 @@
 
 <script>
 import iDatePicker from "@/components/common/idatepicker.vue";
+import attributeFlowSelect from "@/components/flow-selector/attribute-flow-select";
 import ChartBox from "_c/common/Chart-box";
 import config from "@/config/index";
 import { LineChartConstructor } from "@/libs/echart-constructor/line.class.js";
@@ -99,32 +61,29 @@ export default {
       isHour: false,
       enterFlowList: [],
       toolList: config.toolList,
-      columns: [{ key: "1", title: "实体名称" }, { key: "2", title: "时间" }],
-      tableData: [
-        {
-          1: "凌图时代西安",
-          2: "凌图时代西安2",
-        },
-        {
-          1: "凌图时代西安",
-          2: "凌图时代西安2",
-        },
-        {
-          1: "凌图时代西安",
-          2: "凌图时代西安2",
-        },
+      columns: [{ key: "n", title: "实体名称" }, { key: "g", title: "时间" }],
+      arr: [
+        { n: 1, g: "00", l: 2 },
+        { n: 1, g: "100", l: 2 },
+        { n: 1, g: "010", l: 2 },
+        { n: 2, g: "001", l: 2 },
+        { n: 2, g: "0051", l: 2 },
+        { n: 2, g: "0051", l: 2 },
+        { n: 2, g: "0051", l: 2 },
       ],
     };
   },
   components: {
     iDatePicker,
     ChartBox,
+    attributeFlowSelect,
   },
   created() {
     this.enterFlowList = config.dictionary.filter((o) => {
       return ["enter", "exit"].includes(o.value);
     });
-    console.log(this.$store.state);
+    this.getTableData();
+    console.log(this.$store.state.home.headerAction);
   },
   methods: {
     dateSelect(val) {
@@ -133,18 +92,30 @@ export default {
     // 表格合并行
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
-        // if (rowIndex % 2 === 0) {
-        //   return {
-        //     rowspan: 2,
-        //     colspan: 1,
-        //   };
-        // } else {
-        //   return {
-        //     rowspan: 0,
-        //     colspan: 0,
-        //   };
-        // }
+        return {
+          rowspan: row.num ? row.num : 1,
+          colspan: 1,
+        };
       }
+    },
+    getTableData() {
+      this.arr = this.arr.reverse();
+      for (let i = 0; i < this.arr.length; i++) {
+        let item = this.arr[i];
+        let count = 0;
+        let iName = item.n;
+        console.log(iName);
+        for (let j = 0; j < this.arr.length; j++) {
+          if (item.n == this.arr[j].n) {
+            count++;
+            this.arr[j].num = 0;
+          }
+        }
+        item["n"] = iName;
+        item.num = count;
+      }
+      this.arr = this.arr.reverse();
+      console.log(this.arr);
     },
     // get数据
     getData() {
@@ -154,7 +125,7 @@ export default {
         date1Array: this.time,
         date2Array: [],
         enterType: "",
-        entitys: [],
+        // entitys: [],
         selectList: [],
       };
       this.oParams = new ParamsConstructor(p, this.isHour);
