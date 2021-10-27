@@ -261,6 +261,20 @@ export default [
           pageTitle: '停留时间分析'
         }
       },
+      { // 顾客轨迹分析
+        path: 'trajectory',
+        name: 'Trajectory',
+        component: () =>
+          import ('@/views/footfall-analytics/Trajectory.vue'),
+        meta: {
+          breadcrumb: [
+            { title: 'DashBoard', url: '/dashboard' },
+            { title: '顾客行为分析', url: '/generatrix' },
+            { title: '顾客轨迹分析', active: true },
+          ],
+          pageTitle: '顾客轨迹分析'
+        }
+      },
     ]
   },
 

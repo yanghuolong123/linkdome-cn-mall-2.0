@@ -176,6 +176,7 @@ module.exports =  {
   路径动向分析: "Path",
   实体引流分析: "Drainage",
   停留时间分析: "Dwell Time",
+  顾客轨迹分析: "Trajectory",
   目标达成分析: "Goal",
   节假日活动分析: "Holiday Analysis",
   销售分析: "Sales Dimensions",
