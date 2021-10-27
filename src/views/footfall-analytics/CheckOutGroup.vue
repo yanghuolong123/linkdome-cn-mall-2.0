@@ -6,56 +6,79 @@
     ></cusPropertySelect>
     <div class="mt-4 common-card">
       <h4 class="title mb-2">{{ $t("顾客结账信息统计") }}</h4>
-
-      <Table stripe height="400" :columns="tableColumns" :data="tableData">
-        <!-- <template slot-scope="{ row }" slot="entityType">
-          <span>{{ getItype(row.entityName) }}</span>
-        </template> -->
-      </Table>
+      <Table
+        class="mt-4"
+        stripe
+        height="470"
+        :columns="tableColumns"
+        :data="tableData"
+      ></Table>
       <div class="paginations">
         <vs-pagination
-          :total="cusTotal ? cusTotal : 1"
-          v-model="params.page"
+          :total="checkTotal ? checkTotal : 1"
+          v-model="currentP"
           goto
         ></vs-pagination>
       </div>
     </div>
-    <BigImg @close="close" :info="info"></BigImg>
+    <BigImg :info="info"></BigImg>
   </div>
 </template>
 
 <script>
-import BigImg from "./components/BigImg.vue";
+import { addZero } from "@/libs/util";
+import _ from "lodash";
+import BigImg from "./components/GetBigImg.vue";
 import { checkoutGroup } from "@/api/analysis";
 import cusPropertySelect from "_c/flow-selector/property-flow-select.vue";
 export default {
   name: "CusProperty",
   components: { cusPropertySelect, BigImg },
+  watch: {
+    currentP() {
+      this.params.page = this.currentP;
+      this.getList();
+    },
+  },
   data() {
     return {
+      currentP: 1,
       info: {},
       tableColumns: [
-        { title: "收银柜台", key: "create_time" },
-        { title: "开始时间", key: "is_male" },
-        { title: "结束时间", key: "is_male" },
-        { title: "花费时间", key: "is_together" },
+        { title: "收银柜台", key: "Cashier" },
+        { title: "开始时间", key: "start_time" },
+        { title: "结束时间", key: "end_time" },
+        {
+          title: "花费时间",
+          key: "checkout_time",
+          render: (h, params) => {
+            return h("span", this.getTime(params.row.checkout_time));
+          },
+        },
         {
           title: "截图",
-          key: "is_together",
+          key: "image_path",
           render: (h, params) => {
             return h("img", {
-              style: { width: "9.375rem", height: "6.25rem" },
+              style: {
+                width: "7.75rem",
+                height: "4.375rem",
+                marginTop: ".3125rem",
+              },
               attrs: {
-                src: params.row.src,
-                onclick: getImg(params.row),
+                src: params.row.image_path,
+              },
+              on: {
+                click: () => {
+                  this.getImg(_.cloneDeep(params.row));
+                },
               },
             });
           },
         },
       ],
       tableData: [],
-      currentx: 1,
-      cusTotal: 1,
+      checkTotal: 1,
       params: {},
     };
   },
@@ -63,21 +86,29 @@ export default {
     this.getList();
   },
   methods: {
-    close() {},
+    getTime(time) {
+      let h = addZero(parseInt(time / 3600));
+      let m = addZero(parseInt(time / 60));
+      let s = addZero(parseInt(time % 60));
+      return h + ":" + m + ":" + s;
+    },
     getImg(val) {
-      this.info = val;
+      this.info = {
+        title: val.Cashier,
+        time: val.start_time + "-" + val.end_time,
+        image_path: val.image_path,
+      };
     },
     handleClick(val) {
       this.params = val;
       this.params.page = 1;
+      this.currentP = 1
       this.getList();
     },
     getList() {
       checkoutGroup(this.params).then((res) => {
-        console.log(res);
         let data = res.data.data;
-        data.list.forEach((element) => {});
-        this.cusTotal = data.count;
+        this.checkTotal = Math.ceil(data.count / 10);
         this.tableData = data.list;
       });
     },

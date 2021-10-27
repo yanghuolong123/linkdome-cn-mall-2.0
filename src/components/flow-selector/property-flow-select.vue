@@ -4,15 +4,13 @@
       <i-date-picker
         class="w-select"
         :value="time"
-        :dType="1"
         @selectDate="dateSelect"
       ></i-date-picker>
       <Select
         v-show="!polygon"
         placeholder="顾客性别"
-        v-model="queryParams.gender"
+        v-model="queryParams.is_male"
         class="w-select m-l-20"
-        @on-change="genderChange"
       >
         <Option :value="0">女</Option>
         <Option :value="1">男</Option>
@@ -40,7 +38,6 @@
         placeholder="到店方式"
         v-model="queryParams.is_together"
         class="w-select m-l-20"
-        @on-change="awayChange"
         v-show="!polygon"
       >
         <Option v-for="item in wayList" :value="item.value" :key="item.value">{{
@@ -51,15 +48,11 @@
         placeholder="收银柜台"
         v-model="queryParams.polygon_id"
         class="w-select m-l-20"
-        @on-change="polygonChange"
         v-show="polygon"
       >
-        <Option
-          v-for="item in polygonList"
-          :value="item.value"
-          :key="item.value"
-          >{{ item.lable }}</Option
-        >
+        <Option v-for="item in polygonList" :value="item.id" :key="item.id">{{
+          item.name
+        }}</Option>
       </Select>
       <Button size="large" type="primary" class="m-l-20" @click="handleClick">{{
         $t("查询")
@@ -84,10 +77,10 @@ export default {
   data() {
     return {
       polygonList: [],
-      queryParams: {},
+      queryParams: { limit: 10 },
       time: [],
       age: "",
-      wayList: [{ value: 1, lable: "结伴" }],
+      wayList: [{ value: 0, lable: "独行" }, { value: 1, lable: "结伴" }],
       ageList: [
         { value: "0-20", lable: "小于20" },
         { value: "20-30", lable: "20-30" },
@@ -99,32 +92,27 @@ export default {
     };
   },
   methods: {
-    polygonChange() {},
     ageChange() {
       let age = this.age.split("-");
       this.queryParams.age1 = age[0];
       this.queryParams.age2 = age[1];
     },
-    awayChange() {},
-    genderChange() {},
-    dateSelect() {
-      this.queryParams.time1 = Moment(this.time[0]).format("YYYY-MM-DD");
-      this.queryParams.time2 = Moment(this.time[1]).format("YYYY-MM-DD");
+    dateSelect(time) {
+      this.queryParams.time1 = Moment(time[0]).format("YYYY-MM-DD");
+      this.queryParams.time2 = Moment(time[1]).format("YYYY-MM-DD");
     },
     handleClick() {
-      // for (const key in this.queryParams) {
-      //   if (!this.queryParams[key]) delete this.queryParams[key];
-      // }
       this.$emit("handleClick", this.queryParams);
     },
     resetClick() {
-      this.is_together = 0;
+      this.queryParams = { limit: 10 };
+      this.age = "";
+      this.time = [];
     },
   },
   created() {
     if (this.polygon) {
       cashierList().then((res) => {
-        console.log(res);
         this.polygonList = res.data.data;
       });
     }

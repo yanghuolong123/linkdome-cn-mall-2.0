@@ -3,23 +3,21 @@ import qs from "qs";
 export const cashierList = (params) => {
   return naxios.request({
     url: "customer/cashier",
-    data: params,
+    params: params,
     method: "get",
   });
 };
 export const checkoutGroup = (params) => {
-  console.log(params);
   return naxios.request({
     url: "customer/checkout_group",
-    data: params,
+    params: params,
     method: "get",
   });
 };
 export const cusProperty = (params) => {
-  console.log(params);
   return naxios.request({
     url: "customer/nature",
-    data: params,
+    params: params,
     method: "get",
   });
 };
