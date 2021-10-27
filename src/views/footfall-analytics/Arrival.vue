@@ -3,20 +3,20 @@
 		<flow-selector @paramsPrepare="paramsPrepare"></flow-selector>
 		<!-- enter -->
 		<div class="mt-6 newOld-chart-box" >
-			<div class="bg-white box-card pb-6">
-				<chart-tabs :xAxis="newOldChartData.xAxis"
-										:labels="newOldChartData.labels"
-										:series="newOldChartData.series"
-										:type="newOldChartData.type"
-										:extraOptions="extraOptionsNewold"
-										:chartWidth='chartWidth'
-										title="新老顾客占比"
-										:tooltipUnit="$t('人')"
-										@tableChage="ageTableChange">
-					<export-menu slot="export"
-											 @onchange="ageExportBiztop"></export-menu>
-				</chart-tabs>
-			</div>
+<!--			<div class="bg-white box-card pb-6">-->
+<!--				<chart-tabs :xAxis="newOldChartData.xAxis"-->
+<!--										:labels="newOldChartData.labels"-->
+<!--										:series="newOldChartData.series"-->
+<!--										:type="newOldChartData.type"-->
+<!--										:extraOptions="extraOptionsNewold"-->
+<!--										:chartWidth='chartWidth'-->
+<!--										title="新老顾客占比"-->
+<!--										:tooltipUnit="$t('人')"-->
+<!--										@tableChage="ageTableChange">-->
+<!--					<export-menu slot="export"-->
+<!--											 @onchange="ageExportBiztop"></export-menu>-->
+<!--				</chart-tabs>-->
+<!--			</div>-->
 			<div class="bg-white box-card pb-6">
 				<chart-tabs :xAxis="arrivalChartData.xAxis"
 										:labels="arrivalChartData.labels"
@@ -24,7 +24,7 @@
 										:type="arrivalChartData.type"
 										:extraOptions="extraOptionsArrival"
 										:chartWidth='chartWidth'
-										title="到店次数"
+										title="到访次数"
 										:tooltipUnit="$t('人')"
 										@tableChage="genderTableChange">
 					<export-menu slot="export"
@@ -66,7 +66,7 @@
           plotOptions: {
             bar: {
               endingShape: 'flat',
-              columnWidth:'35%'
+              // columnWidth:'35%'
             }
           }
 				},
@@ -209,9 +209,9 @@
 <style lang="stylus">
 	.newOld-chart-box
 		display grid
-		grid-template-columns repeat(2, minmax(10px, 1fr))
+		grid-template-columns repeat(1, minmax(0px, 1fr))
 		grid-template-areas 'age gender'
-		grid-gap 20px
+		grid-gap 0px
 		// @media (max-width: 768px)
 		//   grid-template-columns minmax(10px, 1fr)
 		//   grid-template-areas 'age' 'gender'
@@ -219,7 +219,7 @@
 		>div
 			&:nth-child(1)
 				grid-area age
-				margin-right 20px
+				margin-right 0px
 			&:nth-child(2) /deep/
 			grid-area gender
 				.custom-legend-box

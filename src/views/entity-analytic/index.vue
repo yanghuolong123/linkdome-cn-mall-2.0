@@ -107,6 +107,7 @@
       },
       //显示集客量图表的条件为：选择了购物中心 并且 是单天的数据
       showOccu () {
+        return false //沃尔玛不显示集客量
         if (!this.oParams) return false
         return !isEmpty(this.oParams.getSelectedShopId()) && this.oParams.isSingleDay()&&this.oParams.params.compareType!=="businessType"
       },

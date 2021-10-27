@@ -179,6 +179,7 @@ module.exports = {
   停留时间分析: "Dwell Time",
   顾客属性统计: "CusProperty",
   结账分组统计: "CheckOutGroup",
+  顾客轨迹分析: "Trajectory",
   目标达成分析: "Goal",
   节假日活动分析: "Holiday Analysis",
   销售分析: "Sales Dimensions",
