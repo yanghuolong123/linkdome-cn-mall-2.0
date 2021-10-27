@@ -2,7 +2,7 @@
   <div class="box" v-show="show">
     <div class="imgInfo">
       <p>{{ info.title }} &nbsp; ({{ info.time }})</p>
-      <i @click="close" class="el-icon-circle-close icon"></i>
+      <i @click="show = false" class="el-icon-circle-close icon"></i>
       <img :src="info.image_path" alt="此处应有图片" />
     </div>
   </div>
@@ -20,11 +20,6 @@ export default {
   watch: {
     info() {
       this.show = true;
-    },
-  },
-  methods: {
-    close() {
-      this.show = false;
     },
   },
 };
