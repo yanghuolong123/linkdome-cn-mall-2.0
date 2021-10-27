@@ -93,7 +93,7 @@ export default {
       tableData: [],
       checkTotal: 1,
       params: {
-        limit: 20,
+        limit: 25,
         time1: Moment()
           .subtract(1, "days")
           .format("YYYY-MM-DD"),
