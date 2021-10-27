@@ -1,7 +1,11 @@
 <template>
   <div class="selector-container common-card">
     <div class="flex-center">
-      <i-date-picker class="w-select" :value="time"></i-date-picker>
+      <i-date-picker
+        class="w-select"
+        @selectDate="dateSelect"
+        :value="time"
+      ></i-date-picker>
       <Select
         v-show="!polygon"
         placeholder="顾客性别"
@@ -73,7 +77,7 @@ export default {
   data() {
     return {
       polygonList: [],
-      queryParams: { limit: 20 },
+      queryParams: {},
       time: [
         Moment()
           .subtract(1, "days")
@@ -93,6 +97,10 @@ export default {
     };
   },
   methods: {
+    dateSelect(time) {
+      this.queryParams.time1 = Moment(time[0]).format("YYYY-MM-DD");
+      this.queryParams.time2 = Moment(time[1]).format("YYYY-MM-DD");
+    },
     ageChange() {
       if (this.age) {
         let age = this.age.split("-");
@@ -101,12 +109,10 @@ export default {
       }
     },
     handleClick() {
-      this.queryParams.time1 = Moment(this.time[0]).format("YYYY-MM-DD");
-      this.queryParams.time2 = Moment(this.time[1]).format("YYYY-MM-DD");
       this.$emit("handleClick", this.queryParams);
     },
     resetClick() {
-      this.queryParams = { limit: 20 };
+      this.queryParams = {};
       this.age = "";
       this.time = [
         Moment()

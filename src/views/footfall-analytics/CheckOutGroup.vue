@@ -133,7 +133,7 @@ export default {
     },
     // 查询
     handleClick(val) {
-      this.params = val;
+      this.params = Object.assign(this.params, val);
       this.params.page = 1;
       this.currentP = 1;
       this.getList();
