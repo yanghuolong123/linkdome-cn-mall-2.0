@@ -1,10 +1,7 @@
 <template>
   <div class="selector-container common-card">
     <div class="flex-center">
-      <i-date-picker
-        class="w-select"
-        :value="time"
-      ></i-date-picker>
+      <i-date-picker class="w-select" :value="time"></i-date-picker>
       <Select
         v-show="!polygon"
         placeholder="顾客性别"
@@ -97,9 +94,11 @@ export default {
   },
   methods: {
     ageChange() {
-      let age = this.age.split("-");
-      this.queryParams.age1 = age[0];
-      this.queryParams.age2 = age[1];
+      if (this.age) {
+        let age = this.age.split("-");
+        this.queryParams.age1 = age[0];
+        this.queryParams.age2 = age[1];
+      }
     },
     handleClick() {
       this.queryParams.time1 = Moment(this.time[0]).format("YYYY-MM-DD");

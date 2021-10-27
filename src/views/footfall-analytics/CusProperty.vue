@@ -21,7 +21,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="params.page"
-          :page-sizes="[20, 50, 100, 200,500]"
+          :page-sizes="[25, 50, 100, 200, 500]"
           :page-size="params.limit"
           layout="total, sizes, prev, pager, next, jumper"
           :total="cusTotal"
