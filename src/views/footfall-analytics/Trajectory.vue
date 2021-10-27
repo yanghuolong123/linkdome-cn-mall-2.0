@@ -68,6 +68,18 @@
 					</template>
 				</el-table-column>
 			</el-table>
+			<div class="pagination">
+				<el-pagination
+					background
+					@size-change="sizeChange"
+					@current-change="currentChange"
+					:current-page.sync="queryParams.page"
+					:page-sizes="[25, 50, 100, 200,500]"
+					:page-size="queryParams.limit"
+					layout="prev, pager, next,sizes,jumper"
+					:total="total">
+				</el-pagination>
+			</div>
 			<BigImg :info="previewImgInfo"></BigImg>
 		</div>
 	</div>
@@ -75,8 +87,9 @@
 <script>
   import BigImg from "./components/GetBigImg.vue";
 	import {getCustomerTrailList} from '@/api/passenger'
-	import  moment from 'moment'
-	const today = moment(new Date).format('YYYY-MM-DD')
+	import {disabledDate} from '../../libs/util'
+  import  moment from 'moment'
+	const yesterday = moment(new Date).subtract(1, 'days').format('YYYY-MM-DD')
 	export default {
 	  components:{
       BigImg
@@ -84,18 +97,25 @@
 	  data(){
 	    return{
 	      previewImgInfo:{},
-        options: {
-          disabledDate (date) {
-            return date && date.valueOf() > Date.now()
-          }
-        },
+        total:0,
         tableData:[],
         queryParams:{
-        	date:[today,today]
+	        page:1,
+					limit:25,
+        	date:[yesterday,yesterday]
 				},
 			}
 		},
+
     methods: {
+      sizeChange(size){
+        this.queryParams.limit = size;
+        this.handleSearch()
+			},
+      currentChange(page){
+        this.queryParams.page = page;
+        this.handleSearch()
+			},
       imgClick(img){
         this.previewImgInfo = {
           title: img.object_id,
@@ -119,22 +139,29 @@
 				const params = {
 				  time1:this.queryParams.date[0],
 				  time2:this.queryParams.date[1],
+					page:this.queryParams.page,
+					limit:this.queryParams.limit
 				}
         getCustomerTrailList(params).then(res=>{
 					this.tableData = res.data.data.list ||[];
+					this.total =res.data.data.count||0
 					this.tableData.forEach(o=>{
 					  o.expand = true;
 					  this.$set(o,'listPage',0)
 					  o.list = _.chunk(o.list,10)
 					})
-        })
+        }).catch(err=>{
+          this.total = 0;
+          this.tableData = []
+				})
 			},
 			reset(){
-   			this.queryParams.date = [today,today]
+   			this.queryParams.date = [yesterday,yesterday]
 			},
     },
     created () {
-	   this.handleSearch()
+	    this.options = disabledDate;
+	   	this.handleSearch()
     },
 	}
 </script>
@@ -187,6 +214,10 @@
 			height: 79px;
 		}
 
+	}
+	.pagination{
+		text-align: center;
+		margin-top: 20px;
 	}
 }
 </style>
