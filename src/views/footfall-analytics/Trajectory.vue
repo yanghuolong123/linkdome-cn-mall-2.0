@@ -113,7 +113,7 @@
         getCustomerTrailList(params).then(res=>{
 					this.tableData = res.data.data.list ||[];
 					this.tableData.forEach(o=>{
-					  o.expand = false;
+					  o.expand = true;
 					  this.$set(o,'listPage',0)
 					  o.list = _.chunk(o.list,10)
 					})
