@@ -1,268 +1,289 @@
-import naxios from '@/libs/api.request'
-import qs from 'qs'
-export const postQueueData = params => {
-  const { id, zones, type, range, innerRange } = params
+import naxios from "@/libs/api.request";
+import qs from "qs";
+export const cashierList = (params) => {
   return naxios.request({
-    url: 'data/queue',
+    url: "customer/cashier",
+    params: params,
+    method: "get",
+  });
+};
+export const checkoutGroup = (params) => {
+  return naxios.request({
+    url: "customer/checkout_group",
+    params: params,
+    method: "get",
+  });
+};
+export const cusProperty = (params) => {
+  return naxios.request({
+    url: "customer/nature",
+    params: params,
+    method: "get",
+  });
+};
+export const postQueueData = (params) => {
+  const { id, zones, type, range, innerRange } = params;
+  return naxios.request({
+    url: "data/queue",
     data: qs.stringify({
       id,
       zones,
       type,
       range,
-      innerRange
+      innerRange,
     }),
-    method: 'post'
-  })
-}
-export const dateCompare = params => {
+    method: "post",
+  });
+};
+export const dateCompare = (params) => {
   return naxios.request({
-    url: 'analysis/dateentityscompare',
+    url: "analysis/dateentityscompare",
     data: params,
-    method: 'post'
-  })
-}
-export const dwellTime = params => {
-  const { time1, time2, bzid } = params
+    method: "post",
+  });
+};
+export const dwellTime = (params) => {
+  const { time1, time2, bzid } = params;
   return naxios.request({
-    url: 'dwelltime/chart',
+    url: "dwelltime/chart",
     params: {
       time1,
       time2,
-      bzid
+      bzid,
     },
-    method: 'get'
-  })
-}
-export const entityCompare = params => {
-  const { id, bzid1, bzid2, type, range, innerRange } = params
+    method: "get",
+  });
+};
+export const entityCompare = (params) => {
+  const { id, bzid1, bzid2, type, range, innerRange } = params;
   return naxios.request({
-    url: 'analysis/entitycompare',
+    url: "analysis/entitycompare",
     data: qs.stringify({
       id,
       bzid1,
       bzid2,
       type,
       range,
-      innerRange
+      innerRange,
     }),
-    method: 'post'
-  })
-}
+    method: "post",
+  });
+};
 
-export const crossData = params => {
-  const { time1, time2, from_bzid, to_bzid, range } = params
+export const crossData = (params) => {
+  const { time1, time2, from_bzid, to_bzid, range } = params;
   return naxios.request({
-    url: 'crossFlow/index',
+    url: "crossFlow/index",
     params: {
       time1,
       time2,
       from_bzid,
       to_bzid,
-      range
+      range,
     },
-    method: 'get'
-  })
-}
-export const relevanceData = params => {
-  const { bzid, time } = params
+    method: "get",
+  });
+};
+export const relevanceData = (params) => {
+  const { bzid, time } = params;
   return naxios.request({
-    url: 'flow/assoc',
+    url: "flow/assoc",
     params: {
       bzid,
-      time
+      time,
     },
-    method: 'get'
-  })
-}
-export const directionData = params => {
-  const { bzid, time } = params
+    method: "get",
+  });
+};
+export const directionData = (params) => {
+  const { bzid, time } = params;
   return naxios.request({
-    url: 'cross/direction',
+    url: "cross/direction",
     params: {
       bzid,
-      time
+      time,
     },
-    method: 'get'
-  })
-}
+    method: "get",
+  });
+};
 
-export const getEntityFlowBatch = params => {
+export const getEntityFlowBatch = (params) => {
   return naxios.request({
-    url: 'stat/entityFlowBatch',
+    url: "stat/entityFlowBatch",
     params,
-    method: 'get'
-  })
-}
-export const activitiesList = params => {
+    method: "get",
+  });
+};
+export const activitiesList = (params) => {
   return naxios.request({
-    url: 'dict/industry',
+    url: "dict/industry",
     params,
-    method: 'get'
-  })
-}
-export const goShopTen = params => {
-  const { time1, time2, industry_id, property_id } = params
+    method: "get",
+  });
+};
+export const goShopTen = (params) => {
+  const { time1, time2, industry_id, property_id } = params;
   return naxios.request({
-    url: 'shop/enterRate/top',
+    url: "shop/enterRate/top",
     params: {
       time1,
       time2,
       industry_id,
-      property_id
+      property_id,
     },
-    method: 'get'
-  })
-}
+    method: "get",
+  });
+};
 
-export const goShopTenLoading = params => {
-  const { time1, time2, industry_id } = params
+export const goShopTenLoading = (params) => {
+  const { time1, time2, industry_id } = params;
   return naxios.request({
-    url: '/enterexcel',
+    url: "/enterexcel",
     params: {
       time1,
       time2,
-      industry_id
+      industry_id,
     },
-    method: 'get'
-  })
-}
+    method: "get",
+  });
+};
 
-export const goShopTrend = params => {
-  const { time1, time2, bzid, range } = params
+export const goShopTrend = (params) => {
+  const { time1, time2, bzid, range } = params;
   return naxios.request({
-    url: 'shop/enterRate/trend',
+    url: "shop/enterRate/trend",
     params: {
       time1,
       time2,
       bzid,
-      range
+      range,
     },
-    method: 'get'
-  })
-}
-export const drainageData = params => {
-  const { time, bzid } = params
+    method: "get",
+  });
+};
+export const drainageData = (params) => {
+  const { time, bzid } = params;
   return naxios.request({
-    url: 'flow/drainage',
+    url: "flow/drainage",
     params: {
       time,
-      bzid
+      bzid,
     },
-    method: 'get'
-  })
-}
-export const flowMoving = params => {
-  const { time, property_id } = params
+    method: "get",
+  });
+};
+export const flowMoving = (params) => {
+  const { time, property_id } = params;
   return naxios.request({
-    url: 'flow/moving',
+    url: "flow/moving",
     params: {
       time,
-      property_id
+      property_id,
     },
-    method: 'get'
-  })
-}
-export const PathMovingData = params => {
-  const { time, property_id, start, end, floor_id } = params
+    method: "get",
+  });
+};
+export const PathMovingData = (params) => {
+  const { time, property_id, start, end, floor_id } = params;
   return naxios.request({
-    url: 'judge/keyPath',
+    url: "judge/keyPath",
     params: {
       time,
       property_id,
       start,
       end,
-      floor_id
+      floor_id,
     },
-    method: 'get'
-  })
-}
+    method: "get",
+  });
+};
 
-export const activityDataList = params => {
-  const { date, property_id } = params
+export const activityDataList = (params) => {
+  const { date, property_id } = params;
   return naxios.request({
-    url: 'manager/query_active_target',
+    url: "manager/query_active_target",
     params: {
       date,
-      property_id
+      property_id,
     },
-    method: 'get'
-  })
-}
+    method: "get",
+  });
+};
 export const getEffective = (bzid, start_time, end_time, innerRange) => {
   return naxios.request({
-    url: 'passflow/visits',
+    url: "passflow/visits",
     data: {
       bzid: bzid,
       start_time: start_time,
       end_time: end_time,
-      innerRange: innerRange
+      innerRange: innerRange,
     },
-    method: 'post'
-  })
-}
-export const getHeatMapData = params => {
-  const { time, bzid, timeRange } = params
+    method: "post",
+  });
+};
+export const getHeatMapData = (params) => {
+  const { time, bzid, timeRange } = params;
   return naxios.request({
-    url: 'analysis/heat_map',
+    url: "analysis/heat_map",
     data: qs.stringify({
       time,
       bzid,
-      timeRange
+      timeRange,
     }),
-    method: 'post'
-  })
-}
-export const getHeatMapFloorData = params => {
-  const { property_id, type } = params
+    method: "post",
+  });
+};
+export const getHeatMapFloorData = (params) => {
+  const { property_id, type } = params;
   return naxios.request({
-    url: 'judge/getHKBzids',
+    url: "judge/getHKBzids",
     params: {
       property_id,
-      type
+      type,
     },
-    method: 'get'
-  })
-}
-export const getEntityDrainage = params => {
-  const { time1, range, from_bzids, to_bzids } = params
+    method: "get",
+  });
+};
+export const getEntityDrainage = (params) => {
+  const { time1, range, from_bzids, to_bzids } = params;
   return naxios.request({
-    url: 'cross/trend',
+    url: "cross/trend",
     params: {
       time1,
       range,
       from_bzids,
-      to_bzids
+      to_bzids,
     },
-    method: 'get'
-  })
-}
+    method: "get",
+  });
+};
 //时段客流分布热力
-export const getTimePassengerFlowDistribution = params => {
-  const { bzIds, begin_time, end_time } = params
+export const getTimePassengerFlowDistribution = (params) => {
+  const { bzIds, begin_time, end_time } = params;
   return naxios.request({
-    url: 'flow/timeDistr',
+    url: "flow/timeDistr",
     params: {
       bzIds,
       begin_time,
       end_time,
     },
-  })
-}
+  });
+};
 // 热力地图分布
-export const getHeatMapDistribution = params => {
+export const getHeatMapDistribution = (params) => {
   return naxios.request({
-    url: 'judge/heatMap',
-    params
-  })
-}
-export const Path3D = params => {
-  const { time, property_id } = params
+    url: "judge/heatMap",
+    params,
+  });
+};
+export const Path3D = (params) => {
+  const { time, property_id } = params;
   return naxios.request({
-    url: 'flow/movingTd',
+    url: "flow/movingTd",
     params: {
       time,
-      property_id
+      property_id,
     },
-    method: 'get'
-  })
-}
+    method: "get",
+  });
+};
