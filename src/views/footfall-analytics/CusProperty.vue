@@ -6,22 +6,35 @@
       <Table
         class="mt-4"
         stripe
-        height="470"
+        height="510"
         :columns="tableColumns"
         :data="tableData"
       ></Table>
       <div class="paginations">
-        <vs-pagination
+        <!-- <vs-pagination
           :total="cusTotal ? cusTotal : 1"
           v-model="currentP"
           goto
-        ></vs-pagination>
+        ></vs-pagination> -->
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="params.page"
+          :page-sizes="[20, 50, 100, 200,500]"
+          :page-size="params.limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="cusTotal"
+        >
+        </el-pagination>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Moment from "moment";
+
 import { cusProperty } from "@/api/analysis";
 import cusPropertySelect from "_c/flow-selector/property-flow-select.vue";
 export default {
@@ -49,13 +62,21 @@ export default {
           title: "进店方式",
           key: "is_together",
           render(h, params) {
-            return h("span", params.row.is_together ? "结伴" : "独自");
+            return h("span", params.row.is_together ? "结伴" : "独行");
           },
         },
       ],
       tableData: [],
       cusTotal: 1,
-      params: { limit: 10 },
+      params: {
+        limit: 20,
+        time1: Moment()
+          .subtract(1, "days")
+          .format("YYYY-MM-DD"),
+        time2: Moment()
+          .subtract(1, "days")
+          .format("YYYY-MM-DD"),
+      },
       currentP: 1,
     };
   },
@@ -63,10 +84,20 @@ export default {
     this.getList();
   },
   methods: {
+    handleSizeChange(val) {
+      this.params.limit = val;
+      this.params.page = 1;
+      this.getList();
+    },
+    handleCurrentChange(val) {
+      this.params.page = val;
+      this.getList();
+    },
+    // 点击查询
     handleClick(val) {
       this.params = val;
       this.params.page = 1;
-      this.currentP = 1
+      this.currentP = 1;
       this.getList();
     },
     getList() {
@@ -75,7 +106,7 @@ export default {
         data.list.forEach((item) => {
           item.range = item.age + "-" + item.age_max;
         });
-        this.cusTotal = Math.ceil(data.count / 10);
+        this.cusTotal = data.count;
         this.tableData = data.list;
       });
     },
@@ -88,5 +119,8 @@ export default {
   position: relative;
   bottom: 6px;
   margin-top: 20px;
+  .el-pagination {
+    text-align: center;
+  }
 }
 </style>

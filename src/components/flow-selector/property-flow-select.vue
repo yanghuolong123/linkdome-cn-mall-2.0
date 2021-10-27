@@ -4,7 +4,6 @@
       <i-date-picker
         class="w-select"
         :value="time"
-        @selectDate="dateSelect"
       ></i-date-picker>
       <Select
         v-show="!polygon"
@@ -15,7 +14,7 @@
         <Option :value="0">女</Option>
         <Option :value="1">男</Option>
       </Select>
-      <!-- <Select
+      <Select
         v-show="!polygon"
         placeholder="年龄区间"
         v-model="age"
@@ -25,15 +24,15 @@
         <Option v-for="item in ageList" :value="item.value" :key="item.value">{{
           item.lable
         }}</Option>
-      </Select> -->
-      <Input
+      </Select>
+      <!-- <Input
         class="m-l-20 ipt"
         v-model="age"
         placeholder="年龄区间"
         style="width: 300px"
         @on-blur="ageChange"
         v-show="!polygon"
-      ></Input>
+      ></Input> -->
       <Select
         placeholder="到店方式"
         v-model="queryParams.is_together"
@@ -77,17 +76,22 @@ export default {
   data() {
     return {
       polygonList: [],
-      queryParams: { limit: 10 },
-      time: [],
+      queryParams: { limit: 20 },
+      time: [
+        Moment()
+          .subtract(1, "days")
+          .format("YYYY-MM-DD"),
+        Moment()
+          .subtract(1, "days")
+          .format("YYYY-MM-DD"),
+      ],
       age: "",
       wayList: [{ value: 0, lable: "独行" }, { value: 1, lable: "结伴" }],
       ageList: [
-        { value: "0-20", lable: "小于20" },
-        { value: "20-30", lable: "20-30" },
-        { value: "30-40", lable: "30-40" },
-        { value: "40-50", lable: "40-50" },
-        { value: "50-60", lable: "50-60" },
-        { value: "60-120", lable: "大于60" },
+        { value: "0-20", lable: "20以下" },
+        { value: "20-40", lable: "20-40" },
+        { value: "40-60", lable: "40-60" },
+        { value: "60-150", lable: "60以上" },
       ],
     };
   },
@@ -97,17 +101,22 @@ export default {
       this.queryParams.age1 = age[0];
       this.queryParams.age2 = age[1];
     },
-    dateSelect(time) {
-      this.queryParams.time1 = Moment(time[0]).format("YYYY-MM-DD");
-      this.queryParams.time2 = Moment(time[1]).format("YYYY-MM-DD");
-    },
     handleClick() {
+      this.queryParams.time1 = Moment(this.time[0]).format("YYYY-MM-DD");
+      this.queryParams.time2 = Moment(this.time[1]).format("YYYY-MM-DD");
       this.$emit("handleClick", this.queryParams);
     },
     resetClick() {
-      this.queryParams = { limit: 10 };
+      this.queryParams = { limit: 20 };
       this.age = "";
-      this.time = [];
+      this.time = [
+        Moment()
+          .subtract(1, "days")
+          .format("YYYY-MM-DD"),
+        Moment()
+          .subtract(1, "days")
+          .format("YYYY-MM-DD"),
+      ];
     },
   },
   created() {

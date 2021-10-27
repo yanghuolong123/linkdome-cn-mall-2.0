@@ -9,16 +9,27 @@
       <Table
         class="mt-4"
         stripe
-        height="470"
+        height="510"
         :columns="tableColumns"
         :data="tableData"
       ></Table>
       <div class="paginations">
-        <vs-pagination
+        <!-- <vs-pagination
           :total="checkTotal ? checkTotal : 1"
           v-model="currentP"
           goto
-        ></vs-pagination>
+        ></vs-pagination> -->
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="params.page"
+          :page-sizes="[25, 50, 100, 200,500]"
+          :page-size="params.limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="checkTotal"
+        >
+        </el-pagination>
       </div>
     </div>
     <BigImg :info="info"></BigImg>
@@ -26,6 +37,8 @@
 </template>
 
 <script>
+import Moment from "moment";
+
 import { addZero } from "@/libs/util";
 import _ from "lodash";
 import BigImg from "./components/GetBigImg.vue";
@@ -79,19 +92,38 @@ export default {
       ],
       tableData: [],
       checkTotal: 1,
-      params: {},
+      params: {
+        limit: 20,
+        time1: Moment()
+          .subtract(1, "days")
+          .format("YYYY-MM-DD"),
+        time2: Moment()
+          .subtract(1, "days")
+          .format("YYYY-MM-DD"),
+      },
     };
   },
   created() {
     this.getList();
   },
   methods: {
+    handleSizeChange(val) {
+      this.params.limit = val;
+      this.params.page = 1;
+      this.getList();
+    },
+    handleCurrentChange(val) {
+      this.params.page = val;
+      this.getList();
+    },
+    // 秒钟时间转换
     getTime(time) {
       let h = addZero(parseInt(time / 3600));
       let m = addZero(parseInt(time / 60));
       let s = addZero(parseInt(time % 60));
       return h + ":" + m + ":" + s;
     },
+    // 查看大图
     getImg(val) {
       this.info = {
         title: val.Cashier,
@@ -99,16 +131,18 @@ export default {
         image_path: val.image_path,
       };
     },
+    // 查询
     handleClick(val) {
       this.params = val;
       this.params.page = 1;
-      this.currentP = 1
+      this.currentP = 1;
       this.getList();
     },
+    // 请求
     getList() {
       checkoutGroup(this.params).then((res) => {
         let data = res.data.data;
-        this.checkTotal = Math.ceil(data.count / 10);
+        this.checkTotal = data.count;
         this.tableData = data.list;
       });
     },
@@ -121,5 +155,8 @@ export default {
   position: relative;
   bottom: 6px;
   margin-top: 20px;
+  .el-pagination {
+    text-align: center;
+  }
 }
 </style>
