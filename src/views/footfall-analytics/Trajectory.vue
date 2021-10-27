@@ -55,13 +55,10 @@
 							<el-button :disabled="!scope.row.listPage || !scope.row.list.length"
 												 @click.stop="pageChange(scope.row,scope.row.listPage-1)"
 												 size="mini" class="icon-btn left" icon="el-icon-arrow-left" circle></el-button>
-							<el-image
-								v-for="img in scope.row.list[scope.row.listPage]"
-								:key="img.id"
-								class="img"
-								:src="img.image_path"
-								:preview-src-list="scope.row.list[scope.row.listPage].map(o=>{return o.image_path})">
-							</el-image>
+							<div @click="imgClick(img)" class="flex-column img-item" :key="img.id" v-for="img in scope.row.list[scope.row.listPage]">
+								<img class="img" :src="img.image_path"/>
+								<span class="time">{{img.cur_time}}</span>
+							</div>
 							<el-button :disabled="!scope.row.list.length || scope.row.listPage+1 === scope.row.list.length"
 												 size="mini" class="icon-btn right"
 												 icon="el-icon-arrow-right"
@@ -71,16 +68,22 @@
 					</template>
 				</el-table-column>
 			</el-table>
+			<BigImg :info="previewImgInfo"></BigImg>
 		</div>
 	</div>
 </template>
 <script>
+  import BigImg from "./components/GetBigImg.vue";
 	import {getCustomerTrailList} from '@/api/passenger'
 	import  moment from 'moment'
 	const today = moment(new Date).format('YYYY-MM-DD')
 	export default {
+	  components:{
+      BigImg
+		},
 	  data(){
 	    return{
+	      previewImgInfo:{},
         options: {
           disabledDate (date) {
             return date && date.valueOf() > Date.now()
@@ -93,6 +96,13 @@
 			}
 		},
     methods: {
+      imgClick(img){
+        this.previewImgInfo = {
+          title: img.object_id,
+          time: img.cur_time,
+          image_path: img.image_path,
+				}
+			},
       pageChange(row,page){
         row.listPage = page
 			},
@@ -150,6 +160,16 @@
 		width: 100%;
 		background:#f7f7f7;
 		padding: 9px 50px;
+		.img-item{
+			cursor: pointer;
+			.time{
+				font-size: 12px;
+				color: #626262;
+			}
+		}
+		.img-item+.img-item{
+			margin-left: 16px;
+		}
 		.icon-btn{
 			position: absolute;
 			top: 50%;
@@ -166,9 +186,7 @@
 			width: 136px;
 			height: 79px;
 		}
-		.img+.img{
-			margin-left: 16px;
-		}
+
 	}
 }
 </style>
