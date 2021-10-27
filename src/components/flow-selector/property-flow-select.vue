@@ -122,6 +122,7 @@ export default {
           .subtract(1, "days")
           .format("YYYY-MM-DD"),
       ];
+      this.dateSelect(this.time);
     },
   },
   created() {
