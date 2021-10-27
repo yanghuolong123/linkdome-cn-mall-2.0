@@ -76,7 +76,7 @@
 					:current-page.sync="queryParams.page"
 					:page-sizes="[25, 50, 100, 200,500]"
 					:page-size="queryParams.limit"
-					layout="prev, pager, next,sizes,jumper"
+					layout="total, sizes, prev, pager, next, jumper"
 					:total="total">
 				</el-pagination>
 			</div>
