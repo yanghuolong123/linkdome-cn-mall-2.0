@@ -56,7 +56,7 @@ module.exports = {
   account: "账户",
   accountNum: "账号",
   password: "密码",
-  analysisPlatform: "凌图智慧商业综合分析平台",
+  analysisPlatform: "智慧商业综合分析平台",
   forgetPassword: "忘记密码？",
   rememberPassword: "记住密码",
   login: "登录",
