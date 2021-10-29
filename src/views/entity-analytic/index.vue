@@ -117,7 +117,7 @@
     }, {
       icon: 'daoru',
       value:'download',
-      name: '实体客流分析顾客/店员客流量趋势'
+      name: '实体客流分析店员客流量趋势'
     }
   ];
   let customerToolList = [
@@ -136,7 +136,7 @@
     }, {
       icon: 'daoru',
       value:'download',
-      name: '实体客流分析顾客/店员客流量趋势'
+      name: '实体客流分析顾客客流量趋势'
     }
   ];
   export default {
