@@ -50,11 +50,11 @@ export default {
     {
       icon: 'zhexiantu',
       value:'line',
-      name: '客流量趋势'
+      name: '总客流量趋势'
     }, {
       icon: '62',
       value:'bar',
-      name: '客流量趋势'
+      name: '总客流量趋势'
     }, {
       icon: 'biaoge-copy',
       value:'table',
