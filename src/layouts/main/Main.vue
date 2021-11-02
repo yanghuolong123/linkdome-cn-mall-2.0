@@ -265,6 +265,7 @@ export default {
 }
 .content-wrapper{
   .router-view{
+		overflow: hidden;
     padding:22px;
   }
 }

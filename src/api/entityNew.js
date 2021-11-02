@@ -7,3 +7,10 @@ export const entityFlow = params => {
     params
   })
 }
+//店员/顾客客流趋势（通用 新）
+export const staffEntityFlow = params => {
+  return naxios.request({
+    url: 'flow/trendBatch2',
+    params
+  })
+}

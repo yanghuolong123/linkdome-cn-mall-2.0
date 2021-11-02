@@ -94,3 +94,11 @@ export const getHuojiaList = property => {
     params: property
   })
 }
+//客户轨迹　
+export const getCustomerTrailList = params => {
+  return naxios.request({
+    url: '/customer/trail',
+    method: 'get',
+    params
+  })
+}

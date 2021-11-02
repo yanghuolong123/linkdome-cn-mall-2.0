@@ -62,10 +62,12 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import heatmapjsVue from 'heatmapjs-vue'
 Vue.use(ViewUI)
+
 Vue.use(ElementUI,{
   i18n: (key, value) => i18n.t(key, value)
 })
 import './my-theme/index.less';
+import './my-theme/element-variables.scss'
 
 import Alert from '@/components/alert/index'
 Vue.prototype.$alert = Alert.install;

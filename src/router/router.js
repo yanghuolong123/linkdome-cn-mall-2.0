@@ -54,20 +54,6 @@ export default [
           pageTitle: "实体客流分析",
         },
       },
-      {
-        // 分组情况分析
-        path: "group",
-        name: "分组情况分析",
-        component: () => import("@/views/footfall-analytics/group.vue"),
-        meta: {
-          breadcrumb: [
-            { title: "DashBoard", url: "/" },
-            { title: "客流分析", url: "/group" },
-            { title: "分组情况分析", active: true },
-          ],
-          pageTitle: "分组情况分析",
-        },
-      },
 
       {
         // 年龄性别分析
@@ -154,7 +140,7 @@ export default [
         },
       },
       {
-        // 到店次数统计
+        // 到访次数统计
         path: "arrival",
         name: "Arrival",
         component: () => import("@/views/footfall-analytics/Arrival.vue"),
@@ -277,6 +263,48 @@ export default [
             { title: "停留时间分析", active: true },
           ],
           pageTitle: "停留时间分析",
+        },
+      },
+      {
+        // 顾客属性统计
+        path: "cusProperty",
+        name: "CusProperty",
+        component: () => import("@/views/footfall-analytics/CusProperty.vue"),
+        meta: {
+          breadcrumb: [
+            { title: "客流分析", url: "/" },
+            { title: "顾客行为分析", url: "/generatrix" },
+            { title: "顾客属性统计", active: true },
+          ],
+          pageTitle: "顾客属性统计",
+        },
+      },
+      {
+        // 结账分组统计
+        path: "checkOutGroup",
+        name: "CheckOutGroup",
+        component: () => import("@/views/footfall-analytics/CheckOutGroup.vue"),
+        meta: {
+          breadcrumb: [
+            { title: "客流分析", url: "/" },
+            { title: "顾客行为分析", url: "/generatrix" },
+            { title: "结账分组统计", active: true },
+          ],
+          pageTitle: "结账分组统计",
+        },
+      },
+      {
+        // 顾客轨迹分析
+        path: "trajectory",
+        name: "Trajectory",
+        component: () => import("@/views/footfall-analytics/Trajectory.vue"),
+        meta: {
+          breadcrumb: [
+            { title: "DashBoard", url: "/dashboard" },
+            { title: "顾客行为分析", url: "/generatrix" },
+            { title: "顾客轨迹分析", active: true },
+          ],
+          pageTitle: "顾客轨迹分析",
         },
       },
     ],

@@ -442,9 +442,8 @@ const selectMixin = {
       this.entitySelectObj = obj;
     },
     //给级联数据最后一级加全部按钮
-    cascadeDataAddAll(data) {
-      console.log(data);
-      findCascadeLastLevel(data, "children", addAll);
+    cascadeDataAddAll (data) {
+      findCascadeLastLevel(data, 'children', addAll)
 
       function addAll(levelNode) {
         const parent_id = levelNode[levelNode.length - 1].parent_id;

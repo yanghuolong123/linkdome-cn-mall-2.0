@@ -54,25 +54,22 @@ export default {
   ],
   toolList: [
     {
-      icon: "zhexiantu",
-      value: "line",
-      name: "客流量趋势",
-    },
-    {
-      icon: "62",
-      value: "bar",
-      name: "客流量趋势",
-    },
-    {
-      icon: "biaoge-copy",
-      value: "table",
-      name: "详细数据",
-    },
-    {
-      icon: "daoru",
-      value: "download",
-      name: "实体客流分析客流量趋势",
-    },
+      icon: 'zhexiantu',
+      value:'line',
+      name: '总客流量趋势'
+    }, {
+      icon: '62',
+      value:'bar',
+      name: '总客流量趋势'
+    }, {
+      icon: 'biaoge-copy',
+      value:'table',
+      name: '详细数据'
+    }, {
+      icon: 'daoru',
+      value:'download',
+      name: '实体客流分析客流量趋势'
+    }
   ],
   noPropertyPages: [
     "Dashboard",

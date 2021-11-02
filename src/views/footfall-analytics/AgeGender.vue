@@ -4,17 +4,17 @@
     <!-- enter -->
     <div class="mt-6 age-chart-box">
       <div class="bg-white box-card pb-6">
-        <chart-tabs
-          :xAxis="agechartData.xAxis"
-          :labels="agechartData.labels"
-          :series="agechartData.series"
-          :type="agechartData.type"
-          :chartWidth="ageChartWidth"
-          title="年龄分布"
-          :tooltipUnit="$t('人')"
-          @tableChage="ageTableChange"
-        >
-          <export-menu slot="export" @onchange="ageExportBiztop"></export-menu>
+        <chart-tabs :xAxis="agechartData.xAxis"
+                    :labels="agechartData.labels"
+                    :series="agechartData.series"
+                    :type="agechartData.type"
+                    :extraOptions="extraOptions"
+                    :chartWidth='ageChartWidth'
+                    title="年龄分布"
+                    :tooltipUnit="$t('人')"
+                    @tableChage="ageTableChange">
+          <export-menu slot="export"
+                       @onchange="ageExportBiztop"></export-menu>
         </chart-tabs>
       </div>
       <div class="bg-white box-card pb-6">
@@ -73,17 +73,14 @@ export default {
       },
       chartData: { age: {}, gender: {} },
       extraOptions: {
-        chart: {
-          stacked: true,
-        },
+        // chart: {
+        //   stacked: true
+        // },
         plotOptions: {
           bar: {
-            endingShape: "flat",
-          },
-        },
-        legend: {
-          show: true,
-        },
+            columnWidth:'60%'
+          }
+        }
       },
       ageTableList: [],
       genderTableList: [],
