@@ -570,7 +570,7 @@
             columns: [],
             tableData: []
           }
-        });
+        }
       }
     },
     getLineOption(quta = this.enterSelect) {
