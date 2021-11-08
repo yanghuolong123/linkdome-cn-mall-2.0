@@ -82,7 +82,6 @@ export default {
           title: "截图",
           key: "image_path",
           render: (h, params) => {
-            console.log(params);
             return h("img", {
               style: {
                 width: "7.75rem",

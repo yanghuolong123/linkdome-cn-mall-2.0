@@ -140,8 +140,6 @@ export default {
       this.handleSearch();
     },
     imgClick(img, index, list) {
-      console.log(index);
-      console.log(list);
       this.index = index;
       this.previewImgInfo = list;
       // this.previewImgInfo = {
