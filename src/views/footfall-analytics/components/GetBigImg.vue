@@ -31,9 +31,7 @@ export default {
   },
   watch: {
     index() {
-      console.log(this.index);
       this.indexImg = Number(this.index.split("-")[0]);
-      console.log(this.indexImg);
     },
     info() {
       this.infoList = this.info;
