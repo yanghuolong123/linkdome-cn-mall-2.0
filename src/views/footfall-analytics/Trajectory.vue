@@ -95,7 +95,11 @@
         >
         </el-pagination>
       </div>
-      <BigImg :index="index" :keyName="keyName" :info="previewImgInfo"></BigImg>
+      <BigImg
+        :index="index + '-' + +new Date()"
+        :keyName="keyName"
+        :info="previewImgInfo"
+      ></BigImg>
     </div>
   </div>
 </template>
@@ -141,7 +145,7 @@ export default {
     },
     imgClick(img, index, list) {
       this.index = index;
-      this.previewImgInfo = list;
+      this.previewImgInfo = _.cloneDeep(list);
       // this.previewImgInfo = {
       //   title: img.object_id,
       //   time: img.cur_time,

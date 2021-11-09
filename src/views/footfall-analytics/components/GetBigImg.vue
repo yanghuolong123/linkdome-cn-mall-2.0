@@ -31,6 +31,7 @@ export default {
   },
   watch: {
     index() {
+      console.log(this.index);
       this.indexImg = Number(this.index.split("-")[0]);
       console.log(this.indexImg);
     },
@@ -41,14 +42,10 @@ export default {
   },
   methods: {
     getPrevious() {
-      if (this.indexImg != 0) {
-        this.indexImg--;
-      }
+      if (this.indexImg != 0) this.indexImg--;
     },
     getNext() {
-      if (this.indexImg != this.info.length - 1) {
-        this.indexImg++;
-      }
+      if (this.indexImg != this.info.length - 1) this.indexImg++;
     },
   },
 };
