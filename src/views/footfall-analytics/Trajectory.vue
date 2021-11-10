@@ -1,223 +1,253 @@
 <template>
-	<div class="containter">
-		<div class="selector-container common-card">
-			<div class="flex-center">
-				<DatePicker
-					type="daterange"
-					@on-change="val=>queryParams.date = val"
-					v-model="queryParams.date"
-					class="w-select"
-					placement="bottom-start"
-					:placeholder="$t('holder.请选择')"
-					:options="options"
-				></DatePicker>
-				<Button size="large" class="m-l-20" type="primary" @click="handleSearch">{{ $t('查询') }}</Button>
-				<Button size="large" class="m-l-20" @click="reset">{{ $t('重置') }}</Button>
-			</div>
-		</div>
-		<div class="common-card m-t-20 main">
-			<div class="tit">顾客轨迹信息统计</div>
-			<el-table
-				ref="table"
-				default-expand-all
-				:data="tableData"
-				:header-cell-style="{background:'#F8F8F8'}"
-				class="trajectory-table m-t-20"
-				style="width: 100%"
-				border>
-				<el-table-column
-					align="center"
-					prop="object_id"
-					label="顾客ID">
-				</el-table-column>
-				<el-table-column
-					prop="count"
-					align="center"
-					label="轨迹点位数">
-				</el-table-column>
-				<el-table-column
-					prop="operate"
-					align="center"
-					label="操作">
-					<template slot-scope="scope">
-						<div @click="rowClick(scope.row)" class="operate-btn">
-							轨迹点位 <i class="el-icon-arrow-down"></i>
-						</div>
-					</template>
-				</el-table-column>
-				<el-table-column
-					prop="operate"
-					align="center"
-					width="1"
-					type="expand">
-					<template slot-scope="scope">
-						<div class="img-box flex-center p-r">
-							<el-button :disabled="!scope.row.listPage || !scope.row.list.length"
-												 @click.stop="pageChange(scope.row,scope.row.listPage-1)"
-												 size="mini" class="icon-btn left" icon="el-icon-arrow-left" circle></el-button>
-							<div @click="imgClick(img)" class="flex-column img-item" :key="img.id" v-for="img in scope.row.list[scope.row.listPage]">
-								<img class="img" :src="img.image_path"/>
-								<span class="time">{{img.cur_time}}</span>
-							</div>
-							<el-button :disabled="!scope.row.list.length || scope.row.listPage+1 === scope.row.list.length"
-												 size="mini" class="icon-btn right"
-												 icon="el-icon-arrow-right"
-												 @click="pageChange(scope.row,scope.row.listPage+1)"
-												 circle></el-button>
-						</div>
-					</template>
-				</el-table-column>
-			</el-table>
-			<div class="pagination">
-				<el-pagination
-					background
-					@size-change="sizeChange"
-					@current-change="currentChange"
-					:current-page.sync="queryParams.page"
-					:page-sizes="[25, 50, 100, 200,500]"
-					:page-size="queryParams.limit"
-					layout="total, sizes, prev, pager, next, jumper"
-					:total="total">
-				</el-pagination>
-			</div>
-			<BigImg :info="previewImgInfo"></BigImg>
-		</div>
-	</div>
+  <div class="containter">
+    <div class="selector-container common-card">
+      <div class="flex-center">
+        <DatePicker
+          type="daterange"
+          @on-change="(val) => (queryParams.date = val)"
+          v-model="queryParams.date"
+          class="w-select"
+          placement="bottom-start"
+          :placeholder="$t('holder.请选择')"
+          :options="options"
+        ></DatePicker>
+        <Button
+          size="large"
+          class="m-l-20"
+          type="primary"
+          @click="handleSearch"
+          >{{ $t("查询") }}</Button
+        >
+        <Button size="large" class="m-l-20" @click="reset">{{
+          $t("重置")
+        }}</Button>
+      </div>
+    </div>
+    <div class="common-card m-t-20 main">
+      <div class="tit">顾客轨迹信息统计</div>
+      <el-table
+        ref="table"
+        default-expand-all
+        :data="tableData"
+        :header-cell-style="{ background: '#F8F8F8' }"
+        class="trajectory-table m-t-20"
+        style="width: 100%"
+        border
+      >
+        <el-table-column align="center" prop="object_id" label="顾客ID">
+        </el-table-column>
+        <el-table-column prop="count" align="center" label="轨迹点位数">
+        </el-table-column>
+        <el-table-column prop="operate" align="center" label="操作">
+          <template slot-scope="scope">
+            <div @click="rowClick(scope.row)" class="operate-btn">
+              轨迹点位 <i class="el-icon-arrow-down"></i>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="operate" align="center" width="1" type="expand">
+          <template slot-scope="scope">
+            <div class="img-box flex-center p-r">
+              <el-button
+                :disabled="!scope.row.listPage || !scope.row.list.length"
+                @click.stop="pageChange(scope.row, scope.row.listPage - 1)"
+                size="mini"
+                class="icon-btn left"
+                icon="el-icon-arrow-left"
+                circle
+              ></el-button>
+              <div
+                @click="
+                  imgClick(img, index, scope.row.list[scope.row.listPage])
+                "
+                class="flex-column img-item"
+                :key="img.id"
+                v-for="(img, index) in scope.row.list[scope.row.listPage]"
+              >
+                <img class="img" :src="img.image_path" />
+                <span class="time">{{ img.cur_time }}</span>
+              </div>
+              <el-button
+                :disabled="
+                  !scope.row.list.length ||
+                    scope.row.listPage + 1 === scope.row.list.length
+                "
+                size="mini"
+                class="icon-btn right"
+                icon="el-icon-arrow-right"
+                @click="pageChange(scope.row, scope.row.listPage + 1)"
+                circle
+              ></el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="pagination">
+        <el-pagination
+          background
+          @size-change="sizeChange"
+          @current-change="currentChange"
+          :current-page.sync="queryParams.page"
+          :page-sizes="[25, 50, 100, 200, 500]"
+          :page-size="queryParams.limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+        >
+        </el-pagination>
+      </div>
+      <BigImg
+        :index="index + '-' + +new Date()"
+        :keyName="keyName"
+        :info="previewImgInfo"
+      ></BigImg>
+    </div>
+  </div>
 </template>
 <script>
-  import BigImg from "./components/GetBigImg.vue";
-	import {getCustomerTrailList} from '@/api/passenger'
-	import {disabledDate} from '../../libs/util'
-  import  moment from 'moment'
-	const yesterday = moment(new Date).subtract(1, 'days').format('YYYY-MM-DD')
-	export default {
-	  components:{
-      BigImg
-		},
-	  data(){
-	    return{
-	      previewImgInfo:{},
-        total:0,
-        tableData:[],
-        queryParams:{
-	        page:1,
-					limit:25,
-        	date:[yesterday,yesterday]
-				},
-			}
-		},
+import BigImg from "./components/GetBigImg.vue";
+import { getCustomerTrailList } from "@/api/passenger";
+import { disabledDate } from "../../libs/util";
+import moment from "moment";
+const yesterday = moment(new Date())
+  .subtract(1, "days")
+  .format("YYYY-MM-DD");
+export default {
+  components: {
+    BigImg,
+  },
+  data() {
+    return {
+      index: 0,
+      previewImgInfo: {},
+      total: 0,
+      tableData: [],
+      queryParams: {
+        page: 1,
+        limit: 25,
+        date: [yesterday, yesterday],
+      },
+      keyName: {
+        title: "object_id",
+        time1: "cur_time",
+        image_path: "image_path",
+      },
+    };
+  },
 
-    methods: {
-      sizeChange(size){
-        this.queryParams.limit = size;
-        this.handleSearch()
-			},
-      currentChange(page){
-        this.queryParams.page = page;
-        this.handleSearch()
-			},
-      imgClick(img){
-        this.previewImgInfo = {
-          title: img.object_id,
-          time: img.cur_time,
-          image_path: img.image_path,
-				}
-			},
-      pageChange(row,page){
-        row.listPage = page
-			},
-			rowClick(row){
-          // 点击button展开
-        this.$refs.table.toggleRowExpansion(row, !row.expand);
-        row.expand = !row.expand
-			},
-      handleSearch(){
-				if(_.isEmpty(_.compact(this.queryParams.date))){
-          this.$alert({ content: this.$t('fn.请选择', [this.$t('日期')])})
-					return
-				}
-				const params = {
-				  time1:this.queryParams.date[0],
-				  time2:this.queryParams.date[1],
-					page:this.queryParams.page,
-					limit:this.queryParams.limit
-				}
-        getCustomerTrailList(params).then(res=>{
-					this.tableData = res.data.data.list ||[];
-					this.total =res.data.data.count||0
-					this.tableData.forEach(o=>{
-					  o.expand = true;
-					  this.$set(o,'listPage',0)
-					  o.list = _.chunk(o.list,10)
-					})
-        }).catch(err=>{
+  methods: {
+    sizeChange(size) {
+      this.queryParams.limit = size;
+      this.handleSearch();
+    },
+    currentChange(page) {
+      this.queryParams.page = page;
+      this.handleSearch();
+    },
+    imgClick(img, index, list) {
+      this.index = index;
+      this.previewImgInfo = _.cloneDeep(list);
+      // this.previewImgInfo = {
+      //   title: img.object_id,
+      //   time: img.cur_time,
+      //   image_path: img.image_path,
+      // };
+    },
+    pageChange(row, page) {
+      row.listPage = page;
+    },
+    rowClick(row) {
+      // 点击button展开
+      this.$refs.table.toggleRowExpansion(row, !row.expand);
+      row.expand = !row.expand;
+    },
+    handleSearch() {
+      if (_.isEmpty(_.compact(this.queryParams.date))) {
+        this.$alert({ content: this.$t("fn.请选择", [this.$t("日期")]) });
+        return;
+      }
+      const params = {
+        time1: this.queryParams.date[0],
+        time2: this.queryParams.date[1],
+        page: this.queryParams.page,
+        limit: this.queryParams.limit,
+      };
+      getCustomerTrailList(params)
+        .then((res) => {
+          this.tableData = res.data.data.list || [];
+          this.total = res.data.data.count || 0;
+          this.tableData.forEach((o) => {
+            o.expand = true;
+            this.$set(o, "listPage", 0);
+            o.list = _.chunk(o.list, 10);
+          });
+        })
+        .catch((err) => {
           this.total = 0;
-          this.tableData = []
-				})
-			},
-			reset(){
-   			this.queryParams.date = [yesterday,yesterday]
-			},
+          this.tableData = [];
+        });
     },
-    created () {
-	    this.options = disabledDate;
-	   	this.handleSearch()
+    reset() {
+      this.queryParams.date = [yesterday, yesterday];
     },
-	}
+  },
+  created() {
+    this.options = disabledDate;
+    this.handleSearch();
+  },
+};
 </script>
 <style scoped lang="scss">
-.containter{
-	.main{
-		.tit{
-			font-size: 18px;
-		}
-		.operate-btn{
-			color: #5fc4f1;
-			&:hover{
-				cursor: pointer;
-			}
-		}
-	}
-	.trajectory-table{
-		/deep/.el-table__expanded-cell{
-			padding: 0;
-		}
-	}
-	.img-box{
-		width: 100%;
-		background:#f7f7f7;
-		padding: 9px 50px;
-		.img-item{
-			cursor: pointer;
-			.time{
-				font-size: 12px;
-				color: #626262;
-			}
-		}
-		.img-item+.img-item{
-			margin-left: 16px;
-		}
-		.icon-btn{
-			position: absolute;
-			top: 50%;
-			transform: translateY(-50%);
-			&.left{
-				left:10px ;
-			}
-			&.right{
-				right:10px ;
-			}
-		}
+.containter {
+  .main {
+    .tit {
+      font-size: 18px;
+    }
+    .operate-btn {
+      color: #5fc4f1;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+  .trajectory-table {
+    /deep/.el-table__expanded-cell {
+      padding: 0;
+    }
+  }
+  .img-box {
+    width: 100%;
+    background: #f7f7f7;
+    padding: 9px 50px;
+    .img-item {
+      cursor: pointer;
+      .time {
+        font-size: 12px;
+        color: #626262;
+      }
+    }
+    .img-item + .img-item {
+      margin-left: 16px;
+    }
+    .icon-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      &.left {
+        left: 10px;
+      }
+      &.right {
+        right: 10px;
+      }
+    }
 
-		.img{
-			width: 136px;
-			height: 79px;
-		}
-
-	}
-	.pagination{
-		text-align: center;
-		margin-top: 20px;
-	}
+    .img {
+      width: 136px;
+      height: 79px;
+    }
+  }
+  .pagination {
+    text-align: center;
+    margin-top: 20px;
+  }
 }
 </style>

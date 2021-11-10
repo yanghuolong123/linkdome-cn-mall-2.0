@@ -32,7 +32,11 @@
         </el-pagination>
       </div>
     </div>
-    <BigImg :info="info"></BigImg>
+    <BigImg
+      :info="info"
+      :index="index + '-' + +new Date()"
+      :keyName="keyName"
+    ></BigImg>
   </div>
 </template>
 
@@ -55,8 +59,14 @@ export default {
   },
   data() {
     return {
+      keyName: {
+        title: "Cashier",
+        time1: "start_time",
+        time2: "end_time",
+        image_path: "image_path",
+      },
+      index: 0,
       currentP: 1,
-      info: {},
       tableColumns: [
         { title: "收银柜台", key: "Cashier" },
         { title: "开始时间", key: "start_time" },
@@ -83,7 +93,7 @@ export default {
               },
               on: {
                 click: () => {
-                  this.getImg(_.cloneDeep(params.row));
+                  this.getImg(_.cloneDeep(params.row), params.index);
                 },
               },
             });
@@ -101,6 +111,7 @@ export default {
           .subtract(1, "days")
           .format("YYYY-MM-DD"),
       },
+      info: {},
     };
   },
   created() {
@@ -124,12 +135,9 @@ export default {
       return h + ":" + m + ":" + s;
     },
     // 查看大图
-    getImg(val) {
-      this.info = {
-        title: val.Cashier,
-        time: val.start_time + "-" + val.end_time,
-        image_path: val.image_path,
-      };
+    getImg(val, i) {
+      this.info = _.cloneDeep(this.tableData);
+      this.index = i;
     },
     // 查询
     handleClick(val) {
