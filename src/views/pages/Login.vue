@@ -3,7 +3,7 @@
 		<!--国际化按钮-->
 <!--		<LanguageBtn style="margin: 8px 16px 0 auto;"/>-->
 		<div class="login">
-<!--			<img src="@/assets/images/fixation_img/logo/logo.png" width="150" alt="">-->
+			<img src="@/assets/images/fixation_img/logo/logo.jpg" width="150" alt="">
 			<!--			<div class="system-select" @click="selectBoxShow=true">{{systemSelectName}} <Icon type="md-arrow-dropdown" />-->
 			<div class="system-select">{{systemSelectName}}
 				<div class="select-box" v-show="selectBoxShow">
@@ -422,7 +422,6 @@ export default {
 			img{
 				width: 150px;
 				height: auto;
-				margin-bottom: 40px;
 			}
 			.form-data{
 				margin-top: 40px;

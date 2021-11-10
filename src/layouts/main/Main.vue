@@ -12,7 +12,7 @@
   <div class="layout--main" :class="[navbarClasses, footerClasses, {'app-page': isAppPage}]">
     <vx-sidebar
       :sidebarItems="menuList"
-      :logo="require('@/assets/images/fixation_img/logo/logo.png')"
+      :logo="require('@/assets/images/fixation_img/logo/logo.jpg')"
       title="DeepNorth"
       parent=".layout--main"
     />
