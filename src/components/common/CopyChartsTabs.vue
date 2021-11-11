@@ -56,7 +56,7 @@ export default {
   },
   props: {
     tooltipUnit: {
-      type: String || Array,
+      type: [String,Array] ,
       default: () => {
         return ''
       }
