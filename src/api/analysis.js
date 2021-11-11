@@ -1,19 +1,5 @@
 import naxios from '@/libs/api.request'
-import qs from 'qs'
-export const postQueueData = params => {
-  const { id, zones, type, range, innerRange } = params
-  return naxios.request({
-    url: 'data/queue',
-    data: qs.stringify({
-      id,
-      zones,
-      type,
-      range,
-      innerRange
-    }),
-    method: 'post'
-  })
-}
+
 export const dateCompare = params => {
   return naxios.request({
     url: 'analysis/dateentityscompare',
@@ -31,21 +17,6 @@ export const dwellTime = params => {
       bzid
     },
     method: 'get'
-  })
-}
-export const entityCompare = params => {
-  const { id, bzid1, bzid2, type, range, innerRange } = params
-  return naxios.request({
-    url: 'analysis/entitycompare',
-    data: qs.stringify({
-      id,
-      bzid1,
-      bzid2,
-      type,
-      range,
-      innerRange
-    }),
-    method: 'post'
   })
 }
 
@@ -197,18 +168,6 @@ export const getEffective = (bzid, start_time, end_time, innerRange) => {
       end_time: end_time,
       innerRange: innerRange
     },
-    method: 'post'
-  })
-}
-export const getHeatMapData = params => {
-  const { time, bzid, timeRange } = params
-  return naxios.request({
-    url: 'analysis/heat_map',
-    data: qs.stringify({
-      time,
-      bzid,
-      timeRange
-    }),
     method: 'post'
   })
 }

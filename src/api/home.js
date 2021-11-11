@@ -69,23 +69,7 @@ export const getcompute = params => {
     method: 'post'
   })
 }
-/**
-     * @description 获取排行榜
-     * @param
-     */
-export const getAnalysisCompute = params => {
-  const { bzid, type, range, innerRange } = params
-  return naxios.request({
-    url: 'analysis/compute',
-    data: qs.stringify({
-      bzid,
-      type,
-      range,
-      innerRange
-    }),
-    method: 'post'
-  })
-}
+
 export const getTopmall = params => {
   return naxios.request({
     url: 'home/topmall',
@@ -93,13 +77,7 @@ export const getTopmall = params => {
     method: 'get'
   })
 }
-export const postAgender = params => {
-  return naxios.request({
-    url: '/analysis/agender',
-    data: qs.stringify(params),
-    method: 'post'
-  })
-}
+
 export const getCurrent = (params,_this={}) => {
   let { time, companyId, offset } = params;
     const CancelToken= axios.CancelToken;
@@ -135,13 +113,7 @@ export const postHistorycompute = (params,_this={}) => {
     })
   })
 }
-export const getAgeandGender = params => {
-  return naxios.request({
-    url: 'analysis/agedenrTops',
-    data: qs.stringify(params),
-    method: 'post'
-  })
-}
+
 export const getanalysiseeo = params => {
   return naxios.request({
     url: 'report/eeo',
