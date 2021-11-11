@@ -12,7 +12,18 @@
         height="510"
         :columns="tableColumns"
         :data="tableData"
-      ></Table>
+      >
+        <template slot="images" slot-scope="{ row, $index }">
+          <div>
+            <el-image
+              style="width: 100px; height: 100px"
+              :src="row.image_path"
+              fit="contain"
+              @click="getImg(row, $index)"
+            ></el-image>
+          </div>
+        </template>
+      </Table>
       <div class="paginations">
         <!-- <vs-pagination
           :total="checkTotal ? checkTotal : 1"
@@ -81,23 +92,24 @@ export default {
         {
           title: "截图",
           key: "image_path",
-          render: (h, params) => {
-            return h("img", {
-              style: {
-                width: "7.75rem",
-                height: "4.375rem",
-                marginTop: ".3125rem",
-              },
-              attrs: {
-                src: params.row.image_path,
-              },
-              on: {
-                click: () => {
-                  this.getImg(_.cloneDeep(params.row), params.index);
-                },
-              },
-            });
-          },
+          slot: "images",
+          // render: (h, params) => {
+          //   return h("img", {
+          //     style: {
+          //       width: "7.75rem",
+          //       height: "4.375rem",
+          //       marginTop: ".3125rem",
+          //     },
+          //     attrs: {
+          //       src: params.row.image_path,
+          //     },
+          //     on: {
+          //       click: () => {
+          //         this.getImg(_.cloneDeep(params.row), params.index);
+          //       },
+          //     },
+          //   });
+          // },
         },
       ],
       tableData: [],
