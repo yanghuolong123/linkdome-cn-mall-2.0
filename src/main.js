@@ -8,111 +8,135 @@
   Author URL: hhttp://www.themeforest.net/user/pixinvent
 ========================================================================================== */
 
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from "vue";
+import App from "./App.vue";
 
 // import './assets/siyuan/style.css'
 // import './assets/roboto/style.css'
 // Vuesax Component Framework
-import Vuesax from 'vuesax'
-import 'material-icons/iconfont/material-icons.css' // Material Icons
-import 'vuesax/dist/vuesax.css'
+import Vuesax from "vuesax";
+import "material-icons/iconfont/material-icons.css"; // Material Icons
+import "vuesax/dist/vuesax.css";
 
 // Theme Configurations
-import '../themeConfig.js'
+import "../themeConfig.js";
 
 // Globally Registered Components
-import './globalComponents.js'
+import "./globalComponents.js";
 
 // Styles: SCSS
-import './assets/scss/main.scss'
+import "./assets/scss/main.scss";
 
 // Tailwind
-import '@/assets/css/main.css'
+import "@/assets/css/main.css";
 
 // Vue Router
-import router from '@/router/index'
+import router from "@/router/index";
 
 // Vuex Store
-import store from './store/store'
+import store from "./store/store";
 
 // i18n
-import i18n from './i18n/i18n'
+import i18n from "./i18n/i18n";
 
 // Vuesax Admin Filters
-import './filters/filters'
-import '@/assets/utils/prototype'
+import "./filters/filters";
+import "@/assets/utils/prototype";
 // VeeValidate
-import VeeValidate from 'vee-validate'
+import VeeValidate from "vee-validate";
 
-import 'view-design/dist/styles/iview.css';
+import "view-design/dist/styles/iview.css";
 // 全局过滤器
-import * as custom from '@/filters/custom'
-import VueAMap from 'vue-amap'
-import icons from '_c/icons'
+import * as custom from "@/filters/custom";
+import VueAMap from "vue-amap";
+import icons from "_c/icons";
 // PrismJS
-import 'prismjs'
-import 'prismjs/themes/prism.css'
-import '@/assets/css/sundry.css'
-import '@/assets/css/components-style.less'
+import "prismjs";
+import "prismjs/themes/prism.css";
+import "@/assets/css/sundry.css";
+import "@/assets/css/components-style.less";
 
+import ViewUI from "view-design";
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
+import heatmapjsVue from "heatmapjs-vue";
+Vue.use(ViewUI);
 
-import ViewUI  from 'view-design'
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-import heatmapjsVue from 'heatmapjs-vue'
-Vue.use(ViewUI)
+Vue.use(ElementUI, {
+  i18n: (key, value) => i18n.t(key, value),
+});
+import "./my-theme/index.less";
+import "./my-theme/element-variables.scss";
 
-Vue.use(ElementUI,{
-  i18n: (key, value) => i18n.t(key, value)
-})
-import './my-theme/index.less';
-import './my-theme/element-variables.scss'
-
-import Alert from '@/components/alert/index'
+import Alert from "@/components/alert/index";
 Vue.prototype.$alert = Alert.install;
-Vue.component('icons', icons)
-Vue.use(Vuesax)
-Object.keys(custom).forEach(key => {
-  Vue.filter(key, custom[key])
-})
+Vue.component("icons", icons);
+Vue.use(Vuesax);
+Object.keys(custom).forEach((key) => {
+  Vue.filter(key, custom[key]);
+});
+
+//图片预览
+import Viewer from "v-viewer";
+import "viewerjs/dist/viewer.css";
+
+Vue.use(Viewer);
+Viewer.setDefaults({
+  Options: {
+    inline: true,
+    button: true, //右上角按钮
+    navbar: true, //底部缩略图
+    title: true, //当前图片标题
+    toolbar: true, //底部工具栏
+    tooltip: true, //显示缩放百分比
+    movable: true, //是否可以移动
+    zoomable: true, //是否可以缩放
+    rotatable: true, //是否可旋转
+    scalable: true, //是否可翻转
+    transition: true, //使用 CSS3 过度
+    fullscreen: true, //播放时是否全屏
+    keyboard: true, //是否支持键盘
+    url: "data-source",
+  },
+});
+
 // 连接线插件
-import jsPlumb from 'jsplumb'
-Vue.prototype.$jsPlumb = jsPlumb.jsPlumb
+import jsPlumb from "jsplumb";
+Vue.prototype.$jsPlumb = jsPlumb.jsPlumb;
 // 高德地图
-Vue.use(VueAMap)
+Vue.use(VueAMap);
 VueAMap.initAMapApiLoader({
-  key: '256f485dca2b10552a5a17c3f69ae1c7',
+  key: "256f485dca2b10552a5a17c3f69ae1c7",
   plugin: [
-    'AMap.Autocomplete',
-    'AMap.PlaceSearch',
-    'AMap.Scale',
-    'AMap.OverView',
-    'AMap.ToolBar',
-    'AMap.MapType',
-    'AMap.PolyEditor',
-    'AMap.CircleEditor'
+    "AMap.Autocomplete",
+    "AMap.PlaceSearch",
+    "AMap.Scale",
+    "AMap.OverView",
+    "AMap.ToolBar",
+    "AMap.MapType",
+    "AMap.PolyEditor",
+    "AMap.CircleEditor",
   ],
   // 默认高德 sdk 版本为 1.4.4
-  v: '1.4.4'
-})
+  v: "1.4.4",
+});
 // Feather font icon
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 const config = {
-  errorBagName: 'errorBags', // change if property conflicts.
-  fieldsBagName: 'fieldBags'
-}
-Vue.use(VeeValidate, config)
-Vue.use(heatmapjsVue)
-import './libs/rem'
-require('./assets/css/iconfont.css')
+  errorBagName: "errorBags", // change if property conflicts.
+  fieldsBagName: "fieldBags",
+};
+Vue.use(VeeValidate, config);
+Vue.use(heatmapjsVue);
+import "./libs/rem";
+require("./assets/css/iconfont.css");
 // 控制是否显示遮罩层
-Vue.prototype.hasCover = process.env.NODE_ENV === 'development' ? '' : ''
-require('./assets/css/common.css')
+Vue.prototype.hasCover = process.env.NODE_ENV === "development" ? "" : "";
+require("./assets/css/common.css");
 new Vue({
   router,
   store,
   i18n,
-  render: h => h(App)
-}).$mount('#app')
+  render: (h) => h(App),
+}).$mount("#app");

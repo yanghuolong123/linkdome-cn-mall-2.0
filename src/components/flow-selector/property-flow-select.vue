@@ -26,14 +26,6 @@
           item.lable
         }}</Option>
       </Select>
-      <!-- <Input
-        class="m-l-20 ipt"
-        v-model="age"
-        placeholder="年龄区间"
-        style="width: 300px"
-        @on-blur="ageChange"
-        v-show="!polygon"
-      ></Input> -->
       <Select
         placeholder="到店方式"
         v-model="queryParams.is_together"
@@ -89,10 +81,12 @@ export default {
       age: "",
       wayList: [{ value: 0, lable: "独行" }, { value: 1, lable: "结伴" }],
       ageList: [
-        { value: "0-20", lable: "20以下" },
-        { value: "20-40", lable: "20-40" },
-        { value: "40-60", lable: "40-60" },
-        { value: "60-150", lable: "60以上" },
+        { value: "0-16", lable: "16以下" },
+        { value: "16-30", lable: "16-30" },
+        { value: "30-40", lable: "30-40" },
+        { value: "40-55", lable: "40-55" },
+        { value: "55-65", lable: "55-65" },
+        { value: "65-150", lable: "65以上" },
       ],
     };
   },
