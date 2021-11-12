@@ -81,12 +81,12 @@ export default {
       age: "",
       wayList: [{ value: 0, lable: "独行" }, { value: 1, lable: "结伴" }],
       ageList: [
-        { value: "0-16", lable: "16以下" },
+        { value: "0-16", lable: "16及以下" },
         { value: "16-30", lable: "16-30" },
         { value: "30-40", lable: "30-40" },
         { value: "40-55", lable: "40-55" },
         { value: "55-65", lable: "55-65" },
-        { value: "65-150", lable: "65以上" },
+        { value: "65-150", lable: "65及以上" },
       ],
     };
   },

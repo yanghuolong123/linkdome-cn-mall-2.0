@@ -78,6 +78,14 @@ export default {
           .format("YYYY-MM-DD"),
       },
       currentP: 1,
+      ageList: [
+        { value: "0-16", lable: "16及以下" },
+        { value: "16-30", lable: "16-30" },
+        { value: "30-40", lable: "30-40" },
+        { value: "40-55", lable: "40-55" },
+        { value: "55-65", lable: "55-65" },
+        { value: "65-150", lable: "65及以上" },
+      ],
     };
   },
   created() {
@@ -104,7 +112,13 @@ export default {
       cusProperty(this.params).then((res) => {
         let data = res.data.data;
         data.list.forEach((item) => {
-          item.range = item.age + "-" + item.age_max;
+          this.ageList.forEach((val) => {
+            let min = val.value.split("-")[0];
+            let max = val.value.split("-")[1];
+            if (item.age >= min && item.age < max) {
+              item.range = val.lable;
+            }
+          });
         });
         this.cusTotal = data.count;
         this.tableData = data.list;
