@@ -13,13 +13,13 @@
         :columns="tableColumns"
         :data="tableData"
       >
-        <template slot="images" slot-scope="{ row, $index }">
+        <template slot="images" slot-scope="scope">
           <div>
             <el-image
               style="width: 100px; height: 100px"
-              :src="row.image_path"
+              :src="scope.row.image_path"
               fit="contain"
-              @click="getImg(row, $index)"
+              @click="getImg(scope)"
             ></el-image>
           </div>
         </template>
@@ -147,9 +147,9 @@ export default {
       return h + ":" + m + ":" + s;
     },
     // 查看大图
-    getImg(val, i) {
+    getImg(val) {
       this.info = _.cloneDeep(this.tableData);
-      this.index = i;
+      this.index = val.index;
     },
     // 查询
     handleClick(val) {
