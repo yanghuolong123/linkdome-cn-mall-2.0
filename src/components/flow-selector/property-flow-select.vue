@@ -100,6 +100,9 @@ export default {
         let age = this.age.split("-");
         this.queryParams.age1 = age[0];
         this.queryParams.age2 = age[1];
+      } else {
+        this.queryParams.age1 = "";
+        this.queryParams.age2 = "";
       }
     },
     handleClick() {
