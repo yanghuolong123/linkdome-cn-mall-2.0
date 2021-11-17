@@ -8,23 +8,7 @@
       :index="indexImg"
     >
       <div class="box" v-for="(item, index) in infoList" :key="index">
-        <img
-          v-if="keyName.time2"
-          :src="item[keyName.image_path]"
-          :alt="
-            item[keyName.title] +
-              ' ( ' +
-              item[keyName.time1] +
-              ' - ' +
-              item[keyName.time2] +
-              ' ) '
-          "
-        />
-        <img
-          v-else
-          :src="item[keyName.image_path]"
-          :alt="item[keyName.title] + ' ( ' + item[keyName.time1] + ' ) '"
-        />
+        <img :src="item[keyName.image_path]" :alt="imgAlt(item)" />
       </div>
     </viewer>
   </div>
@@ -49,6 +33,20 @@ export default {
       this.viewershow();
     },
   },
+  computed: {
+    imgAlt() {
+      return function(obj) {
+        return this.keyName.time2
+          ? obj[this.keyName.title] +
+              " ( " +
+              obj[this.keyName.time1] +
+              " - " +
+              obj[this.keyName.time2] +
+              " ) "
+          : obj[this.keyName.title] + " ( " + obj[this.keyName.time1] + " ) ";
+      };
+    },
+  },
   methods: {
     viewershow() {
       this.$viewer.show();
@@ -56,12 +54,6 @@ export default {
     inited(viewer) {
       this.$viewer = viewer;
       this.$viewer.index = this.indexImg;
-    },
-    getPrevious() {
-      if (this.indexImg != 0) this.indexImg--;
-    },
-    getNext() {
-      if (this.indexImg != this.info.length - 1) this.indexImg++;
     },
   },
 };

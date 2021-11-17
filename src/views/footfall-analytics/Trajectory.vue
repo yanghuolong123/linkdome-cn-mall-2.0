@@ -64,7 +64,7 @@
                 :key="img.id"
                 v-for="(img, index) in scope.row.list[scope.row.listPage]"
               >
-                <img class="img" :src="img.image_path" />
+                <el-image :src="img.image_path" fit="contain"></el-image>
                 <span class="time">{{ img.cur_time }}</span>
               </div>
               <el-button
@@ -240,7 +240,7 @@ export default {
       }
     }
 
-    .img {
+    .el-image {
       width: 136px;
       height: 79px;
     }

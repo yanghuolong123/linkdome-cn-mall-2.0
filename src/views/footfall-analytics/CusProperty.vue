@@ -11,11 +11,6 @@
         :data="tableData"
       ></Table>
       <div class="paginations">
-        <!-- <vs-pagination
-          :total="cusTotal ? cusTotal : 1"
-          v-model="currentP"
-          goto
-        ></vs-pagination> -->
         <el-pagination
           background
           @size-change="handleSizeChange"

@@ -16,7 +16,7 @@
         <template slot="images" slot-scope="scope">
           <div>
             <el-image
-              style="width: 100px; height: 100px"
+              style="width: 100px; height: 100px; margin-top:5px"
               :src="scope.row.image_path"
               fit="contain"
               @click="getImg(scope)"
@@ -25,11 +25,6 @@
         </template>
       </Table>
       <div class="paginations">
-        <!-- <vs-pagination
-          :total="checkTotal ? checkTotal : 1"
-          v-model="currentP"
-          goto
-        ></vs-pagination> -->
         <el-pagination
           background
           @size-change="handleSizeChange"
@@ -93,23 +88,6 @@ export default {
           title: "截图",
           key: "image_path",
           slot: "images",
-          // render: (h, params) => {
-          //   return h("img", {
-          //     style: {
-          //       width: "7.75rem",
-          //       height: "4.375rem",
-          //       marginTop: ".3125rem",
-          //     },
-          //     attrs: {
-          //       src: params.row.image_path,
-          //     },
-          //     on: {
-          //       click: () => {
-          //         this.getImg(_.cloneDeep(params.row), params.index);
-          //       },
-          //     },
-          //   });
-          // },
         },
       ],
       tableData: [],
