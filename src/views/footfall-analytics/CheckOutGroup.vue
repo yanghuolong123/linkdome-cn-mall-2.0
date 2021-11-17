@@ -157,9 +157,9 @@ export default {
   }
 }
 .el-image {
-  width: 100px;
+  width: 70px;
   height: 100px;
-  margin-top: 5px;
+  margin-top:5px;
   border: 1px solid #ccc;
 }
 </style>
