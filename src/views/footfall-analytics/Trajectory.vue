@@ -241,8 +241,9 @@ export default {
     }
 
     .el-image {
-      width: 136px;
+      width: 134px;
       height: 79px;
+      border: 1px solid #ccc;
     }
   }
   .pagination {

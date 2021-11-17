@@ -16,7 +16,6 @@
         <template slot="images" slot-scope="scope">
           <div>
             <el-image
-              style="width: 100px; height: 100px; margin-top:5px"
               :src="scope.row.image_path"
               fit="contain"
               @click="getImg(scope)"
@@ -156,5 +155,11 @@ export default {
   .el-pagination {
     text-align: center;
   }
+}
+.el-image {
+  width: 100px;
+  height: 100px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
 }
 </style>
