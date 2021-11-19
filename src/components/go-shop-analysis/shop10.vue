@@ -7,7 +7,7 @@
           class="w-select"
           type="daterange"
           v-model="crossDate"
-          placement="bottom-end"
+          placement="bottom-start"
           :options="disabledDate"
           :placeholder="$t('选择日期')"
 				></DatePicker>

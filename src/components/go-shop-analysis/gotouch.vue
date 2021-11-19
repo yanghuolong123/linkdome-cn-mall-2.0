@@ -6,7 +6,7 @@
         <DatePicker
           type="daterange"
           v-model="crossDate"
-          placement="bottom-end"
+          placement="bottom-start"
           :options="disabledDate"
           :placeholder="$t('holder.选择日期')"
           class="w-select"

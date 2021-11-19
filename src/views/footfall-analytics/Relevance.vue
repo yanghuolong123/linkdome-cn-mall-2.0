@@ -6,7 +6,7 @@
           type="daterange"
           v-model="relevanceDate"
           class="w-select"
-          placement="bottom-end"
+          placement="bottom-start"
           :placeholder="$t('holder.请选择')"
           :options="disabledDate"
         ></DatePicker>
