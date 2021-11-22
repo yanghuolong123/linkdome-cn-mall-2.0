@@ -25,13 +25,11 @@
         </el-table-column>
         <el-table-column prop="image_path" align="center" label="截图">
           <template slot-scope="scope">
-            <div>
-              <el-image
-                :src="scope.row.image_path"
-                fit="contain"
-                @click="getImg(scope)"
-              ></el-image>
-            </div>
+            <el-image
+              :src="scope.row.image_path"
+              fit="contain"
+              @click="getImg(scope)"
+            ></el-image>
           </template>
         </el-table-column>
         <el-table-column prop="operate" align="center" label="操作">
@@ -102,7 +100,7 @@
     <BigImg
       :info="info"
       :index="index + '-' + +new Date()"
-      :keyName="type ? keyName2 : keyName1"
+      :keyName="keyName"
     ></BigImg>
   </div>
 </template>
@@ -125,18 +123,7 @@ export default {
   },
   data() {
     return {
-      keyName1: {
-        title: "Cashier",
-        time1: "start_time",
-        time2: "end_time",
-        image_path: "image_path",
-      },
-      type: 0,
-      keyName2: {
-        title: "object_id",
-        time1: "cur_time",
-        image_path: "image_path",
-      },
+      keyName: {},
       index: 0,
       currentP: 1,
       tableData: [],
@@ -151,12 +138,6 @@ export default {
           .format("YYYY-MM-DD"),
       },
       info: {},
-      traceParams: {
-        id: "",
-        date: "",
-        page: 1,
-        limit: 10,
-      },
       traceList: [],
     };
   },
@@ -167,9 +148,10 @@ export default {
     async rowClick(row) {
       // 点击button展开
       if (!row.expand && !row.list) {
-        this.traceParams.id = row.id;
-        this.traceParams.date = row.start_time.split(" ")[0];
-        await groupAndTrajectory(this.traceParams).then((res) => {
+        await groupAndTrajectory({
+          id: row.id,
+          date: row.start_time.split(" ")[0],
+        }).then((res) => {
           if (res.data.code !== 200)
             return this.$message.error(this.$t(res.data.message));
           this.$set(row, "listPage", 0);
@@ -200,13 +182,22 @@ export default {
     },
     // 查看大图
     getImg(val) {
-      this.type = 0;
+      this.keyName = {
+        title: "Cashier",
+        time1: "start_time",
+        time2: "end_time",
+        image_path: "image_path",
+      };
       this.info = _.cloneDeep(this.tableData);
       this.index = val.$index;
     },
-    // 展开行
+    // 展开行图片预览
     imgClick(img, index, list) {
-      this.type = 1;
+      this.keyName = {
+        title: "object_id",
+        time1: "cur_time",
+        image_path: "image_path",
+      };
       this.index = index;
       this.info = _.cloneDeep(list);
     },
@@ -245,8 +236,11 @@ export default {
       padding: 0;
     }
   }
+  .el-table {
+    border: 1px solid #ebeef5 !important;
+  }
   .el-table--fit {
-    max-height: 510px;
+    max-height: 31.875rem;
     overflow: auto;
   }
   .el-table::before {
@@ -284,9 +278,6 @@ export default {
     height: 100px;
     margin-top: 5px;
     border: 1px solid #ccc;
-  }
-  .el-table {
-    border: 1px solid #ebeef5 !important;
   }
   .traceImg {
     width: 134px;
