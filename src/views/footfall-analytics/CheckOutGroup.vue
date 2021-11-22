@@ -163,7 +163,8 @@ export default {
   methods: {
     async rowClick(row) {
       // 点击button展开
-      if (!row.expand) {
+      console.log(row);
+      if (!row.expand && !row.list) {
         this.traceParams.id = row.id;
         this.traceParams.date = row.start_time.split(" ")[0];
         await groupAndTrajectory(this.traceParams).then((res) => {
@@ -222,7 +223,6 @@ export default {
         this.tableData = data.list;
         this.tableData.forEach((o) => {
           this.$set(o, "listPage", 0);
-          o.list = _.chunk(o.list, 10);
         });
       });
     },
