@@ -99,7 +99,7 @@
     <BigImg
       :info="info"
       :index="index + '-' + +new Date()"
-      :keyName=" type ? keyName2 : keyName1"
+      :keyName="type ? keyName2 : keyName1"
     ></BigImg>
   </div>
 </template>
@@ -167,6 +167,9 @@ export default {
         this.traceParams.id = row.id;
         this.traceParams.date = row.start_time.split(" ")[0];
         await groupAndTrajectory(this.traceParams).then((res) => {
+          // this.$message.success(this.$t('fn.successTo', [this.$t('添加用户')]))
+          if (res.data.code !== 200)
+            return this.$message.error(this.$t(res.data.message));
           row.list = res.data.data;
           this.$set(row, "listPage", 0);
           row.list = _.chunk(row.list, 10);
@@ -196,13 +199,13 @@ export default {
     },
     // 查看大图
     getImg(val) {
-      this.type = 0
+      this.type = 0;
       this.info = _.cloneDeep(this.tableData);
       this.index = val.$index;
     },
     // 展开行
     imgClick(img, index, list) {
-      this.type = 1
+      this.type = 1;
       this.index = index;
       this.info = _.cloneDeep(list);
     },
