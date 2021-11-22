@@ -283,6 +283,9 @@ export default {
     margin-top: 5px;
     border: 1px solid #ccc;
   }
+  .el-table {
+    border: 1px solid #ebeef5 !important;
+  }
   .traceImg {
     width: 134px;
     height: 79px;

@@ -202,6 +202,9 @@ export default {
     max-height: 510px;
     overflow: auto;
   }
+  .el-table {
+    border: 1px solid #ebeef5 !important;
+  }
   .main {
     .tit {
       font-size: 18px;
