@@ -167,12 +167,10 @@ export default {
         this.traceParams.id = row.id;
         this.traceParams.date = row.start_time.split(" ")[0];
         await groupAndTrajectory(this.traceParams).then((res) => {
-          // this.$message.success(this.$t('fn.successTo', [this.$t('添加用户')]))
           if (res.data.code !== 200)
             return this.$message.error(this.$t(res.data.message));
-          row.list = res.data.data;
           this.$set(row, "listPage", 0);
-          row.list = _.chunk(row.list, 10);
+          row.list = _.chunk(res.data.data, 10);
         });
       }
       this.$refs.table.toggleRowExpansion(row, !row.expand);
@@ -245,6 +243,14 @@ export default {
       padding: 0;
     }
   }
+  .el-table--fit {
+    max-height: 510px;
+    overflow: auto;
+  }
+
+  .el-table::before {
+    z-index: inherit;
+  }
   .img-box {
     width: 100%;
     background: #f7f7f7;
@@ -281,7 +287,7 @@ export default {
     width: 134px;
     height: 79px;
   }
-  .pagination {
+  .paginations {
     text-align: center;
     margin-top: 20px;
   }

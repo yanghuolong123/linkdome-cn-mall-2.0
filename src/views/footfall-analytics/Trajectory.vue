@@ -198,6 +198,10 @@ export default {
 </script>
 <style scoped lang="scss">
 .containter {
+  .el-table--fit {
+    max-height: 510px;
+    overflow: auto;
+  }
   .main {
     .tit {
       font-size: 18px;
