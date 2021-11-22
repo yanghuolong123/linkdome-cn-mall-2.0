@@ -1,4 +1,12 @@
 import naxios from "@/libs/api.request";
+// 分组轨迹关联
+export const groupAndTrajectory = (params) => {
+  return naxios.request({
+    url: "customer/checkout_group/trace",
+    params: params,
+    method: "get",
+  });
+};
 export const cashierList = (params) => {
   return naxios.request({
     url: "customer/cashier",
