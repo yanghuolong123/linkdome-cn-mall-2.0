@@ -43,7 +43,10 @@
         </el-table-column>
         <el-table-column prop="operate" align="center" width="1" type="expand">
           <template slot-scope="scope">
-            <div class="img-box flex-center p-r">
+            <div v-if="!scope.row.list.length" class="img-box p-r">
+              暂无轨迹数据
+            </div>
+            <div v-else class="img-box flex-center p-r">
               <el-button
                 :disabled="!scope.row.listPage || !scope.row.list.length"
                 @click.stop="pageChange(scope.row, scope.row.listPage - 1)"
@@ -163,7 +166,6 @@ export default {
   methods: {
     async rowClick(row) {
       // 点击button展开
-      console.log(row);
       if (!row.expand && !row.list) {
         this.traceParams.id = row.id;
         this.traceParams.date = row.start_time.split(" ")[0];
@@ -247,7 +249,6 @@ export default {
     max-height: 510px;
     overflow: auto;
   }
-
   .el-table::before {
     z-index: inherit;
   }
@@ -255,6 +256,7 @@ export default {
     width: 100%;
     background: #f7f7f7;
     padding: 9px 50px;
+    text-align: center;
     .img-item {
       cursor: pointer;
       .time {
