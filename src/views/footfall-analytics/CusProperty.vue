@@ -1,12 +1,11 @@
 <template>
   <div>
     <cusPropertySelect @handleClick="handleClick"></cusPropertySelect>
-    <div class="mt-4 common-card">
-      <h4 class="title mb-2">{{ $t("顾客属性详细信息统计") }}</h4>
+    <div class="m-t-20 common-card">
+      <div class="tit">{{ $t("顾客属性详细信息统计") }}</div>
       <Table
         class="mt-4"
         stripe
-        height="510"
         :columns="tableColumns"
         :data="tableData"
       ></Table>
@@ -124,12 +123,22 @@ export default {
 </script>
 
 <style scoped lang="less">
+.tit {
+  font-size: 18px;
+}
 .paginations {
-  position: relative;
-  bottom: 6px;
+  text-align: center;
   margin-top: 20px;
-  .el-pagination {
-    text-align: center;
-  }
+}
+.ivu-table-wrapper {
+  overflow-y: auto;
+  max-height: 34.375rem;
+  border-bottom: 1px solid #ebeef5;
+}
+/deep/ .ivu-table-overflowX {
+  overflow-x: hidden;
+}
+/deep/ .ivu-table:before {
+  z-index: -1;
 }
 </style>

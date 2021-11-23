@@ -4,8 +4,8 @@
       polygon="true"
       @handleClick="handleClick"
     ></cusPropertySelect>
-    <div class="mt-4 common-card">
-      <h4 class="title mb-2">{{ $t("顾客结账信息统计") }}</h4>
+    <div class="m-t-20 common-card">
+      <div class="tit">{{ $t("顾客结账信息统计") }}</div>
       <el-table
         ref="table"
         :data="tableData"
@@ -225,6 +225,9 @@ export default {
 
 <style scoped lang="less">
 .containter {
+  .tit {
+    font-size: 18px;
+  }
   .operate-btn {
     color: #5fc4f1;
     &:hover {
@@ -240,7 +243,7 @@ export default {
     border: 1px solid #ebeef5 !important;
   }
   .el-table--fit {
-    max-height: 31.875rem;
+    max-height: 34.0625rem;
     overflow: auto;
   }
   .el-table::before {
@@ -280,7 +283,7 @@ export default {
     border: 1px solid #ccc;
   }
   .traceImg {
-    width: 134px;
+    width: 133px;
     height: 79px;
   }
   .paginations {

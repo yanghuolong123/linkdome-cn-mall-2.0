@@ -199,11 +199,14 @@ export default {
 <style scoped lang="scss">
 .containter {
   .el-table--fit {
-    max-height: 510px;
+    max-height: 34.0625rem;
     overflow: auto;
   }
   .el-table {
     border: 1px solid #ebeef5 !important;
+  }
+  .el-table::before {
+    z-index: inherit;
   }
   .main {
     .tit {
