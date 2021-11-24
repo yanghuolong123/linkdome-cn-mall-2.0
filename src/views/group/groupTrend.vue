@@ -189,7 +189,9 @@ export default {
                 }
               })
             })
-            obj.data = _.uniq(obj.data).sort()
+            // obj.data = _.uniq(obj.data).sort()
+            //恒一广场有跨天数据展示，这里暂时不需要排序
+            obj.data = _.uniq(obj.data)
           } else {
             Object.keys(Object.values(dataValues[0])[0]).map(val => obj.data.push(val))
           }
