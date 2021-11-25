@@ -158,7 +158,6 @@ export default {
       showBookmarkPagesDropdown: false,
       comprotList: [],
       comprotModel: 0,
-      actionIndex: 0,
       Biurl: '',
       homeUrl: ''
     }
@@ -202,10 +201,10 @@ export default {
       let modal = _.filter(data.property, (o) => { return o.property_id === this.$store.state.home.headerAction })
       this.comprotModel = modal.length === 0 ? 0 : this.$store.state.home.headerAction
       const index = this.comprotList.findIndex(o=>{
-        return o.value == this.actionIndex
+        return o.value == this.comprotModel
       })
       this.$store.commit('headerImg', this.comprotList[index].img)
-      this.$store.commit('headerData', this.comprotList[0] || {})
+      this.$store.commit('headerData', this.comprotList[index] || {})
       this.$store.commit('saveComprotList', this.comprotList)
     } else {
       _.indexOf(this.$store.state.user.access, GroupCompany) > -1 ? showCompany = true : showCompany = false // 判断是否显示集团
@@ -364,7 +363,6 @@ export default {
         return e.value == that.comprotModel
       })
       if (!companyLogo) return false
-      this.actionIndex = companyLogo.value
       this.$store.commit('headerAction', this.comprotModel)
       this.$store.commit('headerImg', companyLogo.img)
       this.$store.commit('headerData', companyLogo)
