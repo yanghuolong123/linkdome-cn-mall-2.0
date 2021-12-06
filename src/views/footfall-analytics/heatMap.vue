@@ -341,10 +341,8 @@ export default {
     "$store.state.home.headerAction": {
       handler() {
         this.reset();
-        this.getStoreCascadeOpiton();
         this.bussinessTreeReq()
           .then((res) => {
-            this.getSelectOption(res); //获取实体选择时多选下拉框
             this.handleBussinessTreeData(res);
           })
           .catch((err) => {
