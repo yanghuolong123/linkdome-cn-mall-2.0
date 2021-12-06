@@ -341,6 +341,7 @@ export default {
     "$store.state.home.headerAction": {
       handler() {
         this.reset();
+        console.log("===");
         this.bussinessTreeReq()
           .then((res) => {
             this.handleBussinessTreeData(res);
@@ -349,7 +350,6 @@ export default {
             console.log(err);
           });
       },
-      immediate: true,
     },
   },
   activated() {
