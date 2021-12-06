@@ -238,7 +238,7 @@
             console.log(err)
           })
         },
-        immediate: true
+        immediate: true,
       },
     },
     created () {
