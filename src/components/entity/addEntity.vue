@@ -66,7 +66,7 @@
                 </FormItem>
 
                 <FormItem :label="$t('区域关联')" prop="zones" v-if="isSuperAdmin">
-                  <Select multiple @on-change="changeZones" :disabled="disabledZones"
+                  <Select filterable multiple @on-change="changeZones" :disabled="disabledZones"
                     :placeholder="$t('holder.请选择')"
                     v-model="formValidate.zones">
                     <Option

@@ -238,7 +238,6 @@
             console.log(err)
           })
         },
-        immediate: true
       },
     },
     created () {
