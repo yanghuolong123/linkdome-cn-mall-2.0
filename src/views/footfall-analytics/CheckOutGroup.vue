@@ -67,6 +67,7 @@
                   fit="contain"
                 ></el-image>
                 <span class="time">{{ img.cur_time }}</span>
+                <span>{{ img.location }}</span>
               </div>
               <el-button
                 :disabled="
@@ -197,6 +198,7 @@ export default {
         title: "object_id",
         time1: "cur_time",
         image_path: "image_path",
+        location: "location"
       };
       this.index = index;
       this.info = _.cloneDeep(list);
@@ -256,6 +258,7 @@ export default {
     text-align: center;
     .img-item {
       cursor: pointer;
+      text-align: center;
       .time {
         font-size: 12px;
         color: #626262;

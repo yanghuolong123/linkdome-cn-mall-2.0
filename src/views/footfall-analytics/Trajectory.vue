@@ -66,6 +66,7 @@
               >
                 <el-image :src="img.image_path" fit="contain"></el-image>
                 <span class="time">{{ img.cur_time }}</span>
+                <span>{{ img.location }}</span>
               </div>
               <el-button
                 :disabled="
@@ -130,6 +131,7 @@ export default {
         title: "object_id",
         time1: "cur_time",
         image_path: "image_path",
+        location: "location",
       },
     };
   },
@@ -229,6 +231,7 @@ export default {
     background: #f7f7f7;
     padding: 9px 50px;
     .img-item {
+      text-align: center;
       cursor: pointer;
       .time {
         font-size: 12px;

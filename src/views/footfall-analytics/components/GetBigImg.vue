@@ -43,7 +43,12 @@ export default {
               " - " +
               obj[this.keyName.time2] +
               " ) "
-          : obj[this.keyName.title] + " ( " + obj[this.keyName.time1] + " ) ";
+          : obj[this.keyName.title] +
+              "  " +
+              obj[this.keyName.location] +
+              "  ( " +
+              obj[this.keyName.time1] +
+              " ) ";
       };
     },
   },
