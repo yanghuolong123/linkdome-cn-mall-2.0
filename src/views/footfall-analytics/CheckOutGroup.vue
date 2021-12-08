@@ -66,6 +66,7 @@
                   :src="img.image_path"
                   fit="contain"
                 ></el-image>
+                <span class="mt-2">object_id: {{img.object_id}}</span>
                 <span class="time">{{ img.cur_time }}</span>
                 <span>{{ img.location }}</span>
               </div>
