@@ -66,7 +66,7 @@
                   :src="img.image_path"
                   fit="contain"
                 ></el-image>
-                <span class="mt-2">object_id: {{img.object_id}}</span>
+                <span class="mt-2">object_id: {{ img.object_id }}</span>
                 <span class="time">{{ img.cur_time }}</span>
                 <span>{{ img.location }}</span>
               </div>
@@ -154,9 +154,15 @@ export default {
           id: row.id,
           date: row.start_time.split(" ")[0],
         }).then((res) => {
-          if (res.data.code !== 200)
-            return this.$message.error(this.$t(res.data.message));
+          if (res.data.code !== 200) return this.$message.error(this.$t(res.data.message));
           this.$set(row, "listPage", 0);
+          if (res.data.data[0])
+            res.data.data.push({
+              image_path: row.image_path,
+              object_id: res.data.data[0].object_id,
+              cur_time: row.end_time,
+              location: row.Cashier,
+            });
           row.list = _.chunk(res.data.data, 10);
         });
       }
@@ -199,7 +205,7 @@ export default {
         title: "object_id",
         time1: "cur_time",
         image_path: "image_path",
-        location: "location"
+        location: "location",
       };
       this.index = index;
       this.info = _.cloneDeep(list);
