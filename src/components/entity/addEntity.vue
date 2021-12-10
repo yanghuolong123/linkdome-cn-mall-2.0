@@ -484,7 +484,8 @@ export default {
       }
     };
     const validSelect = (rule, value, callback) => {
-      if (value === '' || !value[0]) {
+      console.log(rule);
+      if (value === "" || (rule.field == "zones" && !value[0])) {
         callback(new Error(i18n.t("fn.请选择", [i18n.t(rule.tips)])));
       } else {
         callback();
