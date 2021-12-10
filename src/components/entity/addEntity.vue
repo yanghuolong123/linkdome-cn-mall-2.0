@@ -128,11 +128,6 @@
                 <FormItem
                   :label="$t('区域关联')"
                   prop="zones"
-                  :rules="{
-                    required: true,
-                    message: $t('fn._不能为空',[$t('区域')]),
-                    trigger: 'change',
-                  }"
                   v-if="isSuperAdmin"
                 >
                   <Select
@@ -489,8 +484,7 @@ export default {
       }
     };
     const validSelect = (rule, value, callback) => {
-      console.log(rule, value, callback);
-      if (value === "") {
+      if (value === '' || !value[0]) {
         callback(new Error(i18n.t("fn.请选择", [i18n.t(rule.tips)])));
       } else {
         callback();
