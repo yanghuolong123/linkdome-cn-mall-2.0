@@ -131,7 +131,7 @@
                   :rules="{
                     required: true,
                     message: $t('fn._不能为空',[$t('区域')]),
-                    trigger: 'blur',
+                    trigger: 'change',
                   }"
                   v-if="isSuperAdmin"
                 >
@@ -489,6 +489,7 @@ export default {
       }
     };
     const validSelect = (rule, value, callback) => {
+      console.log(rule, value, callback);
       if (value === "") {
         callback(new Error(i18n.t("fn.请选择", [i18n.t(rule.tips)])));
       } else {
