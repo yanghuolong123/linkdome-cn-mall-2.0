@@ -154,7 +154,8 @@ export default {
           id: row.id,
           date: row.start_time.split(" ")[0],
         }).then((res) => {
-          if (res.data.code !== 200) return this.$message.error(this.$t(res.data.message));
+          if (res.data.code !== 200)
+            return this.$message.error(this.$t(res.data.message));
           this.$set(row, "listPage", 0);
           if (res.data.data[0])
             res.data.data.push({
@@ -252,7 +253,7 @@ export default {
     border: 1px solid #ebeef5 !important;
   }
   .el-table--fit {
-    max-height: 34.0625rem;
+    max-height: 55vh;
     overflow: auto;
   }
   .el-table::before {

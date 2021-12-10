@@ -132,7 +132,7 @@ export default {
 }
 .ivu-table-wrapper {
   overflow-y: auto;
-  max-height: 34.375rem;
+  max-height: 55vh;
   border-bottom: 1px solid #ebeef5;
 }
 /deep/ .ivu-table-overflowX {

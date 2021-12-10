@@ -148,11 +148,6 @@ export default {
     imgClick(img, index, list) {
       this.index = index;
       this.previewImgInfo = _.cloneDeep(list);
-      // this.previewImgInfo = {
-      //   title: img.object_id,
-      //   time: img.cur_time,
-      //   image_path: img.image_path,
-      // };
     },
     pageChange(row, page) {
       row.listPage = page;
@@ -201,7 +196,7 @@ export default {
 <style scoped lang="scss">
 .containter {
   .el-table--fit {
-    max-height: 34.0625rem;
+    max-height: 55vh;
     overflow: auto;
   }
   .el-table {
