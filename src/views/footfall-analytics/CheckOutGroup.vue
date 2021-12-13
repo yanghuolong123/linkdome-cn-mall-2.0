@@ -1,9 +1,36 @@
 <template>
   <div class="containter">
-    <cusPropertySelect
-      polygon="true"
-      @handleClick="handleClick"
-    ></cusPropertySelect>
+    <div class="selector-container common-card">
+      <div class="flex-center">
+        <Date-picker
+          :editable="false"
+          :clearable="false"
+          type="date"
+          v-model="time"
+          :options="options1"
+          class="w-select"
+        ></Date-picker>
+        <Select
+          placeholder="收银柜台"
+          v-model="polygon_id"
+          class="w-select m-l-20"
+        >
+          <Option v-for="item in polygonList" :value="item.id" :key="item.id">{{
+            item.name
+          }}</Option>
+        </Select>
+        <Button
+          size="large"
+          type="primary"
+          class="m-l-20"
+          @click="handleClick"
+          >{{ $t("查询") }}</Button
+        >
+        <Button size="large" @click="resetClick" class="m-l-20">{{
+          $t("重置")
+        }}</Button>
+      </div>
+    </div>
     <div class="m-t-20 common-card">
       <div class="tit">{{ $t("顾客结账信息统计") }}</div>
       <el-table
@@ -90,9 +117,9 @@
           background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="params.page"
+          :current-page="page"
           :page-sizes="[25, 50, 100, 200, 500]"
-          :page-size="params.limit"
+          :page-size="limit"
           layout="total, sizes, prev, pager, next, jumper"
           :total="checkTotal"
         >
@@ -113,40 +140,66 @@ import { addZero } from "@/libs/util";
 import _ from "lodash";
 import BigImg from "./components/GetBigImg.vue";
 import { checkoutGroup, groupAndTrajectory } from "@/api/analysis";
-import cusPropertySelect from "_c/flow-selector/property-flow-select.vue";
+import { cashierList } from "@/api/analysis";
+import { disabledDate } from "../../libs/util";
+
+const yesterday = Moment(new Date())
+  .subtract(1, "days")
+  .format("YYYY-MM-DD");
+
 export default {
   name: "CusProperty",
-  components: { cusPropertySelect, BigImg },
-  watch: {
-    currentP() {
-      this.params.page = this.currentP;
-      this.getList();
-    },
-  },
+  components: { BigImg },
   data() {
     return {
+      time: yesterday,
+      cashierList: [],
+      polygonList: [],
       keyName: {},
       index: 0,
-      currentP: 1,
       tableData: [],
       checkTotal: 1,
-      params: {
-        limit: 25,
-        time1: Moment()
-          .subtract(1, "days")
-          .format("YYYY-MM-DD"),
-        time2: Moment()
-          .subtract(1, "days")
-          .format("YYYY-MM-DD"),
-      },
+      polygon_id: "",
+      limit: 25,
+      page: 1,
       info: {},
       traceList: [],
     };
   },
   created() {
+    this.options1 = disabledDate;
     this.getList();
+    cashierList().then((res) => {
+      this.polygonList = res.data.data;
+    });
   },
   methods: {
+    resetClick() {
+      this.polygon_id = "";
+      this.time = yesterday;
+    },
+    // 查询
+    handleClick() {
+      this.page = 1;
+      this.getList()
+    },
+    // 请求
+    getList() {
+      checkoutGroup({
+        page: this.page,
+        time1: Moment(this.time).format("YYYY-MM-DD"),
+        time2: Moment(this.time).format("YYYY-MM-DD"),
+        polygon_id: this.polygon_id,
+        limit: this.limit,
+      }).then((res) => {
+        let data = res.data.data;
+        this.checkTotal = data.count;
+        this.tableData = data.list;
+        this.tableData.forEach((o) => {
+          this.$set(o, "listPage", 0);
+        });
+      });
+    },
     async rowClick(row) {
       // 点击button展开
       if (!row.expand && !row.list) {
@@ -167,12 +220,13 @@ export default {
       row.listPage = page;
     },
     handleSizeChange(val) {
-      this.params.limit = val;
-      this.params.page = 1;
+      this.limit = val;
+      this.page = 1;
       this.getList();
     },
     handleCurrentChange(val) {
-      this.params.page = val;
+      console.log(val);
+      this.page = val;
       this.getList();
     },
     // 秒钟时间转换
@@ -203,25 +257,6 @@ export default {
       };
       this.index = index;
       this.info = _.cloneDeep(list);
-    },
-    // 查询
-    handleClick(val) {
-      this.params = Object.assign(this.params, val);
-      this.params.page = 1;
-      this.currentP = 1;
-      if (this.params.time1 !== this.params.time2) this.params.time1 = this.params.time2;
-      this.getList();
-    },
-    // 请求
-    getList() {
-      checkoutGroup(this.params).then((res) => {
-        let data = res.data.data;
-        this.checkTotal = data.count;
-        this.tableData = data.list;
-        this.tableData.forEach((o) => {
-          this.$set(o, "listPage", 0);
-        });
-      });
     },
   },
 };

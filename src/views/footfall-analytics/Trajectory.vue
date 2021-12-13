@@ -2,20 +2,15 @@
   <div class="containter">
     <div class="selector-container common-card">
       <div class="flex-center">
-        <!-- <DatePicker
-          type="daterange"
+        <DatePicker
+          :editable="false"
+          :clearable="false"
+          type="date"
           @on-change="(val) => (queryParams.date = val)"
           v-model="queryParams.date"
           class="w-select"
-          placement="bottom-start"
-          :placeholder="$t('holder.请选择')"
           :options="options"
-        ></DatePicker> -->
-        <i-date-picker
-          class="w-select"
-          @selectDate="(val) => (queryParams.date = val)"
-          :value="queryParams.date"
-        ></i-date-picker>
+        ></DatePicker>
         <Button
           size="large"
           class="m-l-20"
@@ -110,10 +105,9 @@
   </div>
 </template>
 <script>
-import iDatePicker from "_c/common/idatepicker.vue";
-
 import BigImg from "./components/GetBigImg.vue";
 import { getCustomerTrailList } from "@/api/passenger";
+import { disabledDate } from "../../libs/util";
 import moment from "moment";
 const yesterday = moment(new Date())
   .subtract(1, "days")
@@ -121,7 +115,6 @@ const yesterday = moment(new Date())
 export default {
   components: {
     BigImg,
-    iDatePicker,
   },
   data() {
     return {
@@ -132,7 +125,7 @@ export default {
       queryParams: {
         page: 1,
         limit: 25,
-        date: [yesterday, yesterday],
+        date: yesterday,
       },
       keyName: {
         title: "object_id",
@@ -165,15 +158,9 @@ export default {
       row.expand = !row.expand;
     },
     handleSearch() {
-      if (_.isEmpty(_.compact(this.queryParams.date))) {
-        this.$alert({ content: this.$t("fn.请选择", [this.$t("日期")]) });
-        return;
-      }
-      if (this.queryParams.date[0] !== this.queryParams.date[1])
-        this.queryParams.date[0] = this.queryParams.date[1];
       const params = {
-        time1: this.queryParams.date[0],
-        time2: this.queryParams.date[1],
+        time1: moment(this.queryParams.date).format("YYYY-MM-DD"),
+        time2: moment(this.queryParams.date).format("YYYY-MM-DD"),
         page: this.queryParams.page,
         limit: this.queryParams.limit,
       };
@@ -193,10 +180,11 @@ export default {
         });
     },
     reset() {
-      this.queryParams.date = [yesterday, yesterday];
+      this.queryParams.date = yesterday;
     },
   },
   created() {
+    this.options = disabledDate;
     this.handleSearch();
   },
 };

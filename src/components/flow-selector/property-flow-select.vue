@@ -7,7 +7,6 @@
         :value="time"
       ></i-date-picker>
       <Select
-        v-show="!polygon"
         placeholder="顾客性别"
         v-model="queryParams.is_male"
         class="w-select m-l-20"
@@ -16,7 +15,6 @@
         <Option :value="1">男</Option>
       </Select>
       <Select
-        v-show="!polygon"
         placeholder="年龄区间"
         v-model="age"
         class="w-select m-l-20"
@@ -30,20 +28,9 @@
         placeholder="到店方式"
         v-model="queryParams.is_together"
         class="w-select m-l-20"
-        v-show="!polygon"
       >
         <Option v-for="item in wayList" :value="item.value" :key="item.value">{{
           item.lable
-        }}</Option>
-      </Select>
-      <Select
-        placeholder="收银柜台"
-        v-model="queryParams.polygon_id"
-        class="w-select m-l-20"
-        v-show="polygon"
-      >
-        <Option v-for="item in polygonList" :value="item.id" :key="item.id">{{
-          item.name
         }}</Option>
       </Select>
       <Button size="large" type="primary" class="m-l-20" @click="handleClick">{{
@@ -59,25 +46,20 @@
 import iDatePicker from "_c/common/idatepicker.vue";
 import Moment from "moment";
 import { cashierList } from "@/api/analysis";
+const yesterday = Moment(new Date())
+  .subtract(1, "days")
+  .format("YYYY-MM-DD");
 
 export default {
   name: "attributeFlowSelect",
   components: {
     iDatePicker,
   },
-  props: ["polygon"],
   data() {
     return {
       polygonList: [],
       queryParams: {},
-      time: [
-        Moment()
-          .subtract(1, "days")
-          .format("YYYY-MM-DD"),
-        Moment()
-          .subtract(1, "days")
-          .format("YYYY-MM-DD"),
-      ],
+      time: [yesterday, yesterday],
       age: "",
       wayList: [{ value: 0, lable: "独行" }, { value: 1, lable: "结伴" }],
       ageList: [
@@ -111,23 +93,9 @@ export default {
     resetClick() {
       this.queryParams = {};
       this.age = "";
-      this.time = [
-        Moment()
-          .subtract(1, "days")
-          .format("YYYY-MM-DD"),
-        Moment()
-          .subtract(1, "days")
-          .format("YYYY-MM-DD"),
-      ];
+      this.time = [yesterday,yesterday];
       this.dateSelect(this.time);
     },
-  },
-  created() {
-    if (this.polygon) {
-      cashierList().then((res) => {
-        this.polygonList = res.data.data;
-      });
-    }
   },
 };
 </script>
