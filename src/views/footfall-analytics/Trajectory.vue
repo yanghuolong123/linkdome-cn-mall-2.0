@@ -121,7 +121,7 @@ const yesterday = moment(new Date())
 export default {
   components: {
     BigImg,
-    iDatePicker
+    iDatePicker,
   },
   data() {
     return {
@@ -169,6 +169,8 @@ export default {
         this.$alert({ content: this.$t("fn.请选择", [this.$t("日期")]) });
         return;
       }
+      if (this.queryParams.date[0] !== this.queryParams.date[1])
+        this.queryParams.date[0] = this.queryParams.date[1];
       const params = {
         time1: this.queryParams.date[0],
         time2: this.queryParams.date[1],

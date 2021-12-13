@@ -209,6 +209,7 @@ export default {
       this.params = Object.assign(this.params, val);
       this.params.page = 1;
       this.currentP = 1;
+      if (this.params.time1 !== this.params.time2) this.params.time1 = this.params.time2;
       this.getList();
     },
     // 请求
