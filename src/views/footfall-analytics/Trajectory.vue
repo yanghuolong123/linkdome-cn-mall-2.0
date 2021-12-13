@@ -2,7 +2,7 @@
   <div class="containter">
     <div class="selector-container common-card">
       <div class="flex-center">
-        <DatePicker
+        <!-- <DatePicker
           type="daterange"
           @on-change="(val) => (queryParams.date = val)"
           v-model="queryParams.date"
@@ -10,7 +10,12 @@
           placement="bottom-start"
           :placeholder="$t('holder.请选择')"
           :options="options"
-        ></DatePicker>
+        ></DatePicker> -->
+        <i-date-picker
+          class="w-select"
+          @selectDate="(val) => (queryParams.date = val)"
+          :value="queryParams.date"
+        ></i-date-picker>
         <Button
           size="large"
           class="m-l-20"
@@ -105,9 +110,10 @@
   </div>
 </template>
 <script>
+import iDatePicker from "_c/common/idatepicker.vue";
+
 import BigImg from "./components/GetBigImg.vue";
 import { getCustomerTrailList } from "@/api/passenger";
-import { disabledDate } from "../../libs/util";
 import moment from "moment";
 const yesterday = moment(new Date())
   .subtract(1, "days")
@@ -115,6 +121,7 @@ const yesterday = moment(new Date())
 export default {
   components: {
     BigImg,
+    iDatePicker
   },
   data() {
     return {
@@ -188,7 +195,6 @@ export default {
     },
   },
   created() {
-    this.options = disabledDate;
     this.handleSearch();
   },
 };
