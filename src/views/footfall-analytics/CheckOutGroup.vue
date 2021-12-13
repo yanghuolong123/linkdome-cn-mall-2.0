@@ -157,13 +157,6 @@ export default {
           if (res.data.code !== 200)
             return this.$message.error(this.$t(res.data.message));
           this.$set(row, "listPage", 0);
-          if (res.data.data[0])
-            res.data.data.push({
-              image_path: row.image_path,
-              object_id: res.data.data[0].object_id,
-              cur_time: row.end_time,
-              location: row.Cashier,
-            });
           row.list = _.chunk(res.data.data, 10);
         });
       }
