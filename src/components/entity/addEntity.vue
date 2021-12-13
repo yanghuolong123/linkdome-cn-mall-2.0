@@ -484,7 +484,6 @@ export default {
       }
     };
     const validSelect = (rule, value, callback) => {
-      console.log(rule);
       if (value === "" || (rule.field == "zones" && !value[0])) {
         callback(new Error(i18n.t("fn.请选择", [i18n.t(rule.tips)])));
       } else {
@@ -936,6 +935,7 @@ export default {
       this.city = val;
     },
     closeEdit() {
+      this.$refs.formValidate.resetFields()
       this.$emit("closeEdit");
     },
     /* 选择类型
