@@ -320,7 +320,7 @@ export default {
       }
       let pdfUrl = window.location.href.split('/#/')[0]
       let token = getToken()
-      let objName = (pdfUrl.split('://')[1]).split('.')[0]
+      let objName = (pdfUrl.split('://')[1]).split('.')[0] + "_" + this.propertyId
       // let objName ='test'
       let ht = pdfUrl.split('://')[0]
       let download

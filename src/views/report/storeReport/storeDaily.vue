@@ -268,7 +268,7 @@
         }
         let pdfUrl = window.location.href.split('/#/')[0]
         let token = getToken()
-        let objName = (pdfUrl.split('://')[1]).split('.')[0]
+        let objName = (pdfUrl.split('://')[1]).split('.')[0]+ "_" + this.propertyId
         let url = pdfUrl + '/#/downloadStoreDayPdf?propertyId=' + this.propertyId + '&date=' + time + '&token=' + token + '&bzid=' + this.storeBzids+'&storeNames='+encodeURI(this.storeNames) + '&pdfUrl=' + this.pdfBaseUrl
         this.$vs.loading()
         const datelist = time.split(',')
