@@ -6,7 +6,9 @@
         <report-cover
           :suggestText="suggestText"
           titleName="凌图智慧日报"
-          :pageTotal="`${11 + allHeatMap.length}`"
+          :pageTotal="
+            `${11 + allHeatMap.length + allFloorStore.length - 1}`
+          "
         ></report-cover>
         <!-- 总览 -->
         <report-one
@@ -661,8 +663,7 @@ export default {
     },
 
     floorDataList(data) {
-      this.allFloorStore = [];
-      if (data.length > 8) this.allFloorStore = _.chunk(data, 8);
+      this.allFloorStore = _.chunk(data, 8);
       this.allFloorStore.forEach((ele, index) => {
         this.multiChartData(ele, `allFloorStore+${index}`, "chart");
       });

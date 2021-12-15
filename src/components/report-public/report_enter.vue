@@ -99,7 +99,12 @@ export default {
     }
   },
   watch: {
-
+		data:{
+			handler(newval){
+				console.log(newval)
+			},
+			immediate:true
+		}
   },
   computed: {
   },

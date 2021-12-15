@@ -6,7 +6,7 @@
         <report-cover
           :suggestText="suggestText"
           titleName="凌图智慧周报"
-          :pageTotal="`${13 + allHeatMap.length}`"
+          :pageTotal="`${13 + allHeatMap.length + allFloorStore.length - 1}`"
         ></report-cover>
         <!-- 总览 -->
         <report-one
@@ -74,7 +74,7 @@
         <!-- 业态下的商铺 -->
         <report-chart-multi
           title="店铺客流"
-          :page="`${9+allFloorStore.length - 1}`"
+          :page="`${9 + allFloorStore.length - 1}`"
           :listTitle="formatStoreTitle"
           :dataList="allFormatStore"
         ></report-chart-multi>
@@ -83,7 +83,7 @@
           :key="'heatMap' + index"
           v-for="(item, index) in allHeatMap"
           title="热力图"
-          :page="`${10 + index+allFloorStore.length - 1}`"
+          :page="`${10 + index + allFloorStore.length - 1}`"
           :listTitle="item.title"
           :dataList="item.data"
           :isRemark="false"
@@ -94,14 +94,14 @@
           title="店铺关联"
           :listTitle="orderlyTitle"
           :tableData="orderlyData"
-          :page="`${10 + allHeatMap.length+allFloorStore.length - 1}`"
+          :page="`${10 + allHeatMap.length + allFloorStore.length - 1}`"
         ></report-table>
         <!-- 店铺关联 无序-->
         <report-table
           title="店铺关联"
           :listTitle="disorderTitle"
           :tableData="disorderData"
-          :page="`${11 + allHeatMap.length+allFloorStore.length - 1}`"
+          :page="`${11 + allHeatMap.length + allFloorStore.length - 1}`"
         ></report-table>
         <!-- 停留时间 业态-->
         <report-chart
@@ -109,7 +109,7 @@
           :clickData="clickData"
           title="停留时间"
           :isRemark="false"
-          :page="`${12 + allHeatMap.length+allFloorStore.length - 1}`"
+          :page="`${12 + allHeatMap.length + allFloorStore.length - 1}`"
           :listTitle="dwellTitle"
           :dataList="dwellChartData"
           chartType="dwell"
@@ -118,7 +118,7 @@
         <report-chart-multi
           chartType="dwell"
           title="停留时间"
-          :page="`${13 + allHeatMap.length+allFloorStore.length - 1}`"
+          :page="`${13 + allHeatMap.length + allFloorStore.length - 1}`"
           :listTitle="formatDwellStoreTitle"
           :dataList="allDwellFormatStore"
         ></report-chart-multi>
@@ -910,9 +910,7 @@ export default {
       this.shopChartData.remarkData = shopData.comment ? shopData.comment : [];
     },
     floorDataList(data) {
-      this.allFloorStore = [];
-      // this.multiChartData(data, "allFloorStore", "chart");
-      if (data.length > 8)  this.allFloorStore = _.chunk(data, 8);
+      this.allFloorStore = _.chunk(data, 8);
       this.allFloorStore.forEach((ele, index) => {
         this.multiChartData(ele, `allFloorStore+${index}`, "chart");
       });

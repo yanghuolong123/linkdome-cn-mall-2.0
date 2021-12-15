@@ -4,7 +4,14 @@
       <div id="pdfDom" v-if="showPDF" style=" width: 1200px;">
         <!-- 封面 -->
         <report-cover
-          :pageTotal="`${14 + allHeatMap.length}`"
+          :pageTotal="
+            `${14 +
+              allHeatMap.length +
+              floorShopChartData.length -
+              1 +
+              floorGateChartData.length -
+              1}`
+          "
           :suggestText="suggestText"
           titleName="凌图智慧月报"
         ></report-cover>
@@ -79,7 +86,7 @@
         <!-- 业态 店铺 -->
         <report-chart-multi
           title="店铺客流"
-          :page="`${10+floorShopChartData.length - 1}`"
+          :page="`${10 + floorShopChartData.length - 1}`"
           :listTitle="shopcAtivitiesTitle"
           :dataList="formatShopChartData"
         ></report-chart-multi>
@@ -88,7 +95,7 @@
           :key="'heatMap' + index"
           v-for="(item, index) in allHeatMap"
           title="热力图"
-          :page="`${11 + index +floorShopChartData.length - 1}`"
+          :page="`${11 + index + floorShopChartData.length - 1}`"
           :listTitle="item.title"
           :dataList="item.data"
           :chartHeight="600"
@@ -98,14 +105,14 @@
           title="店铺关联"
           :listTitle="orderlyTitle"
           :tableData="orderlyData"
-          :page="`${11 + allHeatMap.length+floorShopChartData.length - 1}`"
+          :page="`${11 + allHeatMap.length + floorShopChartData.length - 1}`"
         ></report-table>
         <!-- 店铺关联 无序-->
         <report-table
           title="店铺关联"
           :listTitle="disorderTitle"
           :tableData="disorderData"
-          :page="`${12 + allHeatMap.length+floorShopChartData.length - 1}`"
+          :page="`${12 + allHeatMap.length + floorShopChartData.length - 1}`"
         ></report-table>
         <!-- 停留时间 业态-->
         <report-chart
@@ -113,7 +120,7 @@
           :clickData="clickData"
           :isRemark="false"
           title="停留时间"
-          :page="`${13 + allHeatMap.length+floorShopChartData.length - 1}`"
+          :page="`${13 + allHeatMap.length + floorShopChartData.length - 1}`"
           :listTitle="dwellTitle"
           :dataList="dwellChartData"
           chartType="dwell"
@@ -122,7 +129,7 @@
         <report-chart-multi
           chartType="dwell"
           title="停留时间"
-          :page="`${14 + allHeatMap.length+floorShopChartData.length - 1}`"
+          :page="`${14 + allHeatMap.length + floorShopChartData.length - 1}`"
           :listTitle="formatDwellStoreTitle"
           :dataList="allDwellFormatStore"
         ></report-chart-multi>
@@ -906,36 +913,47 @@ export default {
       obj.data.push(numberObj.time, numberObj.enter.toLocaleString() + "人次");
       this.ratioTableData.push(obj);
     },
+
     shopDataDispose(data, type) {
       let colorArr = ["#745AEF", "#EE690B", "#4EDBDA", "#2081D4"];
-      let nameList = Object.keys(data);
-      nameList.forEach((list, index) => {
-        let listObj = {
-          option: _.cloneDeep(this.enterOption),
-        };
-        listObj.option.xAxis.categories = [];
-        listObj.option.series = [
-          {
-            name: list,
-            type: "bar",
-            color: index > 4 ? colorArr[index - 4] : colorArr[index],
-            data: [],
-          },
-        ];
-        let dataType = data[list].shop ? data[list].shop : data[list].gate;
-        let shop = _.take(_.orderBy(dataType, "enter", "desc"), 10);
-        shop.forEach((value) => {
-          listObj.option.series[0].data.push(value.enter);
-          listObj.option.xAxis.categories.push(value.name);
+      let nameListArr = _.chunk(Object.keys(data), 8);
+      nameListArr.forEach((nameList, nameIndex) => {
+        type == "floorGateChartData"
+          ? (this[type][nameIndex] = { data: [] })
+          : "";
+        nameList.forEach((list, index) => {
+          let listObj = {
+            option: _.cloneDeep(this.enterOption),
+          };
+          listObj.option.xAxis.categories = [];
+          listObj.option.series = [
+            {
+              name: list,
+              type: "bar",
+              color: index > 4 ? colorArr[index - 4] : colorArr[index],
+              data: [],
+            },
+          ];
+          let dataType = data[list].shop ? data[list].shop : data[list].gate;
+          let shop = _.take(_.orderBy(dataType, "enter", "desc"), 10);
+          shop.forEach((value) => {
+            listObj.option.series[0].data.push(value.enter);
+            listObj.option.xAxis.categories.push(value.name);
+          });
+          if (nameIndex) {
+            listObj.span = 6;
+            listObj.height = 500;
+          } else {
+            this.switchHeight(nameList, listObj);
+          }
+          type == "floorGateChartData"
+            ? this[type][nameIndex].data.push(listObj)
+            : this[type].push(listObj);
         });
-        this.switchHeight(nameList, listObj);
-        this[type].push(listObj);
       });
     },
     floorShopDataList(data) {
-      this.floorShopChartData = [];
-      // this.multiChartData(data, "floorShopChartData", "chart");
-      if (data.length > 8)  this.floorShopChartData = _.chunk(data, 8);
+      this.floorShopChartData = _.chunk(data, 8);
       this.floorShopChartData.forEach((ele, index) => {
         this.multiChartData(ele, `floorShopChartData+${index}`, "chart");
       });
@@ -943,10 +961,6 @@ export default {
     formatShopDataList(data) {
       this.formatShopChartData = [];
       this.multiChartData(data, "formatShopChartData", "chart");
-      if (data.length > 8)  this.floorShopChartData = _.chunk(data, 8);
-      this.floorShopChartData.forEach((ele, index) => {
-        this.multiChartData(ele, `floorShopChartData+${index}`, "chart");
-      });
     },
     dwellFormatStoreData(data) {
       this.allDwellFormatStore = [];

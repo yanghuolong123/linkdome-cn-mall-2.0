@@ -36,7 +36,7 @@
         <report-cover
           :suggestText="suggestText"
           titleName="凌图智慧日报"
-          :pageTotal="`${11 + allHeatMap.length}`"
+          :pageTotal="`${11 + allHeatMap.length + allFloorStore.length - 1}`"
         ></report-cover>
         <!-- 总览 -->
         <report-one
@@ -703,7 +703,6 @@ export default {
         });
       }
       this.shopChartData.option.series = [currentObj, yesterObj];
-      console.log(this.shopChartData.option);
       this.shopChartData.remarkData = shopData.comment ? shopData.comment : [];
     },
     headerDate(value) {
@@ -722,8 +721,7 @@ export default {
       this.$store.commit("dayReportHeader", headerDate);
     },
     floorDataList(data) {
-      this.allFloorStore = [];
-      if (data.length > 8)  this.allFloorStore = _.chunk(data, 8);
+      this.allFloorStore = _.chunk(data, 8);
       this.allFloorStore.forEach((ele, index) => {
         this.multiChartData(ele, `allFloorStore+${index}`, "chart");
       });
