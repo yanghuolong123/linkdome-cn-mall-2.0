@@ -72,7 +72,7 @@
           :chartHeight="600"
           :clickData="clickData"
           title="店铺客流"
-          page="8"
+          :page="`${8 + floorGateChartData.length - 1}`"
           :listTitle="shop10Title"
           :dataList="shop10Data"
         ></report-chart>
@@ -81,14 +81,20 @@
           title="店铺客流"
           v-for="(item, index) in floorShopChartData"
           :key="index"
-          :page="`${9 + index}`"
+          :page="`${9 + index + floorGateChartData.length - 1}`"
           :listTitle="floorShopTitle"
           :dataList="item.data"
         ></report-chart-multi>
         <!-- 业态 店铺 -->
         <report-chart-multi
           title="店铺客流"
-          :page="`${10 + floorShopChartData.length - 1}`"
+          :page="
+            `${10 +
+              floorShopChartData.length -
+              1 +
+              floorGateChartData.length -
+              1}`
+          "
           :listTitle="shopcAtivitiesTitle"
           :dataList="formatShopChartData"
         ></report-chart-multi>
@@ -97,7 +103,14 @@
           :key="'heatMap' + index"
           v-for="(item, index) in allHeatMap"
           title="热力图"
-          :page="`${11 + index + floorShopChartData.length - 1}`"
+          :page="
+            `${11 +
+              index +
+              floorShopChartData.length -
+              1 +
+              floorGateChartData.length -
+              1}`
+          "
           :listTitle="item.title"
           :dataList="item.data"
           :chartHeight="600"
@@ -107,14 +120,28 @@
           title="店铺关联"
           :listTitle="orderlyTitle"
           :tableData="orderlyData"
-          :page="`${11 + allHeatMap.length + floorShopChartData.length - 1}`"
+          :page="
+            `${11 +
+              allHeatMap.length +
+              floorShopChartData.length -
+              1 +
+              floorGateChartData.length -
+              1}`
+          "
         ></report-table>
         <!-- 店铺关联 无序-->
         <report-table
           title="店铺关联"
           :listTitle="disorderTitle"
           :tableData="disorderData"
-          :page="`${12 + allHeatMap.length + floorShopChartData.length - 1}`"
+          :page="
+            `${12 +
+              allHeatMap.length +
+              floorShopChartData.length -
+              1 +
+              floorGateChartData.length -
+              1}`
+          "
         ></report-table>
         <!-- 停留时间 业态-->
         <report-chart
@@ -122,7 +149,14 @@
           :clickData="clickData"
           :isRemark="false"
           title="停留时间"
-          :page="`${13 + allHeatMap.length + floorShopChartData.length - 1}`"
+          :page="
+            `${13 +
+              allHeatMap.length +
+              floorShopChartData.length -
+              1 +
+              floorGateChartData.length -
+              1}`
+          "
           :listTitle="dwellTitle"
           :dataList="dwellChartData"
           chartType="dwell"
@@ -131,7 +165,14 @@
         <report-chart-multi
           chartType="dwell"
           title="停留时间"
-          :page="`${14 + allHeatMap.length + floorShopChartData.length - 1}`"
+          :page="
+            `${14 +
+              allHeatMap.length +
+              floorShopChartData.length -
+              1 +
+              floorGateChartData.length -
+              1}`
+          "
           :listTitle="formatDwellStoreTitle"
           :dataList="allDwellFormatStore"
         ></report-chart-multi>
