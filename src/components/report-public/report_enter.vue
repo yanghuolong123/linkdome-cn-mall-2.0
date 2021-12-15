@@ -98,14 +98,6 @@ export default {
 	  peakIcon: require('@/assets/images/fixation_img/rest/peak.png')
     }
   },
-  watch: {
-		data:{
-			handler(newval){
-				console.log(newval)
-			},
-			immediate:true
-		}
-  },
   computed: {
   },
   methods: {

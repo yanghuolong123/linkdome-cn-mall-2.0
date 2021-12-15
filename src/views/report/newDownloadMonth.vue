@@ -60,10 +60,12 @@
         ></report-month-table>
         <!-- 楼层 出入口 -->
         <report-chart-multi
+          v-for="(item, index) in floorGateChartData"
+          :key="index + 'a'"
           title="出入口客流"
-          page="7"
+          :page="`${7 + index}`"
           :listTitle="gateFloorTitle"
-          :dataList="floorGateChartData"
+          :dataList="item.data"
         ></report-chart-multi>
         <!-- 店铺 -->
         <report-chart
@@ -80,7 +82,7 @@
           v-for="(item, index) in floorShopChartData"
           :key="index"
           :page="`${9 + index}`"
-          :listTitle="floorStoreTitle"
+          :listTitle="floorShopTitle"
           :dataList="item.data"
         ></report-chart-multi>
         <!-- 业态 店铺 -->
