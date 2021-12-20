@@ -92,7 +92,7 @@ export default {
       })
     },
     suggestReset () {
-      this.suggestText = ''
+      this.suggestContent = ''
     },
     suggestHide () {
       this.isSuggestText = false
