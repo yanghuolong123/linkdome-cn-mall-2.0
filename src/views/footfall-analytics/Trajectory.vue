@@ -67,6 +67,7 @@
                 <el-image :src="img.image_path" fit="contain"></el-image>
                 <span class="time">{{ img.cur_time }}</span>
                 <span>{{ img.location }}</span>
+                <span> {{ img.object_id % 2 == 0 ? "男" : "女" }} 30-40</span>
               </div>
               <el-button
                 :disabled="
