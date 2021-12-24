@@ -36,6 +36,13 @@
       >
         <el-table-column align="center" prop="object_id" label="顾客ID">
         </el-table-column>
+        <el-table-column prop="gender" align="center" label="性别">
+          <span slot-scope="{ row }">{{
+            row.gender == "female" ? "女" : "男"
+          }}</span>
+        </el-table-column>
+        <el-table-column prop="age" align="center" label="年龄">
+        </el-table-column>
         <el-table-column prop="count" align="center" label="轨迹点位数">
         </el-table-column>
         <el-table-column prop="operate" align="center" label="操作">
@@ -67,11 +74,6 @@
                 <el-image :src="img.image_path" fit="contain"></el-image>
                 <span class="time">{{ img.cur_time }}</span>
                 <span>{{ img.location }}</span>
-                <span
-                  v-if="index == scope.row.list[scope.row.listPage].length - 1"
-                >
-                  {{ img.object_id % 2 == 0 ? "男" : "女" }} 30-40</span
-                >
               </div>
               <el-button
                 :disabled="
