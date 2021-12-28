@@ -1,7 +1,7 @@
 // 定义全局map变量
 var map = null
 // 定义地图ID变量
-var fmapID = '1351434157796646914'
+var fmapID = '1465880293325746177'
 // 定义路径规划对象
 var naviAnalyser = null
 // 起终点坐标

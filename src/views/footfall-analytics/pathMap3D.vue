@@ -49,8 +49,8 @@
                     container: '',
                     // mapThemeURL: '../../../data/theme',
                     focusAlphaMode: false,
-                    appName: '测试',
-                    key: 'dd96c8b3682ff87587a6dafc3db4b11e'
+                    appName: 'demo',
+                    key: 'a68a28977c273e07af2c7c00194e02bf'
                 },
                 allLine: []
             }
