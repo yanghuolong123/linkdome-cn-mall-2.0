@@ -48,7 +48,8 @@ export default {
       mapOptions: {
         container: "",
         mapServerURL: "./data/map", //地图数据位置
-        // mapThemeURL: "./data/theme",
+        mapThemeURL: "./data/theme",
+        defaultThemeName: "2001",
         focusAlphaMode: false,
         appName: "demo",
         key: "a68a28977c273e07af2c7c00194e02bf",
