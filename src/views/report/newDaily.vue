@@ -506,6 +506,7 @@ export default {
           property_id: this.propertyId,
         }),
       ]).then((res) => {
+        console.log(res);
         this.showPDF = true;
         // 建议
         this.suggestText = res[0].data.data[0].property_suggest;

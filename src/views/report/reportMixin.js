@@ -293,6 +293,7 @@ export default {
           occupancyTime: this.timeTYpe(cOPDate, cOTime, "集客量"),
           average:
             currentData.enter.avg.number.toLocaleString() + "人次/" + type,
+          valid: currentData.valid.toLocaleString() + "人次/" + type,
         },
         {
           // 昨天时间数据
@@ -305,6 +306,7 @@ export default {
           occupancyTime: this.timeTYpe(tOPDate, tOTime, "集客量"),
           average:
             contrastData.enter.avg.number.toLocaleString() + "人次/" + type,
+          valid: contrastData.valid.toLocaleString() + "人次/" + type,
         },
       ];
       if (data2) {
@@ -333,6 +335,7 @@ export default {
             "集客量"
           ),
           average: laData.enter.avg.number.toLocaleString() + "人次/" + type,
+          valid: laData.valid.toLocaleString() + "人次/" + type,
         };
         this.enterData.push(obj);
       }
