@@ -542,11 +542,6 @@ export default {
           timeRange: this.selectDate,
           report_type: "month",
         }),
-        newReportEnter({
-          property_id: this.propertyId,
-          timeRange: this.lastYear,
-          report_type: "month",
-        }),
         getanalysiseeo({
           bzid: this.bzid,
           type: "enter",
