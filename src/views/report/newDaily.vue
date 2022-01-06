@@ -411,6 +411,9 @@ export default {
       let yesterday = moment(this.selectDateTime)
         .subtract(1, "days")
         .format("YYYY-MM-DD");
+      let lastWeek = moment(this.selectDateTime)
+        .subtract(1, "weeks")
+        .format("YYYY-MM-DD");
       this.showPDF = false;
       Promise.all([
         // 建议
@@ -505,15 +508,25 @@ export default {
           time: this.selectDateText,
           property_id: this.propertyId,
         }),
+        // 上周客流趋势
+        getanalysiseeo({
+          bzid: this.bzid,
+          type: "enter",
+          range: lastWeek + "," + lastWeek,
+          innerRange: "1h",
+        }),
       ]).then((res) => {
-        console.log(res);
         this.showPDF = true;
         // 建议
         this.suggestText = res[0].data.data[0].property_suggest;
         // 客流总览
         this.reportOneData(res[1].data.data);
         // 客流趋势
-        this.trendDataList(res[2].data.data, res[3].data.data);
+        this.trendDataList(
+          res[2].data.data,
+          res[3].data.data,
+          res[15].data.data
+        );
         // 出入口
         this.gateDataList(res[4].data.data);
         // 商铺
@@ -543,9 +556,17 @@ export default {
       });
     },
     // 趋势数据
-    trendDataList(enterData, yesterdayData) {
+    trendDataList(enterData, yesterdayData, lastWeekData) {
       this.ratioTableData = [];
       let highest = {
+        number: 0,
+        time: "",
+      };
+      let highestYest = {
+        number: 0,
+        time: "",
+      };
+      let highestWeek = {
         number: 0,
         time: "",
       };
@@ -556,22 +577,45 @@ export default {
         type: "line",
         data: [],
       };
-      //let occupancyObj = {
-      // 	name: '集客量',
-      // 	color: '#00A0E9',
-      // 	type: 'line',
-      // 	data: []
+      let enterObjYest = {
+        name: "环比",
+        color: "#00A0E9",
+        type: "line",
+        data: [],
+      };
+      let enterObjWeek = {
+        name: "上周环比",
+        color: "#00A0A0",
+        type: "line",
+        data: [],
+      };
+      // let occupancyObj = {
+      //    name: '集客量',
+      //       color: '#00A0E9',
+      //       type: 'line',
+      //       data: []
       // }
-
       enterData.forEach((list, index) => {
         let time = moment(list.begin).format("HH:mm");
         this.trendChartData.option.xAxis.categories.push(time);
         enterObj.data.push(list.enter);
-        // let occupancy = occupancyData[index].occupancy < 0 ? 0 : occupancyData[index].occupancy
-        // occupancyObj.data.push(occupancy)
+        enterObjYest.data.push(yesterdayData[index].enter);
+        enterObjWeek.data.push(lastWeekData[index].enter);
         if (Number(list.enter) > highest.number) {
           highest.number = list.enter;
           highest.time = Number(moment(list.begin).format("H"));
+        }
+        if (Number(yesterdayData[index].enter) > highestYest.number) {
+          highestYest.number = yesterdayData[index].enter;
+          highestYest.time = Number(
+            moment(yesterdayData[index].begin).format("H")
+          );
+        }
+        if (Number(lastWeekData[index].enter) > highestWeek.number) {
+          highestWeek.number = lastWeekData[index].enter;
+          highestWeek.time = Number(
+            moment(lastWeekData[index].begin).format("H")
+          );
         }
         // 表格
         this.ratioTableData.push({
@@ -585,7 +629,11 @@ export default {
         });
       });
       //  this.trendChartData.option.series=[enterObj,occupancyObj]
-      this.trendChartData.option.series = [enterObj];
+      this.trendChartData.option.series = [
+        enterObj,
+        enterObjYest,
+        enterObjWeek,
+      ];
       let cuT = _.sumBy(enterData, (o) => {
         return o.enter;
       });
@@ -602,12 +650,26 @@ export default {
         ],
       });
       let enterNumber = this.trendChartData.option.series[0].data;
+      let yestNum = this.trendChartData.option.series[1].data;
+      let weekNum = this.trendChartData.option.series[2].data;
       this.trendChartData.remarkData = [
-        "当日开始营业后一小时间客流量" +
+        "开始营业后一小时间客流量 当日 " +
           enterNumber[0].toLocaleString() +
+          "人次" +
+          " 昨日 " +
+          yestNum[0].toLocaleString() +
+          "人次" +
+          " 上周同日 " +
+          +weekNum[0].toLocaleString() +
           "人次",
-        "当日结束营业前一小时间客流量" +
+        "结束营业前一小时间客流量 当日 " +
           enterNumber[enterNumber.length - 1].toLocaleString() +
+          "人次" +
+          " 昨日 " +
+          yestNum[yestNum.length - 1].toLocaleString() +
+          "人次" +
+          " 上周同日 " +
+          weekNum[weekNum.length - 1].toLocaleString() +
           "人次",
         "当日" +
           highest.time +
@@ -615,6 +677,20 @@ export default {
           (highest.time + 1) +
           "点达到客流峰值" +
           highest.number.toLocaleString() +
+          "人次；" +
+          "昨日" +
+          highestYest.time +
+          "点到" +
+          (highestYest.time + 1) +
+          "点达到客流峰值" +
+          highestYest.number.toLocaleString() +
+          "人次；" +
+          "上周同日" +
+          (highestWeek.time ? highestWeek.time : 0) +
+          "点到" +
+          (highestWeek.time + 1) +
+          "点达到客流峰值" +
+          highestWeek.number.toLocaleString() +
           "人次",
       ];
     },
@@ -630,7 +706,7 @@ export default {
         "同期 ( " + time2 + " )",
         "同比",
       ];
-      let [currentObj, yesterObj, lastObj] = [
+      let [currentObj, yesterObj, lastObj, lastWeekObj] = [
         {
           name: "本日客流",
           color: "#2081D4",
@@ -649,6 +725,12 @@ export default {
           type: "column",
           data: [],
         },
+        {
+          name: "上周同日客流",
+          color: "#554Dd0",
+          type: "column",
+          data: [],
+        },
       ];
       if (gateData.data) {
         gateData.data.forEach((list) => {
@@ -661,6 +743,12 @@ export default {
           let lastEnter = _.find(gateData.period, (o) => o.bzid === list.bzid)
             .enter;
           lastObj.data.push(lastEnter);
+
+          let lastWeekEnter = _.find(
+            gateData.last_week_day,
+            (o) => o.bzid === list.bzid
+          ).enter;
+          lastWeekObj.data.push(lastWeekEnter);
           this.gateTableData.data.push({
             name: list.name,
             curr: list.enter.toLocaleString(),
@@ -670,13 +758,18 @@ export default {
           this.gateChartData.option.xAxis.categories.push(list.name);
         });
       }
-      this.gateChartData.option.series = [currentObj, yesterObj, lastObj];
+      this.gateChartData.option.series = [
+        currentObj,
+        yesterObj,
+        lastObj,
+        lastWeekObj,
+      ];
       this.gateChartData.remarkData = gateData.comment ? gateData.comment : [];
     },
     shopDataList(shopData) {
       this.shopChartData.option = _.cloneDeep(this.enterOption);
 
-      let [currentObj, yesterObj] = [
+      let [currentObj, yesterObj, lastObj] = [
         {
           name: "本日客流",
           color: "#2081d4",
@@ -689,7 +782,14 @@ export default {
           color: "#2BD9CF",
           data: [],
         },
+        {
+          name: "上周同日客流",
+          type: "column",
+          color: "#3DD0FC",
+          data: [],
+        },
       ];
+      console.log(shopData);
       if (shopData.current) {
         _.take(shopData.current, 10).forEach((list) => {
           currentObj.data.push(list.data);

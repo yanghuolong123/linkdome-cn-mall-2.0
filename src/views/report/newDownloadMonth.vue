@@ -542,6 +542,11 @@ export default {
           timeRange: this.selectDate,
           report_type: "month",
         }),
+        newReportEnter({
+          property_id: this.propertyId,
+          timeRange: this.lastYear,
+          report_type: "month",
+        }),
         getanalysiseeo({
           bzid: this.bzid,
           type: "enter",
@@ -619,11 +624,21 @@ export default {
           year: this.saveHeaderData.year,
           month: this.saveHeaderData.time,
         }),
+        getanalysiseeo({
+          bzid: this.bzid,
+          type: "enter",
+          range: this.lastMonthDate,
+          innerRange: "1day",
+        }),
       ]).then((res) => {
         this.showPDF = true;
         this.suggestText = res[0].data.data[0].property_suggest;
         this.reportOneData(res[1].data.data, res[2].data.data);
-        this.trendDataList(res[3].data.data, res[4].data.data);
+        this.trendDataList(
+          res[3].data.data,
+          res[4].data.data,
+          res[18].data.data
+        );
         this.trendTableData(res[3].data.data);
         this.gateDataList(res[5].data.data);
         this.floorGateData(res[6].data.data);
@@ -708,9 +723,9 @@ export default {
       });
       this.gateTableData.push(total);
     },
-    trendDataList(data, remarkData) {
+    trendDataList(data, remarkData, lastM) {
       this.trendChartData.option = _.cloneDeep(this.enterOption);
-      let [enterObj, trendObj, averageObj] = [
+      let [enterObj, trendObj, lastObj, averageObj] = [
         {
           name: "每日客流",
           type: "column",
@@ -737,6 +752,18 @@ export default {
           },
         },
         {
+          name: "上月客流",
+          type: "spline",
+          color: "#ABA00B",
+          marker: {
+            enabled: false,
+          },
+          data: [],
+          tooltip: {
+            valueSuffix: "",
+          },
+        },
+        {
           name: "平均客流",
           type: "spline",
           color: "#FEB33D",
@@ -752,15 +779,34 @@ export default {
       let totalNumber = Number(
         (_.sumBy(data, "enter") / data.length).toFixed(0)
       );
-      data.forEach((list, index) => {
-        enterObj.data.push(list.enter);
-        trendObj.data.push(list.enter);
-        averageObj.data.push(totalNumber);
-        this.trendChartData.option.xAxis.categories.push(
-          moment(list.begin).format("YYYY-MM-DD")
-        );
-      });
-      this.trendChartData.option.series = [enterObj, trendObj, averageObj];
+      if (data.length > lastM.length) {
+        data.forEach((list, index) => {
+          enterObj.data.push(list.enter);
+          trendObj.data.push(list.enter);
+          lastObj.data.push(lastM[index] ? lastM[index].enter : 0);
+          averageObj.data.push(totalNumber);
+          this.trendChartData.option.xAxis.categories.push(
+            moment(list.begin).format("YYYY-MM-DD")
+          );
+        });
+      } else {
+        lastM.forEach((list, index) => {
+          let num = data[index].enter ? data[index].enter : 0;
+          enterObj.data.push(num);
+          trendObj.data.push(num);
+          lastObj.data.push(list.enter);
+          averageObj.data.push(totalNumber);
+          this.trendChartData.option.xAxis.categories.push(
+            moment(list.begin).format("YYYY-MM-DD")
+          );
+        });
+      }
+      this.trendChartData.option.series = [
+        enterObj,
+        trendObj,
+        averageObj,
+        lastObj,
+      ];
       this.trendChartData.remarkData = remarkData.comment
         ? remarkData.comment
         : [];

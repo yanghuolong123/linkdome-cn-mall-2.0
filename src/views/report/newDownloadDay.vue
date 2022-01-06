@@ -6,9 +6,7 @@
         <report-cover
           :suggestText="suggestText"
           titleName="凌图智慧日报"
-          :pageTotal="
-            `${11 + allHeatMap.length + allFloorStore.length - 1}`
-          "
+          :pageTotal="`${11 + allHeatMap.length + allFloorStore.length - 1}`"
         ></report-cover>
         <!-- 总览 -->
         <report-one
@@ -380,6 +378,9 @@ export default {
         .subtract(1, "days")
         .format("YYYY-MM-DD");
       this.showPDF = false;
+      let lastWeek = moment(this.selectDateTime)
+        .subtract(1, "weeks")
+        .format("YYYY-MM-DD");
       Promise.all([
         // 建议
         newReportSuggest({
@@ -473,6 +474,13 @@ export default {
           time: this.selectDateText,
           property_id: this.propertyId,
         }),
+        // 上周客流趋势
+        getanalysiseeo({
+          bzid: this.bzid,
+          type: "enter",
+          range: lastWeek + "," + lastWeek,
+          innerRange: "1h",
+        }),
       ]).then((res) => {
         this.showPDF = true;
         // 建议
@@ -480,7 +488,11 @@ export default {
         // 客流总览
         this.reportOneData(res[1].data.data);
         // 客流趋势
-        this.trendDataList(res[2].data.data, res[3].data.data);
+        this.trendDataList(
+          res[2].data.data,
+          res[3].data.data,
+          res[15].data.data
+        );
         // 出入口
         this.gateDataList(res[4].data.data);
         // 商铺
@@ -525,9 +537,17 @@ export default {
       this.$store.commit("dayReportHeader", headerDate);
     },
     // 趋势数据
-    trendDataList(enterData, yesterdayData) {
+    trendDataList(enterData, yesterdayData, lastWeekData) {
       this.ratioTableData = [];
       let highest = {
+        number: 0,
+        time: "",
+      };
+      let highestYest = {
+        number: 0,
+        time: "",
+      };
+      let highestWeek = {
         number: 0,
         time: "",
       };
@@ -535,6 +555,18 @@ export default {
       let enterObj = {
         name: "客流",
         color: "#745AEF",
+        type: "line",
+        data: [],
+      };
+      let enterObjYest = {
+        name: "环比",
+        color: "#00A0E9",
+        type: "line",
+        data: [],
+      };
+      let enterObjWeek = {
+        name: "上周环比",
+        color: "#00A0A0",
         type: "line",
         data: [],
       };
@@ -548,11 +580,25 @@ export default {
         let time = moment(list.begin).format("HH:mm");
         this.trendChartData.option.xAxis.categories.push(time);
         enterObj.data.push(list.enter);
+        enterObjYest.data.push(yesterdayData[index].enter);
+        enterObjWeek.data.push(lastWeekData[index].enter);
         //   let occupancy = occupancyData[index].occupancy < 0 ? 0 : occupancyData[index].occupancy
         // occupancyObj.data.push(occupancy)
         if (Number(list.enter) > highest.number) {
           highest.number = list.enter;
           highest.time = Number(moment(list.begin).format("H"));
+        }
+        if (Number(yesterdayData[index].enter) > highestYest.number) {
+          highestYest.number = yesterdayData[index].enter;
+          highestYest.time = Number(
+            moment(yesterdayData[index].begin).format("H")
+          );
+        }
+        if (Number(lastWeekData[index].enter) > highestWeek.number) {
+          highestWeek.number = lastWeekData[index].enter;
+          highestWeek.time = Number(
+            moment(lastWeekData[index].begin).format("H")
+          );
         }
         // 表格
         this.ratioTableData.push({
@@ -566,7 +612,11 @@ export default {
         });
       });
       //  this.trendChartData.option.series=[enterObj,occupancyObj]
-      this.trendChartData.option.series = [enterObj];
+      this.trendChartData.option.series = [
+        enterObj,
+        enterObjYest,
+        enterObjWeek,
+      ];
       let cuT = _.sumBy(enterData, (o) => {
         return o.enter;
       });
@@ -583,12 +633,26 @@ export default {
         ],
       });
       let enterNumber = this.trendChartData.option.series[0].data;
+      let yestNum = this.trendChartData.option.series[1].data;
+      let weekNum = this.trendChartData.option.series[2].data;
       this.trendChartData.remarkData = [
-        "当日开始营业后一小时间客流量" +
+        "开始营业后一小时间客流量 当日 " +
           enterNumber[0].toLocaleString() +
+          "人次" +
+          " 昨日 " +
+          yestNum[0].toLocaleString() +
+          "人次" +
+          " 上周同日 " +
+          +weekNum[0].toLocaleString() +
           "人次",
-        "当日结束营业前一小时间客流量" +
+        "结束营业前一小时间客流量 当日 " +
           enterNumber[enterNumber.length - 1].toLocaleString() +
+          "人次" +
+          " 昨日 " +
+          yestNum[yestNum.length - 1].toLocaleString() +
+          "人次" +
+          " 上周同日 " +
+          weekNum[weekNum.length - 1].toLocaleString() +
           "人次",
         "当日" +
           highest.time +
@@ -596,12 +660,26 @@ export default {
           (highest.time + 1) +
           "点达到客流峰值" +
           highest.number.toLocaleString() +
+          "人次；" +
+          "昨日" +
+          highestYest.time +
+          "点到" +
+          (highestYest.time + 1) +
+          "点达到客流峰值" +
+          highestYest.number.toLocaleString() +
+          "人次；" +
+          "上周同日" +
+          (highestWeek.time ? highestWeek.time : 0) +
+          "点到" +
+          (highestWeek.time + 1) +
+          "点达到客流峰值" +
+          highestWeek.number.toLocaleString() +
           "人次",
       ];
     },
     gateDataList(gateData) {
       this.gateChartData.option = _.cloneDeep(this.enterOption);
-      let [currentObj, yesterObj] = [
+      let [currentObj, yesterObj, lastObj, lastWeekObj] = [
         {
           name: "本日客流",
           color: "#2081D4",
@@ -614,6 +692,18 @@ export default {
           type: "column",
           data: [],
         },
+        {
+          name: "同期客流",
+          color: "#874bd9",
+          type: "column",
+          data: [],
+        },
+        {
+          name: "上周同日客流",
+          color: "#554Dd0",
+          type: "column",
+          data: [],
+        },
       ];
       if (gateData.data) {
         gateData.data.forEach((list) => {
@@ -623,10 +713,24 @@ export default {
             (o) => o.bzid === list.bzid
           ).enter;
           yesterObj.data.push(yesterEnter);
+          let lastEnter = _.find(gateData.period, (o) => o.bzid === list.bzid)
+            .enter;
+          lastObj.data.push(lastEnter);
+
+          let lastWeekEnter = _.find(
+            gateData.last_week_day,
+            (o) => o.bzid === list.bzid
+          ).enter;
+          lastWeekObj.data.push(lastWeekEnter);
           this.gateChartData.option.xAxis.categories.push(list.name);
         });
       }
-      this.gateChartData.option.series = [currentObj, yesterObj];
+      this.gateChartData.option.series = [
+        currentObj,
+        yesterObj,
+        lastObj,
+        lastWeekObj,
+      ];
       this.gateChartData.remarkData = gateData.comment;
     },
     shopDataList(shopData) {

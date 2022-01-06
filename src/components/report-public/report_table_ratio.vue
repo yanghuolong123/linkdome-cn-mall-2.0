@@ -7,13 +7,13 @@
             margin: 12px 0 0 0;
             border-radius: 8px;">
 			<tr style="background-color:#2081D4;">
-				<td rowspan="2" style="height:110px; border-right: 2px solid #fff;
+				<td rowspan="2" style="height:80px; border-right: 2px solid #fff;
                      font-size: 22px;"
 					:key="index1" v-for="(name1,index1) in tableColumn.name1">
 					{{name1}}
 				</td>
 				<td colspan="3"
-					style="height:55px;border-bottom:2px solid #fff;border-right: 2px solid #fff;
+					style="height:40px;border-bottom:2px solid #fff;border-right: 2px solid #fff;
                      font-size: 22px;"
 					:key="index2+100" v-for="(name2,index2) in tableColumn.name2">
 					{{name2}}
@@ -27,7 +27,7 @@
 			</tr>
 			<tr class="table-tr" :key="index3" v-for="(list,index3) in tableData">
 				<td style="font-size: 16px;
-                    height: 55px;
+                    height: 35px;
                     border-right:2px solid #D2D2D2;
                     border-bottom: 2px solid #D2D2D2;" :key="index2" v-for="(data,index2) in  list.data">{{data}}
 				</td>

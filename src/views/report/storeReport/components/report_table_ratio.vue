@@ -6,18 +6,18 @@
             margin: 12px 0 0 0;
             border-radius: 8px;">
 			<tr style="background-color:#2081D4;">
-				<td rowspan="2" style="height:110px; border-right: 2px solid #fff;
+				<td rowspan="2" style="height:80px; border-right: 2px solid #fff;
                      font-size: 22px;width: 176px"
 					:key="'name1'+i" v-for="(name1,i) in tableColumn.name1">
 					{{name1}}
 				</td>
 				<td :colspan="tableColumn.name4.length"
-					style="height:55px;border-bottom:2px solid #fff;border-right: 2px solid #fff;
+					style="height:40px;border-bottom:2px solid #fff;border-right: 2px solid #fff;
                      font-size: 22px;"
 					:key="'name2'+i" v-for="(name,i) in tableColumn.name2">
 					{{name}}
 				</td>
-				<td colspan="2" style="height:55px;border-bottom:2px solid #fff;border-right: 2px solid #fff;
+				<td colspan="2" style="height:35px;border-bottom:2px solid #fff;border-right: 2px solid #fff;
                      font-size: 22px;width: 120px" :key="i" v-for="(name,i) in tableColumn.name3">
 					{{name}}
 				</td>
@@ -34,7 +34,7 @@
 			</tr>
 			<tr class="table-tr" :key="i" v-for="(list,i) in tableData">
 				<td style="font-size: 16px;
-                    height: 55px;
+                    height: 35px;
                     border-right:2px solid #D2D2D2;
                     border-bottom: 2px solid #D2D2D2;" :key="index2" v-for="(data,index2) in  list">
 					{{data|formatTableData}}
