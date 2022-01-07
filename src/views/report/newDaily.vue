@@ -572,19 +572,19 @@ export default {
       };
       this.trendChartData.option = _.cloneDeep(this.enterOption);
       let enterObj = {
-        name: "客流",
+        name: "今日客流",
         color: "#745AEF",
         type: "line",
         data: [],
       };
       let enterObjYest = {
-        name: "环比",
+        name: "昨日客流",
         color: "#00A0E9",
         type: "line",
         data: [],
       };
       let enterObjWeek = {
-        name: "上周环比",
+        name: "上周同日客流",
         color: "#00A0A0",
         type: "line",
         data: [],
@@ -789,21 +789,29 @@ export default {
           data: [],
         },
       ];
-      console.log(shopData);
       if (shopData.current) {
         _.take(shopData.current, 10).forEach((list) => {
           currentObj.data.push(list.data);
-          if (shopData.contrast.length !== 0) {
+          if (shopData.contrast.length) {
             let yesterEnter = _.find(shopData.contrast, (o) => o.id === list.id)
               .data;
             yesterObj.data.push(yesterEnter);
           } else {
             yesterObj.data.push(0);
           }
+          if (shopData.last_week_day.length) {
+            let lastEnter = _.find(
+              shopData.last_week_day,
+              (o) => o.id === list.id
+            ).data;
+            lastObj.data.push(lastEnter);
+          } else {
+            lastObj.data.push(0);
+          }
           this.shopChartData.option.xAxis.categories.push(list.name);
         });
       }
-      this.shopChartData.option.series = [currentObj, yesterObj];
+      this.shopChartData.option.series = [currentObj, yesterObj, lastObj];
       this.shopChartData.remarkData = shopData.comment ? shopData.comment : [];
     },
     headerDate(value) {
