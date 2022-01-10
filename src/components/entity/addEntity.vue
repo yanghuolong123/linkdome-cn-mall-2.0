@@ -448,6 +448,7 @@ import {
 } from "@/api/manager.js";
 import { getFormateData } from "@/api/formats.js";
 import { getGroupOrganization } from "@/api/home.js";
+import { getYearList } from "@/api/operate";
 
 export default {
   name: "addEntity",
@@ -671,7 +672,7 @@ export default {
       a: "",
       b: "",
       isModify: false,
-      yearlist: [2019, 2020, 2021],
+      yearlist: [],
       currentYear: new Date().getFullYear(),
     };
   },
@@ -702,6 +703,9 @@ export default {
     propertyId() {
       if (this.propertyId != 0) {
         this.getZones();
+        getYearList({ property_id: this.propertyId }).then((res) => {
+          this.yearlist = res.data.data;
+        });
       }
     },
   },
@@ -935,7 +939,7 @@ export default {
       this.city = val;
     },
     closeEdit() {
-      this.$refs.formValidate.resetFields()
+      this.$refs.formValidate.resetFields();
       this.$emit("closeEdit");
     },
     /* 选择类型
