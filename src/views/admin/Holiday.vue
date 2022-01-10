@@ -63,6 +63,7 @@ import TableMultipleSelected from "@/views/ui-elements/table/TableMultipleSelect
 import holidayEdit from "@/components/holiday-manage/holiday-edit.vue";
 import { getActiveDays, deleteActiveDays } from "@/api/manager.js";
 
+import { getYearList } from "@/api/operate";
 export default {
   components: {
     TableMultipleSelected,
@@ -136,7 +137,7 @@ export default {
   },
   async mounted() {
     this.currentPropertyId = this.$store.state.home.headerAction;
-    await getYearList({ property_id: currentPropertyId }).then((res) => {
+    await getYearList({ property_id: this.currentPropertyId }).then((res) => {
       this.years = res.data.data.map((val) => {
         return (val = { key: val, value: val });
       });
