@@ -90,7 +90,7 @@ export default {
       let property_id = this.$store.state.home.headerAction;
       Path3D({ time: this.outRange, property_id: property_id }).then((res) => {
         this.$store.commit("UPDATE_LOADING_STATUS", true);
-        if (res.data.code === 200) {
+        if (res.data.code === 200 && res.data.data[0]) {
           this.isFengMap = true;
           let data = res.data.data;
           this.number1 = data[0].depthOfWandering;
@@ -107,9 +107,9 @@ export default {
                   let arr = [];
                   val.path.map((d) => {
                     let obj = {};
-                    (obj.x = d.x ? Number(d.x) : ""),
-                      (obj.y = d.y ? Number(d.y) : ""),
-                      (obj.id = index + 1);
+                    obj.x = d.x ? Number(d.x) : "";
+                    obj.y = d.y ? Number(d.y) : "";
+                    obj.id = index + 1;
                     if (i <= 3) {
                       obj.colorType = "front";
                     } else if (i > 3 && i <= 6) {
