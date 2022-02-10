@@ -1,7 +1,7 @@
 <template>
   <div class="login-container" :class="themeClass">
     <!--国际化按钮-->
-    <LanguageBtn style="margin: 8px 16px 0 auto;" />
+    <!-- <LanguageBtn style="margin: 8px 16px 0 auto;" /> -->
     <div class="login">
       <img
         src="@/assets/images/fixation_img/logo/logo.png"
@@ -151,12 +151,11 @@ export default {
     },
   },
   activated() {},
-  mounted() {},
   methods: {
     getPdfCenter() {
       getPdfCenterUrl().then((res) => {
         this.$store.commit("setPdfBaseUrl", res.data.data.pdf_center);
-        this.$i18n.locale = res.locale;
+        this.$i18n.locale = res.data.data.locale;
       });
     },
     handleSystemSwitch(id) {
@@ -421,6 +420,7 @@ export default {
     },
   },
   created() {
+    this.getPdfCenter()
     if (Cookies.get("userInfo")) {
       this.loginForm = JSON.parse(Cookies.get("userInfo"));
       this.isRememberMe = true;

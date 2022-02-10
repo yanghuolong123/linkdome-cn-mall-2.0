@@ -75,7 +75,7 @@ module.exports =  {
 	enter: "enter",
   发送成功: "Sent successfully",
   账户信息: "Account",
-  退出: "Exit",
+  退出: "logout",
 	客流量: "Enter",
   目标客流量:"Target Enter",
   population: "Population",
