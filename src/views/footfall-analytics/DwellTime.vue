@@ -138,7 +138,6 @@ export default {
           },
           fill: {
             opacity: 1
-
           },
           tooltip: {
             y: {

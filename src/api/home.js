@@ -9,6 +9,22 @@ export const getPdfCenterUrl = ()=>{
     method: 'get'
   })
 }
+// 停留时间店铺排行
+export const getShopDwell = (params) =>{
+  return naxios.request({
+    url:'dwell/topShop',
+    params,
+    method: 'get'
+  })
+}
+// 停留时间行业排行
+export const getIndustryDwell = (params) =>{
+  return naxios.request({
+    url:'dwell/topIndustry',
+    params,
+    method: 'get'
+  })
+}
 // 获取集团组织架构
 export const getGroupOrganization = async(_this={}) => {
   const CancelToken= axios.CancelToken
