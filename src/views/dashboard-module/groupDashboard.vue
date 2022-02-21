@@ -142,7 +142,6 @@ import customerNameDict from "../home/seriesDict";
 import salesMixin from "../operation/salseMixin";
 import salesDict from "@/views/home/components/salesIndicatorDict.js";
 import NP from "number-precision";
-import { initTimes } from "@/libs/util";
 export default {
   name: "groupDashboard",
   mixins: [salesMixin],

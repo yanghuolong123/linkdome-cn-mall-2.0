@@ -326,15 +326,19 @@ export default {
       if (currentSalesTypeData.length == 0) return false;
       const bizIdx = this.currentBizIdx;
       let tml = {};
-      if (bizIdx < 0) tml = currentSalesTypeData;
+      console.log(bizIdx, currentSalesTypeData);
+      if (bizIdx <= 0) tml = currentSalesTypeData;
       else {
         Object.keys(currentSalesTypeData).forEach((e) => {
           tml[e] = {};
+          console.log(e,this.bussinessType);
           tml[e][this.bussinessType] = _.find(currentSalesTypeData[e], (l) => {
+            console.log(l,_.indexOf(l.id, this.bussinessType));
             if (_.indexOf(l.id, this.bussinessType) !== -1) return l;
           });
         });
       }
+      console.log(Object.values(tml)[0]);
       return {
         xAxis: {
           name: this.$t("名称"),
@@ -538,7 +542,8 @@ export default {
         let url = [];
         if (this.shopIndicator == "enter")
           url = getShopTopFootFall(topShopParam);
-        else if (this.shopIndicator == "dwell") url = getShopDwell(topShopParam);
+        else if (this.shopIndicator == "dwell")
+          url = getShopDwell(topShopParam);
         else url = getTopShop(topShopParam);
         topShopOfBizType.push(url);
       }

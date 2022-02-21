@@ -176,7 +176,6 @@ import customerNameDict from "../home/seriesDict";
 import salesMixin from "../operation/salseMixin";
 import salesDict from "@/views/home/components/salesIndicatorDict.js";
 import exportMenu from "@/views/operation/components/ExportMenu.vue";
-import { initTimes } from "@/libs/util";
 export default {
   name: "shoppingDashboard",
   mixins: [salesMixin],
@@ -309,18 +308,30 @@ export default {
             male: this.$t("男性"),
             female: this.$t("女性"),
           };
-          chartObj.labels = {
-            name: this.$t("年龄"),
-            key: "age",
-            data: Object.keys(data[e]).map((e) => {
-              return this.ageNameformat(e);
-            }),
-          };
+          console.log(Object.keys(data[e]));
+          if (Object.keys(data[e]).length <= 4) {
+            chartObj.labels = {
+              name: this.$t("年龄"),
+              key: "age",
+              data: ["少年", "中年", "青年", "老年"],
+            };
+          } else {
+            chartObj.labels = {
+              name: this.$t("年龄"),
+              key: "age",
+              data: Object.keys(data[e]).map((e) => {
+                return this.ageNameformat(e);
+              }),
+            };
+            console.log(chartObj, "======");
+          }
+          console.log(data[e]);
           chartObj.series = Object.keys(genderName).map((k) => ({
             name: genderName[k],
             key: k,
             data: Object.values(data[e]).map((o) => o[k]),
           }));
+          console.log(chartObj);
         } else {
           chartObj.labels = {
             name: this.$t("类型"),
@@ -335,6 +346,7 @@ export default {
         chartObj.height = this.customChecklist[e].height;
         if (e !== "vip_proportion") tml.push(chartObj);
       });
+      console.log(tml);
       return tml;
     },
     historyIndicators() {
@@ -343,10 +355,7 @@ export default {
     },
     rankingIndicators() {
       return {
-        ...{
-          enter: { name: "入客流" },
-          dwell: { name: "停留时间" },
-        },
+        ...{ enter: { name: "入客流" }, dwell: { name: "停留时间" } },
         ...salesDict,
       };
     },
