@@ -312,7 +312,7 @@ export default {
             chartObj.labels = {
               name: this.$t("年龄"),
               key: "age",
-              data: ["少年", "中年", "青年", "老年"],
+              data: ["少年", "青年", "中年", "老年"],
             };
           } else {
             chartObj.labels = {
