@@ -213,7 +213,6 @@ export default {
         let tml = {};
         this.columns.forEach((c, cindex) => {
           let itemData = this.megerSeries[cindex].data[index];
-          console.log(itemData);
           if (typeof itemData === "string") {
             if (itemData.indexOf(":00") > -1) {
               var itemDatas = _.cloneDeep(itemData);
@@ -221,9 +220,10 @@ export default {
               hours = Number(hours);
               itemData = itemData + " - " + hours + ":59";
             }
-          }
-          if (this.tooltipUnit == "时间") {
-            itemData = initTimes(itemData);
+          } else {
+            if (this.tooltipUnit == "时间") {
+              itemData = initTimes(itemData);
+            }
           }
           try {
             if (this.megerSeries[cindex].key) {
@@ -306,7 +306,6 @@ export default {
         data: [this.columns, tableList],
       };
       this.$emit("tableChage", data);
-      console.log(tableList);
       return tableList;
     },
     radiabarSeries() {

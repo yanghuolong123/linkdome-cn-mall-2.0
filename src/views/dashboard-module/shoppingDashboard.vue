@@ -308,7 +308,6 @@ export default {
             male: this.$t("男性"),
             female: this.$t("女性"),
           };
-          console.log(Object.keys(data[e]));
           if (Object.keys(data[e]).length <= 4) {
             chartObj.labels = {
               name: this.$t("年龄"),
@@ -323,15 +322,12 @@ export default {
                 return this.ageNameformat(e);
               }),
             };
-            console.log(chartObj, "======");
           }
-          console.log(data[e]);
           chartObj.series = Object.keys(genderName).map((k) => ({
             name: genderName[k],
             key: k,
             data: Object.values(data[e]).map((o) => o[k]),
           }));
-          console.log(chartObj);
         } else {
           chartObj.labels = {
             name: this.$t("类型"),
@@ -346,7 +342,6 @@ export default {
         chartObj.height = this.customChecklist[e].height;
         if (e !== "vip_proportion") tml.push(chartObj);
       });
-      console.log(tml);
       return tml;
     },
     historyIndicators() {

@@ -438,8 +438,6 @@ export default {
     },
     iconClick(e) {
       this.iconIndex = Number(e.target.getAttribute("data-value"));
-
-      console.log(this.iconIndex);
       switch (this.iconIndex) {
         case 1:
           this.$nextTick(() => {

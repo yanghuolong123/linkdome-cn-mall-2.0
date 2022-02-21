@@ -326,19 +326,15 @@ export default {
       if (currentSalesTypeData.length == 0) return false;
       const bizIdx = this.currentBizIdx;
       let tml = {};
-      console.log(bizIdx, currentSalesTypeData);
       if (bizIdx <= 0) tml = currentSalesTypeData;
       else {
         Object.keys(currentSalesTypeData).forEach((e) => {
           tml[e] = {};
-          console.log(e,this.bussinessType);
           tml[e][this.bussinessType] = _.find(currentSalesTypeData[e], (l) => {
-            console.log(l,_.indexOf(l.id, this.bussinessType));
             if (_.indexOf(l.id, this.bussinessType) !== -1) return l;
           });
         });
       }
-      console.log(Object.values(tml)[0]);
       return {
         xAxis: {
           name: this.$t("名称"),
@@ -611,14 +607,18 @@ export default {
       return sortedObj;
     },
     exportBiztop() {
+      let bizIndicatorName = this.indicators.find(
+        (val) => val.value == this.bizIndicator
+      ).name
       let name;
       if (this.$store.state.home.headerAction === 0)
-        name = this.$t("集团业态排行");
+        name = this.$t("集团业态排行") + "(" + this.$t(bizIndicatorName) + ")";
       else {
         if (this.$router.currentRoute.name === "SalesAnalytics") {
-          name = this.$t("销售业态排行");
+          name =
+            this.$t("销售业态排行") + "(" + this.$t(bizIndicatorName) + ")";
         } else {
-          name = this.$t("业态排行");
+          name = this.$t("业态排行") + "(" + this.$t(bizIndicatorName) + ")";
         }
       }
       downloadEx(exportEx, name, [
@@ -626,14 +626,17 @@ export default {
         this.tableList.dataOne,
       ]);
     },
-    exportShoptop(type) {
+    exportShoptop() {
+      let shopIndicatorName = this.indicators.find(
+        (val) => val.value == this.bizIndicator
+      ).name;
       let name;
       if (this.$store.state.home.headerAction === 0)
-        name = this.$t("购物中心业态排行");
+        name = this.$t("购物中心业态排行") + "(" + shopIndicatorName + ")";
       else if (this.$router.currentRoute.name === "SalesAnalytics") {
-        name = this.$t("销售商铺排行");
+        name = this.$t("销售商铺排行") + "(" + shopIndicatorName + ")";
       } else {
-        name = this.$t("商铺排行");
+        name = this.$t("商铺排行") + "(" + shopIndicatorName + ")";
       }
       downloadEx(exportEx, name, [
         this.tableList.coumnTwo,
