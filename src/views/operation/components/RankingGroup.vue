@@ -628,7 +628,7 @@ export default {
     },
     exportShoptop() {
       let shopIndicatorName = this.indicators.find(
-        (val) => val.value == this.bizIndicator
+        (val) => val.value == this.shopIndicator
       ).name;
       let name;
       if (this.$store.state.home.headerAction === 0)
