@@ -731,7 +731,7 @@ export const isEmpty = (value) => {
   }
 }
 
-export const downloadEx =(fun,name,value)=>{
+export const downloadEx =(fun,name,value)=>{ 
   value[1].map(list=>{
     Object.keys(list).map(k=>{
       if(!_.isNumber(list[k])){

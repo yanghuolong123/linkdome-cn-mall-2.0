@@ -857,7 +857,7 @@ export default {
       let totalNumber = Number(
         (_.sumBy(data, "enter") / data.length).toFixed(0)
       );
-      if (data.length > lastM.length) {
+      if (data.length < lastM.length) {
         data.forEach((list, index) => {
           enterObj.data.push(list.enter);
           trendObj.data.push(list.enter);
@@ -869,7 +869,7 @@ export default {
         });
       } else {
         lastM.forEach((list, index) => {
-          let num = data[index].enter?data[index].enter:0
+          let num = data[index].enter ? data[index].enter : 0;
           enterObj.data.push(num);
           trendObj.data.push(num);
           lastObj.data.push(list.enter);

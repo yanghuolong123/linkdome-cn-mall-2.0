@@ -1,11 +1,12 @@
 <template>
-  <i-tabs v-model="current" v-if="canshow" >
-		<slot slot="select"></slot>
+  <i-tabs v-model="current" v-if="canshow">
+    <slot slot="select"></slot>
     <tab-item
       :icon="iconCheck[item.type]"
       :titles="item.title"
-      v-for="(item,index) in tabsInfo"
-      :key="index">
+      v-for="(item, index) in tabsInfo"
+      :key="index"
+    >
       <vue-apex-charts
         :type="item.type"
         height="400"
@@ -14,27 +15,42 @@
       ></vue-apex-charts>
     </tab-item>
     <tab-item icon="biaoge-copy" :titles="title[0]" id="table-item">
-      <vs-table :data="tableData.data" maxHeight="400px" :noDataText="$t(nodata)">
+      <vs-table
+        :data="tableData.data"
+        maxHeight="400px"
+        :noDataText="$t(nodata)"
+      >
         <template slot="thead">
-          <vs-th :key="index" v-for="(item,index) in tableData.column" class="px-2">{{$t(item.title)}}</vs-th>
+          <vs-th
+            :key="index"
+            v-for="(item, index) in tableData.column"
+            class="px-2"
+            >{{ $t(item.title) }}</vs-th
+          >
         </template>
-        <template slot-scope="{data}">
+        <template slot-scope="{ data }">
           <vs-tr :key="indextr" v-for="(tr, indextr) in data">
-            <vs-td v-for="(c,idx) in tableData.column" :key="idx">{{tr[c.key] || ""}}</vs-td>
+            <vs-td v-for="(c, idx) in tableData.column" :key="idx">{{
+              tr[c.key] || ""
+            }}</vs-td>
           </vs-tr>
         </template>
       </vs-table>
     </tab-item>
-    <tab-item icon="chakan"
+    <tab-item
+      icon="chakan"
       v-if="showChakan"
       :title="item.title"
-      v-for="(item,index) in tabsInfo"
-      :key="index">
-      <div style="height:400px; width:100%; overflow-y: auto;overflow-x: hidden" >
+      v-for="(item, index) in tabsInfo"
+      :key="index"
+    >
+      <div
+        style="height:400px; width:100%; overflow-y: auto;overflow-x: hidden"
+      >
         <!-- <div class="allTable"></div> -->
         <vue-apex-charts
           :type="item.type"
-          :width='chartWidth'
+          :width="chartWidth"
           :height="chartHeight"
           :options="optionOfapxeCharts"
           :series="cloneSeries"
@@ -44,113 +60,122 @@
   </i-tabs>
 </template>
 <script>
-import iTabs from '_c/I-Tabs/Itabs.vue'
-import tabItem from '_c/I-Tabs/TabItem.vue'
-import VueApexCharts from 'vue-apexcharts'
-import indicatorSelector from './IndicatorSelector'
-import _ from 'lodash'
+import iTabs from "_c/I-Tabs/Itabs.vue";
+import tabItem from "_c/I-Tabs/TabItem.vue";
+import VueApexCharts from "vue-apexcharts";
+import indicatorSelector from "./IndicatorSelector";
+import _ from "lodash";
 export default {
-  name: 'chartTabs',
+  name: "chartTabs",
   components: {
     iTabs,
     tabItem,
     VueApexCharts,
-    indicatorSelector
+    indicatorSelector,
   },
   props: {
     xAxis: {
       type: Array,
-      default: () => []// 与series 数据结构相同，[{key:xx,name:xx,data:[]}] 其中name 是作为表格第一列的名称，其他列从series中取
+      default: () => [], // 与series 数据结构相同，[{key:xx,name:xx,data:[]}] 其中name 是作为表格第一列的名称，其他列从series中取
     },
     series: {
       type: Array, // chart series [{key:xx,name:xx,data:[]}]
-      default: () => []
+      default: () => [],
     },
     type: {
       type: Array,
-      default: () => ['line', 'bar']
+      default: () => ["line", "bar"],
     },
     chartLib: {
       type: String, // 图表库，默认是apex ,此外还支持echarts
-      default: 'Apex'
+      default: "Apex",
     },
     title: {
       type: Array, // tab 名称
-      default: () => ['客流量趋势', '客流量趋势']
+      default: () => ["客流量趋势", "客流量趋势"],
     },
-    horizonta: {// 柱状图是否水平，默认false
+    horizonta: {
+      // 柱状图是否水平，默认false
       type: Boolean,
-      default: false
+      default: false,
     },
     extraOption: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
-    footfallSelect: {// 是否可以选择进出客流
+    footfallSelect: {
+      // 是否可以选择进出客流
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       showChakan: false,
       isAllData: false,
       current: 0,
-      nodata: '暂无数据',
-      chartWidth: '99%',
+      nodata: "暂无数据",
+      chartWidth: "99%",
       chartHeight: 385,
       canshow: false,
       iconCheck: {
-        bar: '62',
-        line: 'zhexiantu'
+        bar: "62",
+        line: "zhexiantu",
       },
       apexOptions: {
         xaxis: {
           categories: [],
           labels: {
             show: true,
-          }
+          },
         },
-        colors: ['#00A0E9', '#2BD9CF', '#8D82F0', '#E8585A', '#E8585A', '#94E2FF'],
+        colors: [
+          "#00A0E9",
+          "#2BD9CF",
+          "#8D82F0",
+          "#E8585A",
+          "#E8585A",
+          "#94E2FF",
+        ],
         yaxis: {
           labels: {
-            formatter (value) {
-              return value ? value.toLocaleString() : ''
-            }
-          }
+            formatter(value) {
+              return value ? value.toLocaleString() : "";
+            },
+          },
         },
         stroke: {
-          curve: 'straight',
-          width: 2
+          curve: "straight",
+          width: 2,
         },
         plotOptions: {
           bar: {
             horizontal: false,
-            endingShape: 'rounded',
+            endingShape: "rounded",
             radius: 0,
-            distributed: false
-          }
+            distributed: false,
+          },
         },
         dataLabels: {
-          enabled: false
+          enabled: false,
         },
         noData: {
-          text: '暂无数据',
-          align: 'center',
-          verticalAlign: 'middle',
+          text: "暂无数据",
+          align: "center",
+          verticalAlign: "middle",
           offsetX: 0,
           offsetY: 0,
           style: {
-            fontSize: '14px',
-          }
+            fontSize: "14px",
+          },
         },
         chart: {
           toolbar: {
-            show: false
+            show: false,
           },
           zoom: {
-            enabled: false
-          }
+            enabled: false,
+          },
         },
         responsive: [
           {
@@ -158,192 +183,197 @@ export default {
             options: {
               plotOptions: {
                 bar: {
-                  horizontal: false
-                }
+                  horizontal: false,
+                },
               },
               legend: {
-                position: 'bottom'
-              }
-            }
-          }
-        ]
-      }
-    }
+                position: "bottom",
+              },
+            },
+          },
+        ],
+      },
+    };
   },
   computed: {
-    mergeData () {
-      return [...this.xAxis, ...this.series]
+    mergeData() {
+      return [...this.xAxis, ...this.series];
     },
-    tableData () {
-      let column = []
-      let data = []
-      if (!this.mergeData.length) return { column, data }
+    tableData() {
+      let column = [];
+      let data = [];
+      if (!this.mergeData.length) return { column, data };
       this.mergeData.forEach((e, dindex) => {
-        let { name: title, key } = e
-        if(dindex > 0){
-          title = this.$t(title) +' ( '+this.$t('人次')+' ) '
-          column.push({ title, key })
-        }else{
-          column.push({ title, key })
-        }
-       
-      })
-      this.xAxis[0].data.forEach((e, dindex) => {
-        let tml = {}
-        column.forEach((k, kindex) => {
-          let value = this.mergeData[kindex].data[dindex]
-          if (typeof value === 'number') {
-            value = value.toLocaleString()
-          }
-          tml[k.key] = value
-        })
-        data.push(tml)
-      })
-      return { column, data }
-    },
-    optionOfapxeCharts () {
-      if (!this.xAxis.length) return this.apexOptions
-      let categories
-      if (this.isAllData) {
-        categories = this.xAxis[0].data
-        if (categories.length < 10) {
-          this.chartHeight = 400
-          this.chartWidth = '100%'
+        let { name: title, key } = e;
+        if (dindex > 0) {
+          title = this.$t(title) + " ( " + this.$t("人次") + " ) ";
+          column.push({ title, key });
         } else {
-          this.chartHeight = categories.length * 40
-          this.chartWidth = '99%'
+          column.push({ title, key });
+        }
+      });
+      this.xAxis[0].data.forEach((e, dindex) => {
+        let tml = {};
+        column.forEach((k, kindex) => {
+          let value = this.mergeData[kindex].data[dindex];
+          if (typeof value === "number") {
+            value = value.toLocaleString();
+          }
+          tml[k.key] = value;
+        });
+        data.push(tml);
+      });
+      return { column, data };
+    },
+    optionOfapxeCharts() {
+      if (!this.xAxis.length) return this.apexOptions;
+      let categories;
+      if (this.isAllData) {
+        categories = this.xAxis[0].data;
+        if (categories.length < 10) {
+          this.chartHeight = 400;
+          this.chartWidth = "100%";
+        } else {
+          this.chartHeight = categories.length * 40;
+          this.chartWidth = "99%";
         }
       } else {
-        this.showChakan = this.xAxis[0].data.length > 10
-        categories = _.take(this.xAxis[0].data, 10)
-        this.chartHeight = 400
+        this.showChakan = this.xAxis[0].data.length > 10;
+        categories = _.take(this.xAxis[0].data, 10);
+        this.chartHeight = 400;
       }
-      const ifhasData = Boolean(categories.length)
+      const ifhasData = Boolean(categories.length);
       let extraBarOpt = {
         plotOptions: {
           bar: {
-            columnWidth: categories.length < 5 ? '20%' : '70%'
-          }
-        }
-      }
+            columnWidth: categories.length < 5 ? "20%" : "70%",
+          },
+        },
+      };
       if (this.horizonta) {
         let horizbar = {
           yaxis: {
             labels: {
-              align:'center',
+              align: "center",
               offsetX: 10,
-              show: ifhasData
+              show: ifhasData,
             },
-            show: ifhasData
+            show: ifhasData,
           },
           plotOptions: {
             bar: {
-              barHeight: categories.length < 5 ? '30%' : '70%',
-              horizontal: true
-            }
+              barHeight: categories.length < 5 ? "30%" : "70%",
+              horizontal: true,
+            },
           },
           tooltip: {
             y: {
               formatter: (val) => {
-                if(val===0) return 0 +this.$t('人次')
-                if (val == undefined || val == null || val == '')  return ''
-                if (typeof val === 'number') return val.toLocaleString() + this.$t('人次')
-                else  return val + this.$t('人次')
-                
-              }
-            }
+                if (val === 0) return 0 + this.$t("人次");
+                if (val == undefined || val == null || val == "") return "";
+                if (typeof val === "number")
+                  return val.toLocaleString() + this.$t("人次");
+                else return val + this.$t("人次");
+              },
+            },
           },
           grid: {
             yaxis: {
               lines: {
-                show: ifhasData
-              }
-            }
-          }
-        }
-        extraBarOpt = _.merge(extraBarOpt, horizbar)
+                show: ifhasData,
+              },
+            },
+          },
+        };
+        extraBarOpt = _.merge(extraBarOpt, horizbar);
       }
-      let mergeObj = _.merge(this.apexOptions, extraBarOpt)
+      let mergeObj = _.merge(this.apexOptions, extraBarOpt);
       let xData = {
         xaxis: {
           lines: {
-            show: ifhasData
+            show: ifhasData,
           },
           categories,
           labels: {
-            trim:false,
+            trim: false,
             formatter: (value) => {
-              return value.toLocaleString()
-            }
-          }
-        }
-      }
-      return { ...mergeObj, ...xData }
+              return value.toLocaleString();
+            },
+          },
+        },
+      };
+      return { ...mergeObj, ...xData };
     },
-    cloneSeries () {
-      let cloneData = _.cloneDeep(this.series)
+    cloneSeries() {
+      let cloneData = _.cloneDeep(this.series);
       if (this.isAllData) {
-        return cloneData// 因为apexchart 点击图例会影响到外部的数据，需要在外部克隆一份
+        return cloneData; // 因为apexchart 点击图例会影响到外部的数据，需要在外部克隆一份
       } else {
-        cloneData.map(list => {
-          let newData = []
-          list.data.map(val => {
-            if (newData.length < 10)newData.push(val)
-          })
-          list.data = newData
-        })
-        return cloneData
+        cloneData.map((list) => {
+          let newData = [];
+          list.data.map((val) => {
+            if (newData.length < 10) newData.push(val);
+          });
+          list.data = newData;
+        });
+        return cloneData;
       }
     },
-    tabsInfo () {
-      let data = []
+    tabsInfo() {
+      let data = [];
       this.type.forEach((item, index) => {
         let tml = {
           type: item,
-          title: this.title[index]
-        }
-        data.push(tml)
-      })
-      return data
-    }
+          title: this.title[index],
+        };
+        data.push(tml);
+      });
+      return data;
+    },
   },
   watch: {
-    series () {
-      this.canshow = false
-      this.$nextTick(() => { this.canshow = true })
+    series() {
+      this.canshow = false;
+      this.$nextTick(() => {
+        this.canshow = true;
+      });
     },
-    current () {
-      this.current == 2 ? this.isAllData = true : this.isAllData = false
-    }
+    current() {
+      this.current == 2 ? (this.isAllData = true) : (this.isAllData = false);
+    },
   },
   methods: {
-    transformToSet (xAxis, series) {
-      let dataset = []
-      if (!xAxis.length || !series.length) return { dataset: { source: dataset } }
-      let firstItem = series.map(s => s.name)
+    transformToSet(xAxis, series) {
+      let dataset = [];
+      if (!xAxis.length || !series.length)
+        return { dataset: { source: dataset } };
+      let firstItem = series.map((s) => s.name);
       xAxis[0].data.forEach((e, index) => {
-        let tml = []
-        tml.push(e)
-        series.forEach(s => { tml.push(s.data[index]) })
-        dataset.push(tml)// 生成dataset
-      })
-      firstItem.unshift(xAxis[0].key || '')
-      dataset.unshift(firstItem)// 将这项添加在dataset头部
-      let seriesCheckObj = this.initSeriesOfEchart() // 生成各类型的serie
-      return { dataset: { source: dataset }, seriesCheckObj }
+        let tml = [];
+        tml.push(e);
+        series.forEach((s) => {
+          tml.push(s.data[index]);
+        });
+        dataset.push(tml); // 生成dataset
+      });
+      firstItem.unshift(xAxis[0].key || "");
+      dataset.unshift(firstItem); // 将这项添加在dataset头部
+      let seriesCheckObj = this.initSeriesOfEchart(); // 生成各类型的serie
+      return { dataset: { source: dataset }, seriesCheckObj };
     },
-    initSeriesOfEchart () {
-      let result = {}
-      this.type.forEach(type => {
-        let tml = { series: [] }
-        this.series.forEach(s => { tml.series.push({ type, barMaxWidth: 80 }) })
-        result[type] = tml
-      })
-      return result
-    }
-  }
-
-}
+    initSeriesOfEchart() {
+      let result = {};
+      this.type.forEach((type) => {
+        let tml = { series: [] };
+        this.series.forEach((s) => {
+          tml.series.push({ type, barMaxWidth: 80 });
+        });
+        result[type] = tml;
+      });
+      return result;
+    },
+  },
+};
 </script>
 
 <style lang="stylus" scoped>

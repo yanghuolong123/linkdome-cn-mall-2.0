@@ -33,7 +33,7 @@ footFall:客流
             autocomplete
             v-model="bizIndicator"
             class="chartSelector"
-            v-if="indicatorSelector"s>
+            v-if="indicatorSelector">
             <vs-select-item
               v-for="(item,index) in indicators "
               :text="$t(item.name)"
