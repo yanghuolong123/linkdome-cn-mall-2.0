@@ -378,7 +378,7 @@ export default {
         .subtract(1, "days")
         .format("YYYY-MM-DD");
       this.showPDF = false;
-      let lastWeek = moment(this.selectDateTime)
+      let lastWeek = moment(this.selectDateText.split(",")[0])
         .subtract(1, "weeks")
         .format("YYYY-MM-DD");
       Promise.all([

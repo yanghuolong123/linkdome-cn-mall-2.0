@@ -695,6 +695,8 @@ export default {
       ];
     },
     gateDataList(gateData) {
+      
+      console.log(this.selectDateTime);
       this.gateChartData.option = _.cloneDeep(this.enterOption);
       let time = moment(this.selectDateTime).format("YYYY-MM-DD");
       let time2 = moment(this.selectDateTime)
