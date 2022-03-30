@@ -132,6 +132,10 @@ export default {
       type: String,
       default: "",
     },
+    weathers: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
@@ -204,6 +208,11 @@ export default {
           return { title: this.$t(e.name), key: e.key };
         }
       });
+      if (this.weathers.length)
+        column.push({
+          key: "temperature",
+          title: "温度",
+        });
       this.$emit("getShopTableCoumn", column);
       return column;
     },
@@ -211,8 +220,20 @@ export default {
       if (!this.xaxisOrlabels.data) return [];
       let tableList = this.xaxisOrlabels.data.map((e, index) => {
         let tml = {};
+        let itemData = null;
         this.columns.forEach((c, cindex) => {
-          let itemData = this.megerSeries[cindex].data[index];
+          if (c.key === "temperature") {
+            let w = this.weathers[index];
+            if (w) {
+              if (w.type) itemData = w.temperature + "℃";
+              else
+                itemData =
+                  w.low_temperature + "℃" + "-" + w.high_temperature + "℃";
+            } else {
+              itemData = "-";
+            }
+          } else itemData = this.megerSeries[cindex].data[index];
+
           if (typeof itemData === "string") {
             if (itemData.indexOf(":00") > -1) {
               var itemDatas = _.cloneDeep(itemData);
@@ -226,7 +247,7 @@ export default {
             }
           }
           try {
-            if (this.megerSeries[cindex].key) {
+            if (this.megerSeries[cindex] && this.megerSeries[cindex].key) {
               if (!_.isNumber(this.megerSeries[cindex].key)) {
                 if (this.megerSeries[cindex].key.match(/[A-Za-z]+/)) {
                   if (
@@ -268,7 +289,8 @@ export default {
               total[keys[index]] = _.isNaN(totalNum)
                 ? ""
                 : totalNum.toLocaleString();
-            } else total[keys[index]] = "";
+            } else if (keys[index] === "temperature") total[keys[index]] = "-";
+            else total[keys[index]] = "";
           }
         });
       }
@@ -373,14 +395,30 @@ export default {
         let unit = this.tooltipUnit;
         // 首页购物中心趋势分析会传入多个tooltipUnit
         tmlOptions.tooltip.y.formatter = (val, p) => {
+          let w = this.weathers[p.dataPointIndex];
+          let weather = "";
+          if (w) {
+            if (w.type === 1)
+              weather = `   温度${
+                w.temperature
+              }℃   <img style="width:20px;height:20px;vertical-align: middle;" src="${
+                w.weather_icon
+              }"></img>`;
+            else
+              weather = `   最低温度${w.low_temperature}℃ 最高温度${
+                w.high_temperature
+              }℃   <img style="width:20px;height:20px;vertical-align: middle;" src="${
+                w.weather_icon
+              }"></img>`;
+          }
           if (Array.isArray(this.tooltipUnit))
             unit = this.tooltipUnit[p.seriesIndex].name;
-          if (val === 0) return 0 + unit;
-          if (val == undefined || val == null || val == "") return "";
+          if (val === 0) return 0 + unit + weather;
+          if (val == undefined || val == null || val == "") return "" + weather;
           if (typeof val === "number") {
-            return val.toLocaleString() + unit;
+            return val.toLocaleString() + unit + weather;
           } else {
-            return val + unit;
+            return val + unit + weather;
           }
         };
         if (unit == "时间") {
