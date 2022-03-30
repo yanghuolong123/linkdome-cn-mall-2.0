@@ -131,7 +131,7 @@ export default {
           }
           if (this.weathers.length) {
             let w = this.weathers[i];
-            if (w) {
+            if (w && w.id) {
               if (w.type) data[i]["temperature"] = w.temperature + "℃";
               else
                 data[i]["temperature"] =

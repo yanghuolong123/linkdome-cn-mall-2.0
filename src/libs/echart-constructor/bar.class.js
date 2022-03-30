@@ -19,7 +19,7 @@ export class BarChartConstructor extends BasicData {
       });
       let w = weathers[params[0].dataIndex];
       let weather = "";
-      if (w) {
+      if (w && w.id) {
         if (w.type === 1)
           weather = `  温度${
             w.temperature

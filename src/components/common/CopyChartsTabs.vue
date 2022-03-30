@@ -224,7 +224,7 @@ export default {
         this.columns.forEach((c, cindex) => {
           if (c.key === "temperature") {
             let w = this.weathers[index];
-            if (w) {
+            if (w && w.id) {
               if (w.type) itemData = w.temperature + "℃";
               else
                 itemData =
@@ -397,7 +397,7 @@ export default {
         tmlOptions.tooltip.y.formatter = (val, p) => {
           let w = this.weathers[p.dataPointIndex];
           let weather = "";
-          if (w) {
+          if (w && w.id) {
             if (w.type === 1)
               weather = `   温度${
                 w.temperature
