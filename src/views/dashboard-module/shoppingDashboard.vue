@@ -6,16 +6,14 @@
       @refresh="updateRealTimezone"
     >
       <template v-if="weathers.id" slot="weather">
-        <span
-          >温度: {{ weathers.low_temperature }}℃ -
-          {{ weathers.high_temperature }}℃</span
-        >
-        <img
-          style="width:30px;height:30px"
-          :src="weathers.weather_icon"
-          alt=""
-          srcset=""
-        />
+        <div class="temperature">
+          <span
+            >温度: {{ weathers.low_temperature }}℃-{{
+              weathers.high_temperature 
+            }}℃   {{ weathers.condition }}</span
+          >
+          <img class="ml-10" style="width:30px;height:30px" :src="weathers.weather_icon" />
+        </div>
       </template>
       <template slot="map">
         <map-carousel
@@ -913,6 +911,17 @@ export default {
 .ivu-carousel-track,
 .ivu-carousel-item {
   min-width: 100%;
+}
+.temperature {
+  height: 100%;
+  vertical-align: middle;
+  font-size: 17px;
+}
+img {
+  vertical-align: middle;
+}
+.ml-10{
+  margin-left: 10px;
 }
 </style>
 <style lang="stylus" scoped>

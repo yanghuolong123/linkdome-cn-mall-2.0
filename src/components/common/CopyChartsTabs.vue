@@ -411,9 +411,7 @@ export default {
                 w.weather_icon
               }"></img>`;
             else
-              weather = `   温度${w.low_temperature}℃ - ${
-                w.high_temperature
-              }℃  ${
+              weather = `   温度${w.low_temperature}℃-${w.high_temperature}℃  ${
                 w.condition
               }  <img style="width:20px;height:20px;vertical-align: middle;" src="${
                 w.weather_icon
