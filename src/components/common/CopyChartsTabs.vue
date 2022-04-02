@@ -211,7 +211,7 @@ export default {
       if (this.weathers.length)
         column.push({
           key: "temperature",
-          title: "温度",
+          title: "温度/天气",
         });
       this.$emit("getShopTableCoumn", column);
       return column;
@@ -225,10 +225,16 @@ export default {
           if (c.key === "temperature") {
             let w = this.weathers[index];
             if (w && w.id) {
-              if (w.type) itemData = w.temperature + "℃";
+              if (w.type) itemData = w.temperature + "℃" + " " + w.condition;
               else
                 itemData =
-                  w.low_temperature + "℃" + "-" + w.high_temperature + "℃";
+                  w.low_temperature +
+                  "℃" +
+                  "-" +
+                  w.high_temperature +
+                  "℃" +
+                  " " +
+                  w.condition;
             } else {
               itemData = "-";
             }
@@ -399,15 +405,17 @@ export default {
           let weather = "";
           if (w && w.id) {
             if (w.type === 1)
-              weather = `   温度${
-                w.temperature
-              }℃   <img style="width:20px;height:20px;vertical-align: middle;" src="${
+              weather = `   温度${w.temperature}℃  ${
+                w.condition
+              }  <img style="width:20px;height:20px;vertical-align: middle;" src="${
                 w.weather_icon
               }"></img>`;
             else
-              weather = `   最低温度${w.low_temperature}℃ 最高温度${
+              weather = `   温度${w.low_temperature}℃ - ${
                 w.high_temperature
-              }℃   <img style="width:20px;height:20px;vertical-align: middle;" src="${
+              }℃  ${
+                w.condition
+              }  <img style="width:20px;height:20px;vertical-align: middle;" src="${
                 w.weather_icon
               }"></img>`;
           }

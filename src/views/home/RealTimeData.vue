@@ -3,13 +3,20 @@
     <div class="info-seting-zone">
       <p class="time-box">
         <span class="text-xl text-black font-medium">
-          {{ $t('realTimeDataToday') }}
-          <Tooltip :content="tootipText" placement="right" theme="light" transfer max-width="500">
-            <icons type="wenhao"/>
+          {{ $t("realTimeDataToday") }}
+          <Tooltip
+            :content="tootipText"
+            placement="right"
+            theme="light"
+            transfer
+            max-width="500"
+          >
+            <icons type="wenhao" />
           </Tooltip>
         </span>
-        <span class="font-number hidden md:inline">{{date}}</span>
-        <span class="font-number hidden md:inline">{{time}}</span>
+        <span class="font-number hidden md:inline">{{ date }}</span>
+        <span class="font-number hidden md:inline">{{ time }}</span>
+        <slot name="weather"></slot>
       </p>
       <p class="text-right user-seting">
         <a href @click.prevent="handleRefresh">
@@ -17,8 +24,12 @@
         </a>
         <vs-dropdown class="hidden md:inline ml-8">
           <span class="text-sm setingtext">
-						{{ $t('fn.refreshTime', [$store.state.home.intervalTime]).replace("分钟", $t('fx.minute')).replace("秒", $t('fx.second')) }}
-					</span>
+            {{
+              $t("fn.refreshTime", [$store.state.home.intervalTime])
+                .replace("分钟", $t("fx.minute"))
+                .replace("秒", $t("fx.second"))
+            }}
+          </span>
           <icons type="arrow_down" color="#626262" class="mx-4"></icons>
           <vs-dropdown-menu>
             <vs-dropdown-item
@@ -28,8 +39,12 @@
               :name="item"
               @click="clickInterVal(item)"
             >
-							{{ item.replace("分钟", $t('fx.minute')).replace("秒", $t('fx.second')) }}
-						</vs-dropdown-item>
+              {{
+                item
+                  .replace("分钟", $t("fx.minute"))
+                  .replace("秒", $t("fx.second"))
+              }}
+            </vs-dropdown-item>
           </vs-dropdown-menu>
         </vs-dropdown>
       </p>
@@ -48,43 +63,45 @@
   </div>
 </template>
 <script>
-import Moment from 'moment'
+import Moment from "moment";
 export default {
-  name: 'realTimeData',
-  data () {
+  name: "realTimeData",
+  data() {
     return {
-      interVal: ['30秒', '5分钟', '10分钟', '20分钟', '30分钟'],
-      date: '',
-      time: ''
-    }
+      interVal: ["30秒", "5分钟", "10分钟", "20分钟", "30分钟"],
+      date: "",
+      time: "",
+    };
   },
   computed: {
-    tootipText () {
-      return this.$store.state.home.headerAction === 0 
-			? this.$t('passages.tootipText1') 
-			: this.$t('passages.tootipText2') 
-    }
+    tootipText() {
+      return this.$store.state.home.headerAction === 0
+        ? this.$t("passages.tootipText1")
+        : this.$t("passages.tootipText2");
+    },
   },
-  mounted () {
+  mounted() {
     setInterval(() => {
-      this.formatTime()
-    }, 1000)
+      this.formatTime();
+    }, 1000);
   },
   methods: {
-    clickInterVal (val) {
-      this.$store.commit('saveIntervalTime', val)
-      this.$emit('interValChange', val)
+    clickInterVal(val) {
+      this.$store.commit("saveIntervalTime", val);
+      this.$emit("interValChange", val);
     },
-    formatTime () {
-      let date = Moment().format('YYYY-MM-DD HH:mm:ss').split(' ')
-      this.date = date[0]
-      this.time = date[1]
+    formatTime() {
+      let date = Moment()
+        .format("YYYY-MM-DD HH:mm:ss")
+        .split(" ");
+      this.date = date[0];
+      this.time = date[1];
     },
-    handleRefresh () {
-      this.$emit('refresh')
-    }
-  }
-}
+    handleRefresh() {
+      this.$emit("refresh");
+    },
+  },
+};
 </script>
 <style lang="stylus">
 .my-dropdown-item

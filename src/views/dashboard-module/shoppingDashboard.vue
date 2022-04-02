@@ -5,6 +5,18 @@
       @interValChange="intervalClick"
       @refresh="updateRealTimezone"
     >
+      <template v-if="weathers.id" slot="weather">
+        <span
+          >温度: {{ weathers.low_temperature }}℃ -
+          {{ weathers.high_temperature }}℃</span
+        >
+        <img
+          style="width:30px;height:30px"
+          :src="weathers.weather_icon"
+          alt=""
+          srcset=""
+        />
+      </template>
       <template slot="map">
         <map-carousel
           :center="center"
@@ -163,6 +175,7 @@ import {
   exportEx,
   getSaleReach,
 } from "@/api/home.js";
+import { weatherTrend } from "@/api/entityNew";
 import Ranking from "@/views/operation/components/RankingGroup.vue";
 import singleCard from "@/views/home/components/singleCard.vue";
 import CustomerCharts from "_c/common/CopyChartsTabs";
@@ -194,6 +207,7 @@ export default {
   },
   data() {
     return {
+      weathers: [],
       saleData: {},
       historyDate: [
         Moment()
@@ -430,6 +444,13 @@ export default {
   },
   mounted() {
     this.initRequest();
+    weatherTrend({
+      time1: this.today + "," + this.today,
+      property_id: this.$store.state.home.headerAction,
+      type: 0,
+    }).then((res) => {
+      this.weathers = Object.values(res.data.data)[0][0].list[0];
+    });
   },
   activated() {
     this.historyDate = [

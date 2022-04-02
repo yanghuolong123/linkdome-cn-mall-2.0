@@ -132,10 +132,18 @@ export default {
           if (this.weathers.length) {
             let w = this.weathers[i];
             if (w && w.id) {
-              if (w.type) data[i]["temperature"] = w.temperature + "℃";
+              if (w.type)
+                data[i]["temperature"] =
+                  w.temperature + "℃" + " " + w.condition;
               else
                 data[i]["temperature"] =
-                  w.low_temperature + "℃" + "-" + w.high_temperature + "℃";
+                  w.low_temperature +
+                  "℃" +
+                  "-" +
+                  w.high_temperature +
+                  "℃" +
+                  " " +
+                  w.condition;
             } else data[i]["temperature"] = "-";
           }
         });
@@ -172,7 +180,7 @@ export default {
       if (this.weathers.length)
         column.push({
           key: "temperature",
-          title: "温度",
+          title: "温度/天气",
         });
       return column;
     },
