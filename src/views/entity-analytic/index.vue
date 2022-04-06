@@ -265,7 +265,9 @@ export default {
         property_id: params.entitys[0].property_id,
         type: type ? 1 : 0,
       }).then((res) => {
-        this.weathers = Object.values(res.data.data)[0][0].list;
+        this.weathers = res.data.data
+          ? Object.values(res.data.data)[0][0].list
+          : [];
       });
       Promise.all(reqList)
         .then((res) => {

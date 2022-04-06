@@ -347,7 +347,9 @@ export default {
         property_id: propertyId,
         type: type ? 1 : 0,
       }).then((res) => {
-        this.weathers = Object.values(res.data.data)[0][0].list;
+        this.weathers = res.data.data
+          ? Object.values(res.data.data)[0][0].list
+          : [];
       });
       const reqs = Object.keys(indicatorData).map((e) => {
         let params = {

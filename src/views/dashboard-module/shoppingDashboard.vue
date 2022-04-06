@@ -9,10 +9,14 @@
         <div class="temperature">
           <span
             >温度: {{ weathers.low_temperature }}℃-{{
-              weathers.high_temperature 
-            }}℃   {{ weathers.condition }}</span
+              weathers.high_temperature
+            }}℃ {{ weathers.condition }}</span
           >
-          <img class="ml-10" style="width:30px;height:30px" :src="weathers.weather_icon" />
+          <img
+            class="ml-10"
+            style="width:30px;height:30px"
+            :src="weathers.weather_icon"
+          />
         </div>
       </template>
       <template slot="map">
@@ -447,7 +451,9 @@ export default {
       property_id: this.$store.state.home.headerAction,
       type: 0,
     }).then((res) => {
-      this.weathers = Object.values(res.data.data)[0][0].list[0];
+      this.weathers = res.data.data
+        ? Object.values(res.data.data)[0][0].list
+        : [];
     });
   },
   activated() {
@@ -920,7 +926,7 @@ export default {
 img {
   vertical-align: middle;
 }
-.ml-10{
+.ml-10 {
   margin-left: 10px;
 }
 </style>
