@@ -452,8 +452,8 @@ export default {
       type: 0,
     }).then((res) => {
       this.weathers = res.data.data
-        ? Object.values(res.data.data)[0][0].list
-        : [];
+        ? Object.values(res.data.data)[0][0].list[0]
+        : {};
     });
   },
   activated() {
