@@ -8,9 +8,9 @@
       <template v-if="weathers.id" slot="weather">
         <div class="temperature">
           <span
-            >温度: {{ weathers.low_temperature }}℃-{{
-              weathers.high_temperature
-            }}℃ {{ weathers.condition }}</span
+            >城市:{{ weathers.city_name }} 温度:
+            {{ weathers.low_temperature }}℃-{{ weathers.high_temperature }}℃
+            {{ weathers.condition }}</span
           >
           <img
             class="ml-10"
