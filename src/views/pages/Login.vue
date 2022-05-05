@@ -62,9 +62,9 @@
         >{{ $t("login") }}</Button
       >
     </div>
-    <!-- <div class="bottom">
+    <div class="bottom">
       苏ICP备2021044524号 苏州凌图科技有限公司 Copyright 2019-{{ currentYear }}
-    </div> -->
+    </div>
     <vs-alert
       :active="isalert"
       color="danger"
