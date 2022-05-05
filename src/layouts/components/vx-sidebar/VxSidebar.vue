@@ -25,7 +25,7 @@
       <!-- {{isSidebarActive}} -->
       <div @mouseenter="sidebarMouseEntered" @mouseleave="sidebarMouseLeave">
         <div class="header-sidebar-main flex items-center flex-center" slot="header">
-          <div class="logo " :style="{backgroundImage:`url(${logoImg?logoImg:logo})`}"></div>
+          <!-- <div class="logo " :style="{backgroundImage:`url(${logoImg?logoImg:logo})`}"></div> -->
           <span>
             <template v-if="showCloseButton">
               <feather-icon

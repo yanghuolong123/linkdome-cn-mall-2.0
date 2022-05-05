@@ -2,8 +2,8 @@
 <template>
     <div class="report-flooter" style=" bottom: 45px;
          padding: 0 80px;">
-       <img style=" width: 318px;
-            height: 108px;" :src="logo" alt="">
+       <!-- <img style=" width: 318px;
+            height: 108px;" :src="logo" alt=""> -->
        <p style=" right: 80px;
             font-size: 28px;">
            第{{size}}页

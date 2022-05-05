@@ -3,7 +3,8 @@
     <div class="report-remark" style=" padding: 10px 28px;
         margin: 0 80px;
         max-height:385px;">
-        <p style=" font-size: 40px;"><img style=" width: 28px;" :src="img" alt=""> 凌图智慧点评</p>
+        <!-- <p style=" font-size: 40px;"><img style=" width: 28px;" :src="img" alt=""> 凌图智慧点评</p> -->
+        <p style=" font-size: 40px;"><img style=" width: 28px;" :src="img" alt=""> 智慧点评</p>
         <ul style="  margin-top: 15px;
             padding-left: 35px;">
             <li style="   font-size: 26px;" :key="index" v-for="(item,index) in dataList">{{item}}</li>

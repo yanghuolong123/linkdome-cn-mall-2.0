@@ -13,7 +13,7 @@
               1}`
           "
           :suggestText="suggestText"
-          titleName="凌图智慧月报"
+          titleName="智慧月报"
         ></report-cover>
         <!-- 总览 -->
         <report-one

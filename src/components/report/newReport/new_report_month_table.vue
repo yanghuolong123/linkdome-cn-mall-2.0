@@ -44,7 +44,7 @@
             </div>
             <report-flooter :size='page'></report-flooter>
         </div>
-        <img :src="logo" class="report-bg" alt="">
+        <!-- <img :src="logo" class="report-bg" alt=""> -->
     </div>
 </template>
 <script>

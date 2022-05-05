@@ -36,10 +36,7 @@
           :options="lineData.chartOptions"
           :series="lineData.series"
         ></vue-apex-charts>
-        <div
-          class=" dwell-chart-table"
-          v-show="iconIndex != 1 || iconIndex != 0"
-        >
+        <div class=" dwell-chart-table" v-show="iconIndex != 1">
           <dwell-table
             maxHeight="400px"
             :columns="columnsList"

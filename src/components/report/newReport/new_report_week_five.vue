@@ -8,7 +8,7 @@
             <report-table width='25%' :listTitle='listTitle' :tableColumn='tableColumn' :tableData='tableData' ></report-table>
             <report-flooter size='5'></report-flooter>
         </div>
-        <img :src="logo" class="report-bg" alt="">
+        <!-- <img :src="logo" class="report-bg" alt=""> -->
     </div>
 </template>
 <script>

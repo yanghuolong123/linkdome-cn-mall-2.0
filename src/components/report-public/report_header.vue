@@ -2,7 +2,7 @@
 <template>
     <div class="report-header" style=" padding: 76px 80px 0 80px;
         height: 184px;">
-        <img class="header-logo" style="  width: 318px;" :src="logo" alt="">
+        <!-- <img class="header-logo" style="  width: 318px;" :src="logo" alt=""> -->
         <div class="header-right">
             <p class="text" style="font-size: 24px;
                  line-height: 108px;">

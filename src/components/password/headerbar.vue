@@ -4,7 +4,7 @@
       <i-col :sm="6" :xs="0">&nbsp;</i-col>
       <i-col :sm="12" :xs="24" id="headCon">
         <div id="logo">
-          <img :src="logosrc" alt>
+          <!-- <img :src="logosrc" alt> -->
           <span>{{$t('找回密码')}}</span>
         </div>
         <router-link to="/login">{{$t('login')}}</router-link>

@@ -23,10 +23,11 @@
     /> -->
     <vx-sidebar
       :sidebarItems="menuList"
-      :logo="require('@/assets/images/fixation_img/logo/logo.png')"
+      
       title="DeepNorth"
       parent=".layout--main"
     />
+    <!-- :logo="require('@/assets/images/fixation_img/logo/logo.png')" -->
     <div id="content-area" :class="[contentAreaClass, {'show-overlay': bodyOverlay}]">
 
       <div id="content-overlay"></div>

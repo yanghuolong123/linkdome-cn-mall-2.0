@@ -3,11 +3,11 @@
     <!--国际化按钮-->
     <!-- <LanguageBtn style="margin: 8px 16px 0 auto;" /> -->
     <div class="login">
-      <img
+      <!-- <img
         src="@/assets/images/fixation_img/logo/logo.png"
         width="150"
         alt=""
-      />
+      /> -->
       			<!-- <div class="system-select" @click="selectBoxShow=true">{{systemSelectName}} <Icon type="md-arrow-dropdown" /> -->
       <div class="system-select">
         {{ systemSelectName }}

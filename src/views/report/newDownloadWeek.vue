@@ -5,7 +5,7 @@
         <!-- 封面 -->
         <report-cover
           :suggestText="suggestText"
-          titleName="凌图智慧周报"
+          titleName="智慧周报"
           :pageTotal="`${13 + allHeatMap.length + allFloorStore.length - 1}`"
         ></report-cover>
         <!-- 总览 -->

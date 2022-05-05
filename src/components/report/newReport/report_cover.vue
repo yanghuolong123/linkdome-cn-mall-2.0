@@ -1,7 +1,7 @@
 <template>
 	<div class="reportOneText" style="width: 1200px;height: 1682px;">
 		<div class="report-text" style="padding: 86px 80px;">
-			<img :src="property.img" class="property-logo" style=" width: 346px;" alt="">
+			<!-- <img :src="property.img" class="property-logo" style=" width: 346px;" alt=""> -->
 			<h1 style="margin-top: 104px;font-size: 76px;letter-spacing: 2px;">
 				{{titleName}}
 				<span style="margin-left: 20px; font-size: 32px;" v-if="reportType === 'week'">
@@ -24,7 +24,7 @@
 		</div>
 		<div class="footer" style="  bottom: 86px;
             padding: 0 80px;">
-			<img style="width: 346px;" :src="logo" alt="">
+			<!-- <img style="width: 346px;" :src="logo" alt=""> -->
 			<div class="footer-right" style=" border-bottom:18px solid #35e9df;
                 font-size: 36px;
                 color: #ffffff;
