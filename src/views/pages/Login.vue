@@ -8,7 +8,7 @@
         width="150"
         alt=""
       />
-      			<!-- <div class="system-select" @click="selectBoxShow=true">{{systemSelectName}} <Icon type="md-arrow-dropdown" /> -->
+      <!-- <div class="system-select" @click="selectBoxShow=true">{{systemSelectName}} <Icon type="md-arrow-dropdown" /> -->
       <div class="system-select">
         {{ systemSelectName }}
         <div class="select-box" v-show="selectBoxShow">
@@ -279,8 +279,8 @@ export default {
                         Cookies.remove("userInfo");
                       }
                       //如果进入的页面需要选择购物中心
-                      if (!config.noPropertyPages.includes(names.name))
-                        that.setHeaderAction();
+                      // if (!config.noPropertyPages.includes(names.name))
+                      that.setHeaderAction();
                       that.$router.push(names);
                     } else {
                       that.showHint(this.$t("notices.noPermission"));
@@ -420,7 +420,7 @@ export default {
     },
   },
   created() {
-    this.getPdfCenter()
+    this.getPdfCenter();
     if (Cookies.get("userInfo")) {
       this.loginForm = JSON.parse(Cookies.get("userInfo"));
       this.isRememberMe = true;
