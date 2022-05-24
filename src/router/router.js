@@ -117,9 +117,9 @@ export default [
           breadcrumb: [
             { title: '客流分析', url: '/' },
             { title: '客流分析', url: '/footfall' },
-            { title: '有效客流分析', active: true },
+            { title: '去重客流分析', active: true },
           ],
-          pageTitle: '有效客流分析'
+          pageTitle: '去重客流分析'
         }
       },
       { // 排队货架分析

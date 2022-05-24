@@ -388,7 +388,7 @@ export default {
         return _.dropRight([...tmlEnterKPI, ...tmlOccuKPI]);
       let validObj = {
         id: "entervalid",
-        name: this.$t("有效客流"),
+        name: this.$t("去重客流"),
         data: Number(valid) < 0 ? 0 : valid,
         type: {
           icon: "youxiaokeliu",

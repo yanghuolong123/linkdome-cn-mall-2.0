@@ -6,7 +6,7 @@
         <goalCharts
           class="charts"
           id='tendencyLine'
-          title1="有效客流趋势"
+          title1="去重客流趋势"
           :height1="chartheight"
           :height3="chartheight"
           :options1="trendAndAvg.trendLineOption"
@@ -76,7 +76,7 @@ export default {
       pieType: 'pie',
       effective: {
         icon: 'youxiaokeliu1',
-        title: '有效客流',
+        title: '去重客流',
         number: '',
         bg: '#EAE8FD',
         color: '#776AED',
@@ -187,7 +187,7 @@ export default {
           return m.visits
         })
         var obj2 = {}
-        obj2.name = this.$t('有效客流')
+        obj2.name = this.$t('去重客流')
         obj2.data = []
         if(xaxisCategories != undefined){
           xaxisCategories.forEach((element,index) => {
