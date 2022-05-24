@@ -246,6 +246,7 @@ export default {
       this.isSelect = false
     },
     selectSubmint () {
+      console.log('----===============----');
       this.$store.commit('headerAction', this.shopingModel)
       let find = _.find(this.shopingList, ['value', this.shopingModel])
       // find = find && find.text ? find.text : ''
