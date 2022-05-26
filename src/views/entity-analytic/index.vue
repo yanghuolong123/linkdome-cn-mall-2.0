@@ -262,7 +262,7 @@ export default {
           params.date1Array[1].split("-")[2] || this.isHour;
       await weatherTrend({
         time1: params.date1Array.join(","),
-        property_id: params.entitys[0].property_id,
+        property_id: this.$store.state.home.headerAction,
         type: type ? 1 : 0,
       }).then((res) => {
         this.weathers = res.data.data
