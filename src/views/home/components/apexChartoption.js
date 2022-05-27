@@ -235,7 +235,7 @@ export default {
         distributed: false,
       },
     },
-    colors: ["#00A0E9", "#ee7552", "#94e2ff", "#fbab40", "#e8585a", "#8d82f0"],
+    colors: ["#ee7552","#00A0E9",  "#94e2ff", "#fbab40", "#e8585a", "#8d82f0"],
     dataLabels: {
       enabled: false,
     },

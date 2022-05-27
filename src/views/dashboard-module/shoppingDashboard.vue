@@ -321,8 +321,8 @@ export default {
           chartObj.series = Object.values(data[e]);
         } else if (e === "age_distribution") {
           let genderName = {
-            male: this.$t("男性"),
             female: this.$t("女性"),
+            male: this.$t("男性"),
           };
           if (Object.keys(data[e]).length <= 4) {
             chartObj.labels = {

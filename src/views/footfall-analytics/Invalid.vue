@@ -43,12 +43,14 @@
             type="radialBar"
             width="90%"
             :options="optionsA1"
-            :series="[((seriesA[0] / invalidFlow) * 100).toFixed(2)]"
+            :series="[
+              seriesA[0] ? ((seriesA[0] / invalidFlow) * 100).toFixed(2) : 0,
+            ]"
           >
           </vue-apex-charts>
           <div class="rightDes">
             <span>{{ nameA[0] }}</span>
-            <div>{{ seriesA[0] }}</div>
+            <div>{{ seriesA[0] + "" }}</div>
           </div>
         </div>
         <div class="flex-between">
@@ -56,12 +58,14 @@
             type="radialBar"
             width="90%"
             :options="optionsA2"
-            :series="[((seriesA[1] / invalidFlow) * 100).toFixed(2)]"
+            :series="[
+              seriesA[1] ? ((seriesA[1] / invalidFlow) * 100).toFixed(2) : 0,
+            ]"
           >
           </vue-apex-charts>
           <div class="rightDes">
             <span>{{ nameA[1] }}</span>
-            <div>{{ seriesA[1] }}</div>
+            <div>{{ String(seriesA[1]) }}</div>
           </div>
         </div>
       </div>
@@ -100,7 +104,7 @@ export default {
         colors: ["#1DD9D1"],
       }),
       optionsA2: opt.invalidRadialbar,
-      seriesA: [],
+      seriesA: [0, 0],
       nameA: [],
       isShowChart: true,
       chartheight: "0",
@@ -140,6 +144,8 @@ export default {
       var trendAndAvg = _.cloneDeep(this.trendAndAvg);
       if (res.status == 200) {
         var data = res.data.data;
+        if (!data.invalid[0]) return (this.seriesA = [0, 0]);
+        this.seriesA = [];
         var lineO = _.cloneDeep(lineOptions);
         var barO = _.cloneDeep(options2);
         // 处理横坐标
@@ -158,6 +164,7 @@ export default {
           for (const key in ele.list) {
             invalidObj[key] = invalidObj[key] || 0;
             invalidObj[key] += Number(ele.list[key]);
+            console.log(invalidObj[key]);
           }
         });
         obj2.data = Object.values(invalidObj);
@@ -194,13 +201,14 @@ export default {
           colors: ["#897FF0", "#FC4662"],
         });
         trendAndAvg.trendBarSeries = columnSeries;
-        let temps = res.data.data;
         this.allFlow = Object.values(data.total.list).reduce(
           (p, c) => p + c,
           0
-        );
-        this.invalidFlow = Object.values(invalidObj).reduce((p, c) => p + c, 0);
-        this.invalidRate = ((this.invalidFlow / this.allFlow) * 100).toFixed(2);
+        ); // total无效客流
+        this.invalidFlow =
+          Object.values(invalidObj).reduce((p, c) => p + c, 0) || 0;
+        this.invalidRate =
+          ((this.invalidFlow / this.allFlow) * 100).toFixed(2) || 0;
 
         data.invalid.forEach((ele, i) => {
           this.seriesA.push(
