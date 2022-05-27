@@ -235,7 +235,7 @@ export default {
         distributed: false,
       },
     },
-    colors: ["#00A0E9", "#ee7552", "#94e2ff", "#fbab40", "#e8585a", "#8d82f0"],
+    colors: ["#ee7552", "#00A0E9", "#94e2ff", "#fbab40", "#e8585a", "#8d82f0"],
     dataLabels: {
       enabled: false,
     },
@@ -459,6 +459,44 @@ export default {
           w.config.labels[seriesIndex]
         }:</span>${series[seriesIndex]}元</p>`;
       },
+    },
+  },
+  invalidRadialbar: {
+    chart: {
+      type: "radialBar",
+      offsetY: 20,
+      offsetX: -30,
+    },
+    grid: {
+      padding: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+      },
+    },
+    colors: ["#FEB019"],
+    plotOptions: {
+      radialBar: {
+        columnWidth: "1%",
+        hollow: {
+          size: "60%",
+          margin: 0,
+        },
+        dataLabels: {
+          name: {
+            show: false,
+          },
+          value: {
+            offsetY: 5,
+          },
+        },
+      },
+    },
+    stroke: {
+      curve: "straight",
+      width: 1,
+      lineCap: "round",
     },
   },
 };

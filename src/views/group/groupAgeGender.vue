@@ -420,7 +420,7 @@ export default {
             },
           },
         ],
-        colors: ["rgb(0, 160, 233)", "#ee7552"],
+        colors: ["#ee7552", "rgb(0, 160, 233)"],
         xaxis: {
           categories: [],
         },
@@ -568,7 +568,7 @@ export default {
           if (genderValues.length != 0) {
             Object.keys(genderValues[0]).map((name, index) => {
               let obj = {};
-              obj.name = this.$t(index == 0 ? "男性" : "女性");
+              obj.name = this.$t(index == 0 ? "女性" : "男性");
               obj.data = [];
               genderValues.map((lise) => {
                 obj.data.push(lise[index]);
