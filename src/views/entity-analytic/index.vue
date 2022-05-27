@@ -396,10 +396,11 @@ export default {
           key: "time",
         });
       }
-      columns.splice(-1, 0, {
-        title: `累计${qutaName}`,
-        key: "total",
-      });
+      if (!quta.includes("occupancy"))
+        columns.splice(-1, 0, {
+          title: `累计${qutaName}`,
+          key: "total",
+        });
       option.legend.data.forEach((d, dIndex) => {
         const data = option.series[dIndex].data;
         if (!data.length) return;
@@ -427,15 +428,25 @@ export default {
             .add(highestIndex, "d")
             .format("YYYY-MM-DD");
         }
-        tableData.push({
-          entityName,
-          entityType: entityName,
-          highest: `${data[highestIndex].toLocaleString()} ${this.$t(
-            "人次"
-          )} ${highestTime}`,
-          total,
-          time,
-        });
+        if (quta.includes("occupancy"))
+          tableData.push({
+            entityName,
+            entityType: entityName,
+            highest: `${data[highestIndex].toLocaleString()} ${this.$t(
+              "人次"
+            )} ${highestTime}`,
+            time,
+          });
+        else
+          tableData.push({
+            entityName,
+            entityType: entityName,
+            highest: `${data[highestIndex].toLocaleString()} ${this.$t(
+              "人次"
+            )} ${highestTime}`,
+            total,
+            time,
+          });
       });
       return {
         columns,
