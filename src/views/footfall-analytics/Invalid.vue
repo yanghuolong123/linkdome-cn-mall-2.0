@@ -10,7 +10,7 @@
         <goalCharts
           class="charts"
           id="tendencyLine"
-          title1="去重客流趋势"
+          title1="无效客流趋势"
           :height1="chartheight"
           :height3="chartheight"
           :options1="trendAndAvg.trendLineOption"
