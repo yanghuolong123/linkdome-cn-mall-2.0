@@ -144,7 +144,6 @@ export default {
       var trendAndAvg = _.cloneDeep(this.trendAndAvg);
       if (res.status == 200) {
         var data = res.data.data;
-        if (!data.invalid[0]) return (this.seriesA = [0, 0]);
         this.seriesA = [];
         var lineO = _.cloneDeep(lineOptions);
         var barO = _.cloneDeep(options2);
@@ -205,17 +204,23 @@ export default {
           (p, c) => p + c,
           0
         ); // total无效客流
-        this.invalidFlow =
-          Object.values(invalidObj).reduce((p, c) => p + c, 0) || 0;
-        this.invalidRate =
-          ((this.invalidFlow / this.allFlow) * 100).toFixed(2) || 0;
+        if (data.invalid[0]) {
+          this.invalidFlow =
+            Object.values(invalidObj).reduce((p, c) => p + c, 0) || 0;
+          this.invalidRate =
+            ((this.invalidFlow / this.allFlow) * 100).toFixed(2) || 0;
 
-        data.invalid.forEach((ele, i) => {
-          this.seriesA.push(
-            Object.values(ele.list).reduce((p, c) => p + Number(c), 0)
-          );
-          this.nameA.push(ele.name.split("（")[0]);
-        });
+          data.invalid.forEach((ele, i) => {
+            this.seriesA.push(
+              Object.values(ele.list).reduce((p, c) => p + Number(c), 0)
+            );
+            this.nameA.push(ele.name.split("（")[0]);
+          });
+        } else {
+          this.invalidFlow = 0;
+          this.invalidRate = 0;
+          this.seriesA = [0, 0];
+        }
         trendAndAvg.trendTable = Object.keys(data.total.list).map((ele) => {
           let obj = {};
           obj.name = ele;
