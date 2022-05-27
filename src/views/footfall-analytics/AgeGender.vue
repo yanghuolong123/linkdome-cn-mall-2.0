@@ -59,12 +59,12 @@ export default {
       canshow: false,
       genderName: {
         "0": {
-          name: this.$t("女性"),
-          icon: "female",
-        },
-        "1": {
           name: this.$t("男性"),
           icon: "male",
+        },
+        "1": {
+          name: this.$t("女性"),
+          icon: "female",
         },
       },
       genderDict: {
@@ -159,7 +159,6 @@ export default {
           });
         });
       });
-      console.log(ageCollection);
       if (ageCollection[0].data) {
         let flag = Object.values(ageCollection[0].data).length <= 4;
         ageLabels = {

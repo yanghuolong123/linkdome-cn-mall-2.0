@@ -461,4 +461,42 @@ export default {
       },
     },
   },
+  invalidRadialbar: {
+    chart: {
+      type: "radialBar",
+      offsetY: 20,
+      offsetX: -30,
+    },
+    grid: {
+      padding: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+      },
+    },
+    colors: ["#FEB019"],
+    plotOptions: {
+      radialBar: {
+        columnWidth: "1%",
+        hollow: {
+          size: "60%",
+          margin: 0,
+        },
+        dataLabels: {
+          name: {
+            show: false,
+          },
+          value: {
+            offsetY: 5,
+          },
+        },
+      },
+    },
+    stroke: {
+      curve: "straight",
+      width: 1,
+      lineCap: "round",
+    },
+  },
 };

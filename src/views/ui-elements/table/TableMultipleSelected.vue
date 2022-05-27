@@ -4,7 +4,7 @@
 							:multiple="isMultiple"
 							:noDataText="$t('holder.暂无数据')"
 							:data="tableList">
-			<template slot="thead" #thead>
+			<template slot="thead" #thead>	
 				<vs-th :key="indexs" class="table-title" v-for="(item, indexs) in tableName">{{$t(item)}}</vs-th>
 			</template>
 			
