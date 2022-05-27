@@ -48,10 +48,10 @@
         </div>
       </div>
 
-      <div class="maps">
+      <!-- <div class="maps">
         <pathTab :title="title1" :numbers="number1"></pathTab>
-        <!-- <pathTab :parking="isParking" :title="title2" :numbers="number2" :right="right"></pathTab> -->
-      </div>
+        <pathTab :parking="isParking" :title="title2" :numbers="number2" :right="right"></pathTab>
+      </div> -->
     </div>
 
     <div>
@@ -457,7 +457,7 @@ export default {
         border-radius: .5rem;
         background-color: #fff;
         position: relative;
-        width: 80%;
+        width: 100%;
         height: auto;
         padding-left: 30px;
         .svgs{
