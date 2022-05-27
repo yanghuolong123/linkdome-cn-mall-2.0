@@ -293,8 +293,8 @@ export default {
         padding: 30px 0;
       }
       .rightDes {
-        width: 130px;
-        font-size: 16px;
+        width: 55%;
+        font-size: 15px;
         font-weight: bold;
         line-height: 40px;
         div {
