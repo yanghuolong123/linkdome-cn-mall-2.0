@@ -163,7 +163,6 @@ export default {
           for (const key in ele.list) {
             invalidObj[key] = invalidObj[key] || 0;
             invalidObj[key] += Number(ele.list[key]);
-            console.log(invalidObj[key]);
           }
         });
         obj2.data = Object.values(invalidObj);
@@ -209,7 +208,7 @@ export default {
             Object.values(invalidObj).reduce((p, c) => p + c, 0) || 0;
           this.invalidRate =
             ((this.invalidFlow / this.allFlow) * 100).toFixed(2) || 0;
-
+          this.nameA = [];
           data.invalid.forEach((ele, i) => {
             this.seriesA.push(
               Object.values(ele.list).reduce((p, c) => p + Number(c), 0)
