@@ -38,7 +38,7 @@
             :show-text="false"
           ></el-progress>
         </div>
-        <div class="flex-between">
+        <div class="flex-between chart">
           <vue-apex-charts
             type="radialBar"
             width="90%"
@@ -49,11 +49,13 @@
           >
           </vue-apex-charts>
           <div class="rightDes">
-            <span>{{ nameA[0] }}</span>
+            <span>{{ nameA[0] && nameA[0].from }}</span>
+            <img src="@/assets/images/pages/updown.png" alt="" />
+            <span>{{ nameA[0] && nameA[0].to }}</span>
             <div>{{ seriesA[0] + "" }}</div>
           </div>
         </div>
-        <div class="flex-between">
+        <div class="flex-between chart">
           <vue-apex-charts
             type="radialBar"
             width="90%"
@@ -64,7 +66,9 @@
           >
           </vue-apex-charts>
           <div class="rightDes">
-            <span>{{ nameA[1] }}</span>
+            <span>{{ nameA[1] && nameA[1].from }}</span>
+            <img src="@/assets/images/pages/updown.png" alt="" />
+            <span>{{ nameA[1] && nameA[1].to }}</span>
             <div>{{ String(seriesA[1]) }}</div>
           </div>
         </div>
@@ -213,7 +217,11 @@ export default {
             this.seriesA.push(
               Object.values(ele.list).reduce((p, c) => p + Number(c), 0)
             );
-            this.nameA.push(ele.name.split("（")[0]);
+            let names = ele.name.split("-");
+            this.nameA.push({
+              from: names[0].split("（")[0].split("(")[0],
+              to: names[1].split("（")[0].split("(")[0],
+            });
           });
         } else {
           this.invalidFlow = 0;
@@ -293,6 +301,9 @@ export default {
         font-size: 18px;
         font-weight: bold;
       }
+      .chart {
+        width: 100%;
+      }
       .el-progress {
         padding: 30px 0;
       }
@@ -301,8 +312,15 @@ export default {
         font-size: 15px;
         font-weight: bold;
         line-height: 40px;
+        display: flex;
+        flex-direction: column;
         div {
           font-weight: normal;
+          width: 100%;
+        }
+        img{
+          width: 20px;
+          height: 20px;
         }
       }
     }
