@@ -178,6 +178,7 @@ export default {
     },
     xAxisObj() {
       let len = this.currentData.length;
+      console.log(this.currentData);
       if (len == 0) {
         return {
           name: "时间",
@@ -208,7 +209,7 @@ export default {
                 }
               });
             });
-            // obj.data = _.uniq(obj.data).sort()
+            obj.data = _.uniq(obj.data).sort()
             //恒一广场有跨天数据展示，这里暂时不需要排序
             obj.data = _.uniq(obj.data);
           } else {
