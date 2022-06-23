@@ -178,7 +178,6 @@ export default {
     },
     xAxisObj() {
       let len = this.currentData.length;
-      console.log(this.currentData);
       if (len == 0) {
         return {
           name: "时间",
