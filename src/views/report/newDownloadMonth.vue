@@ -779,28 +779,15 @@ export default {
       let totalNumber = Number(
         (_.sumBy(data, "enter") / data.length).toFixed(0)
       );
-      if (data.length < lastM.length) {
-        data.forEach((list, index) => {
-          enterObj.data.push(list.enter);
-          trendObj.data.push(list.enter);
-          lastObj.data.push(lastM[index] ? lastM[index].enter : 0);
-          averageObj.data.push(totalNumber);
-          this.trendChartData.option.xAxis.categories.push(
-            moment(list.begin).format("YYYY-MM-DD")
-          );
-        });
-      } else {
-        lastM.forEach((list, index) => {
-          let num = data[index].enter ? data[index].enter : 0;
-          enterObj.data.push(num);
-          trendObj.data.push(num);
-          lastObj.data.push(list.enter);
-          averageObj.data.push(totalNumber);
-          this.trendChartData.option.xAxis.categories.push(
-            moment(list.begin).format("YYYY-MM-DD")
-          );
-        });
-      }
+      data.forEach((list, index) => {
+        enterObj.data.push(list.enter || 0);
+        trendObj.data.push(list.enter || 0);
+        lastM[index] && lastObj.data.push(lastM[index].enter || 0);
+        averageObj.data.push(totalNumber);
+        this.trendChartData.option.xAxis.categories.push(
+          moment(list.begin).format("YYYY-MM-DD")
+        );
+      });
       this.trendChartData.option.series = [
         enterObj,
         trendObj,
