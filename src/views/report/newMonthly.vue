@@ -692,27 +692,33 @@ export default {
           time2: `${o.last_start_time} - ${o.last_end_time}`,
         });
 
-        o.list.forEach((gate, gIndex) => {
-          if (this.gateTableData[gIndex]) {
-            this.gateTableData[gIndex].currTotal =
-              this.gateTableData[gIndex].currTotal + gate.current_num;
-            this.gateTableData[gIndex].enter.push({
-              curr: gate.current_num.toString(),
-              period: gate.last_num.toLocaleString(),
-              ratio: (gate.ratio * 100).toFix(2) + "%",
-            });
-          } else {
-            this.gateTableData[gIndex] = {
+        o.list.forEach((gate) => {
+          let fidx = this.gateTableData.findIndex(
+            (ele) => ele.bzid == gate.bzid
+          );
+          if (fidx === -1) {
+            this.gateTableData.push({
+              bzid: gate.bzid,
               name: gate.name,
               currTotal: gate.current_num,
               enter: [
                 {
-                  curr: gate.current_num.toString(),
-                  period: gate.last_num.toLocaleString(),
-                  ratio: (gate.ratio * 100).toFix(2) + "%",
+                  curr: (gate.current_num && gate.current_num.toString()) || 0,
+                  period:
+                    (gate.last_num && gate.last_num.toLocaleString()) || 0,
+                  ratio:
+                    (gate.ratio && (gate.ratio * 100).toFix(2) + "%") || "0%",
                 },
               ],
-            };
+            });
+          } else {
+            this.gateTableData[fidx].currTotal =
+              this.gateTableData[fidx].currTotal + gate.current_num;
+            this.gateTableData[fidx].enter.push({
+              curr: (gate.current_num && gate.current_num.toString()) || 0,
+              period: (gate.last_num && gate.last_num.toLocaleString()) || 0,
+              ratio: (gate.ratio && (gate.ratio * 100).toFix(2) + "%") || "0%",
+            });
           }
         });
         //排序取top10
@@ -730,8 +736,8 @@ export default {
           })
         );
         total.enter.push({
-          curr: totalCurr.toLocaleString(),
-          period: totalLast.toLocaleString(),
+          curr: (totalCurr && totalCurr.toLocaleString()) || 0,
+          period: (totalLast && totalLast.toLocaleString()) || 0,
           ratio: totalLast
             ? (((totalCurr - totalLast) / totalLast) * 100).toFix(2) + "%"
             : "0%",
