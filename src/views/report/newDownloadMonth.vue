@@ -674,61 +674,64 @@ export default {
         enter: [],
       };
       data.forEach((o, index) => {
-        this.gateTableColumn.push({
-          name: `第${index + 1}周`,
-          time1: `${o.curent_start_time} - ${o.current_end_time}`,
-          time2: `${o.last_start_time} - ${o.last_end_time}`,
-        });
-        o.list.forEach((gate) => {
-          let fidx = this.gateTableData.findIndex(
-            (ele) => ele.bzid == gate.bzid
-          );
-          if (fidx === -1) {
-            this.gateTableData.push({
-              bzid: gate.bzid,
-              name: gate.name,
-              currTotal: gate.current_num,
-              enter: [
-                {
-                  curr: (gate.current_num && gate.current_num.toString()) || 0,
-                  period:
-                    (gate.last_num && gate.last_num.toLocaleString()) || 0,
-                  ratio:
-                    (gate.ratio && (gate.ratio * 100).toFix(2) + "%") || "0%",
-                },
-              ],
-            });
-          } else {
-            this.gateTableData[fidx].currTotal =
-              this.gateTableData[fidx].currTotal + gate.current_num;
-            this.gateTableData[fidx].enter.push({
-              curr: (gate.current_num && gate.current_num.toString()) || 0,
-              period: (gate.last_num && gate.last_num.toLocaleString()) || 0,
-              ratio: (gate.ratio && (gate.ratio * 100).toFix(2) + "%") || "0%",
-            });
-          }
-        });
-        //排序取top10
-        this.gateTableData = _.sortBy(this.gateTableData, "currTotal")
-          .reverse()
-          .splice(0, 10);
-        const totalCurr = _.sum(
-          o.list.map((l) => {
-            return l.current_num;
-          })
-        );
-        const totalLast = _.sum(
-          o.list.map((l) => {
-            return l.last_num;
-          })
-        );
-        total.enter.push({
-          curr: (totalCurr && totalCurr.toLocaleString()) || 0,
-          period: (totalLast && totalLast.toLocaleString()) || 0,
-          ratio: totalLast
-            ? (((totalCurr - totalLast) / totalLast) * 100).toFix(2) + "%"
-            : "0%",
-        });
+        o.curent_start_time &&
+          this.gateTableColumn.push({
+            name: `第${index + 1}周`,
+            time1: `${o.curent_start_time} - ${o.current_end_time}`,
+            time2: `${o.last_start_time} - ${o.last_end_time}`,
+          });
+
+        if (!index) {
+          o.list = _.sortBy(o.list, "current_num")
+            .reverse()
+            .splice(0, 10);
+        }
+        let totalCurr = 0;
+        let totalLast = 0;
+        if (o.curent_start_time) {
+          o.list.forEach((gate, gateIdx) => {
+            let fidx = this.gateTableData.findIndex(
+              (ele) => ele.bzid == gate.bzid
+            );
+            if (!index) {
+              totalCurr = totalCurr + gate.current_num;
+              totalLast = totalLast + gate.last_num;
+              this.gateTableData.push({
+                bzid: gate.bzid,
+                name: gate.name,
+                currTotal: gate.current_num,
+                enter: [
+                  {
+                    curr:
+                      (gate.current_num && gate.current_num.toString()) || 0,
+                    period:
+                      (gate.last_num && gate.last_num.toLocaleString()) || 0,
+                    ratio:
+                      (gate.ratio && (gate.ratio * 100).toFix(2) + "%") || "0%",
+                  },
+                ],
+              });
+            } else if (fidx !== -1) {
+              totalCurr = totalCurr + gate.current_num;
+              totalLast = totalLast + gate.last_num;
+              this.gateTableData[fidx].currTotal =
+                this.gateTableData[fidx].currTotal + gate.current_num;
+              this.gateTableData[fidx].enter.push({
+                curr: (gate.current_num && gate.current_num.toString()) || 0,
+                period: (gate.last_num && gate.last_num.toLocaleString()) || 0,
+                ratio:
+                  (gate.ratio && (gate.ratio * 100).toFix(2) + "%") || "0%",
+              });
+            }
+          });
+          total.enter.push({
+            curr: (totalCurr && totalCurr.toLocaleString()) || 0,
+            period: (totalLast && totalLast.toLocaleString()) || 0,
+            ratio: totalLast
+              ? (((totalCurr - totalLast) / totalLast) * 100).toFix(2) + "%"
+              : "0%",
+          });
+        }
       });
       this.gateTableData.push(total);
     },
