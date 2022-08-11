@@ -81,7 +81,6 @@
 <script>
   import { formatEntityData, getCompareDate } from '@/libs/util'
   import selectMixin from '@/mixin/selectMixin.js'
-  import { getBussinessDict } from '@/api/home'
   import Moment from 'moment'
 
   export default {
@@ -135,25 +134,6 @@
       }
     },
     methods: {
-      getBussinessDict () {
-        getBussinessDict({ property_id: this.$store.state.home.headerAction }).then(res => {
-          res = res.data.data
-          this.bussinessTypeOptions = [{
-            id: -1,
-            name: '全部业态'
-          }]
-          if (res) {
-            for (let key in res) {
-              this.bussinessTypeOptions.push({
-                id: key,
-                name: res[key]
-              })
-            }
-          }
-
-
-        })
-      },
       paramsPrepare (params) {
         this.$emit('paramsPrepare', params)
       },
@@ -227,9 +207,5 @@
         immediate: true,
       },
     },
-    created () {
-      //获取所有业态
-      this.getBussinessDict()
-    }
   }
 </script>
