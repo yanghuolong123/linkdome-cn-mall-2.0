@@ -225,3 +225,17 @@ export const Path3D = params => {
     method: 'get'
   })
 }
+//无效客流趋势
+export const getInvalidFlowTrend = params => {
+  return naxios.request({
+    url: 'specialcounting/trend',
+    params
+  })
+}
+//无效客流
+export const getInvalidFlow = params => {
+  return naxios.request({
+    url: 'invalid/flow',
+    params
+  })
+}

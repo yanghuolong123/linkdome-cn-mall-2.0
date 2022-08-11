@@ -10,7 +10,7 @@
       </Checkbox>
     </div>
     <CheckboxGroup v-model="checkValues" class="checkList" @on-change="onchange">
-      <Checkbox :label="item.cname" :disabled="disabled" v-for=" item in checkDatas.subpagesList"></Checkbox>
+      <Checkbox class="margin-t-b" :label="item.cname" :disabled="disabled" v-for=" item in checkDatas.subpagesList"></Checkbox>
     </CheckboxGroup>
   </div>
 </template>
@@ -142,6 +142,7 @@ export default {
     .ivu-checkbox-group-item {
       display: inline-block;
       width: 13.5%;
+      margin: 5px 0;
     }
   }
   /deep/ .ivu-checkbox-wrapper{

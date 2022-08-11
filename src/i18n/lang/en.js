@@ -170,6 +170,7 @@ module.exports =  {
   进店率分析: "GoShop",
   热力图分析: "HeatMap",
   有效客流分析: "Effective",
+  无效客流分析: "InvalidFlow",
   排队货架分析: "Queue",
   到店次数统计: "Arrival",
   关联分析: "Relevance",

@@ -121,6 +121,19 @@ export default [
           ],
           pageTitle: '有效客流分析'
         }
+      },{ // 无效客流分析
+        path: 'invalid',
+        name: 'InvalidFlow',
+        component: () =>
+          import ('@/views/footfall-analytics/Noneffective.vue'),
+        meta: {
+          breadcrumb: [
+            { title: '客流分析', url: '/' },
+            { title: '客流分析', url: '/footfall' },
+            { title: '无效客流分析', active: true },
+          ],
+          pageTitle: '无效客流分析'
+        }
       },
       { // 排队货架分析
         path: 'queue',

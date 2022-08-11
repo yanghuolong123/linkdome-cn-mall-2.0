@@ -96,11 +96,11 @@ module.exports = {
   devServer: {
     // proxy: 'https://ai-mall.linkdome.cn/api/v1'
     // proxy: 'http://ai_mall_dev.linkdome.cn/api/v1'
-    proxy: 'https://enjoycity.linkdome.cn/api/v1'
+    // proxy: 'https://enjoycity.linkdome.cn/api/v1'
     // proxy: 'http://wxmall.linkdome.cn/api/v1'
     // proxy:'https://chuangyigu.linkdome.cn/api/v1'
-    // proxy: 'https://dev_mall.linkdome.cn/api/v1'
-    
+    proxy: 'https://dev_mall.linkdome.cn/api/v1'
+
     // proxy: 'https://sale_mall_dev.linkdome.cn/api/v1'
     // proxy: 'https://peacebird_v4.linkdome.cn/api/v1'
     // proxy: 'https://ai_mall_dev.linkdome.cn/api/v1'

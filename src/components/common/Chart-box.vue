@@ -6,7 +6,7 @@
         <slot></slot>
         <span
           class="icon"
-          @click="changeTab(index)"
+          @click="changeTab(item,index)"
           v-for="(item, index) in toolList"
           :key="index"
         >
@@ -191,8 +191,8 @@ export default {
         this.tableData,
       ]);
     },
-    changeTab(index) {
-      if (index === this.toolList.length - 1) {
+    changeTab(item,index) {
+      if (item.value === 'download') {
         this.handleDownload(index);
         return;
       }
