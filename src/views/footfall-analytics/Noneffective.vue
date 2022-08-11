@@ -26,7 +26,7 @@
 </template>
 <script>
   import BarPie from '@/views/home/BarPie.vue'
-  import FlowSelector from '_c/flow-selector/rank-flow-selector'
+  import FlowSelector from '_c/flow-selector/invalid-flow-selector'
 	import {getInvalidFlowTrend} from '@/api/analysis.js'
   import ChartBox from "_c/common/Chart-box";
   import config from "@/config/index";
