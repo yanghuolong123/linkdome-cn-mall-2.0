@@ -644,7 +644,7 @@ export default {
       let checkNameObj = {
         enter: {
           avg: pic + this.$t("平均客流"),
-          highest: pic + this.$t("总客流量"),
+          highest: pic + this.$t("客流峰值"),
           total: pic + this.$t("总客流量"),
         },
         occupancy: {

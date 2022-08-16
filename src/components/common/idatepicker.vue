@@ -120,7 +120,7 @@ export default {
           }
         ],
         disabledDate (date) {
-          if(!['EntityNew','Entity'].includes(that.$route.name)){
+          if(!['EntityNew','Entity','InvalidFlow'].includes(that.$route.name)){
             return  date && date.valueOf() > Date.now() - 86400000
           }else{
             return  date && date.valueOf() > Date.now()

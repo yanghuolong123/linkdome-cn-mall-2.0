@@ -90,10 +90,11 @@
           range:val.date1Array[0] === val.date1Array[1]?'Hour':'Date',
           time1:val.date1Array.toString(),
         }
-        Promise.all([getInvalidFlowTrend(params),entityFlow(paramsEnter)]).then(res=>{
-					this.formatInvalidEnterByEntity(res[0].data.data.time1)
-					this.formatInvalidEnterTrend(res)
-        })
+        getInvalidFlowTrend(params).then(res=>{
+          res = res.data.data.time1
+          this.formatInvalidEnterByEntity(res)
+          this.formatInvalidEnterTrend(res)
+				})
       },
       formatInvalidEnterByEntity(res){
         let series = [
@@ -133,86 +134,46 @@
         let lineConfigCopy = _.cloneDeep(lineConfig);
         lineConfigCopy.dataZoom = []
         let barConfigCopy = _.cloneDeep(barConfig);
-        const legend = ['全部客流','无效客流']
+
+        let legend = [],xAxis = [],lineSeries = [],barSeries = []
         lineConfigCopy.legend.data = legend
         barConfigCopy.legend.data = legend
-				const allRes = res[1].data.data;
-				const invalidRes = res[0].data.data.time1;
-				const xAxis = Object.keys(allRes[0].list.time1).map(o=>{
-				  return o.substring(0,16)
+        console.log(_.cloneDeep(res))
+				
+        res.forEach(o=>{
+          legend.push(o.name)
+					//构造x轴数据
+					if(!xAxis.length && o.list){
+            xAxis = Object.keys(o.list).map(l=>{
+					    return l.substring(0,16)
+						})
+					}
+          lineSeries.push({
+						name:o.name,
+						type:'line',
+						data:Object.values(o.list).map(l=>{return l.enter})
+					})
+					barSeries.push( {
+            name:o.name,
+            type: "bar",
+            barGap: "0%",
+            itemStyle: {
+              normal: {
+                //柱形图圆角
+                barBorderRadius: [80, 80, 0, 0],
+              },
+            },
+            data:Object.values(o.list).map(l=>{return l.enter})
+          })
 				})
+				// const xAxis = Object.keys(allRes[0].list.time1).map(o=>{
+				//   return o.substring(0,16)
+				// })
         lineConfigCopy.xAxis.data = xAxis;
         barConfigCopy.xAxis.data = xAxis;
-				let enterObj1 = {}
-				let enterObj2 = {}
-        invalidRes.forEach(o=>{
-          if(o.list){
-            for(let key in o.list){
-              if(enterObj1[key]){
-                enterObj1[key]+=o.list[key].enter
-							}else {
-                enterObj1[key] = o.list[key].enter
-							}
-						}
-					}
-				})
-        allRes.forEach(o=>{
-          const obj = o.list.time1
-            for(let key in obj){
-              if(enterObj2[key]){
-                enterObj2[key]+=obj[key]
-							}else {
-                enterObj2[key] = obj[key]
-							}
-						}
-				})
-				const series = [
-					{
-					  name:'全部客流',
-            type: 'line',
-						data:Object.values(enterObj2)
-					},{
-            name:'无效客流',
-            type: 'line',
-            data:Object.values(enterObj1)
-					}
-				]
-        lineConfigCopy.series = [
-          {
-            name:'全部客流',
-            type: 'line',
-            data:Object.values(enterObj2)
-          },{
-            name:'无效客流',
-            type: 'line',
-            data:Object.values(enterObj1)
-          }
-        ]
-        barConfigCopy.series = [
-          {
-            name:'全部客流',
-            type: "bar",
-            barGap: "0%",
-            itemStyle: {
-              normal: {
-                //柱形图圆角
-                barBorderRadius: [80, 80, 0, 0],
-              },
-            },
-            data:Object.values(enterObj2)
-          },{
-            name:'无效客流',
-            type: "bar",
-            barGap: "0%",
-            itemStyle: {
-              normal: {
-                //柱形图圆角
-                barBorderRadius: [80, 80, 0, 0],
-              },
-            },
-            data:Object.values(enterObj1)
-          }
-        ]
+
+        lineConfigCopy.series = lineSeries
+        barConfigCopy.series = barSeries
 				this.lineOption = lineConfigCopy;
 				this.barOption = barConfigCopy;
  				this.$refs.invalidEnter.initLineChart(this.lineOption)
