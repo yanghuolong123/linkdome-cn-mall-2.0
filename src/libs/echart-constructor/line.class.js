@@ -4,6 +4,10 @@ import i18n from "@/i18n/i18n";
 export class LineChartConstructor extends BasicData {
   constructor(responseData = [], Params, quta = [], weathers = []) {
     super(responseData, Params, quta);
+    console.log(Params)
+    this.params = Params
+
+    this.weathers = weathers;
     this.config = _.cloneDeep(config);
     this.config.tooltip.formatter = (params, val, v) => {
       const title = params[0].axisValueLabel + "<br>";
@@ -59,6 +63,32 @@ export class LineChartConstructor extends BasicData {
     this.config.legend.data = this.legend;
     this.config.series = this.series;
     this.config.xAxis.data = this.category;
+    //x轴显示天气图标
+    if(['not','entity','businessType'].includes(this.params.params.compareType)){
+      this.config.xAxis.axisLabel = {
+        show: true,
+        formatter:(value,i)=>{
+          let weather;
+          if(this.weathers[i].type === 1){
+            weather = this.weathers[i].temperature + '℃'
+          }else {
+            weather = `${this.weathers[i].low_temperature}℃ - ${this.weathers[i].high_temperature}℃`
+          }
+          return value + '\n'+'{style' + i + '| }\n'+ weather;
+        },
+        rich:{}
+      }
+      this.category.forEach((o,i)=>{
+        this.config.xAxis.axisLabel.rich[`style${i}`] = {
+          width:30,
+          height:30,
+          backgroundColor:{
+            image:this.weathers[i].weather_icon
+          }
+        }
+      })
+    }
+
     const length = this.category.length;
     if (length > 20) {
       this.config.dataZoom = [
