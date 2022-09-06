@@ -6,7 +6,8 @@
       @paramsPrepare="paramsPrepare"
     ></flow-selector>
     <chart-box
-      :weathers="weathers"
+      :weathers="(enterSelect.length > 1 &&
+                  (oParams && oParams.params.entitys.length > 1))?[]:weathers"
       chartId="enter"
       :chart="enterChart"
       ref="chartEnter"
@@ -216,9 +217,13 @@ export default {
     handletoolClick(chartName, componentName, quta = this.enterSelect) {
       switch (chartName) {
         case "line":
-        case "table":
           this.$nextTick(() => {
             this.updateLineChart(componentName, quta);
+          });
+          break;
+        case "table":
+          this.$nextTick(() => {
+            this.updateTable(componentName, quta)
           });
           break;
         case "bar":
@@ -292,6 +297,10 @@ export default {
       const lineOpiton = this.getLineOption(quta);
       this.$refs[componentName].initLineChart(lineOpiton);
     },
+    updateTable(componentName, quta = this.enterSelect){
+      const lineOpiton = this.getLineOption(quta);
+      this.$refs[componentName].initTable(lineOpiton);
+    },
     updateBarChart(componentName, quta = this.enterSelect) {
       const data = _.cloneDeep(this.responseData);
       let BarChart, barOpiton;
@@ -300,7 +309,6 @@ export default {
           data,
           this.oParams,
           quta,
-          this.weathers
         );
         barOpiton = BarChart.getDateCompare();
       } else {
@@ -308,7 +316,7 @@ export default {
           data,
           this.oParams,
           quta,
-          this.weathers
+          (this.oParams.params.compareType!=='not'&&quta.length>1)?[]:this.weathers
         );
         barOpiton = BarChart.getPostEntitysCompare();
       }
@@ -328,8 +336,10 @@ export default {
           //等子组件渲染完成，数据更新
           switch (this.$refs[componentName].currentChart) {
             case "line":
-            case "table":
               this.updateLineChart(componentName, quta);
+              break;
+            case "table":
+              this.updateTable(componentName, quta);
               break;
             case "bar":
               this.updateBarChart(componentName, quta);
@@ -346,7 +356,6 @@ export default {
           data,
           this.oParams,
           quta,
-          this.weathers
         );
         lineOpiton = LineChart.getDateCompare();
       } else {
@@ -354,7 +363,7 @@ export default {
           data,
           this.oParams,
           quta,
-          this.weathers
+          (this.oParams.params.compareType!=='not'&&quta.length>1)?[]:this.weathers
         );
         lineOpiton = LineChart.getPostEntitysCompare();
       }

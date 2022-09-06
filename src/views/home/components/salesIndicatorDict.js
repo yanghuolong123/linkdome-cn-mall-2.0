@@ -52,6 +52,7 @@ export default {
     name: '成交率',
     icon: 'chengjiaohuafen',
     color: '#857AEF',
+    unit: '（%）',
     yaxis: {
       title: {
         text:  i18n.t('成交率')+'（%）'

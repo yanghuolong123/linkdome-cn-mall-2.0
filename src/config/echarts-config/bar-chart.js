@@ -12,7 +12,7 @@ export const config= {
     type:'scroll'
   },
   grid: {
-    left: 30,
+    left: 50,
     right: 50,
     bottom: 40,
     top:30,

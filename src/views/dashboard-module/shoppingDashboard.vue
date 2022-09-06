@@ -5,20 +5,6 @@
       @interValChange="intervalClick"
       @refresh="updateRealTimezone"
     >
-      <template v-if="weathers.id" slot="weather">
-        <div class="temperature">
-          <span
-            >城市:{{ weathers.city_name }} 温度:
-            {{ weathers.low_temperature }}℃-{{ weathers.high_temperature }}℃
-            {{ weathers.condition }}</span
-          >
-          <img
-            class="ml-10"
-            style="width:30px;height:30px"
-            :src="weathers.weather_icon"
-          />
-        </div>
-      </template>
       <template slot="map">
         <map-carousel
           :center="center"
@@ -116,19 +102,23 @@
         </indicator-cards>
       </div>
       <!-- 趋势对比 -->
-      <Trend
-        class="m-t-20"
-        :time1="outRange"
-        @curretIndicatorChange="
-          (val) => {
-            showTotal = !val;
-          }
-        "
-        :innerRange="innerRange"
-        :propertyId="currentPropertyId"
-        :indicatorData="trendIndicators"
-        :istotal="showTotal"
-      ></Trend>
+<!--      <Trend-->
+<!--        class="m-t-20"-->
+<!--        :time1="outRange"-->
+<!--        @curretIndicatorChange="-->
+<!--          (val) => {-->
+<!--            showTotal = !val;-->
+<!--          }-->
+<!--        "-->
+<!--        :innerRange="innerRange"-->
+<!--        :propertyId="currentPropertyId"-->
+<!--        :indicatorData="trendIndicators"-->
+<!--        :istotal="showTotal"-->
+<!--      ></Trend>-->
+      
+      <TrendAnalys class="m-t-20"
+                   :date="outRange"
+                   :innerRange="innerRange"></TrendAnalys>
       <!-- 排行占比 -->
       <Ranking
         :time1="outRange"
@@ -164,6 +154,7 @@ import {
   realTimeData,
   mapCarousel,
   Trend,
+  TrendAnalys,
   indicatorCards,
   dashBoard,
   CustomerAnalytics,
@@ -177,7 +168,6 @@ import {
   exportEx,
   getSaleReach,
 } from "@/api/home.js";
-import { weatherTrend } from "@/api/entityNew";
 import Ranking from "@/views/operation/components/RankingGroup.vue";
 import singleCard from "@/views/home/components/singleCard.vue";
 import CustomerCharts from "_c/common/CopyChartsTabs";
@@ -195,6 +185,7 @@ export default {
   name: "shoppingDashboard",
   mixins: [salesMixin],
   components: {
+    TrendAnalys,
     realTimeData,
     mapCarousel,
     Ranking,
@@ -233,7 +224,7 @@ export default {
       windows: [],
       shopData: null,
       gateData: null,
-      showTotal: true,
+      // showTotal: true,
       monthTargetVal: 0,
       todayEnter: 0,
       monthEnter: 0,
@@ -412,49 +403,40 @@ export default {
       });
       return [...tmlEnterKPI, ...tmlOccuKPI, ...[validObj]];
     },
-    trendIndicators() {
-      let footfallYaxis = {
-        enter: {
-          name: this.$t("客流量"),
-          yaxis: {
-            title: {
-              text: `${this.$t("客流量")}(${this.$t("人次")})`,
-            },
-            labels: {
-              formatter(value) {
-                return value ? value.toLocaleString() : "";
-              },
-            },
-          },
-        },
-        occupancy: {
-          name: this.$t("集客量"),
-          yaxis: {
-            title: {
-              text: `${this.$t("集客量")}(${this.$t("人次")})`,
-            },
-            labels: {
-              formatter(value) {
-                return value ? value.toLocaleString() : "";
-              },
-            },
-          },
-        },
-      };
-      return { ...footfallYaxis, ...salesDict };
-    },
+    // trendIndicators() {
+    //   let footfallYaxis = {
+    //     enter: {
+    //       name: this.$t("客流量"),
+    //       yaxis: {
+    //         title: {
+    //           text: `${this.$t("客流量")}(${this.$t("人次")})`,
+    //         },
+    //         labels: {
+    //           formatter(value) {
+    //             return value ? value.toLocaleString() : "";
+    //           },
+    //         },
+    //       },
+    //     },
+    //     occupancy: {
+    //       name: this.$t("集客量"),
+    //       yaxis: {
+    //         title: {
+    //           text: `${this.$t("集客量")}(${this.$t("人次")})`,
+    //         },
+    //         labels: {
+    //           formatter(value) {
+    //             return value ? value.toLocaleString() : "";
+    //           },
+    //         },
+    //       },
+    //     },
+    //   };
+    //   return { ...footfallYaxis, ...salesDict };
+    // },
   },
   mounted() {
     this.initRequest();
-    weatherTrend({
-      time1: this.today + "," + this.today,
-      property_id: this.$store.state.home.headerAction,
-      type: 0,
-    }).then((res) => {
-      this.weathers = res.data.data
-        ? Object.values(res.data.data)[0][0].list[0]
-        : {};
-    });
   },
   activated() {
     this.historyDate = [

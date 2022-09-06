@@ -264,7 +264,6 @@ export default {
             }
           },
         };
-        console.log(tmlYaxis);
         return tmlYaxis;
       });
       // 同一类的只需要保留一个轴,分组之后,将第一个除外其余隐藏

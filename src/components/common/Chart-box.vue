@@ -173,7 +173,7 @@ export default {
                   ? o.length * 15
                   : o.length * 20
                 : "",
-            title: o + `(${this.$t("人次")})`,
+            title: o + (option.legend.unit&&option.legend.unit[i]?option.legend.unit[i]:`(${this.$t("人次")})`),
           };
         })
       );
@@ -186,6 +186,7 @@ export default {
     },
     //下载
     handleDownload(index) {
+      this.initTable(this.chartOption)
       downloadEx(exportEx, this.toolList[index].name, [
         this.tableColumn,
         this.tableData,
@@ -202,7 +203,7 @@ export default {
     initLineChart(option) {
       this.chartOption = option;
       this.chart.lineChart.setOption(option, true);
-      this.initTable(option);
+      // this.initTable(option);
       this.$nextTick(() => {
         this.chart.lineChart.resize();
       });
@@ -210,7 +211,7 @@ export default {
     initBarChart(option) {
       this.chartOption = option;
       this.chart.barChart.setOption(option, true);
-      this.initTable(option);
+      // this.initTable(option);
       this.$nextTick(() => {
         this.chart.barChart.resize();
       });

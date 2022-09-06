@@ -14,7 +14,7 @@
         <span class="header-title">{{ systemTitle }}</span>
         <vs-select
           class="headerSelect"
-          label=""
+          labe l=""
           v-model="comprotModel"
           autocomplete
           v-if="showCompany && isnotBgmange"
@@ -33,14 +33,19 @@
         }}</span>
         <vs-spacer></vs-spacer>
         <div class="flex-center">
-          <!-- <div id="openVip" @click="openModal" v-if="showVIpModule">
-              <Badge  :count="VIPNoRead">
-                  <icon type="ios-notifications-outline" size="26"></icon>
-              </Badge>
-          </div> -->
-          <!-- <div class="BIButton" v-show="showBI" v-on:click="openBILarge">点击开启BI大屏</div> -->
-          <!--					<LanguageBtn style="margin: 0 16px 0 0;"/>-->
-          <div class="text-right leading-tight hidden sm:block">
+          <div v-show="comprotModel!==0&&weathers.id" class="weather-box flex-center">
+            <span
+            >城市:&nbsp;{{ weathers.city_name }}&nbsp; &nbsp;| &nbsp; &nbsp;
+              <img
+              style="width:20px;height:20px;"
+              :src="weathers.weather_icon"
+            />
+              &nbsp;{{ weathers.condition }}&nbsp;
+            {{ weathers.low_temperature }}℃-{{ weathers.high_temperature }}℃
+            </span>
+
+          </div>
+          <div class="text-right ml-8 leading-tight hidden sm:block">
             <p class="font-semibold">{{ user.userName }}</p>
           </div>
           <vs-dropdown
@@ -140,8 +145,10 @@
 <script>
 import VxAutoSuggest from "@/components/vx-auto-suggest/VxAutoSuggest.vue";
 import headerAccount from "_c/account-manage/header-account-edit.vue";
+import { weatherTrend } from "@/api/entityNew";
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
 import { getGroupOrganization, getUrl } from "@/api/home.js";
+import Moment from "moment";
 import _ from "lodash";
 import Cookies from "js-cookie";
 import LanguageBtn from "@/components/LanguageBtn.vue";
@@ -182,6 +189,8 @@ export default {
       comprotModel: 0,
       Biurl: "",
       homeUrl: "",
+      today: Moment().format("YYYY-MM-DD"),
+      weathers:{},
     };
   },
   watch: {
@@ -191,6 +200,9 @@ export default {
     },
     "$store.state.home.headerAction"(val) {
       this.comprotModel = val;
+      if(val!=0){
+        this.getWeather()
+      }
     },
   },
   mounted() {
@@ -284,6 +296,9 @@ export default {
         this.$store.commit("saveComprotList", this.comprotList);
       }
     }
+    if(this.comprotModel!=0){
+      this.getWeather()
+    }
     getUrl().then((res) => {
       if (res.data.code == 200) {
         this.Biurl = res.data.data.BI;
@@ -304,28 +319,6 @@ export default {
     roleName() {
       return this.$store.state.user.role_name;
     },
-    showVIpModule() {
-      if (this.$store.state.user.role_id < 3) {
-        if (this.count == 0) {
-          document.addEventListener("click", this.NavFalse);
-          this.count++;
-        }
-        return true;
-      } else {
-        let menulist = JSON.parse(window.localStorage.getItem("menulist"));
-        let temp = _.find(menulist, ["name", "Dashboard"]).subpagesList;
-        temp = _.find(temp, ["name", "VIPRecode"]).id + "";
-        if (this.$store.state.user.access.indexOf(temp) > -1) {
-          if (this.count == 0) {
-            document.addEventListener("click", this.NavFalse);
-            this.count++;
-          }
-          return true;
-        } else {
-          return false;
-        }
-      }
-    },
     classObj() {
       if (this.sidebarWidth == "default") return "navbar-default";
       else if (this.sidebarWidth == "reduced") return "navbar-reduced";
@@ -333,9 +326,6 @@ export default {
     },
     user() {
       return this.$store.state.user;
-    },
-    VIPNoRead() {
-      if (this.showVIpModule) return this.$store.state.user.VIPNoRead;
     },
     sidebarWidth() {
       return this.$store.state.sidebarWidth;
@@ -349,27 +339,19 @@ export default {
     starredPagesMore() {
       return this.starredPages.slice(10);
     },
-    showBI() {
-      if (this.$store.state.user.role_id < 3) {
-        return true;
-      } else {
-        let access = this.$store.state.user.access;
-        let menulist = JSON.parse(window.localStorage.getItem("menulist"));
-        let BIid = "";
-        for (let i of menulist) {
-          if (i.subpagesList) {
-            let find = _.find(i.subpagesList, ["name", "BI"]);
-            if (find) {
-              BIid = find.id;
-              break;
-            }
-          }
-        }
-        return access.indexOf("" + BIid) > -1;
-      }
-    },
   },
   methods: {
+    getWeather(){
+      weatherTrend({
+        time1: this.today + "," + this.today,
+        property_id: this.comprotModel,
+        type: 0,
+      }).then((res) => {
+        this.weathers = res.data.data
+          ? Object.values(res.data.data)[0][0].list[0]
+          : {};
+      });
+    },
     accountOut() {
       this.$store.commit("setToken", "");
       this.$store.commit("setAccess", []);
@@ -423,19 +405,6 @@ export default {
       if (this.comprotModel == 0) {
         this.$router.push({ name: "Dashboard" });
       }
-    },
-    openBILarge() {
-      let token = Cookies.get("token");
-      let userName = this.$store.state.user.userName;
-      if (this.Biurl == "") return false;
-      window.location.href =
-        this.Biurl +
-        "/#/?homeUrl=" +
-        this.homeUrl +
-        "&user=" +
-        userName +
-        "&token=" +
-        token;
     },
   },
   directives: {

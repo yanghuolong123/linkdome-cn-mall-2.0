@@ -4,7 +4,6 @@ import i18n from "@/i18n/i18n";
 export class LineChartConstructor extends BasicData {
   constructor(responseData = [], Params, quta = [], weathers = []) {
     super(responseData, Params, quta);
-    console.log(Params)
     this.params = Params
 
     this.weathers = weathers;
@@ -21,8 +20,10 @@ export class LineChartConstructor extends BasicData {
           i18n.t("人次") +
           "<br>";
       });
-      let w = weathers[params[0].dataIndex];
+
       let weather = "";
+
+      let w = weathers[params[0].dataIndex];
       if (w && w.id) {
         if (w.type === 1)
           weather = `  温度${w.temperature}℃  ${
@@ -64,7 +65,7 @@ export class LineChartConstructor extends BasicData {
     this.config.series = this.series;
     this.config.xAxis.data = this.category;
     //x轴显示天气图标
-    if(['not','entity','businessType'].includes(this.params.params.compareType)){
+    if(this.weathers.length && ['not','entity','businessType'].includes(this.params.params.compareType)){
       this.config.xAxis.axisLabel = {
         show: true,
         formatter:(value,i)=>{

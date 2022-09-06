@@ -6,6 +6,7 @@ import indicatorCards from './components/IndicatorCards.vue'
 import dashBoard from './components/dashBoard'
 import mapCarousel from './components/mapCarousel.vue'
 import CustomerAnalytics from './CustomerAnalytics.vue'
+import TrendAnalys from './TrendAnalys.vue'
 export {
   realTimeData,
   mapCarousel,
@@ -14,5 +15,6 @@ export {
   compareType,
   indicatorCards,
   dashBoard,
-  CustomerAnalytics
+  CustomerAnalytics,
+  TrendAnalys
 }

@@ -9,7 +9,7 @@ export const config = {
   },
   color:['#37b5ed','#FBB03B','#2BD9CF','#E30113'],
   grid: {
-    left: 30,
+    left: 50,
     right: 50,
     bottom: 40,
     top:30,
