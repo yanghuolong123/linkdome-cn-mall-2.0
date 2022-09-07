@@ -6,8 +6,8 @@
       @paramsPrepare="paramsPrepare"
     ></flow-selector>
     <chart-box
-      :weathers="(enterSelect.length > 1 &&
-                  (oParams && oParams.params.entitys.length > 1))?[]:weathers"
+      :weathers="((enterSelect.length > 1 &&
+                  (oParams && oParams.params.entitys.length > 1))||['time','onYear','onChain'].includes(oParams &&oParams.params.compareType))?[]:weathers"
       chartId="enter"
       :chart="enterChart"
       ref="chartEnter"
@@ -76,6 +76,7 @@
     <chart-box
       chartId="occu"
       :chart="occuChart"
+      :weathers="weathers"
       v-show="showOccu"
       @toolClick="
         (chartName) => {
@@ -269,10 +270,14 @@ export default {
         time1: params.date1Array.join(","),
         property_id: this.$store.state.home.headerAction,
         type: type ? 1 : 0,
-      }).then((res) => {
-        this.weathers = res.data.data
-          ? Object.values(res.data.data)[0][0].list
-          : [];
+      }).then((weather) => {
+        weather = weather.data.data
+        this.weathers = weather ? Object.values(weather)[0][0].list : [];
+        if(this.weathers.length){
+          if(!this.weathers[0].hasOwnProperty('type')){
+            this.weathers = []
+          }
+        }
       });
       Promise.all(reqList)
         .then((res) => {

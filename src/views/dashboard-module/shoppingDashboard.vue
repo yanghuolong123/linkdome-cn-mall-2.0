@@ -117,6 +117,7 @@
 <!--      ></Trend>-->
       
       <TrendAnalys class="m-t-20"
+                   ref="trend"
                    :date="outRange"
                    :innerRange="innerRange"></TrendAnalys>
       <!-- 排行占比 -->
@@ -436,7 +437,7 @@ export default {
     // },
   },
   mounted() {
-    this.initRequest();
+    // this.initRequest();
   },
   activated() {
     this.historyDate = [
@@ -687,6 +688,10 @@ export default {
       this.clickTimeName = clickType;
       this.outRange = date.toString();
       this.innerRange = gotInnerRange(date);
+      this.$nextTick(()=>{
+        this.$refs.trend.getTrendData()
+      })
+     
       // 销售数据
     },
     initDateDuration() {
@@ -766,6 +771,10 @@ export default {
     async initRequest() {
       // in 1.0 version has 'company'
       this.outRange = this.initDateDuration(); // get this month's date range
+      this.$nextTick(()=>{
+        this.$refs.trend.getTrendData()
+  
+      })
       let companyId = this.companyId; // companyId
       // request orgnization and instantData of company
       if (typeof this.cancelGetBussinessTreeAjax === "function") {

@@ -75,7 +75,8 @@ export class BarChartConstructor extends BasicData {
           show: true, //flase直接隐藏图形
           xAxisIndex: [0],
           left: "4%", //滚动条靠左侧的百分比
-          bottom: 30,
+          height:24,
+          bottom: 60,
           start: 0, //滚动条的起始位置
           end: 100,
           // end:parseInt((20/length)*100 ) //滚动条的截止位置（按比例分割你的柱状图x轴长度）

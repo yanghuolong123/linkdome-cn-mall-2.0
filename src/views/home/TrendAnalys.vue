@@ -128,7 +128,14 @@
           }).then(weather => {
             weather = weather.data.data
             this.weathers = weather ? Object.values(weather)[0][0].list : [];
+            if(this.weathers.length){
+              if(!this.weathers[0].hasOwnProperty('type')){
+                this.weathers = []
+              }
+            }
             this.updateChart()
+          }).catch(err=>{
+            console.log(err)
           })
 				}
         if(val.length ===1 && val.includes('enter')){
@@ -270,7 +277,12 @@
           type: (this.convertInnerRange === 'Hour' && this.curretIndicator.length===1)? 1 : 0,
         }).then(weather => {
           weather = weather.data.data
-          this.weathers = weather ? Object.values(weather)[0][0].list : []
+          this.weathers = weather ? Object.values(weather)[0][0].list : [];
+          if(this.weathers.length){
+            if(!this.weathers[0].hasOwnProperty('type')){
+              this.weathers = []
+            }
+					}
         })
         Promise.all(reqs).then(res => {
           Object.keys(this.indicatorSource).forEach((o, i) => {
@@ -289,7 +301,7 @@
       },
       updateLineChart () {
         const that = this
-        if (this.curretIndicator.includes('enter')) {
+        if (this.curretIndicator.includes('enter')&&this.weathers.length) {
           this.options.xAxis.axisLabel = {
             show: true,
             formatter: (value, i) => {
@@ -332,17 +344,12 @@
     },
     watch: {
       propertyId:{
-        immediate: true,
+        // immediate: true,
         handler: function(val, oldVal) {
           if (val) this.getTrendData();
         },
 			},
-      date: {
-        immediate: true,
-        handler () {
-          this.getTrendData()
-        },
-      }
+
     },
     mounted () {
     }
