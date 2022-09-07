@@ -143,16 +143,19 @@ export class BasicData {
         }
         this.responseData[quta].forEach(o => {
           category.push(o.name)
-          series[index].data = series[index].data.concat(_.sum(Object.values(o.list.time1)))
+          series[index].data = series[index].data.concat(_.isEmpty(o.list.time1)?[]:_.sum(Object.values(o.list.time1)))
         })
         category = _.uniq(category)
       }else {
         this.responseData[quta].forEach(o=>{
           name = `${o.name}|${i18n.t(findKey(config.dictionary, 'value', quta, 'name'))}`
           legend.push(name)
-          category = Object.keys(o.list.time1).map(date=>{
-            return date.substring(begin, end)
-          })
+          if(!_.isEmpty(o.list.time1)){
+            category = Object.keys(o.list.time1).map(date=>{
+              return date.substring(begin, end)
+            })
+          }
+
           series.push({
             name,
             data:Object.values(o.list.time1).map(data=>{

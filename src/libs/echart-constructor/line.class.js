@@ -91,7 +91,6 @@ export class LineChartConstructor extends BasicData {
     }
 
     const length = this.category.length;
-    console.log(length)
     if (length > 20) {
       this.config.dataZoom = [
         {

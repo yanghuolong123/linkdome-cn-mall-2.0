@@ -435,7 +435,7 @@ export default {
           } else {
             highestTime = `${
               option.xAxis.data[highestIndex]
-            } - ${option.xAxis.data[highestIndex].replace(/00/, "59")}`;
+            } - ${option.xAxis.data[highestIndex]&&option.xAxis.data[highestIndex].replace(/00/, "59")}`;
           }
         } else {
           highestTime = moment(time.split(" - ")[0])
