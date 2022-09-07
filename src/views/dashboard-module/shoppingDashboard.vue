@@ -437,7 +437,7 @@ export default {
     // },
   },
   mounted() {
-    // this.initRequest();
+    this.initRequest();
   },
   activated() {
     this.historyDate = [
