@@ -1,7 +1,7 @@
 <template>
   <div class="mapbox">
     <div class="info-seting-zone">
-      <p class="time-box">
+      <div class="flex-center time-box">
         <span class="text-xl text-black font-medium">
           {{ $t("realTimeDataToday") }}
           <Tooltip
@@ -14,10 +14,9 @@
             <icons type="wenhao" />
           </Tooltip>
         </span>
-        <span class="font-number hidden md:inline">{{ date }}</span>
-        <span class="font-number hidden md:inline">{{ time }}</span>
-        <slot name="weather"></slot>
-      </p>
+        <span class="font-number hidden md:inline m-l-20">{{ date }}</span>
+        <span class="font-number hidden md:inline ml-2">{{ time }}</span>
+      </div>
       <p class="text-right user-seting">
         <a href @click.prevent="handleRefresh">
           <icons type="shuaxin" :size="24"></icons>
@@ -113,9 +112,9 @@ export default {
   display grid
   grid-template-columns 1.2fr 1fr
   padding 0 8px;
+  margin-bottom 24px
   .user-seting
     color #666E75
-    margin-bottom 24px;
     >a
       display inline-block
       vertical-align middle
@@ -126,10 +125,6 @@ export default {
       font-family: "source_han_sans_cn", "Roboto", sans-serif !important;
   .time-box
       font-weight normal
-      line-height 36px
-      display grid
-      grid-template-columns repeat(auto-fit,minmax(100px,max-content))
-      grid-gap 1.5rem
       font-size 1.15rem
       >span
         color:rgba(35,69,95,1);

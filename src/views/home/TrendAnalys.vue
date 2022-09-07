@@ -331,6 +331,12 @@
 
     },
     watch: {
+      propertyId:{
+        immediate: true,
+        handler: function(val, oldVal) {
+          if (val) this.getTrendData();
+        },
+			},
       date: {
         immediate: true,
         handler () {
