@@ -104,14 +104,14 @@
           :isRemark="false"
           :chartHeight="600"
         ></report-heat-map>
-        <!-- 店铺关联 有序-->
+        <!-- 店铺关联 无序-->
         <report-table
           title="店铺关联"
           :listTitle="orderlyTitle"
           :tableData="orderlyData"
           :page="`${8 + allHeatMap.length + allFloorStore.length - 1}`"
         ></report-table>
-        <!-- 店铺关联 无序-->
+        <!-- 店铺关联 有序-->
         <report-table
           title="店铺关联"
           :listTitle="disorderTitle"
@@ -153,6 +153,7 @@ import reportTable from "@/components/report/newReport/report_table";
 import reportChartMulti from "@/components/report/newReport/report_chart_multi";
 import reportRemark from "@/components/report/newReport/report_remark";
 import reportGateTable from "@/components/report/newReport/report_gate_table";
+import {mapState} from 'vuex'
 
 import moment from "moment";
 import _ from "lodash";
@@ -163,6 +164,7 @@ import {
   newReportSuggest,
   newReportGate,
   newReportShop,
+  getReportSetting,
 } from "@/api/report";
 import { getanalysiseeo } from "@/api/home";
 import {
@@ -225,7 +227,6 @@ export default {
         name3: ["时间", "入客流", "增长率"],
       },
       ratioTableData: [],
-      allFloorStore: [],
       allFormatStore: [],
       allHeatMap: [],
       orderlyData: {
@@ -253,9 +254,14 @@ export default {
         remarkData: [],
       },
       allDwellFormatStore: [],
+      showLastYearData:true,//是否显示同比数据
+      enabledModules:[]//需要显示的模块
     };
   },
   computed: {
+    ...mapState({
+      propertyId: (state) => state.home.headerAction,
+    }),
     oneListData() {
       return [
         {
@@ -383,17 +389,29 @@ export default {
       };
     },
   },
-  watch: {},
-  activated() {},
   mounted() {
     let time = moment()
       .subtract(1, "days")
       .format("YYYY-MM-DD");
     this.selectDateTime = time;
     this.selectDateText = time + "," + time;
-    this.reportQuery();
+    
+    this.getReportSetting().then(()=>{
+      this.reportQuery();
+    })
+    
   },
   methods: {
+    getReportSetting(){
+      return new Promise((resolve,reject)=>{
+        getReportSetting({property_id:this.propertyId}).then(res=>{
+          res = res.data.data;
+          this.showLastYearData = res.show_last_year === 1;
+          this.enabledModules = res.items && res.items.split(',').map(o=>{return Number(o)})
+          resolve()
+        })
+      })
+    },
     selectTimeDate(value) {
       if (value == "") {
         this.selectDateTime = "";
@@ -472,7 +490,7 @@ export default {
           time: this.selectDateText,
           property_id: this.propertyId,
         }),
-        // 关联度 有序
+        // 关联度 无序
         newReportOrderly({
           time: this.selectDateText,
           property_id: this.propertyId,
@@ -485,7 +503,7 @@ export default {
           sort_parameter: "value",
           report_type: "day",
         }),
-        // 关联度 无序
+        // 关联度 有序
         newReportDisorder({
           time: this.selectDateText,
           property_id: this.propertyId,

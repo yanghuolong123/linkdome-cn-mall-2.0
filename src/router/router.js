@@ -466,6 +466,20 @@ export default [
           ],
           pageTitle: '自定义报告',
         }
+      },
+      { // 报告设置
+        path: 'reportSetting',
+        name: 'ReportSetting',
+        component: () =>
+          import ('@/views/report/reportSetting.vue'),
+        meta: {
+          breadcrumb: [
+            { title: 'Analytics', url: '/dashboard/analytics' },
+            { title: '报告详情', url: '/report'},
+            { title: '报告设置', active: true },
+          ],
+          pageTitle: '报告设置',
+        }
       }
     ]
   },

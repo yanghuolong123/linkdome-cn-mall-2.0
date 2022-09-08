@@ -1,6 +1,28 @@
 import naxios from '@/libs/api.request'
 import qs from 'qs'
 import axios from 'axios'
+
+export const getReportSetting = params => {
+  return naxios.request({
+    url: 'report/config',
+    params,
+    method: 'get'
+  })
+}
+export const getReportSettingItem = params => {
+  return naxios.request({
+    url: 'report/items',
+    params,
+    method: 'get'
+  })
+}
+export const reportSetting = (data) => {
+  return naxios.request({
+    url: 'report/setup',
+    data: qs.stringify(data),
+    method: 'post'
+  })
+}
 export const fetchEntity = (timeRange, entityType, propertyId) => {
   return naxios.request({
     url: 'report/daily/entity',

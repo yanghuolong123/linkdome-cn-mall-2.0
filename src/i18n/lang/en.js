@@ -190,6 +190,7 @@ module.exports =  {
   日报: "Daily Report",
   周报: "Week Report",
   月报: "Month Report",
+  报告设置: "Report Setting",
   自定义报告: "Costomized Report",
   实体管理: "Entity Manage",
   节假日活动管理: "Holiday Manage",

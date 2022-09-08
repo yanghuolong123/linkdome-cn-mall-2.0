@@ -29,7 +29,7 @@ export const newReportHeatMap = params => {
 }
 
 
-// 关联度 有序
+// 关联度 无序
 export const newReportOrderly = params => {
   return naxios.request({
     url: 'report/assoc',
@@ -39,7 +39,7 @@ export const newReportOrderly = params => {
 }
 
 
-// 关联度 无序
+// 关联度 有序
 export const newReportDisorder = params => {
   return naxios.request({
     url: 'report/direction',
