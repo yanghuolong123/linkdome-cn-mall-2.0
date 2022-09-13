@@ -177,7 +177,8 @@ export default {
         },
       },
       showLastYearData:true,//是否显示同比数据
-      enabledModules:[]//需要显示的模块
+      enabledModules:[],//需要显示的模块
+      disabled:false
     };
   },
   computed: {
@@ -376,6 +377,7 @@ export default {
       this.suggestText = text;
     },
     async downloadReport(type, time) {
+      if(this.disabled)return
       if (time === "") {
         this.$alert({ content: "请选择时间" });
         return false;
@@ -385,6 +387,7 @@ export default {
         this.$alert({ content: "未配置相关模块！" });
         return false;
       }
+      this.disabled = true
       let pdfUrl = window.location.href.split("/#/")[0];
       let token = getToken();
       let objName =
@@ -437,6 +440,7 @@ export default {
         )
         .then((response) => {
           this.$vs.loading.close();
+          this.disabled = false
           var blob = new Blob([response.data]);
           var downloadElement = document.createElement("a");
           var href = window.URL.createObjectURL(blob); // 创建下载的链接
@@ -447,8 +451,10 @@ export default {
           document.body.removeChild(downloadElement); // 下载完成移除元素
           window.URL.revokeObjectURL(href); // 释放掉blob对象
         })
-        .catch(function(error) {
-          console.log(error);
+        .catch((error)=> {
+          this.$alert({ content: "服务器错误！" });
+          this.$vs.loading.close();
+          this.disabled = false
         });
     },
     // 计算同环比

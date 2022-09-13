@@ -731,7 +731,7 @@ export const isEmpty = (value) => {
   }
 }
 
-export const downloadEx =(fun,name,value)=>{ 
+export const downloadEx =(fun,name,value)=>{
   value[1].map(list=>{
     Object.keys(list).map(k=>{
       if(!_.isNumber(list[k])){
@@ -796,7 +796,6 @@ export const getCompareDate = (originDate,compateType) => {
         ]
       case 'onChain'://环比
         const diff = Moment(originDate[0]).diff(Moment(originDate[1]), 'days') - 1
-        console.log(diff)
         return [
           Moment(originDate[0]).add(diff, 'd').format('YYYY-MM-DD'),
           Moment(originDate[1]).add(diff, 'd').format('YYYY-MM-DD')
