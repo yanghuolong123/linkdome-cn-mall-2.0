@@ -6,7 +6,7 @@
             <report-header></report-header>
             <report-title :title="title"></report-title>
             <report-table width='25%' :listTitle='listTitle' :tableColumn='tableColumn' :tableData='tableData' ></report-table>
-            <report-flooter size='5'></report-flooter>
+            <report-flooter :size='page'></report-flooter>
         </div>
         <img :src="logo" class="report-bg" alt="">
     </div>
@@ -25,6 +25,9 @@ export default {
     tableColumn: {
       type: Array
     },
+      page: {
+          type: String
+      },
     tableData: {
       type: Array
     },

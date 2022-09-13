@@ -21,8 +21,8 @@
                          <p>{{name2.name}}</p>
                          <p>本期</p>
                          <p style="font-size: 12px;">{{name2.time1}}</p>
-                         <p>同期</p>
-                         <p style="font-size: 12px;">{{name2.time2}}</p>
+                         <p v-if="showLastYearData">同期</p>
+                         <p v-if="showLastYearData" style="font-size: 12px;">{{name2.time2}}</p>
                         </td>
                     </tr>
                     
@@ -30,13 +30,13 @@
                         <td style="border-right: 2px solid #D2D2D2; font-size: 14px;border-bottom: 2px solid #D2D2D2;">{{item.name}}</td>
                         <td  style="border-right: 2px solid #D2D2D2; font-size: 16px;">
                             <p  style="font-size:14px;border-bottom: 2px solid #D2D2D2;line-height:28px;">本期</p>
-                            <p  style="font-size:14px;border-bottom: 2px solid #D2D2D2;line-height:28px;">同期</p>
-                            <p  style="font-size:14px;border-bottom: 2px solid #D2D2D2;line-height:28px;">同比</p>
+                            <p v-if="showLastYearData"  style="font-size:14px;border-bottom: 2px solid #D2D2D2;line-height:28px;">同期</p>
+                            <p  v-if="showLastYearData" style="font-size:14px;border-bottom: 2px solid #D2D2D2;line-height:28px;">同比</p>
                         </td>
                         <td :key="index" v-for="(enter,index) in item.enter" style="border-right: 2px solid #D2D2D2; font-size: 16px;">
                             <p  style="font-size:14px;border-bottom: 2px solid #D2D2D2;line-height:28px;">{{enter.curr}}</p>
-                            <p  style="font-size:14px;border-bottom: 2px solid #D2D2D2;line-height:28px;">{{enter.period}}</p>
-                            <p  style="font-size:14px;border-bottom: 2px solid #D2D2D2;line-height:28px;">{{enter.ratio}}</p>
+                            <p  v-if="showLastYearData" style="font-size:14px;border-bottom: 2px solid #D2D2D2;line-height:28px;">{{enter.period}}</p>
+                            <p   v-if="showLastYearData" style="font-size:14px;border-bottom: 2px solid #D2D2D2;line-height:28px;">{{enter.ratio}}</p>
                         </td>
                     </tr>
                     
@@ -61,6 +61,9 @@ export default {
     },
     page: {
       type: String
+    },
+    showLastYearData: {
+      type: Boolean
     },
     tableColumn: {
       type: Array,

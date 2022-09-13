@@ -6,38 +6,62 @@
 				<report-cover
 					:suggestText='suggestText'
 					titleName='凌图智慧报告'
-					:pageTotal='`${10}`'
+					:pageTotal="`${getTotalPage()}`"
 				></report-cover>
 				<!-- 总览 -->
-				<report-one title='客流总览' :enterData='enterData' :listTitle='oneListData'></report-one>
+				<report-one title='客流总览'
+										v-if="enabledModules.includes(1)"
+										:page="`${getPage(1)}`"
+										:enterData='enterData'
+										:listTitle='oneListData'></report-one>
 				<!--客流趋势  -->
-				<report-chart :chartHeight='600' :clickData='clickData' title='客流趋势' page='2' :listTitle='trendTitle'
+				<report-chart :chartHeight='600' :clickData='clickData' title='客流趋势'
+											v-if="enabledModules.includes(2)"
+											:page="`${getPage(2)}`"
+											:listTitle='trendTitle'
 											:dataList=trendChartData></report-chart>
 				<report-ratio-table
 					title='客流趋势'
-					page='3'
+					v-if="enabledModules.includes(2)"
+					:page="`${getPage(2)+1}`"
 					:listTitle='trendTitle'
 					:tableColumn='ratioTableColumn'
 					:tableData='ratioTableData'
 				></report-ratio-table>
 				<!-- 出入口 -->
-				<report-chart :chartHeight='600' :clickData='clickData' title='出入口客流' page='4' :listTitle='gateTitle'
+				<report-chart :chartHeight='600'
+											:clickData='clickData' title='出入口客流'
+											v-if="enabledModules.includes(3)"
+											:page="`${getPage(3)}`"
+											:listTitle='gateTitle'
 											:dataList='gateChartData'></report-chart>
 				<!-- 出入口表格 -->
 				<report-week-five
 					title='出入口客流'
+					v-if="enabledModules.includes(3)"
+					:page="`${getPage(3)+1}`"
 					:listTitle="gateTableTitle"
 					:tableColumn='tableColumn'
 					:tableData='tableData'
 				></report-week-five>
 				<!-- 店铺 -->
-				<report-chart :chartHeight='600' :clickData='clickData' title='店铺客流' page='6' :listTitle='shopTitle'
+				<report-chart :chartHeight='600'
+											:clickData='clickData' title='店铺客流'
+											v-if="enabledModules.includes(4)"
+											:page="`${getPage(4)}`"
+											:listTitle='shopTitle'
 											:dataList='shopChartData'></report-chart>
 				<!-- 楼层下的商铺 -->
-				<report-chart-multi title='店铺客流' page='7' :listTitle='floorStoreTitle'
+				<report-chart-multi title='店铺客流'
+														v-if="enabledModules.includes(5)"
+														:page="`${getPage(5)}`"
+														:listTitle='floorStoreTitle'
 														:dataList='allFloorStore'></report-chart-multi>
 				<!-- 业态下的商铺 -->
-				<report-chart-multi title='店铺客流' page='8' :listTitle='formatStoreTitle'
+				<report-chart-multi title='店铺客流'
+														v-if="enabledModules.includes(6)"
+														:page="`${getPage(6)}`"
+														:listTitle='formatStoreTitle'
 														:dataList='allFormatStore'></report-chart-multi>
 				<!-- 热力图 -->
 <!--				<report-heat-map-->
@@ -59,10 +83,15 @@
 <!--											:page='`${10+allHeatMap.length}`'></report-table>-->
 				<!-- 停留时间 业态-->
 				<report-chart :chartHeight='600' :clickData='clickData' title='停留时间' :isRemark='false'
-											:page='`${9}`' :listTitle='dwellTitle' :dataList='dwellChartData'
+											v-if="enabledModules.includes(10)"
+											:page="`${getPage(10)}`"
+											:listTitle='dwellTitle' :dataList='dwellChartData'
 											chartType='dwell'></report-chart>
 				<!-- 停留时间 业态下的商铺-->
-				<report-chart-multi chartType='dwell' title='停留时间' :page='`${10}`'
+				<report-chart-multi chartType='dwell'
+														title='停留时间'
+														v-if="enabledModules.includes(10)"
+														:page="`${getPage(10)+1}`"
 														:listTitle='formatDwellStoreTitle' :dataList='allDwellFormatStore'></report-chart-multi>
 				<report-back-cover></report-back-cover>
 			</div>
@@ -100,6 +129,39 @@
       callData () {
         return this.$route.query.date
       },
+      pageConfig(){
+        return [
+          {
+            id:1,
+            count:1,
+            name:'客流总览',
+          },{
+            id:2,
+            count:2,
+            name:'客流趋势',
+          },{
+            id:3,
+            count:2,
+            name:'出入口客流',
+          },{
+            id:4,
+            count:1,
+            name:'店铺客流',
+          },{
+            id:5,
+            count:1,
+            name:'店铺客流-楼层',
+          },{
+            id:6,
+            count:1,
+            name:'店铺客流-业态',
+          },{
+            id:10,
+            count:2,
+            name:'停留时间',
+          }
+        ]
+      }
     },
 
     async mounted () {
@@ -110,6 +172,13 @@
       const floors = await getHeatMapFloorData({ property_id: this.propertyId, type: 'is_heatmap' })
       this.floorList = floors.data.data
       this.parameterData()
+      //enabledModules：启用的模块
+      let enabledModules = this.$route.query.enabledModules && this.$route.query.enabledModules.split(',')||[];
+      if(enabledModules && enabledModules.length){
+        this.enabledModules = enabledModules.map(o=>{return Number(o)})
+      }
+      //是否显示同比
+      this.showLastYearData = this.$route.query.showYear
     },
     methods: {
       parameterData () { // 查找对应的 购物中心 id

@@ -2,11 +2,11 @@
 <template>
     <div class="report-remark" style=" padding: 10px 28px;
         margin: 0 80px;
-        max-height:385px;">
+        max-height:420px;">
         <p style=" font-size: 40px;"><img style=" width: 28px;" :src="img" alt=""> 凌图智慧点评</p>
         <ul style="  margin-top: 15px;
             padding-left: 35px;">
-            <li style="   font-size: 26px;" :key="index" v-for="(item,index) in dataList">{{item}}</li>
+            <li :style="liStyle" :key="index" v-for="(item,index) in dataList">{{item}}</li>
         </ul>
     </div>
 </template>
@@ -29,6 +29,14 @@ export default {
 
   },
   computed: {
+      liStyle(){
+        const len = this.dataList.length;
+        if(len<5){
+            return {fontSize:'26px'}
+        }else {
+            return {fontSize:'24px'}
+        }
+      }
   },
   methods: {
 

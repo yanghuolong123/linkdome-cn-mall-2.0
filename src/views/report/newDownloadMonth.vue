@@ -4,26 +4,22 @@
       <div id="pdfDom" v-if="showPDF" style=" width: 1200px;">
         <!-- 封面 -->
         <report-cover
-          :pageTotal="
-            `${14 +
-              allHeatMap.length +
-              floorShopChartData.length -
-              1 +
-              floorGateChartData.length -
-              1}`
-          "
+					:pageTotal="`${getTotalPage()}`"
           :suggestText="suggestText"
           titleName="凌图智慧月报"
         ></report-cover>
         <!-- 总览 -->
         <report-one
           title="客流总览"
+					:page="`${getPage(1)}`"
+					v-if="enabledModules.includes(1)"
           :enterData="enterData"
           :listTitle="oneListData"
         ></report-one>
         <report-remark
           title="客流总览"
-          page="2"
+					:page="`${getPage(1)+1}`"
+					v-if="enabledModules.includes(1)"
           :remarkData="enterData[3]"
         ></report-remark>
         <!-- 客流趋势 -->
@@ -32,12 +28,14 @@
           :clickData="clickData"
           title="客流趋势"
           :listTitle="trendTitle"
-          page="3"
+					v-if="enabledModules.includes(2)"
+					:page="`${getPage(2)}`"
           :dataList="trendChartData"
         ></report-chart>
         <report-ratio-table
           title="客流分析"
-          page="4"
+					v-if="enabledModules.includes(2)"
+					:page="`${getPage(2)+1}`"
           :listTitle="analyseTitle"
           :tableColumn="ratioTableColumn"
           :tableData="ratioTableData"
@@ -47,13 +45,16 @@
           :chartHeight="600"
           :clickData="clickData"
           title="出入口客流"
-          page="5"
+					v-if="enabledModules.includes(3)"
+					:page="`${getPage(3)}`"
           :listTitle="gate10Title"
           :dataList="gateTop10"
         ></report-chart>
         <report-month-table
           title="出入口客流"
-          page="6"
+					v-if="enabledModules.includes(3)"
+					:showLastYearData="showLastYearData"
+					:page="`${getPage(3)+1}`"
           :listTitle="gateFloorTitle"
           :tableData="gateTableData"
           :tableColumn="gateTableColumn"
@@ -63,7 +64,8 @@
           v-for="(item, index) in floorGateChartData"
           :key="index + 'a'"
           title="出入口客流"
-          :page="`${7 + index}`"
+					v-if="enabledModules.includes(3)"
+					:page="`${getPage(3)+2+index}`"
           :listTitle="gateFloorTitle"
           :dataList="item.data"
         ></report-chart-multi>
@@ -72,7 +74,8 @@
           :chartHeight="600"
           :clickData="clickData"
           title="店铺客流"
-          :page="`${8 + floorGateChartData.length - 1}`"
+					v-if="enabledModules.includes(4)"
+					:page="`${getPage(4)}`"
           :listTitle="shop10Title"
           :dataList="shop10Data"
         ></report-chart>
@@ -81,20 +84,16 @@
           title="店铺客流"
           v-for="(item, index) in floorShopChartData"
           :key="index"
-          :page="`${9 + index + floorGateChartData.length - 1}`"
+					v-if="enabledModules.includes(5)"
+					:page="`${getPage(5) + index}`"
           :listTitle="floorShopTitle"
           :dataList="item.data"
         ></report-chart-multi>
         <!-- 业态 店铺 -->
         <report-chart-multi
           title="店铺客流"
-          :page="
-            `${10 +
-              floorShopChartData.length -
-              1 +
-              floorGateChartData.length -
-              1}`
-          "
+					v-if="enabledModules.includes(6)"
+					:page="`${getPage(6)}`"
           :listTitle="shopcAtivitiesTitle"
           :dataList="formatShopChartData"
         ></report-chart-multi>
@@ -103,14 +102,8 @@
           :key="'heatMap' + index"
           v-for="(item, index) in allHeatMap"
           title="热力图"
-          :page="
-            `${11 +
-              index +
-              floorShopChartData.length -
-              1 +
-              floorGateChartData.length -
-              1}`
-          "
+					v-if="enabledModules.includes(7)"
+					:page="`${getPage(7) + index }`"
           :listTitle="item.title"
           :dataList="item.data"
           :chartHeight="600"
@@ -120,28 +113,16 @@
           title="店铺关联"
           :listTitle="orderlyTitle"
           :tableData="orderlyData"
-          :page="
-            `${11 +
-              allHeatMap.length +
-              floorShopChartData.length -
-              1 +
-              floorGateChartData.length -
-              1}`
-          "
+					v-if="enabledModules.includes(8)"
+					:page="`${getPage(8)}`"
         ></report-table>
         <!-- 店铺关联 无序-->
         <report-table
           title="店铺关联"
           :listTitle="disorderTitle"
           :tableData="disorderData"
-          :page="
-            `${12 +
-              allHeatMap.length +
-              floorShopChartData.length -
-              1 +
-              floorGateChartData.length -
-              1}`
-          "
+					v-if="enabledModules.includes(9)"
+					:page="`${getPage(9)}`"
         ></report-table>
         <!-- 停留时间 业态-->
         <report-chart
@@ -149,14 +130,8 @@
           :clickData="clickData"
           :isRemark="false"
           title="停留时间"
-          :page="
-            `${13 +
-              allHeatMap.length +
-              floorShopChartData.length -
-              1 +
-              floorGateChartData.length -
-              1}`
-          "
+					v-if="enabledModules.includes(10)"
+					:page="`${getPage(10)}`"
           :listTitle="dwellTitle"
           :dataList="dwellChartData"
           chartType="dwell"
@@ -165,14 +140,8 @@
         <report-chart-multi
           chartType="dwell"
           title="停留时间"
-          :page="
-            `${14 +
-              allHeatMap.length +
-              floorShopChartData.length -
-              1 +
-              floorGateChartData.length -
-              1}`
-          "
+					v-if="enabledModules.includes(10)"
+					:page="`${getPage(10)+1}`"
           :listTitle="formatDwellStoreTitle"
           :dataList="allDwellFormatStore"
         ></report-chart-multi>
@@ -501,12 +470,64 @@ export default {
         moment(yesterEnd).format("YYYY-MM-DD")
       );
     },
+    pageConfig(){
+      return [
+        {
+          id:1,
+          count:2,
+          name:'客流总览',
+        },{
+          id:2,
+          count:2,
+          name:'客流趋势',
+        },{
+          id:3,
+          count:2+this.floorGateChartData.length,
+          name:'出入口客流',
+        },{
+          id:4,
+          count:1,
+          name:'店铺客流',
+        },{
+          id:5,
+          count:this.floorShopChartData.length,
+          name:'店铺客流-楼层',
+        },{
+          id:6,
+          count:1,
+          name:'店铺客流-业态',
+        },{
+          id:7,
+          count:this.allHeatMap.length,
+          name:'热力图',
+        },{
+          id:8,
+          count:1,
+          name:'店铺客流-无序',
+        },{
+          id:9,
+          count:1,
+          name:'店铺客流-有序',
+        },{
+          id:10,
+          count:2,
+          name:'停留时间',
+        }
+      ]
+    }
   },
   mounted() {
     let token = this.$route.query.token;
     this.pdfBaseUrl = this.$route.query.pdfUrl;
     setToken(token, 1);
     this.parameterData();
+    //enabledModules：启用的模块
+    let enabledModules = this.$route.query.enabledModules && this.$route.query.enabledModules.split(',')||[];
+    if(enabledModules && enabledModules.length){
+      this.enabledModules = enabledModules.map(o=>{return Number(o)})
+    }
+    //是否显示同比
+    this.showLastYearData = this.$route.query.showYear
   },
   methods: {
     parameterData() {
@@ -633,35 +654,35 @@ export default {
       ]).then((res) => {
         this.showPDF = true;
         this.suggestText = res[0].data.data[0].property_suggest;
-        this.reportOneData(res[1].data.data, res[2].data.data);
-        this.trendDataList(
+        this.enabledModules.includes(1)&&this.reportOneData(res[1].data.data, res[2].data.data);
+        this.enabledModules.includes(2)&&this.trendDataList(
           res[3].data.data,
           res[4].data.data,
           res[18].data.data
         );
-        this.trendTableData(res[3].data.data);
-        this.gateDataList(res[5].data.data);
-        this.floorGateData(res[6].data.data);
-        this.shopDataList(res[7].data.data);
-        this.floorShopDataList(res[8].data.data);
-        this.formatShopDataList(res[9].data.data);
-        this.heatMapData(res[10].data.data, "本月");
+        this.enabledModules.includes(2)&&this.trendTableData(res[3].data.data);
+        this.enabledModules.includes(3)&&this.gateDataList(res[5].data.data);
+        this.enabledModules.includes(3)&&this.floorGateData(res[6].data.data);
+        this.enabledModules.includes(4)&&this.shopDataList(res[7].data.data);
+        this.enabledModules.includes(5)&&this.floorShopDataList(res[8].data.data);
+        this.enabledModules.includes(6)&&this.formatShopDataList(res[9].data.data);
+        this.enabledModules.includes(7)&& this.heatMapData(res[10].data.data, "本月");
         // // 关联度 有序
-        this.relevanceTableData(
+        this.enabledModules.includes(8)&&this.relevanceTableData(
           res[11].data.data.matrixList,
           res[12].data.data.matrixList,
           "orderlyData"
         );
         // // 关联度 无序
-        this.relevanceTableData(
+        this.enabledModules.includes(9)&&this.relevanceTableData(
           res[13].data.data,
           res[14].data.data,
           "disorderData"
         );
         // 停留时间 业态
-        this.dwellFormatData(res[15].data.data);
+        this.enabledModules.includes(10)&&this.dwellFormatData(res[15].data.data);
         // 停留时间 业态 商铺
-        this.dwellFormatStoreData(res[16].data.data);
+        this.enabledModules.includes(10)&&this.dwellFormatStoreData(res[16].data.data);
         this.gateFlowTop10(res[17].data.data);
       });
     },
@@ -864,7 +885,7 @@ export default {
     },
     gateDataList(data) {
       this.gateTop10.option = _.cloneDeep(this.enterOption);
-      let [oneObj, twoObj] = [
+      let [oneObj, twoObj,threeObj] = [
         {
           name: "本月客流",
           type: "column",
@@ -877,6 +898,12 @@ export default {
           color: "#2BD9CF",
           data: [],
         },
+        {
+          name: "同期客流",
+          type: "column",
+          color: "#874bd9",
+          data: [],
+        },
       ];
       data.data.forEach((list, index) => {
         oneObj.data.push(list.enter);
@@ -884,9 +911,14 @@ export default {
           return o.bzid === list.bzid;
         })[0];
         twoObj.data.push(last ? last.enter : 0);
+        let sameEnter = _.find(data.period, (o) => o.bzid === list.bzid).enter;
+        threeObj.data.push(sameEnter);
         this.gateTop10.option.xAxis.categories.push(list.name);
       });
       this.gateTop10.option.series = [oneObj, twoObj];
+      if(this.showLastYearData){
+        this.gateTop10.option.series.push(threeObj)
+      }
       this.gateTop10.remarkData = data.comment ? data.comment : [];
     },
     shopDataList(data) {

@@ -6,8 +6,8 @@
 			<report-title :title="title"></report-title>
 			<report-enter :data='enterData[0]' :listTitle='listTitle[0]'></report-enter>
 			<report-enter :data='enterData[1]' :listTitle='listTitle[1]'></report-enter>
-			<report-enter v-if="reportType === 'month' " :data='enterData[2]' :listTitle='listTitle[2]'></report-enter>
-			<report-remark v-else :dataList='enterData[2]'></report-remark>
+			<report-enter v-if="reportType === 'month'&&showLastYearData " :data='enterData[2]' :listTitle='listTitle[2]'></report-enter>
+			<report-remark v-if="reportType !== 'month'" :dataList='enterData[2]'></report-remark>
 			<report-flooter size='1'></report-flooter>
 		</div>
 		<img :src="flooterBg" class="report-bg" alt="">
@@ -33,7 +33,9 @@
       enterData: {
         type: Array
       },
-     
+      showLastYearData:{
+        type:Boolean,
+			}
     },
     components: {
       reportHeader,

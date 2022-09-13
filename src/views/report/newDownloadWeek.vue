@@ -6,11 +6,13 @@
         <report-cover
           :suggestText="suggestText"
           titleName="凌图智慧周报"
-          :pageTotal="`${13 + allHeatMap.length + allFloorStore.length - 1}`"
+          :pageTotal="`${getTotalPage()}`"
         ></report-cover>
         <!-- 总览 -->
         <report-one
           title="客流总览"
+          :page="`${getPage(1)}`"
+          v-if="enabledModules.includes(1)"
           :enterData="enterData"
           :listTitle="oneListData"
         ></report-one>
@@ -19,13 +21,15 @@
           :chartHeight="600"
           :clickData="clickData"
           title="客流趋势"
-          page="2"
+          v-if="enabledModules.includes(2)"
+          :page="`${getPage(2)}`"
           :listTitle="trendTitle"
           :dataList="trendChartData"
         ></report-chart>
         <report-ratio-table
           title="客流趋势"
-          page="3"
+          v-if="enabledModules.includes(2)"
+          :page="`${getPage(2)+1}`"
           :listTitle="trendTitle"
           :tableColumn="ratioTableColumn"
           :tableData="ratioTableData"
@@ -35,7 +39,8 @@
           :chartHeight="600"
           :clickData="clickData"
           title="出入口客流"
-          page="4"
+          v-if="enabledModules.includes(3)"
+          :page="`${getPage(3)}`"
           :listTitle="gateTitle"
           :dataList="gateChartData"
         ></report-chart>
@@ -43,12 +48,16 @@
         <report-week-five
           title="出入口客流"
           :listTitle="gateTableTitle"
+          v-if="enabledModules.includes(3)"
+          :page="`${getPage(3)+1}`"
           :tableColumn="tableColumn"
           :tableData="tableData"
         ></report-week-five>
         <report-gate-table
           title="出入口客流"
-          page="6"
+          v-if="enabledModules.includes(3)"
+          :page="`${getPage(3)+2}`"
+          :showLastYearData="showLastYearData"
           :listTitle="gateTitle"
           :tableColumn="gateTableColumn"
           :tableData="gateTableData"
@@ -58,7 +67,8 @@
           :chartHeight="600"
           :clickData="clickData"
           title="店铺客流"
-          page="7"
+          v-if="enabledModules.includes(4)"
+          :page="`${getPage(4)}`"
           :listTitle="shopTitle"
           :dataList="shopChartData"
         ></report-chart>
@@ -67,14 +77,16 @@
           title="店铺客流"
           v-for="(item, index) in allFloorStore"
           :key="index"
-          :page="`${8 + index}`"
+          v-if="enabledModules.includes(5)"
+          :page="`${getPage(5) + index}`"
           :listTitle="floorStoreTitle"
           :dataList="item.data"
         ></report-chart-multi>
         <!-- 业态下的商铺 -->
         <report-chart-multi
           title="店铺客流"
-          :page="`${9 + allFloorStore.length - 1}`"
+          v-if="enabledModules.includes(6)"
+          :page="`${getPage(6)}`"
           :listTitle="formatStoreTitle"
           :dataList="allFormatStore"
         ></report-chart-multi>
@@ -83,7 +95,8 @@
           :key="'heatMap' + index"
           v-for="(item, index) in allHeatMap"
           title="热力图"
-          :page="`${10 + index + allFloorStore.length - 1}`"
+          v-if="enabledModules.includes(7)"
+          :page="`${getPage(7) + index }`"
           :listTitle="item.title"
           :dataList="item.data"
           :isRemark="false"
@@ -94,14 +107,16 @@
           title="店铺关联"
           :listTitle="orderlyTitle"
           :tableData="orderlyData"
-          :page="`${10 + allHeatMap.length + allFloorStore.length - 1}`"
+          v-if="enabledModules.includes(8)"
+          :page="`${getPage(8)}`"
         ></report-table>
         <!-- 店铺关联 无序-->
         <report-table
           title="店铺关联"
           :listTitle="disorderTitle"
           :tableData="disorderData"
-          :page="`${11 + allHeatMap.length + allFloorStore.length - 1}`"
+          v-if="enabledModules.includes(9)"
+          :page="`${getPage(9)}`"
         ></report-table>
         <!-- 停留时间 业态-->
         <report-chart
@@ -109,7 +124,8 @@
           :clickData="clickData"
           title="停留时间"
           :isRemark="false"
-          :page="`${12 + allHeatMap.length + allFloorStore.length - 1}`"
+          v-if="enabledModules.includes(10)"
+          :page="`${getPage(10)}`"
           :listTitle="dwellTitle"
           :dataList="dwellChartData"
           chartType="dwell"
@@ -118,7 +134,8 @@
         <report-chart-multi
           chartType="dwell"
           title="停留时间"
-          :page="`${13 + allHeatMap.length + allFloorStore.length - 1}`"
+          v-if="enabledModules.includes(10)"
+          :page="`${getPage(10)+1}`"
           :listTitle="formatDwellStoreTitle"
           :dataList="allDwellFormatStore"
         ></report-chart-multi>
@@ -193,11 +210,6 @@ export default {
       shopChartData: {
         option: {},
         remarkData: [],
-      },
-      ratioTableColumn: {
-        name1: ["时间", "入客流"],
-        name2: ["同比分析", "环比分析"],
-        name3: ["时间", "入客流", "增长率", "时间", "入客流", "增长率"],
       },
       ratioTableData: [],
       tableColumn: ["出入口名称", "客流量", "客流峰值", "平均客流量/小时"],
@@ -424,12 +436,79 @@ export default {
           .format("-MM-DD");
       return lastYearStart + "," + lastYearEnd;
     },
+    ratioTableColumn(){
+      if(this.showLastYearData){
+        return  {
+          name1: ["时间", "入客流"],
+          name2: ["同比分析", "环比分析"],
+          name3: ["时间", "入客流", "增长率", "时间", "入客流", "增长率"],
+        }
+      }else {
+        return  {
+          name1: ["时间", "入客流"],
+          name2: [ "环比分析"],
+          name3: [ "时间", "入客流", "增长率"],
+        }
+      }
+    },
+    pageConfig(){
+      return [
+        {
+          id:1,
+          count:1,
+          name:'客流总览',
+        },{
+          id:2,
+          count:2,
+          name:'客流趋势',
+        },{
+          id:3,
+          count:3,
+          name:'出入口客流',
+        },{
+          id:4,
+          count:1,
+          name:'店铺客流',
+        },{
+          id:5,
+          count:this.allFloorStore.length,
+          name:'店铺客流-楼层',
+        },{
+          id:6,
+          count:1,
+          name:'店铺客流-业态',
+        },{
+          id:7,
+          count:this.allHeatMap.length,
+          name:'热力图',
+        },{
+          id:8,
+          count:1,
+          name:'店铺客流-无序',
+        },{
+          id:9,
+          count:1,
+          name:'店铺客流-有序',
+        },{
+          id:10,
+          count:2,
+          name:'停留时间',
+        }
+      ]
+    }
   },
   mounted() {
     let token = this.$route.query.token;
     this.pdfBaseUrl = this.$route.query.pdfUrl;
     setToken(token, 1);
     this.parameterData();
+    //enabledModules：启用的模块
+    let enabledModules = this.$route.query.enabledModules && this.$route.query.enabledModules.split(',')||[];
+    if(enabledModules && enabledModules.length){
+      this.enabledModules = enabledModules.map(o=>{return Number(o)})
+    }
+    //是否显示同比
+    this.showLastYearData = this.$route.query.showYear
   },
   methods: {
     headerDate() {
@@ -586,39 +665,39 @@ export default {
         // 建议
         this.suggestText = res[0].data.data[0].property_suggest;
         // 客流总览
-        this.reportOneData(res[1].data.data);
+        this.enabledModules.includes(1)&&this.reportOneData(res[1].data.data);
         // 趋势数据
-        this.trendDataList(
+        this.enabledModules.includes(2)&&this.trendDataList(
           res[2].data.data,
           res[3].data.data,
           res[4].data.data
         );
         // 出入口数据
-        this.gateDataList(res[5].data.data);
+        this.enabledModules.includes(3)&&this.gateDataList(res[5].data.data);
         // 商铺数据
-        this.shopDataList(res[6].data.data);
+        this.enabledModules.includes(4)&&this.shopDataList(res[6].data.data);
         // 楼层下的商铺
-        this.floorDataList(res[7].data.data);
+        this.enabledModules.includes(5)&&this.floorDataList(res[7].data.data);
         // 业态下的商铺
-        this.formatDataList(res[8].data.data);
+        this.enabledModules.includes(6)&&this.formatDataList(res[8].data.data);
         // 热力图
-        this.heatMapData(res[9].data.data, "本周");
+        this.enabledModules.includes(7)&&this.heatMapData(res[9].data.data, "本周");
         // 关联度 有序
-        this.relevanceTableData(
+        this.enabledModules.includes(8)&&this.relevanceTableData(
           res[10].data.data.matrixList,
           res[11].data.data.matrixList,
           "orderlyData"
         );
         // 关联度 无序
-        this.relevanceTableData(
+        this.enabledModules.includes(9)&&this.relevanceTableData(
           res[12].data.data,
           res[13].data.data,
           "disorderData"
         );
         // 停留时间 业态
-        this.dwellFormatData(res[14].data.data);
+        this.enabledModules.includes(10)&&this.dwellFormatData(res[14].data.data);
         // 停留时间 业态 商铺
-        this.dwellFormatStoreData(res[15].data.data);
+        this.enabledModules.includes(10)&&this.dwellFormatStoreData(res[15].data.data);
         this.gateTableDataList(res[16]);
         this.handleDownload();
       });
@@ -775,13 +854,19 @@ export default {
           maxHighest.enter = list.enter.toLocaleString();
           maxHighest.ratio = lastWeekNumber;
         }
+        let onYearData = [];
+        if(this.showLastYearData){
+          onYearData = [
+            moment(yearEnter[index].begin).format("YYYY-MM-DD"),
+            yearEnter[index].enter.toLocaleString() + "人次",
+            yearNumber + "%",
+          ]
+        }
         this.ratioTableData.push({
           data: [
             moment(list.begin).format("YYYY-MM-DD") + " " + weekType,
             list.enter.toLocaleString() + "人次",
-            moment(yearEnter[index].begin).format("YYYY-MM-DD"),
-            yearEnter[index].enter.toLocaleString() + "人次",
-            yearNumber + "%",
+            ...onYearData,
             moment(lastEnter[index].begin).format("YYYY-MM-DD"),
             lastEnter[index].enter.toLocaleString() + "人次",
             lastWeekNumber + "%",
@@ -798,13 +883,19 @@ export default {
         return o.enter;
       });
       this.trendChartData.option.series = [oneObj, twoObj];
+      let onYearTotal = []
+      if(this.showLastYearData){
+        onYearTotal = [
+          "-",
+          yeT.toLocaleString() + "人次",
+          this.sequential(cuT, yeT) + "%",
+        ]
+      }
       this.ratioTableData.push({
         data: [
           "合计",
           cuT.toLocaleString() + "人次",
-          "-",
-          yeT.toLocaleString() + "人次",
-          this.sequential(cuT, yeT) + "%",
+          ...onYearTotal,
           "-",
           laT.toLocaleString() + "人次",
           this.sequential(cuT, laT) + "%",
@@ -842,7 +933,7 @@ export default {
     gateDataList(gateData) {
       this.gateChartData.option = _.cloneDeep(this.enterOption);
       this.tableData = [];
-      let [currentObj, yesterObj] = [
+      let [currentObj, yesterObj,lastObj] = [
         {
           name: "本周客流",
           color: "#2081D4",
@@ -854,6 +945,11 @@ export default {
           type: "column",
           color: "#2BD9CF",
           data: [],
+        },{
+          name: "同期客流",
+          type: "column",
+          color: "#874bd9",
+          data: [],
         },
       ];
       if (gateData.data) {
@@ -864,6 +960,9 @@ export default {
             (o) => o.bzid === list.bzid
           ).enter;
           yesterObj.data.push(yesterEnter);
+          let lastEnter = _.find(gateData.period, (o) => o.bzid === list.bzid)
+            .enter;
+          lastObj.data.push(lastEnter);
           this.gateChartData.option.xAxis.categories.push(list.name);
           this.tableData.push({
             name: list.name,
@@ -875,6 +974,9 @@ export default {
         });
       }
       this.gateChartData.option.series = [currentObj, yesterObj];
+      if(this.showLastYearData){
+        this.gateChartData.option.series.push(lastObj)
+      }
       this.gateChartData.remarkData = gateData.comment ? gateData.comment : [];
     },
     shopDataList(shopData) {

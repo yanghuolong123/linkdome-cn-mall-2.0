@@ -4,6 +4,7 @@ import { getToken } from "@/libs/util";
 import axios from "axios";
 import NP from "number-precision";
 import { mapState } from "vuex";
+import {getReportSetting} from "@/api/report";
 export default {
   data() {
     let that = this;
@@ -175,6 +176,8 @@ export default {
           ],
         },
       },
+      showLastYearData:true,//是否显示同比数据
+      enabledModules:[]//需要显示的模块
     };
   },
   computed: {
@@ -264,6 +267,21 @@ export default {
     }
   },
   methods: {
+    getReportSetting(){
+      return new Promise((resolve,reject)=>{
+        getReportSetting({property_id:this.propertyId}).then(res=>{
+          res = res.data.data;
+          this.showLastYearData = res.show_last_year === 1;
+          this.enabledModules = res.items && res.items.split(',').map(o=>{return Number(o)})
+          if(this.enabledModules.length){
+            this.enabledModules.sort((a,b)=>{
+              return a<b
+            })
+          }
+          resolve()
+        })
+      })
+    },
     reportOneData(data, data2) {
       this.enterData = [];
       let currentData = data.current[0];
@@ -357,9 +375,14 @@ export default {
     suggestSubmit(text) {
       this.suggestText = text;
     },
-    downloadReport(type, time) {
+    async downloadReport(type, time) {
       if (time === "") {
         this.$alert({ content: "请选择时间" });
+        return false;
+      }
+      await this.getReportSetting()
+      if(!this.enabledModules.length){
+        this.$alert({ content: "未配置相关模块！" });
         return false;
       }
       let pdfUrl = window.location.href.split("/#/")[0];
@@ -394,7 +417,7 @@ export default {
       }
       let url = `${pdfUrl}/#/${download}?propertyId=${
         this.propertyId
-      }&date=${time}&token=${token}&pdfUrl=${this.pdfBaseUrl}`;
+      }&date=${time}&token=${token}&pdfUrl=${this.pdfBaseUrl}&enabledModules=${this.enabledModules.toString()}&showYear=${this.showLastYearData}`;
       this.$vs.loading();
       const datelist = time.split(",");
       const filename = datelist[0] === datelist[1] ? datelist[0] : time;
@@ -688,5 +711,25 @@ export default {
           break;
       }
     },
+    getPage(id){
+      let page = 1;
+      const existModule = this.enabledModules.filter(o=>{
+        return Number(o) < id
+      })
+      existModule.forEach(o=>{
+        const node = this.pageConfig.find(co=>{
+          return co.id===o
+        })
+        if(node){
+          page+=node.count
+        }
+
+      })
+      return page
+    },
+    //获取总页数
+    getTotalPage(){
+      return (this.getPage(_.last(this.enabledModules)+1))-1
+    }
   },
 };

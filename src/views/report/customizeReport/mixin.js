@@ -34,11 +34,6 @@ export default{
         option: {},
         remarkData: []
       },
-      ratioTableColumn: {
-        name1: ['时间', '入客流'],
-        name2: ['同比分析', '环比分析'],
-        name3: ['时间', '入客流', '增长率', '时间', '入客流', '增长率']
-      },
       ratioTableData: [],
       tableColumn: ['出入口名称', '客流量', '客流峰值', '平均客流量/天'],
       tableData: [],
@@ -73,6 +68,21 @@ export default{
     }
   },
   computed:{
+    ratioTableColumn(){
+      if(this.showLastYearData){
+        return  {
+          name1: ["时间", "入客流"],
+          name2: ["同比分析", "环比分析"],
+          name3: ["时间", "入客流", "增长率", "时间", "入客流", "增长率"],
+        }
+      }else {
+        return  {
+          name1: ["时间", "入客流"],
+          name2: [ "环比分析"],
+          name3: [ "时间", "入客流", "增长率"],
+        }
+      }
+    },
     floorBzids () {
       return this.floorList.map(o => {
         return o.bzid
@@ -265,13 +275,19 @@ export default{
           maxHighest.enter = list.enter.toLocaleString()
           maxHighest.ratio = lastWeekNumber
         }
+        let onYearData = []
+        if(this.showLastYearData){
+          onYearData = [
+            moment(yearEnter[index].begin).format('YYYY-MM-DD'),
+            yearEnter[index].enter.toLocaleString() + '人次',
+            yearNumber + '%',
+          ]
+        }
         this.ratioTableData.push({
           data: [
             moment(list.begin).format('YYYY-MM-DD'),
             list.enter.toLocaleString() + '人次',
-            moment(yearEnter[index].begin).format('YYYY-MM-DD'),
-            yearEnter[index].enter.toLocaleString() + '人次',
-            yearNumber + '%',
+            ...onYearData,
             moment(lastEnter[index].begin).format('YYYY-MM-DD'),
             lastEnter[index].enter.toLocaleString() + '人次',
             lastWeekNumber + '%'
@@ -282,13 +298,19 @@ export default{
       let laT = _.sumBy(lastEnter, 'enter')
       let yeT = _.sumBy(yearEnter, 'enter')
       this.trendChartData.option.series = [oneObj, twoObj]
+      let onYearTotal = []
+      if(this.showLastYearData){
+        onYearTotal = [
+          '-',
+          yeT.toLocaleString() + '人次',
+          this.sequential(cuT, yeT) + '%',
+        ]
+      }
       this.ratioTableData.push({
         data: [
           '合计',
           cuT.toLocaleString() + '人次',
-          '-',
-          yeT.toLocaleString() + '人次',
-          this.sequential(cuT, yeT) + '%',
+          ...onYearTotal,
           '-',
           laT.toLocaleString() + '人次',
           this.sequential(cuT, laT) + '%'
@@ -345,7 +367,10 @@ export default{
           })
         })
       }
-      this.gateChartData.option.series = [currentObj, yesterObj, lastObj]
+      this.gateChartData.option.series = [currentObj, yesterObj]
+      if(this.showLastYearData){
+        this.gateChartData.option.series.push(lastObj)
+      }
       this.gateChartData.remarkData = gateData.comment ? gateData.comment : []
     },
     shopDataList (shopData) {

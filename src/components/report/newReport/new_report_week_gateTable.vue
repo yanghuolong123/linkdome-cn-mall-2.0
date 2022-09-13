@@ -26,7 +26,7 @@
                     </header>
                   </li>
                   <li class="list" :key="index" v-for="(item,index) in tableData" style="border-bottom:2px solid #D2D2D2;">
-                    <div class="name">
+                    <div class="name" :style="{height:showLastYearData?'90px':'60px'}" >
                       {{item.name}}
                     </div>
                     <div style="width:960px;border-bottom:2px solid #D2D2D2;">
@@ -43,7 +43,7 @@
                         {{period}}
                       </p>
                     </div>
-                    <div style="width:960px;">
+                    <div style="width:960px;" v-if="showLastYearData">
                       <p style=" width: 50px;border-right:2px solid #D2D2D2;  line-height: 29px;">同比</p>
                       <p style=" width:130px;border-right:2px solid #D2D2D2;  line-height: 29px;"
                       :key="cIndex" v-for="(ratio,cIndex) in item.ratio" >
@@ -83,6 +83,9 @@ export default {
     listTitle:{
       type:Object
     },
+    showLastYearData:{
+      type:Boolean,
+    }
   },
   components: {
     reportHeader,
@@ -171,7 +174,6 @@ export default {
                 .name{
                   overflow: hidden;
                   width: 70Px;
-                  height: 90Px;
                   border-right:2Px solid #D2D2D2;
                   display: flex;
                   justify-content: center;
@@ -180,6 +182,9 @@ export default {
                 div {
                   float: left;
                   text-align: center;
+                  &:last-child{
+                    border-bottom: 0!important;
+                  }
                   p{
                     float: left;
                     text-align: center;
