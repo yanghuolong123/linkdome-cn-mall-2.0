@@ -140,7 +140,6 @@
           :key="'heatMap' + index"
           v-for="(item, index) in allHeatMap"
           title="热力图"
-          v-if="enabledModules.includes(7)"
           :page="`${getPage(7) + index }`"
           :listTitle="item.title"
           :dataList="item.data"
@@ -691,9 +690,9 @@ export default {
           "disorderData"
         );
         // 停留时间 业态
-        this.enabledModules.includes(10)&&this.dwellFormatData(res[15].data.data);
+        this.dwellFormatData(res[15].data.data);
         // 停留时间 业态 商铺
-        this.enabledModules.includes(10)&&this.dwellFormatStoreData(res[16].data.data);
+        this.dwellFormatStoreData(res[16].data.data);
         this.gateFlowTop10(res[17].data.data);
       });
     },
@@ -721,7 +720,7 @@ export default {
         let totalCurr = 0;
         let totalLast = 0;
         if (o.curent_start_time) {
-          o.list.forEach((gate, gateIdx) => {
+          o.list&&o.list.forEach((gate, gateIdx) => {
             let fidx = this.gateTableData.findIndex(
               (ele) => ele.bzid == gate.bzid
             );

@@ -21,7 +21,7 @@
                      >
                          <p>{{name2.name}}</p>
                          <p>{{name2.time1}}</p>
-                         <p>{{name2.time2}}</p>
+                         <p  v-if="showLastYearData">{{name2.time2}}</p>
                       </div>
                     </header>
                   </li>
@@ -30,13 +30,14 @@
                       {{item.name}}
                     </div>
                     <div style="width:960px;border-bottom:2px solid #D2D2D2;">
-                      <p style=" width: 50px;border-right:2px solid #D2D2D2;  line-height: 29px;">本期</p>
-                      <p style=" width:130px;border-right:2px solid #D2D2D2;  line-height: 29px;"
+                      <p style=" width: 50px;border-right:2px solid #D2D2D2; " :style="{lineHeight:showLastYearData?'29px':'60px'}">本期</p>
+                      <p style=" width:130px;border-right:2px solid #D2D2D2; "
+                         :style="{lineHeight:showLastYearData?'29px':'60px'}"
                        :key="cIndex" v-for="(current,cIndex) in item.current">
                         {{current}}
                       </p>
                     </div>
-                    <div style="width:960px;border-bottom:2px solid #D2D2D2;">
+                    <div style="width:960px;border-bottom:2px solid #D2D2D2;" v-if="showLastYearData">
                       <p style=" width: 50px;border-right:2px solid #D2D2D2;  line-height: 29px;">同期</p>
                       <p style=" width:130px;border-right:2px solid #D2D2D2;  line-height: 29px;"
                       :key="cIndex" v-for="(period,cIndex) in item.period" >

@@ -70,12 +70,14 @@ export default {
   },
   watch:{
     clickData(){
-      this.initFlowDstrbtCharts(this.dataList.data,this.dataList.maxAvg,this.dataList.workingtime)
+        console.log(1)
+        this.initFlowDstrbtCharts(this.dataList.data,this.dataList.maxAvg,this.dataList.workingtime)
     }
   },
   mounted () {
     Bus.$on('chartData', () => {
-      this.initFlowDstrbtCharts(this.dataList.data,this.dataList.maxAvg,this.dataList.workingtime)
+        console.log(2)
+        this.initFlowDstrbtCharts(this.dataList.data,this.dataList.maxAvg,this.dataList.workingtime)
     })
   },
   methods: {
@@ -90,7 +92,8 @@ export default {
           option.visualMap.max = maxAvg
           option.series[0].data = data
           option.xAxis.data = workingtime
-          flowDistributionCharts.setOption(option)
+           console.log(option)
+           flowDistributionCharts.setOption(option)
           flowDistributionCharts.resize()
        }
        

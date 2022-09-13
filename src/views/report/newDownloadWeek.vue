@@ -508,7 +508,7 @@ export default {
       this.enabledModules = enabledModules.map(o=>{return Number(o)})
     }
     //是否显示同比
-    this.showLastYearData = this.$route.query.showYear
+    this.showLastYearData = this.$route.query.showYear==='true'
   },
   methods: {
     headerDate() {
@@ -695,9 +695,9 @@ export default {
           "disorderData"
         );
         // 停留时间 业态
-        this.enabledModules.includes(10)&&this.dwellFormatData(res[14].data.data);
+        this.dwellFormatData(res[14].data.data);
         // 停留时间 业态 商铺
-        this.enabledModules.includes(10)&&this.dwellFormatStoreData(res[15].data.data);
+        this.dwellFormatStoreData(res[15].data.data);
         this.gateTableDataList(res[16]);
         this.handleDownload();
       });

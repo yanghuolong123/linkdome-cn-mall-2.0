@@ -579,9 +579,9 @@ export default {
           "disorderData"
         );
         // 停留时间 业态
-        this.enabledModules.includes(10)&&this.dwellFormatData(res[13].data.data);
+        this.dwellFormatData(res[13].data.data);
         // 停留时间 业态 商铺
-        this.enabledModules.includes(10)&&this.dwellFormatStoreData(res[14].data.data);
+        this.dwellFormatStoreData(res[14].data.data);
       });
     },
     headerDate(value) {
@@ -791,9 +791,11 @@ export default {
       this.gateChartData.option.series = [
         currentObj,
         yesterObj,
-        lastObj,
         lastWeekObj,
       ];
+      if(this.showLastYearData){
+        this.gateChartData.option.serie.splice(-1,0,lastObj)
+      }
       this.gateChartData.remarkData = gateData.comment;
     },
     shopDataList(shopData) {

@@ -131,7 +131,6 @@
           :key="'heatMap' + index"
           v-for="(item, index) in allHeatMap"
           title="热力图"
-          v-if="enabledModules.includes(7)"
           :page="`${getPage(7) + index }`"
           :listTitle="item.title"
           :dataList="item.data"
@@ -666,9 +665,9 @@ export default {
           "disorderData"
         );
         // 停留时间 业态
-        this.enabledModules.includes(10)&&this.dwellFormatData(res[14].data.data);
+        this.dwellFormatData(res[14].data.data);
         // 停留时间 业态 商铺
-        this.enabledModules.includes(10)&&this.dwellFormatStoreData(res[15].data.data);
+        this.dwellFormatStoreData(res[15].data.data);
 
         this.gateTableDataList(res[16]);
       });

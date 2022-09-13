@@ -177,8 +177,9 @@
       if(enabledModules && enabledModules.length){
         this.enabledModules = enabledModules.map(o=>{return Number(o)})
       }
+      console.log(this.enabledModules)
       //是否显示同比
-      this.showLastYearData = this.$route.query.showYear
+      this.showLastYearData = this.$route.query.showYear==='true'
     },
     methods: {
       parameterData () { // 查找对应的 购物中心 id

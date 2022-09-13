@@ -535,6 +535,7 @@ export default {
     },
     // 热力图
     heatMapData(data, type) {
+      console.log(data)
       this.allHeatMap = [];
       data.map((list) => {
         let obj = {
@@ -719,18 +720,21 @@ export default {
     },
     getPage(id){
       let page = 1;
-      const existModule = this.enabledModules.filter(o=>{
-        return Number(o) < id
-      })
-      existModule.forEach(o=>{
-        const node = this.pageConfig.find(co=>{
-          return co.id===o
+      if(this.enabledModules && this.enabledModules.length){
+        const existModule = this.enabledModules.filter(o=>{
+          return Number(o) < id
         })
-        if(node){
-          page+=node.count
-        }
+        existModule.forEach(o=>{
+          const node = this.pageConfig.find(co=>{
+            return co.id===o
+          })
+          if(node){
+            page+=node.count
+          }
 
-      })
+        })
+      }
+
       return page
     },
     //获取总页数
