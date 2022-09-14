@@ -181,7 +181,6 @@
       if(enabledModules && enabledModules.length){
         this.enabledModules = enabledModules.map(o=>{return Number(o)})
       }
-      console.log(this.enabledModules)
       //是否显示同比
       this.showLastYearData = this.$route.query.showYear==='true'
     },
@@ -291,17 +290,17 @@
           // 建议
           this.suggestText = res[0].data.data[0].property_suggest
           // 客流总览
-          this.reportOneData(res[1].data.data)
+          this.enabledModules.includes(1)&&this.reportOneData(res[1].data.data)
           // 趋势数据
-          this.trendDataList(res[2].data.data, res[3].data.data, res[4].data.data)
+          this.enabledModules.includes(2)&&this.trendDataList(res[2].data.data, res[3].data.data, res[4].data.data)
           // 出入口数据
-          this.gateDataList(res[5].data.data)
+          this.enabledModules.includes(3)&&this.gateDataList(res[5].data.data)
           // 商铺数据
-          this.shopDataList(res[6].data.data)
+          this.enabledModules.includes(4)&&this.shopDataList(res[6].data.data)
           // 楼层下的商铺
-          this.floorDataList(res[7].data.data)
+          this.enabledModules.includes(5)&&this.floorDataList(res[7].data.data)
           // 业态下的商铺
-          this.formatDataList(res[8].data.data)
+          this.enabledModules.includes(6)&&this.formatDataList(res[8].data.data)
           // 热力图
           // this.floorList.forEach((o, i) => {
           //   const data = res[9 + i].data.data

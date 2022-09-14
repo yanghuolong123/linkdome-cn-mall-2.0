@@ -331,9 +331,9 @@
           // // 关联度 无序
           // this.relevanceTableData(res[11 + this.allHeatMap.length].data.data, res[12 + this.allHeatMap.length].data.data, 'disorderData')
           // 停留时间 业态
-          this.enabledModules.includes(10)&&this.dwellFormatData(res[9].data.data)
+          this.dwellFormatData(res[9].data.data)
           // 停留时间 业态 商铺
-          this.enabledModules.includes(10)&&this.dwellFormatStoreData(res[10].data.data)
+          this.dwellFormatStoreData(res[10].data.data)
         })
       }
 

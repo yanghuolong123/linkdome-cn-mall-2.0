@@ -798,7 +798,7 @@ export default {
         lastWeekObj,
       ];
       if(this.showLastYearData){
-        this.gateChartData.option.serie.splice(-1,0,lastObj)
+        this.gateChartData.option.series.splice(-1,0,lastObj)
       }
       this.gateChartData.remarkData = gateData.comment;
     },
