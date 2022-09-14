@@ -42,6 +42,10 @@
 					<vs-td v-if="data[indextr].imgConfig && userLvl=='admin'">
 						<Button type="primary" @click="imgConfig">{{$t('图片配置')}}</Button>
 					</vs-td>
+					<!--热力图配置-->
+					<vs-td v-if="data[indextr].heatmapConfig && userLvl=='admin'">
+						<Button type="primary" @click="heatmapConfig">{{$t('热力图配置')}}</Button>
+					</vs-td>
 					<!-- 等级 -->
 					<vs-td :data="data[indextr].rank" v-if="data[indextr].rank">
 						{{$t(data[indextr].rank)}}
@@ -163,6 +167,14 @@
         if(this.disabled)return;
         this.disabled = true;
         this.$emit('imgConfig');
+        setTimeout(()=>{
+          this.disabled = false;
+		},1000)
+	  },
+      heatmapConfig(){
+        if(this.disabled)return;
+        this.disabled = true;
+        this.$emit('heatmapConfig');
         setTimeout(()=>{
           this.disabled = false;
 		},1000)

@@ -107,6 +107,19 @@ export default [
           ],
           pageTitle: '热力图分析'
         }
+      },      { // 热力图分析
+        path: 'heatNew',
+        name: 'HeatNew',
+        component: () =>
+          import ('@/views/footfall-analytics/heatMapNew.vue'),
+        meta: {
+          breadcrumb: [
+            { title: '客流分析', url: '/' },
+            { title: '客流分析', url: '/footfall' },
+            { title: '热力图分析-新', active: true },
+          ],
+          pageTitle: '热力图分析-新'
+        }
       },
       { // 有效客流分析
         path: 'effective',

@@ -9,6 +9,7 @@
             :titleName='floorTitle'
             :userLvl="userLvl"
             @imgConfig="imgConfig"
+            @heatmapConfig="heatmapConfig"
             @tableData='editFloor'
             @removeData='delFloor'
         >
@@ -135,7 +136,7 @@ export default {
   computed: {
       tableName(){
           if(this.userLvl === 'admin'){
-              return ['名称', '描述','图片配置', '操作']
+              return ['名称', '描述','图片配置','热力图配置', '操作']
           }else {
               return ['名称', '描述', '操作']
           }
@@ -193,6 +194,7 @@ export default {
         obj.describe = this.floorInfo[1].description ? this.floorInfo[1].description : ' '
         obj.operation = true
         obj.imgConfig = this.userLvl === 'admin'
+        obj.heatmapConfig = this.userLvl === 'admin'
         arr.push(obj)
       }
       return arr
@@ -218,6 +220,9 @@ export default {
       imgConfig(){
           this.$emit('imgConfig')
       },
+    heatmapConfig(){
+      this.$emit('heatmapConfig')
+    },
     /* 格式化选择器数据
     *@method addValuesToEle2
     *@param {obj} pArray 需要格式化的数据对象

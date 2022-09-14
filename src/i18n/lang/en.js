@@ -169,6 +169,7 @@ module.exports =  {
   排行占比分析: "Ranking",
   进店率分析: "GoShop",
   热力图分析: "HeatMap",
+  热力图分析新: "HeatMapNew",
   有效客流分析: "Effective",
   无效客流分析: "InvalidFlow",
   排队货架分析: "Queue",

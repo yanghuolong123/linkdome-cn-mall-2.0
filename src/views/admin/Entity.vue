@@ -48,6 +48,7 @@
             v-if="addType === 2"
             :userLvl="userLvl"
             @imgConfig="imgConfig"
+            @heatmapConfig="heatmapConfig"
             @editFloor="editFloor"
             @delFloor="delFloor"
             @changeDoorway="changeDoorway"
@@ -93,7 +94,9 @@
       @updateStoreData="updateStoreData"
       v-cloak
     ></add-Entity>
-
+    <heatmap-config-modal ref="heatmapModal"
+                          :imgSrc="floorInfo[1] && floorInfo[1].map_url"
+                          :visible="heatmapVisibile"></heatmap-config-modal>
     <imgconfig-modal
       ref="imgcofig"
       :title="$t('图片配置')"
@@ -279,6 +282,7 @@ import marketList from "_c/entity/marketList.vue";
 import staffList from "_c/entity/staffList.vue";
 import addEntity from "_c/entity/addEntity.vue";
 import emptyPage from "_c/entity/components/emptyPage.vue";
+import heatmapConfigModal from "_c/entity/components/heatmapConfigModal.vue";
 import formats from "_c/entity/formats.vue";
 import imgconfigModal from "_c/common/Modal.vue";
 import alert from "@/components/alert.vue";
@@ -309,6 +313,7 @@ export default {
   components: {
     uploadImg,
     imgconfigModal,
+    heatmapConfigModal,
     groupList,
     areaList,
     marketList,
@@ -326,6 +331,7 @@ export default {
       gateTypeList: [],
       noBuy: require("@/assets/images/pages/noBuy.png"),
       isEmptyPage: false,
+      heatmapVisibile:false,
       alertText: {
         title: "",
         text: "",
@@ -734,6 +740,10 @@ export default {
       }
       this.configData.position_x = (symbol.left / img.offsetWidth).toFixed(4);
       this.configData.position_y = (symbol.top / img.offsetHeight).toFixed(4);
+    },
+    heatmapConfig(){
+      this.$refs.heatmapModal.showModal()
+      console.log('heat')
     },
     //图片配置
     async imgConfig(way, property) {
