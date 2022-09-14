@@ -493,3 +493,9 @@ export const configPoint =  (data) => {
     data
   })
 }
+export const heatmapShow =  (params) => {
+  return  axios.request({
+    url: '/heatmap/show',
+    params
+  })
+}
