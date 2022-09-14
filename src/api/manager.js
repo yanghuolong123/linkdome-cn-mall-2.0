@@ -485,3 +485,11 @@ export const getGateTypeList =  (params) => {
     params
   })
 }
+//热力图虚拟点位配置
+export const configPoint =  (data) => {
+  return  axios.request({
+    url: '/heatmap/configPoint',
+    method:'post',
+    data
+  })
+}

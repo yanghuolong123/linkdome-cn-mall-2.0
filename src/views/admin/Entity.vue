@@ -95,6 +95,7 @@
       v-cloak
     ></add-Entity>
     <heatmap-config-modal ref="heatmapModal"
+                          :floorId="floorInfo[1] && floorInfo[1].id"
                           :imgSrc="floorInfo[1] && floorInfo[1].map_url"
                           :visible="heatmapVisibile"></heatmap-config-modal>
     <imgconfig-modal
