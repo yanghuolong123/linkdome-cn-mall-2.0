@@ -66,7 +66,7 @@
           :dataList="trendChartData"
         ></report-chart>
         <report-ratio-table
-          title="客流分析"
+          title="客流趋势"
           v-if="enabledModules.includes(2)"
           :page="`${getPage(2)+1}`"
           :listTitle="analyseTitle"
@@ -178,8 +178,8 @@
         <report-chart-multi
           chartType="dwell"
           title="停留时间"
-          v-if="enabledModules.includes(10)"
-          :page="`${getPage(10)+1}`"
+          v-if="enabledModules.includes(11)"
+          :page="`${getPage(11)}`"
           :listTitle="formatDwellStoreTitle"
           :dataList="allDwellFormatStore"
         ></report-chart-multi>
@@ -529,8 +529,12 @@ export default {
           name:'店铺客流-有序',
         },{
           id:10,
-          count:2,
-          name:'停留时间',
+          count:1,
+          name:'停留时间-业态',
+        },{
+          id:11,
+          count:1,
+          name:'停留时间-店铺',
         }
       ]
     }

@@ -90,8 +90,8 @@
 				<!-- 停留时间 业态下的商铺-->
 				<report-chart-multi chartType='dwell'
 														title='停留时间'
-														v-if="enabledModules.includes(10)"
-														:page="`${getPage(10)+1}`"
+														v-if="enabledModules.includes(11)"
+														:page="`${getPage(11)}`"
 														:listTitle='formatDwellStoreTitle' :dataList='allDwellFormatStore'></report-chart-multi>
 				<report-back-cover></report-back-cover>
 			</div>
@@ -157,8 +157,12 @@
             name:'店铺客流-业态',
           },{
             id:10,
-            count:2,
-            name:'停留时间',
+            count:1,
+            name:'停留时间-业态',
+          },{
+            id:11,
+            count:1,
+            name:'停留时间-店铺',
           }
         ]
       }
