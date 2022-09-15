@@ -13,6 +13,7 @@
           title="客流总览"
 					:page="`${getPage(1)}`"
 					v-if="enabledModules.includes(1)"
+					:showLastYearData="showLastYearData"
           :enterData="enterData"
           :listTitle="oneListData"
         ></report-one>
