@@ -1,5 +1,5 @@
 <template>
-	<h-modal  ref="modal" title="热力图配置"  :width="1350">
+	<h-modal  ref="modal" title="热力图配置" :footerHide="true"  :width="1350">
 		<div class="modal-ctn flex-start">
 			<div class="left" ref="heatmap" @click="setPosition" :class="{cross:status}" :style="{backgroundImage:`url(${imgSrc?imgSrc:placeholder})`}">
 				<img v-for="po in positionList"
@@ -7,7 +7,7 @@
 						 class="po"
 						 @click="positionClick(po)"
 						 :class="{pointer:!status}"
-						 src="../../../../src/assets/images/fixation_img/rest/position.png">
+						 :src="pointsSrc(po.id)">
 			</div>
 			<div class="right m-l-20 flex-column">
 				<div class="flex-start info" v-if="currentPosition">
@@ -27,7 +27,7 @@
 </template>
 <script>
 	import hModal from "_c/common/Modal.vue";
-	import {configPoint} from '../../../api/manager'
+	import {configPoint,getConfigPoint} from '../../../api/manager'
 
   export default {
 	  name:'heatmapModal',
@@ -38,12 +38,20 @@
 	 		return{
         placeholder:require('@/assets/images/fixation_img/bg/placeholder.jpg'),
 				status:false,
-				positionSaved:[],
-				positionUnsaved:[],
+        positionList:[],
         currentPosition:null
 			}
 		},
 		computed:{
+	    pointsSrc(){
+	    	return (id)=>{
+	    	  if(this.currentPosition&&this.currentPosition.id === id ){
+						return require('@/assets/images/fixation_img/rest/position_active.png')
+          }else {
+            return require('@/assets/images/fixation_img/rest/position.png')
+					}
+				}
+			},
 	    size(){
         const imgWidth = this.$refs.heatmap.offsetWidth;
         const imgHeight = this.$refs.heatmap.offsetHeight;
@@ -52,9 +60,7 @@
 					height:imgHeight
 				}
 			},
-      positionList(){
-	      return this.positionSaved.concat(this.positionUnsaved)
-			}
+
 		},
 		props:{
       visible:{
@@ -65,19 +71,23 @@
         type:String
 			},
       floorId:{
-        type:String
+        type:Number
 			},
 		},
 		methods:{
       delClick(){
-      
+      	const index = this.positionList.findIndex(o=>{
+      	  return o.id === this.currentPosition.id
+				})
+				this.positionList.splice(index,1)
+				this.handleSave(this.positionList)
 			},
       positionClick(po){
         if(this.status) return;
         this.currentPosition = po
       },
       handleSave(){
-        const points = this.positionUnsaved.map(o=>{
+        const points = this.positionList.map(o=>{
           return {
             x:o.x,
 						y:o.y
@@ -90,6 +100,7 @@
         configPoint(data).then(res=>{
           this.status = false
 					this.$message.success('保存成功')
+					this.currentPosition = null
         })
 			},
       beginClick(){
@@ -98,6 +109,22 @@
 			},
 	    showModal(){
 	      this.$refs.modal.showModal()
+				const params = {
+          floor_id:this.floorId
+				}
+        getConfigPoint(params).then(res=>{
+          console.log(res)
+					res=	res.data.data
+					if(res && res.points){
+					  let points = JSON.parse(res.points)
+						points.forEach((o,i)=>{
+						  o.id = i
+						  o.left = Math.floor(this.size.width*o.x)
+						  o.top = Math.floor(this.size.height*o.y)
+						})
+					  this.positionList = points
+					}
+        })
 			},
       setPosition(e){
         if(!this.status) return
@@ -108,7 +135,7 @@
 					top:e.layerY,
 					left:e.layerX
 				}
-        this.positionUnsaved.push(obj)
+        this.positionList.push(obj)
       }
 		}
 	}
