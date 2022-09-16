@@ -113,7 +113,6 @@
           floor_id:this.floorId
 				}
         getConfigPoint(params).then(res=>{
-          console.log(res)
 					res=	res.data.data
 					if(res && res.points){
 					  let points = JSON.parse(res.points)

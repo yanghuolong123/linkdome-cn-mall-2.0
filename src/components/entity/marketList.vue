@@ -5,6 +5,7 @@
 				:tableList='tableList'
 				:titleName='titleName'
 				:userLvl="userLvl"
+				:actionList="floorActions"
 				@imgConfig="imgConfig"
 				@tableData='editMail'
 				@removeData='delMail'
@@ -31,21 +32,23 @@
     data () {
       return {
         titleName: '基本信息',
-        tableList: []
+        tableList: [],
+        tableName:[ '名称', '本年客流目标', '本年销售目标', '详情地址', '描述', '操作']
       }
     },
     computed: {
-      tableName () {
-        if (this.userLvl === 'admin') {
-          return [
-            '名称', '本年客流目标', '本年销售目标', '详情地址', '描述', '图片配置', '操作'
-          ]
-        } else {
-          return [
-            '名称', '本年客流目标', '本年销售目标', '详情地址', '描述', '操作'
+      floorActions(){
+        let arr = [];
+        if(this.userLvl === 'admin'){
+          arr = [
+            {
+              name:'图片配置',
+              icon:'md-image'
+            }
           ]
         }
-      }
+        return arr
+      },
     },
     methods: {
       init () {
@@ -55,7 +58,6 @@
         let obj = {}
         obj = _.find(data.property, ['property_id', shoppingInfoDate.property_id])
         obj.operation = true
-        obj.imgConfig = this.userLvl === 'admin'
         //获取当年年份
         const currentYear = new Date().getFullYear()
         //当年的客流目标
@@ -98,7 +100,6 @@
         }
         obj.address = obj.address ? obj.address : ' '
         obj.describe = obj.description ? obj.description : ' '
-        console.log(obj)
         this.tableList.push(obj)
       },
       imgConfig () {

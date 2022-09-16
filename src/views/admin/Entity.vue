@@ -94,6 +94,7 @@
       @updateStoreData="updateStoreData"
       v-cloak
     ></add-Entity>
+    <!--热力图配置-->
     <heatmap-config-modal ref="heatmapModal"
                           :floorId="floorInfo[1] && floorInfo[1].id"
                           :imgSrc="floorInfo[1] && floorInfo[1].map_url"

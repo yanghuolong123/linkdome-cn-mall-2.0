@@ -239,3 +239,10 @@ export const getInvalidFlow = params => {
     params
   })
 }
+//路径动线　20220916
+export const getTrailRoute = params => {
+  return naxios.request({
+    url: 'trail/route',
+    params
+  })
+}

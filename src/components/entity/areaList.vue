@@ -4,12 +4,14 @@
       <div class="left-floor">
         <!-- 楼层 -->
         <table-multiple-selected
-            :tableName='tableName'
+            :tableName='tableNameCommon'
             :tableList='floorTable'
             :titleName='floorTitle'
             :userLvl="userLvl"
             @imgConfig="imgConfig"
             @heatmapConfig="heatmapConfig"
+            @connectedConfig="connectedConfig"
+            :actionList="floorActions"
             @tableData='editFloor'
             @removeData='delFloor'
         >
@@ -75,20 +77,26 @@
         >
         </addArea>
     </div>
+    <!--连通图配置-->
+    <connected-config-modal ref="cnModal"
+                            :configInfo="configInfo"
+                            :storeList="storeList"
+                            :floorId="floorInfo[1] && floorInfo[1].id"></connected-config-modal>
   </div>
 </template>
 
 <script>
 import _ from 'lodash'
-import { zones, deleteData } from '@/api/manager.js'
+import { zones, deleteData,getTrailPoint,getTrailPointConfig } from '@/api/manager.js'
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import addDoorway from '_c/entity/components/addDoorway.vue'
 import addArea from '_c/entity/components/addArea.vue'
-
+import connectedConfigModal from '_c/entity/components/connectedConfigModal.vue'
 export default {
   components: {
     TableMultipleSelected,
     addDoorway,
+    connectedConfigModal,
     addArea,
   },
   data () {
@@ -109,6 +117,8 @@ export default {
       addQueuings: false,
       zoneList: [],
       dataIndex: 0,
+      storeList:[],
+      configInfo:{},
       tem: {
         description: '',
         name: '',
@@ -134,13 +144,24 @@ export default {
     }
   },
   computed: {
-      tableName(){
-          if(this.userLvl === 'admin'){
-              return ['名称', '描述','图片配置','热力图配置', '操作']
-          }else {
-              return ['名称', '描述', '操作']
+    floorActions(){
+      let arr = [];
+      if(this.userLvl === 'admin'){
+        arr = [
+          {
+            name:'图片配置',
+            icon:'md-image'
+          },{
+            name:'热力图配置',
+            icon:'md-pin'
+          },{
+            name:'连通图配置',
+            icon:'ios-swap'
           }
-      },
+        ]
+      }
+      return arr
+    },
     inletTable: {
       get () {
         var arr = []
@@ -193,8 +214,6 @@ export default {
         obj.zone_index = this.floorInfo[1].zone_index
         obj.describe = this.floorInfo[1].description ? this.floorInfo[1].description : ' '
         obj.operation = true
-        obj.imgConfig = this.userLvl === 'admin'
-        obj.heatmapConfig = this.userLvl === 'admin'
         arr.push(obj)
       }
       return arr
@@ -222,6 +241,19 @@ export default {
       },
     heatmapConfig(){
       this.$emit('heatmapConfig')
+    },
+    /*连通图配置*/
+    connectedConfig(){
+      const params = {
+        floor_id:this.floorInfo[1].id
+      }
+      Promise.all([getTrailPoint(params),getTrailPointConfig(params)]).then(res=>{
+        this.storeList = res[0].data.data || [];
+        this.configInfo = res[1].data.data||{}
+        this.$refs.cnModal.showModal()
+      })
+
+     
     },
     /* 格式化选择器数据
     *@method addValuesToEle2

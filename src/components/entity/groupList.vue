@@ -7,7 +7,6 @@
             :tableList='tableList'
             :titleName='titleName'
             :userLvl="userLvl"
-            @imgConfig="imgConfig"
             @tableData='editStore'
             @removeData='delStore'
         >
@@ -72,7 +71,6 @@ export default {
         obj.area = element.area_size
         obj.modal5 = element.business_type_id
         obj.operation = true
-        obj.imgConfig = false
         arr.push(obj)
       } else {
         arr = []
@@ -81,9 +79,6 @@ export default {
     }
   },
   methods: {
-    imgConfig(){
-      this.$emit('imgConfig')
-    },
     editStore (value) {
       this.$emit('editStore', value.data)
     },

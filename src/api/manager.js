@@ -505,3 +505,23 @@ export const getConfigPoint =  (params) => {
     params
   })
 }
+//路径动线　点位列表
+export const getTrailPoint =  (params) => {
+  return  axios.request({
+    url: '/trail/points',
+    params
+  })
+}
+export const setTrailPoint =  (data) => {
+  return  axios.request({
+    url: '/trail/conf',
+    method:'post',
+    data
+  })
+}
+export const getTrailPointConfig =  (params) => {
+  return  axios.request({
+    url: '/trail/conf',
+    params
+  })
+}

@@ -38,14 +38,6 @@
 					<vs-td :data="data[indextr].describe" v-if="data[indextr].describe">
 						{{data[indextr].describe}}
 					</vs-td>
-					<!--图片配置-->
-					<vs-td v-if="data[indextr].imgConfig && userLvl=='admin'">
-						<Button type="primary" @click="imgConfig">{{$t('图片配置')}}</Button>
-					</vs-td>
-					<!--热力图配置-->
-					<vs-td v-if="data[indextr].heatmapConfig && userLvl=='admin'">
-						<Button type="primary" @click="heatmapConfig">{{$t('热力图配置')}}</Button>
-					</vs-td>
 					<!-- 等级 -->
 					<vs-td :data="data[indextr].rank" v-if="data[indextr].rank">
 						{{$t(data[indextr].rank)}}
@@ -94,16 +86,24 @@
 						<img :src="data[indextr].status" class="imgStatus">
 					</vs-td>
 					<!-- 操作 -->
-					<vs-td v-if="data[indextr].operation" :data="data[indextr].operation">
-          <span v-if="userLvl=='common_admin'||userLvl=='admin'" class="account-deit" :title="$t('编辑')"
-				    v-on:click.stop="tableData(data[indextr])">
-            <vs-icon icon="ivu-icon-md-create" icon-pack='ivu-icon'></vs-icon>
-          </span>
-						<span v-if="userLvl=='admin'" class="account-remove" :title="$t('删除')"
-              v-on:click.stop="removeData(data[indextr])">
-            <Icon type="ios-trash"/>
-          </span>
-						<div v-if="userLvl=='normal'"></div>
+					<vs-td v-if="data[indextr].operation" :data="data[indextr].operation" class="action-box flex-center">
+						<Icon v-if="userLvl=='common_admin'||userLvl=='admin'"
+									type="md-create" size="20" color="#C7C6C6"
+									:title="$t('编辑')"
+									@click="tableData(data[indextr])"/>
+						<Icon v-if="userLvl=='admin'"
+									class="m-l-10"
+									type="ios-trash"
+									size="20"
+									color="#C7C6C6"
+									:title="$t('删除')"
+									@click="removeData(data[indextr])"/>
+						<Icon class="m-l-10" :title="icon.name"
+									v-for="icon in actionList"
+									size="20"
+									color="#C7C6C6"
+									:type="icon.icon"
+									@click="actionClick(icon.name)"/>
 					</vs-td>
 				</vs-tr>
 			</template>
@@ -145,7 +145,11 @@
       titleTip: {// 问号提示
         type: String,
         default: ''
-      }
+      },
+      actionList:{
+        type: Array,
+				default:()=>[]
+			}
     },
     data () {
       return {
@@ -163,6 +167,27 @@
       }
     },
     methods: {
+      actionClick(name){
+      	switch (name) {
+					case '图片配置':
+					  this.imgConfig();
+					  break;
+					case '热力图配置':
+					  this.heatmapConfig();
+					  break;
+					case '连通图配置':
+					  this.connectedConfig();
+					  break
+        }
+			},
+      connectedConfig(){
+        if(this.disabled)return;
+        this.disabled = true;
+        this.$emit('connectedConfig');
+        setTimeout(()=>{
+          this.disabled = false;
+        },1000)
+			},
       imgConfig(){
         if(this.disabled)return;
         this.disabled = true;
@@ -202,24 +227,19 @@
 			z-index: 1;
 		}
 	}
-	.account-remove i {
+	.action-box{
 		font-size: 20px;
 		color: #C7C6C6;
-		margin-top: -5px;
-		
-		&:hover {
-			color: #00a0e9;
+		.m-l-10{
+			margin-left: 10px;
+		}
+		/deep/.ivu-icon{
+			&:hover {
+				color: #00a0e9!important;
+			}
 		}
 	}
+
 	
-	.account-deit i {
-		font-size: 20px;
-		color: #C7C6C6;
-		margin-right: 10px;
-		margin-top: -5px;
-		
-		&:hover {
-			color: #00a0e9;
-		}
-	}
+
 </style>

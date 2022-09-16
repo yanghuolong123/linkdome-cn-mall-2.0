@@ -177,6 +177,7 @@ module.exports =  {
   关联分析: "Relevance",
   交叉客流分析: "Cross",
   路径动向分析: "Path",
+  路径动向分析新: "TrailRoute",
   实体引流分析: "Drainage",
   停留时间分析: "Dwell Time",
   目标达成分析: "Goal",
