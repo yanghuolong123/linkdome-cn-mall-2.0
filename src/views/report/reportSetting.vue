@@ -69,12 +69,13 @@
       getSetting(){
         getReportSetting({property_id:this.propertyId}).then(res=>{
 					res = res.data.data;
-          this.setting = res;
-          const items = res.items && res.items.split(',')
-          this.settingData.forEach(o=>{
-            this.$set(o,'enable',items && items.includes(String(o.id))?1:0)
-					})
-        
+          this.setting = res||{};
+          if(res){
+            const items = res.items && res.items.split(',')
+            this.settingData.forEach(o=>{
+              this.$set(o,'enable',items && items.includes(String(o.id))?1:0)
+            })
+					}
         })
 			},
       getData(){

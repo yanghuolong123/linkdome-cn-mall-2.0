@@ -114,8 +114,8 @@
 										chartType='dwell'></report-chart>
 			<!-- 停留时间 业态下的商铺-->
 			<report-chart-multi chartType='dwell' title='停留时间'
-													v-if="enabledModules.includes(10)"
-													:page="`${getPage(10)+1}`"
+													v-if="enabledModules.includes(11)"
+													:page="`${getPage(11)}`"
 													:listTitle='formatDwellStoreTitle'
 													:dataList='allDwellFormatStore'></report-chart-multi>
 			<report-back-cover></report-back-cover>
@@ -191,8 +191,12 @@
             name:'店铺客流-业态',
           },{
             id:10,
-            count:2,
-            name:'停留时间',
+            count:1,
+            name:'停留时间-业态',
+          },{
+            id:11,
+            count:1,
+            name:'停留时间-店铺',
           }
         ]
       }
@@ -327,9 +331,9 @@
           // // 关联度 无序
           // this.relevanceTableData(res[11 + this.allHeatMap.length].data.data, res[12 + this.allHeatMap.length].data.data, 'disorderData')
           // 停留时间 业态
-          this.enabledModules.includes(10)&&this.dwellFormatData(res[9].data.data)
+          this.dwellFormatData(res[9].data.data)
           // 停留时间 业态 商铺
-          this.enabledModules.includes(10)&&this.dwellFormatStoreData(res[10].data.data)
+          this.dwellFormatStoreData(res[10].data.data)
         })
       }
 
