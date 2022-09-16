@@ -123,6 +123,7 @@
             <img
               width="27"
               height="40"
+              @click="symbolClick(symbol)"
               :src="
                 currentWay.id == symbol.id
                   ? require('@/assets/images/fixation_img/bg/symbol_select.png')
@@ -461,6 +462,10 @@ export default {
     this.$store.commit("setMall", { shoppingInfoDate: this.shoppingInfoDate });
   },
   methods: {
+    symbolClick(symbol){
+      this.way = symbol.id
+      this.wayChange(this.way)
+    },
     previewClick() {
       getCameraImageUrl({ line_id: this.currentWay.id }).then((res) => {
         this.cameraImageUrl = res.data.data.screen_capture;
@@ -887,7 +892,6 @@ export default {
         //选择的是购物中心
         const value = val.split("_");
         //waylist 是购物中心下的所有出入口gate
-        console.log(_.cloneDeep(this.orgData));
         this.wayList = [];
         deepTraversal(this.orgData, "children", (o) => {
           if (o.itype === value[0] && o.id === Number(value[1])) {
@@ -926,7 +930,6 @@ export default {
         }
       });
       this.way = way || this.wayList[0].id;
-      console.log("change");
       this.wayChange(this.way);
     },
     getSymbolList() {
