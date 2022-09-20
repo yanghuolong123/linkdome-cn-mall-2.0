@@ -225,6 +225,13 @@ export const Path3D = params => {
     method: 'get'
   })
 }
+export const Path3DNew = params => {
+  return naxios.request({
+    url: 'trail/route2',
+    params,
+    method: 'get'
+  })
+}
 //无效客流趋势
 export const getInvalidFlowTrend = params => {
   return naxios.request({

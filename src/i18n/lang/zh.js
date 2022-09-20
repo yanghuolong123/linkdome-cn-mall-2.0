@@ -648,6 +648,7 @@ module.exports =  {
   TrailRoute: '路径动向分析(新)',
 	PathTrend: '路径动向分析(新)',
 	'3DPath':'3D路径动向分析',
+	'3DNew':'3D路径动向分析(新)',
 	Drainage: '实体引流分析',
 	DwellTime: '停留时间分析',
 	Operation: '运营分析',
