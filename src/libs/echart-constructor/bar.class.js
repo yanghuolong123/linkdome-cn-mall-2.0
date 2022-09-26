@@ -2,7 +2,7 @@ import { config } from "@/config/echarts-config/bar-chart";
 import { BasicData } from "@/libs/echart-constructor/basicData.class.js";
 import i18n from "@/i18n/i18n";
 export class BarChartConstructor extends BasicData {
-  constructor(responseData = [], Params, quta = [], weathers = []) {
+  constructor(responseData = [], Params, quta = []) {
     super(responseData, Params, quta);
     this.config = _.cloneDeep(config);
     this.config.tooltip.formatter = (params) => {
@@ -17,23 +17,7 @@ export class BarChartConstructor extends BasicData {
           i18n.t("人次") +
           "<br>";
       });
-      let w = weathers[params[0].dataIndex];
-      let weather = "";
-      if (w && w.id) {
-        if (w.type === 1)
-          weather = `  温度${w.temperature}℃  ${
-            w.condition
-          }  <img style="width:20px;height:20px;vertical-align: middle;" src="${
-            w.weather_icon
-          }"></img>`;
-        else
-          weather = `  温度${w.low_temperature}℃ - ${w.high_temperature}℃  ${
-            w.condition
-          }  <img style="width:20px;height:20px;vertical-align: middle;" src="${
-            w.weather_icon
-          }"></img>`;
-      }
-      return title + result + weather;
+      return title + result;
     };
     this.seriesConfig = {
       type: "bar",

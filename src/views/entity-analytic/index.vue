@@ -6,8 +6,10 @@
       @paramsPrepare="paramsPrepare"
     ></flow-selector>
     <chart-box
-      :weathers="((enterSelect.length > 1 &&
-                  (oParams && oParams.params.entitys.length > 1))||['time','onYear','onChain'].includes(oParams &&oParams.params.compareType))?[]:weathers"
+      :weathers1="((enterSelect.length > 1 &&
+                  (oParams && oParams.params.entitys.length > 1))||['time'].includes(oParams &&oParams.params.compareType))?[]:weathers1"
+      :weathers2="((enterSelect.length > 1 &&
+                  (oParams && oParams.params.entitys.length > 1))||['time','not','entity','businessType'].includes(oParams &&oParams.params.compareType))?[]:weathers2"
       chartId="enter"
       :chart="enterChart"
       ref="chartEnter"
@@ -76,7 +78,7 @@
     <chart-box
       chartId="occu"
       :chart="occuChart"
-      :weathers="weathers"
+      :weathers1="weathers1"
       v-show="showOccu"
       @toolClick="
         (chartName) => {
@@ -125,7 +127,8 @@ export default {
       oParams: null,
       isHour: false, //按小时
       enterFlowList: [],
-      weathers: [],
+      weathers1: [],
+      weathers2: [],
       enterSelect: ["enter"],
       responseData: {}, //接口返回的数据
       enterChart: {
@@ -235,6 +238,7 @@ export default {
       }
     },
     async paramsPrepare(params) {
+      console.log(params)
       if (["time", "onYear", "onChain"].includes(params.compareType)) {
         this.isHour = false;
       }
@@ -263,19 +267,30 @@ export default {
         );
         responseList.push("occupancy");
       }
-      let type =
-        params.date1Array[0].split("-")[2] ===
-          params.date1Array[1].split("-")[2] || this.isHour;
-      await weatherTrend({
-        time1: params.date1Array.join(","),
+      let type = params.date1Array[0].split("-")[2] === params.date1Array[1].split("-")[2] || this.isHour;
+      let data = {
+        ...this.oParams.getParams(),
         property_id: this.$store.state.home.headerAction,
         type: type ? 1 : 0,
-      }).then((weather) => {
+      }
+
+      await weatherTrend(data).then((weather) => {
         weather = weather.data.data
-        this.weathers = weather ? Object.values(weather)[0][0].list : [];
-        if(this.weathers.length){
-          if(!this.weathers[0].hasOwnProperty('type')){
-            this.weathers = []
+        if(weather ){
+          this.weathers1 = weather[this.oParams.params.date1Array.toString()][0].list
+          this.weathers2 = this.oParams.isDateCompare()?weather[this.oParams.params.date2Array.toString()][0].list:[]
+        }else {
+          this.weathers1 = []
+          this.weathers2 = []
+        }
+        if(this.weathers1.length){
+          if(!this.weathers1[0].hasOwnProperty('type')){
+            this.weathers1 = []
+          }
+        }
+        if(this.weathers2.length){
+          if(!this.weathers2[0].hasOwnProperty('type')){
+            this.weathers2 = []
           }
         }
       });
@@ -314,6 +329,8 @@ export default {
           data,
           this.oParams,
           quta,
+          (['businessType','time','entity'].includes(this.oParams.params.compareType)&&quta.length>1)?[]:this.weathers1,
+          (['businessType','time','entity'].includes(this.oParams.params.compareType)&&quta.length>1)?[]:this.weathers2
         );
         barOpiton = BarChart.getDateCompare();
       } else {
@@ -321,7 +338,8 @@ export default {
           data,
           this.oParams,
           quta,
-          (this.oParams.params.compareType!=='not'&&quta.length>1)?[]:this.weathers
+          (['businessType','time','entity'].includes(this.oParams.params.compareType)&&quta.length>1)?[]:this.weathers1,
+          (['businessType','time','entity'].includes(this.oParams.params.compareType)&&quta.length>1)?[]:this.weathers2,
         );
         barOpiton = BarChart.getPostEntitysCompare();
       }
@@ -361,6 +379,8 @@ export default {
           data,
           this.oParams,
           quta,
+          (['businessType','time','entity'].includes(this.oParams.params.compareType)&&quta.length>1)?[]:this.weathers1,
+          (['businessType','time','entity'].includes(this.oParams.params.compareType)&&quta.length>1)?[]:this.weathers2
         );
         lineOpiton = LineChart.getDateCompare();
       } else {
@@ -368,7 +388,8 @@ export default {
           data,
           this.oParams,
           quta,
-          (this.oParams.params.compareType!=='not'&&quta.length>1)?[]:this.weathers
+          (['businessType','time','entity'].includes(this.oParams.params.compareType)&&quta.length>1)?[]:this.weathers1,
+          (['businessType','time','entity'].includes(this.oParams.params.compareType)&&quta.length>1)?[]:this.weathers2
         );
         lineOpiton = LineChart.getPostEntitysCompare();
       }

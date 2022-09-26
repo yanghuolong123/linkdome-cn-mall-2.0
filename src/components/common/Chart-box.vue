@@ -48,7 +48,11 @@ import { exportEx } from "@/api/home.js";
 export default {
   name: "ChartBox",
   props: {
-    weathers: {
+    weathers1: {
+      type: Array,
+      default: () => [],
+    },
+    weathers2: {
       type: Array,
       default: () => [],
     },
@@ -129,8 +133,42 @@ export default {
               : s.data[i].toLocaleString();
             // + '人次'
           }
-          if (this.weathers.length) {
-            let w = this.weathers[i];
+          if(this.weathers1.length&&this.weathers2.length){
+            let w1 = this.weathers1[i];
+            if (w1 && w1.id) {
+              if (w1.type)
+                data[i]["temperature1"] =
+                  w1.temperature + "℃" + " " + w1.condition;
+              else
+                data[i]["temperature1"] =
+                  w1.low_temperature +
+                  "℃" +
+                  "-" +
+                  w1.high_temperature +
+                  "℃" +
+                  " " +
+                  w1.condition;
+            } else data[i]["temperature1"] = "-";
+  
+            let w2 = this.weathers2[i];
+            if (w2 && w2.id) {
+              if (w2.type)
+                data[i]["temperature2"] =
+                  w2.temperature + "℃" + " " + w2.condition;
+              else
+                data[i]["temperature2"] =
+                  w2.low_temperature +
+                  "℃" +
+                  "-" +
+                  w2.high_temperature +
+                  "℃" +
+                  " " +
+                  w2.condition;
+            } else data[i]["temperature2"] = "-";
+            
+            
+          }else if (this.weathers1.length) {
+            let w = this.weathers1[i];
             if (w && w.id) {
               if (w.type)
                 data[i]["temperature"] =
@@ -148,7 +186,7 @@ export default {
           }
         });
       });
-
+      console.log(data)
       return data;
     },
     getTableColumn(option) {
@@ -177,11 +215,26 @@ export default {
           };
         })
       );
-      if (this.weathers.length)
+      if(this.weathers1.length&&this.weathers2.length){
+        const date1 = _.last(option.legend.data[0].split('|'))
+        const date2 = _.last(option.legend.data[1].split('|'))
+        const arr = [
+          {
+            key: "temperature1",
+            title: "温度/天气("+date1+')',
+          },{
+            key: "temperature2",
+            title: "温度/天气("+date2+')',
+          }
+        ]
+        column  = column.concat(arr)
+      }else if (this.weathers1.length){
         column.push({
           key: "temperature",
           title: "温度/天气",
         });
+      }
+
       return column;
     },
     //下载

@@ -3,7 +3,7 @@
 		<Chart-box class="common-card trend-chart"
 							 :chart="trendChart"
 							 ref="trendChart"
-							 :weathers="weathers"
+							 :weathers1="weathers"
 							 :showSummary="true"
 							 @toolClick="updateChart"
 							 :toolList="toolList" chartId="trend">
