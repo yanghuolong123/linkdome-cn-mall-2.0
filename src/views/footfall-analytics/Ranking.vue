@@ -27,7 +27,7 @@ export default {
   },
   methods: {
       paramsPrepare (val) {
-      this.$nextTick(() => { this.$refs.ranking.entitysCompareReq(val.date1Array, val.entitys) })
+        this.$nextTick(() => { this.$refs.ranking.entitysCompareReq(val.date1Array, val.entitys,val.compareType) })
     }
   },
 

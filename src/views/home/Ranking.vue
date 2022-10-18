@@ -1,7 +1,9 @@
 <template>
   <div class="mt-6 ranking-box">
      <div class="box-card bg-white">
-        <chart-tabs :title="mallTitle" :xAxis="leftXaxis" :series="leftSeries" :type="['bar']" horizonta></chart-tabs>
+        <chart-tabs ref="enterRanking" @tableChage="tableChange" :title="mallTitle" :xAxis="leftXaxis" :series="leftSeries" :type="['bar']" horizonta>
+          <export-menu slot="export" @onchange="handleDownload"></export-menu>
+        </chart-tabs>
      </div>
      <div class="box-card bg-white">
         <template v-if="chartType ==='bar'">
@@ -27,17 +29,19 @@
 </template>
 <script>
 import chartTabs from '_c/common/ChartTabs.vue'
-import { getTopmall, postEntitysCompare } from '@/api/home'
-import { gotInnerRange, formatTableData } from '@/libs/util'
+import { getTopmall, postEntitysCompare,exportEx } from '@/api/home'
+import { gotInnerRange, formatTableData,downloadEx } from '@/libs/util'
 import VueApexCharts from 'vue-apexcharts'
 import _ from 'lodash'
 import NP from 'number-precision'
-import { debug, deprecate } from 'util'
+import exportMenu from "@/views/operation/components/ExportMenu.vue";
+
 export default {
   name: 'home_ranking',
   components: {
     chartTabs,
-    VueApexCharts
+    VueApexCharts,
+    exportMenu
   },
   props: {
     range: {
@@ -118,7 +122,8 @@ export default {
           }
         }
       },
-      pieSeries: []
+      pieSeries: [],
+      tableList:[]
 
     }
   },
@@ -159,6 +164,12 @@ export default {
     }
   },
   methods: {
+    tableChange(val){
+      this.tableList = val
+    },
+    handleDownload(){
+      downloadEx(exportEx, this.mallTitle, [this.$refs.enterRanking.tableData.column,this.$refs.enterRanking.tableData.data]);
+    },
     topDataReq () {
       let type = 'store'
       if (this.propertyId === 'company' || this.bzids.length === 1 || !this.propertyId) type = 'mall'
@@ -189,7 +200,7 @@ export default {
       }
       return params
     },
-    entitysCompareReq (range, bzids) {
+    entitysCompareReq (range, bzids,compareType) {
       this.compareBzids = bzids
       let innerRange = gotInnerRange(range)
       let bzidArr = []
@@ -198,7 +209,12 @@ export default {
         type: 'enter',
         range: range.toString(),
         innerRange,
-        bzid: bzidArr.toString()
+       
+      }
+      if(compareType === 'entity'){
+        params.bzid = bzidArr.toString()
+      }else {
+        params.industry_id = bzidArr.toString()
       }
       postEntitysCompare(params).then(res => {
         this.handleCompareRes(res)
@@ -292,6 +308,7 @@ export default {
       series = [{
         name: this.$t('客流量'),
         data: seriesData,
+        key:'enter',
         showInLegend: false
       }]
       this.leftXaxis = [

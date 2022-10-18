@@ -9,7 +9,7 @@ export const config= {
   legend: {
     data: [],
     bottom:0,
-    type:'scroll'
+    type:'scroll',
   },
   grid: {
     left: 50,

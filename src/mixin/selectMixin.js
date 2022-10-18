@@ -13,7 +13,7 @@ import {
 import i18n from '@/i18n/i18n'
 import { getBussinessTree,  getCascadeList } from '@/api/passenger.js'
 import {  getGateTypeList } from '@/api/manager.js'
-
+import { getBussinessDict } from '@/api/home'
 const selectMixin = {
   components:{
     iDatePicker
@@ -33,6 +33,7 @@ const selectMixin = {
         selectList:[],
         bussinessType:[],
       },
+      bussinessTypeOptions: [],//业态
       entityOptions:[],
       compareType: 'not',//对比类型
       entityType: '',//单选按钮
@@ -151,6 +152,23 @@ const selectMixin = {
     }
   },
   methods: {
+    getBussinessDict () {
+      getBussinessDict({ property_id: this.$store.state.home.headerAction }).then(res => {
+        res = res.data.data
+        this.bussinessTypeOptions = [{
+          id: -1,
+          name: '全部业态'
+        }]
+        if (res) {
+          for (let key in res) {
+            this.bussinessTypeOptions.push({
+              id: key,
+              name: res[key]
+            })
+          }
+        }
+      })
+    },
     getGateTypeList(){
       getGateTypeList({ property_id: this.$store.state.home.headerAction }).then(res=>{
         this.gateCascadeOpiton = res.data.data || [];
@@ -197,6 +215,11 @@ const selectMixin = {
           break
         case 'entity':
           this.queryParams.selectList = this.selectOptions.map(o=>{return o.id});
+          break
+        case 'businessType':
+          this.queryParams.bussinessType = this.bussinessTypeOptions.map(o => {
+            return o.id
+          })
           break
       }
     },
@@ -255,11 +278,18 @@ const selectMixin = {
           alert(i18n.t('fn.请选择',[i18n.t('业态')]));
           return
         }
-        entitys = this.queryParams.bussinessType.filter(o=>{
+        let bussinessType;
+        if(!Array.isArray(this.queryParams.bussinessType)){
+          bussinessType = [this.queryParams.bussinessType]
+        }else {
+          bussinessType = this.queryParams.bussinessType
+        }
+        entitys = bussinessType.filter(o=>{
           return o>-1
         }).map(o=>{
           return {
-            id:o
+            id:o,
+            label:_.find(this.bussinessTypeOptions,b=>{return b.id===o}).name
           }
         })
       }else {

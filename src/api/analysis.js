@@ -159,15 +159,10 @@ export const activityDataList = params => {
     method: 'get'
   })
 }
-export const getEffective = (bzid, start_time, end_time, innerRange) => {
+export const getEffective = (data) => {
   return naxios.request({
     url: 'passflow/visits',
-    data: {
-      bzid: bzid,
-      start_time: start_time,
-      end_time: end_time,
-      innerRange: innerRange
-    },
+    data,
     method: 'post'
   })
 }

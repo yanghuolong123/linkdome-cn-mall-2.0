@@ -13,7 +13,15 @@
 						   @selectDate="dateSelect"></i-date-picker>
 		</div>
 		<div class="flex-center mt-20">
+			<Select v-model="queryParams.bussinessType" class="w-select"
+							v-show="compareType === 'businessType'">
+				<Option v-for="item in bussinessTypeOptions"
+								:value="item.id"
+								:key="item.id">{{ item.name }}
+				</Option>
+			</Select>
 			<el-cascader
+					v-show="compareType !== 'businessType'"
 					v-model="entityCascaderData"
 					collapse-tags
 					class="w-select "
@@ -30,6 +38,7 @@
 import Moment from 'moment'
 import selectMixin from '@/mixin/selectMixin.js'
 import {formatEntityData,deepFind} from '@/libs/util'
+import { getBussinessDict } from '@/api/home'
 const yesterday = Moment(new Date()).add(-1, 'day').format('YYYY-MM-DD')
 
 export default {
@@ -38,6 +47,11 @@ export default {
 	data(){
       return{
         typeOptions: [],
+        queryParams: {
+          date1Array: [yesterday,yesterday],
+          date2Array: [],
+          bussinessType:'',
+        },
         cascadeProps:{
           multiple: false,
           checkStrictly: true,
@@ -52,6 +66,9 @@ export default {
           value: 'not',
           label: this.$t('无对比')
         }, {
+          value: 'businessType',
+          label: this.$t('业态')
+        },{
           value: 'time',
           label: this.$t('自定义对比')
         },
@@ -68,6 +85,19 @@ export default {
     }
   },
 	methods: {
+    getBussinessDict () {
+      getBussinessDict({ property_id: this.$store.state.home.headerAction }).then(res => {
+        res = res.data.data
+        if (res) {
+          for (let key in res) {
+            this.bussinessTypeOptions.push({
+              id: key,
+              name: res[key]
+            })
+          }
+        }
+      })
+    },
     resetClick () {
       this.queryParams.date1Array = [Moment(yesterday).add(-6,'d').format('YYYY-MM-DD'),yesterday];
       this.entityCascaderData = []
@@ -97,6 +127,8 @@ export default {
 	},
 	created(){
 	  this.queryParams.date1Array[0] = Moment(yesterday).add(-6,'d').format('YYYY-MM-DD')
+    //获取所有业态
+    this.getBussinessDict()
 	},
   watch:{
     '$store.state.home.headerAction':{

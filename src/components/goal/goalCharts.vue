@@ -1,6 +1,8 @@
 <template>
   <div class="bg-white box-card box-cardss">
+    
     <i-tabs  class="chartsTable" v-model="current">
+      <slot slot="export" name="export"></slot>
       <tab-item :icon="icon1" class="chart-div" >
         <div class="left-title">
           <p class="title">{{ $t(title1) }}</p>
@@ -38,7 +40,6 @@ import VueApexCharts from 'vue-apexcharts'
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import iTabs from '_c/I-Tabs/Itabs.vue'
 import i18n from '@/i18n/i18n'
-
 export default {
   name: 'goalCharts',
   props: {

@@ -238,7 +238,6 @@ export default {
       }
     },
     async paramsPrepare(params) {
-      console.log(params)
       if (["time", "onYear", "onChain"].includes(params.compareType)) {
         this.isHour = false;
       }

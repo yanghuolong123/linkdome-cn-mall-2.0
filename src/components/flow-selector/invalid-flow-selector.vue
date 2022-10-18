@@ -82,7 +82,7 @@
   import { formatEntityData, getCompareDate } from '@/libs/util'
   import selectMixin from '@/mixin/selectMixin.js'
   import Moment from 'moment'
-
+  import { getBussinessDict } from '@/api/home'
   export default {
     name: 'flowSelector',
     mixins: [selectMixin],
@@ -107,7 +107,10 @@
           }, {
             value: 'entity',
             label: this.$t('实体对比')
-          }
+          }, {
+            value: 'businessType',
+            label: this.$t('业态对比')
+          },
         ]
         return this.typeOptions
       },
@@ -176,6 +179,23 @@
         this.handleClick()
         this.cascadeDataAddAll(this.entityCascaderOption)
       },
+      getBussinessDict () {
+        getBussinessDict({ property_id: this.$store.state.home.headerAction }).then(res => {
+          res = res.data.data
+          this.bussinessTypeOptions = [{
+            id: -1,
+            name: '全部业态'
+          }]
+          if (res) {
+            for (let key in res) {
+              this.bussinessTypeOptions.push({
+                id: key,
+                name: res[key]
+              })
+            }
+          }
+        })
+      },
     },
     watch: {
       'queryParams.bussinessType': {
@@ -207,5 +227,9 @@
         immediate: true,
       },
     },
+    created () {
+      //获取所有业态
+      this.getBussinessDict()
+    }
   }
 </script>

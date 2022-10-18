@@ -15,7 +15,9 @@
           :series2="trendAndAvg.trendBarSeries"
           :columns="trendAndAvg.trendColumn"
           :tableList="trendAndAvg.trendTable"
-        ></goalCharts>
+        >
+					<export-menu slot="export" @onchange="handleDownload"></export-menu>
+				</goalCharts>
       </div>
       <div class="cardContent">
         <Cards style="height: 165px;" :isTime="isTime" :isUp="isUp1" :item="effective"></Cards>
@@ -46,15 +48,16 @@ import Cards from './components/Cards.vue'
 import storeChart from '@/components/charts/storeChart.vue'
 import VueApexCharts from 'vue-apexcharts'
 import { getEffective } from '@/api/analysis'
-import { getEntityFlow } from '@/api/home'
-
+import { getEntityFlow,exportEx } from '@/api/home'
+import exportMenu from "@/views/operation/components/ExportMenu.vue";
+import { downloadEx } from "@/libs/util";
 import moment from 'moment'
 import _ from 'lodash'
 import { lineOptions, formatNumber, storeOption1, storeOption2, } from '@/libs/util'
 import { options2 } from '@/libs/chart.js'
 import FlowSelector from '_c/flow-selector/effective-flow-selector'
 export default {
-  name: 'DwellTime',
+  name: 'Effective',
 
   components: {
     VueApexCharts,
@@ -62,6 +65,7 @@ export default {
     goalCharts,
     storeChart,
     FlowSelector,
+    exportMenu
   },
   data () {
     return {
@@ -155,7 +159,9 @@ export default {
     }
   },
   methods: {
-
+    handleDownload(){
+      downloadEx(exportEx, "有效客流趋势数据", [this.trendAndAvg.trendColumnConfig,this.trendAndAvg.trendTable]);
+    },
     /*
     *@method 处理图表需要的数据
     *@param {obj} res 请求的数据
@@ -248,6 +254,18 @@ export default {
           return obj
         })
         trendAndAvg.trendColumn = ['日期', 'TotalEnterUnit', 'EffectEnterUnit']
+        trendAndAvg.trendColumnConfig = [
+					{
+					  title:'日期',
+						key:'name'
+					},{
+          	key:'begin',
+						title:this.$t('TotalEnterUnit'),
+					},{
+            key:'end',
+            title:this.$t('EffectEnterUnit'),
+          }
+				]
 
         var avgSeries = []
         var obj3 = {}
@@ -357,22 +375,35 @@ export default {
       this.isNumber = this.isNumber + 1
      
       var bzid = value.entitys[0] && value.entitys[0].id
-      if (value.compareType == 'not') { // 无对比
+      if (['not','businessType'].includes(value.compareType) ) { // 无对比
         that.$store.commit('setRequestNumber', 2)
         this.isTime = false
         this.pieType = 'pie'
         this.chartOptions = storeOption1
         this.chartOptions.labels=[this.$t('fn.times',[1]), this.$t('fn.times',[2]), this.$t('fn.times',[3]), this.$t('fn.times',[4]), this.$t('5次及以上')]
-    
-        var startTime = value.date1Array[0]
-        var endTime = value.date1Array[1]
+
         var range = value.date1Array.join(',')
         var initRes = []
-        let innerRange = this.gotInnerRange(value.date1Array)
+        let parmas1 = {
+          start_time:value.date1Array[0],
+          end_time:value.date1Array[1],
+          innerRange: this.gotInnerRange(value.date1Array)
+        }
+        
+        let parmas2 = {
+          range:value.date1Array.join(','),
+        }
+        if(value.compareType === 'businessType'){
+          parmas1.industry_id = bzid;
+          parmas2.industry_id = bzid;
+        }else {
+          parmas1.bzid = bzid;
+          parmas2.bzid = bzid;
+        }
         // 请求数据
-        getEffective(bzid, startTime, endTime, innerRange).then(res => {
+        getEffective(parmas1).then(res => {
           initRes.push(res)
-          getEntityFlow({ range, bzid }).then(ress => {
+          getEntityFlow(parmas2).then(ress => {
             initRes.push(ress)
             var trendAndAvg = that.initTrend(initRes[0])
             that.trendAndAvg = trendAndAvg
@@ -398,10 +429,26 @@ export default {
         let innerRange
         if (innerOne == 'Month' || innerTwo == 'Month') innerRange = 'Month'
         else innerRange = 'Date'
+        const params1 = {
+          bzid,
+          start_time:startTime1,
+          end_time:endTime1,
+          innerRange
+        }
+        const params2 = {
+          bzid,
+          start_time:starTime2,
+          end_time:endTime2,
+          innerRange
+        }
+        const params3 = {
+          range,
+          bzid
+        }
         initRes = await Promise.all([
-          getEffective(bzid, startTime1, endTime1, innerRange),
-          getEffective(bzid, starTime2, endTime2, innerRange),
-          getEntityFlow({ range, bzid })
+          getEffective(params1),
+          getEffective(params2),
+          getEntityFlow(params3)
         ])
         range = value.date2Array.join(',')
         var ress = await Promise.all([
@@ -598,7 +645,6 @@ export default {
         chartOptions.xaxis.categories = [name1, name2]
         this.chartOptions = chartOptions
         this.circleSeries = circleSeries
-        console.log(circleSeries)
         this.showCharts = true
       }
     },

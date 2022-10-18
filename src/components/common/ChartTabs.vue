@@ -1,6 +1,7 @@
 <template>
   <i-tabs v-model="current" v-if="canshow">
     <slot slot="select"></slot>
+    <slot slot="export" name="export"></slot>
     <tab-item
       :icon="iconCheck[item.type]"
       :titles="item.title"

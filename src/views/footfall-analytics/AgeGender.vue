@@ -100,7 +100,7 @@ export default {
       let width;
       if (this.chartData.age.xAxis) {
         let xSize = this.chartData.age.xAxis.data.length;
-        xSize < 10 ? (width = "100%") : (width = xSize * 60);
+        xSize < 14 ? (width = "100%") : (width = xSize * 60);
       } else width = "100%";
       return width;
     },
@@ -120,14 +120,19 @@ export default {
           bzid: this.bzids.toString(),
         });
       } else {
-        res = await getEntityFlowBatch({
+        let params = {
           range1: this.range,
-          bzid: this.bzids.toString(),
-        });
+        }
+        if(pparams.compareType === 'businessType'){
+          params.industry_id = this.bzids.toString()
+        }else {
+          params.bzid = this.bzids.toString()
+        }
+        res = await getEntityFlowBatch(params);
       }
-      this.chartData = this.handleTypeData(res);
+      this.chartData = this.handleTypeData(res,pparams.compareType);
     },
-    handleTypeData(res) {
+    handleTypeData(res,compareType) {
       const {
         data: { data },
       } = res;
@@ -138,11 +143,12 @@ export default {
       let ageXaxis = [];
       let ageSeries;
       let genderChartData;
+      const typeKey = compareType === 'businessType'?'industry_id':"bzid"
       data.forEach((e) => {
         Object.keys(e.stat).forEach((i) => {
           let eleOfTimes = e.stat[i];
           ageCollection.push({
-            id: e.bzid,
+            id: e[typeKey],
             time: i,
             name: "age_distribution",
             data: eleOfTimes.age_distribution
@@ -150,7 +156,7 @@ export default {
               : [],
           });
           genderCollection.push({
-            id: e.bzid,
+            id: e[typeKey],
             time: i,
             name: "gender_propotion",
             data: eleOfTimes.gender_propotion
@@ -450,7 +456,7 @@ export default {
       downloadEx(exportEx, "年龄性别客流数据", value);
     },
   },
-  activated() {},
+
 };
 </script>
 <style lang="stylus">
