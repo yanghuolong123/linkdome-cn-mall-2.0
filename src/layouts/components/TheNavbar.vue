@@ -35,7 +35,7 @@
         <div class="flex-center">
           <div v-show="comprotModel!==0&&weathers.id" class="weather-box flex-center">
             <span
-            >城市:&nbsp;{{ weathers.city_name }}&nbsp; &nbsp;| &nbsp; &nbsp;
+            >{{$t('城市')}}:&nbsp;{{ weathers.city_name }}&nbsp; &nbsp;| &nbsp; &nbsp;
               <img
               style="width:20px;height:20px;"
               :src="weathers.weather_icon"

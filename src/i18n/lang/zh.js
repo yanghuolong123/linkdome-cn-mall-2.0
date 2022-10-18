@@ -53,7 +53,7 @@ module.exports =  {
     lastMonth:'上 月',
     thisYear:'今 年',
   },
-
+  temperature:'温度/天气',
 	account: "账户",
   accountNum: "账号",
   password: "密码",

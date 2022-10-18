@@ -239,17 +239,17 @@
           const arr = [
             {
               key: 'temperature1',
-              title: '温度/天气(' + date1 + ')',
+              title: this.$t('temperature')+'(' + date1 + ')',
             }, {
               key: 'temperature2',
-              title: '温度/天气(' + date2 + ')',
+              title: this.$t('temperature')+'(' + date2 + ')',
             }
           ]
           column = column.concat(arr)
         } else if (this.weathers1.length) {
           column.push({
             key: 'temperature',
-            title: '温度/天气',
+            title: this.$t('temperature'),
           })
         }
 

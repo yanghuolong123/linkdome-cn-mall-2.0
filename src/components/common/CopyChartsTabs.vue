@@ -211,7 +211,7 @@ export default {
       if (this.weathers.length)
         column.push({
           key: "temperature",
-          title: "温度/天气",
+          title: this.$t("temperature"),
         });
       this.$emit("getShopTableCoumn", column);
       return column;
