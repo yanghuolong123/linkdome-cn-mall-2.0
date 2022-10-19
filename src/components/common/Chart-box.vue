@@ -258,11 +258,15 @@
       },
       //下载
       handleDownload (index) {
-        this.initTable(this.chartOption)
-        downloadEx(exportEx, this.toolList[index].name, [
-          this.tableColumn,
-          this.tableData,
-        ])
+        this.$emit('download')//无效客流中要对table数据进行特殊处理，故作延迟处理
+				setTimeout(()=>{
+          this.initTable(this.chartOption)
+          downloadEx(exportEx, this.toolList[index].name, [
+            this.tableColumn,
+            this.tableData,
+          ])
+				})
+      
       },
       changeTab (item, index) {
         if (item.value === 'download') {

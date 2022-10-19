@@ -30,6 +30,7 @@
 			chartId="invalidChart"
 			:chart="invalidChart"
 			@toolClick="(chartName) => {handletoolClick(chartName)}"
+			@download="handletoolClick('table')"
 			ref="invalidEnter"
 			class="common-card m-t-20 chart-1"
 			:toolList="toolList"
