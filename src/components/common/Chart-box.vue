@@ -108,23 +108,24 @@
     methods: {
       getTableData (option) {
         if (isEmpty(option)) return []
+				let optionCopy = _.cloneDeep(option)
         let axle = this.horizontal ? 'yAxis' : 'xAxis'
         let data = []
         if (this.showSummary) {
-          option[axle].data.push(this.$t('合计'))
+          optionCopy[axle].data.push(this.$t('合计'))
         }
         let sum = []
-        option[axle].data.forEach((o, i) => {
+        optionCopy[axle].data.forEach((o, i) => {
           data.push({
             time: o,
           })
           const flag = isEmpty(sum)
-          option.series.forEach((s, sI) => {
+          optionCopy.series.forEach((s, sI) => {
             if (this.showSummary && flag) {
               sum.push(_.sum(s.data))
             }
             if (this.showSummary) {
-              if (i !== option[axle].data.length - 1) {
+              if (i !== optionCopy[axle].data.length - 1) {
                 data[i][`entity${sI}`] = isEmpty(s.data[i])
                   ? '-'
                   : s.data[i].toLocaleString()
@@ -288,6 +289,7 @@
         })
       },
       initTable (option) {
+        this.chartOption = option
         this.tableColumn = this.getTableColumn(option)
         this.tableData = this.getTableData(option)
       },

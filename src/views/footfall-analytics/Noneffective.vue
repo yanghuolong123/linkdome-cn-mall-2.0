@@ -119,7 +119,11 @@
             icon: 'biaoge-copy',
             value: 'table',
             name: '详细数据'
-          },
+          },{
+            icon: 'daoru',
+            value: 'download',
+            name: '无效客流趋势数据'
+          }
         ],
         rankBarOption: null,
         lineOption: null,
