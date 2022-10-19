@@ -369,7 +369,7 @@ export default {
             that.allMoveData = currList
           }
           if (!that.floor) {
-            that.floor = that.allMoveData[0].floor_index
+            that.floor = 1
           }
           that.isNewPath = that.floor === 0 ? true : false
           var moveData = _.find(that.allMoveData, ['floor_index', that.floor])

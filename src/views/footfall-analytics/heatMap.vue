@@ -412,6 +412,7 @@ export default {
           obj.label = m.name;
           obj.value = m.bzid;
           obj.url = m.map_url;
+          obj.floor_index = m.floor_index;
           obj.bzid = m.data.join(",");
           return obj;
         });
@@ -426,7 +427,12 @@ export default {
           });
           this.floorList = currList;
         }
-        if (this.floorList[0]) this.floor = this.floorList[0].value;
+        const floor = _.find(this.floorList,o=>{
+          return o.floor_index === 1
+        })
+        if(floor){
+          this.floor = floor.value
+        }
         this.searchData();
       });
     },
