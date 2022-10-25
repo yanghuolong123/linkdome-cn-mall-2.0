@@ -20,7 +20,10 @@
 			</div>
 		</div>
 		<div class="chart">
-			<div class="pie-chart" id="pie-chart-x" v-show="currentChart === 'pie'"></div>
+			<div class="pie-chart flex-center" id="pie-chart-arrival"  v-show="currentChart === 'pie'">
+
+			</div>
+			<div class="bar-chart" id="bar-chart-arrival" v-show="currentChart === 'bar'"></div>
 			<div class="table" ref="table" v-show="currentChart === 'table'">
 				<Table
 					stripe
@@ -37,16 +40,25 @@
   import { exportEx } from '@/api/home.js'
 
   export default {
+    name:'ArrivalTimes',
     props: {
       toolList: {
         type: Array,
         default: () => []
-      }
+      },
+      chart: {
+        type: Object,
+        default: () => {
+          return {
+            barChart: null,
+            pieChart: null,
+          }
+        },
+      },
     },
     data () {
       return {
         tool: 0,
-        chart: null,
         tableHeight: 0,
         chartOption: null,
         tableData: [],
@@ -64,36 +76,42 @@
       },
     },
     methods: {
-      getTableDataNoneEff (option) {//无效客流中统计外卖和店员专用
+      getTableData1 (option) {
         return option.series[0].data.map(o => {
           return {
-            entity: o.name,
-            'category0': o.staff.toLocaleString(),
-            'category1': o.takeout.toLocaleString(),
+            type: o.name,
+            column0: o.value.toLocaleString()
           }
         })
       },
-      getTableData (option) {
-        return option.series[0].data.map(o => {
-          return {
-            entity: o.name,
-            category0: o.value
-          }
-        })
-      },
-      getTableColumn (option) {
+      getTableData2(option){
+        let tableData = []
+        option.xAxis.data.forEach((o,i)=>{
+          let obj = {
+            type:o
+					}
+          option.series.forEach((s,idx)=>{
+            obj[`column${idx}`] = s.data[i].toLocaleString()
+					})
+          tableData.push(obj)
+				})
+				return tableData
+			},
+      getTableColumn2 (option) {
         if (isEmpty(option)) return []
         let column = [
           {
-            title: option.compareType === 'businessType' ? '业态' : '实体',
-            key: 'entity',
+            title: this.$t('时间'),
+            key: 'type',
+						width:220
           }
         ]
         column = column.concat(
-          option.category.map((o, i) => {
+          option.series.map((o, i) => {
             return {
-              key: 'category' + i,
-              title: (o + `(${this.$t('人次')})`)
+              key: 'column' + i,
+              title: o.name,
+							width:i===4?100:''
             }
           })
         )
@@ -108,30 +126,50 @@
         this.$emit('toolClick', this.currentChart)
       },
       handleDownload (index) {
-        // this.initTable(this.chartOption)
         downloadEx(exportEx, this.toolList[index].name, [
           this.tableColumn,
           this.tableData,
         ])
       },
-      initChart (option) {
-        this.chart.setOption(option, true)
+      initPieChart (option) {
+        this.chartOption = option
+        this.chart.pieChart.setOption(option, true)
         this.$nextTick(() => {
-          this.chart.resize()
+          this.chart.pieChart.resize()
         })
       },
-      initTableNoneEff (option) {
-        this.tableColumn = this.getTableColumn(option)
-        this.tableData = this.getTableDataNoneEff(option)
+      initBarChart (option) {
+        this.chartOption = option
+        this.chart.barChart.setOption(option, true)
+        this.$nextTick(() => {
+          this.chart.barChart.resize()
+        })
       },
-      initTable (option) {
-        this.tableColumn = this.getTableColumn(option)
-        this.tableData = this.getTableData(option)
+      initTable (option,isDateCompare) {
+        if(isDateCompare){
+          this.tableColumn = this.getTableColumn2(option)
+          this.tableData = this.getTableData2(option)
+				}else {
+          this.tableColumn = [
+            {
+              title: this.$t('类型'),
+              key: 'type',
+            },{
+              title: this.$t("fn.EnterUnit", [this.$t("人")]),
+              key: 'column0',
+            }
+          ]
+          this.tableData = this.getTableData1(option)
+				}
+
       }
     },
     mounted () {
-      this.chart = echarts.init(
-        document.getElementById(`pie-chart-x`)
+      this.chart.barChart = echarts.init(
+        document.getElementById(`bar-chart-arrival`)
+      )
+      this.chart.pieChart = echarts.init(
+        document.getElementById(`pie-chart-arrival`)
       )
     }
   }
@@ -156,7 +194,10 @@
 				width: 100%;
 				height: 100%;
 			}
-			
+			#bar-chart-arrival,
+			#pie-chart-arrival{
+				height: 100%;
+			}
 			.table {
 				padding: 20px 0;
 				height: 100%;

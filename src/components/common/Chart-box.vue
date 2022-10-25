@@ -204,7 +204,7 @@
       },
       getTableColumn (option) {
         if (isEmpty(option)) return []
-				let flag = false;
+        let flag = false;
         const target = ['出客流','入客流', '店员','外卖人员'];
         for(let i = 0;i<target.length;i++){
           if(option.legend.data.includes(target[i])){
@@ -230,7 +230,7 @@
                   ? o.length * 15
                   : o.length * 20
                   : '',
-              title: o + (option.legend.unit && option.legend.unit[i] ? option.legend.unit[i] : `(${this.$t('人次')})`),
+              title: o + (option.legend.unit?(option.legend.unit[i] ? `(${option.legend.unit[i]})` : `(${this.$t('人次')})`):''),
             }
           })
         )

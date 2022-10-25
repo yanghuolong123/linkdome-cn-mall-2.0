@@ -19,6 +19,9 @@
     display: flex;
     align-items: flex-start;
 }
+.flex-cell{
+    flex: 1;
+}
 .m-l-20{
     margin-left: 20px;
 }

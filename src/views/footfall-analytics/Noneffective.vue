@@ -2,14 +2,6 @@
 	<div style="position:relative">
 		<!--客流数据指标-->
 		<flow-selector @paramsPrepare="paramsPrepare"></flow-selector>
-		<!--		<bar-pie-->
-		<!--			ref='ranking'-->
-		<!--			:chartTitle="[['无效客流排行'],'无效客流占比']"-->
-		<!--			:barData="barData"-->
-		<!--			:pieData="pieData"-->
-		<!--			:orderName='orderName'-->
-		<!--			:chartType="chartType"-->
-		<!--		></bar-pie>-->
 		<div class="flex-center">
 			<chart-box ref="invalidRanking"
 								 :horizontal="true"
@@ -23,7 +15,7 @@
 								 :toolList="rankPietoolList"
 								 @toolClick="pieToolClick"
 								 style="width: 50%"
-								 class="common-card common-card m-t-20 m-l-20 chart-1"></pie-chart>
+								 class="common-card m-t-20 m-l-20 chart-1"></pie-chart>
 		</div>
 		
 		<chart-box
@@ -38,13 +30,10 @@
 	</div>
 </template>
 <script>
-  import BarPie from '@/views/home/BarPie.vue'
   import FlowSelector from '_c/flow-selector/invalid-flow-selector'
   import { getInvalidFlowTrend } from '@/api/analysis.js'
   import ChartBox from '_c/common/Chart-box'
   import pieChart from './components/PieChart'
-  import config from '@/config/index'
-  import { entityFlow } from '@/api/entityNew'
   import { config as barConfig } from '@/config/echarts-config/bar-chart'
   import { config as lineConfig } from '@/config/echarts-config/line-chart'
   import { config as pieConfig } from '@/config/echarts-config/pie-chart'
@@ -52,7 +41,6 @@
   export default {
     name: 'noneEffective',
     components: {
-      BarPie,
       FlowSelector,
       ChartBox,
       pieChart
@@ -237,7 +225,7 @@
         this.pieOption = pieConfigCopy
         this.$nextTick(() => {
           this.$refs.pieChart.initChart(pieConfigCopy)
-          this.$refs.pieChart.initTable(pieConfigCopy)
+          this.$refs.pieChart.initTableNoneEff(pieConfigCopy)
         })
 
       },
@@ -310,7 +298,7 @@
         switch (type) {
           case 'table':
             this.$nextTick(() => {
-              this.$refs.pieChart.initTable(this.pieOption)
+              this.$refs.pieChart.initTableNoneEff(this.pieOption)
             })
             break
           case 'pie':

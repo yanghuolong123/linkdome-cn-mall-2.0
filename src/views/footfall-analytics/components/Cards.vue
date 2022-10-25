@@ -9,7 +9,7 @@
       </div>
       <div class="right">
         <p class="title">{{ $t(item.title) }}</p>
-        <p class="number">{{Number(item.number).toLocaleString()}}</p>
+        <p class="number">{{Number(item.total1).toFix(1).toLocaleString()}}</p>
       </div>
     </template>
 
@@ -30,7 +30,7 @@
           <p class="time2">{{item.time2}}</p>
         </div>
         <div class="right">
-          <p class="precent">{{Number(item.precent).toLocaleString()}}</p>
+          <p class="precent">{{Number(item.total1).toFix(1).toLocaleString()}}</p>
           <div class="iconss" v-bind:class="{up:isUp}">
             <icons type="xiala" color="#EC7172" ></icons>
             <p class="addPrecent">{{item.addPrecent}}</p>

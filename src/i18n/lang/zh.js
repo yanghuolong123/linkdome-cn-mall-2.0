@@ -295,6 +295,7 @@ module.exports =  {
 
 	// goalCharts.vue => title1
   平均到访频次趋势: "平均到访频次趋势",
+  平均到访频次: "平均到访频次",
 
   // RelavanceTab.vue =>item.label
   关联关系无序图: "关联关系无序图",
