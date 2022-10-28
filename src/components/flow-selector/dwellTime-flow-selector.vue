@@ -11,7 +11,7 @@
 					{{ $t(item.label) }}
 				</Option>
 			</Select>
-			<i-date-picker 
+			<i-date-picker
 				:disabled="['onYear','onChain'].includes(compareType)"
 				class="w-select m-l-20"
 				v-show="['time','onYear','onChain'].includes(compareType)"
@@ -65,7 +65,7 @@
 <script>
   import selectMixin from '@/mixin/selectMixin.js'
   import { formatEntityData, getCascadeFstLeaf } from '@/libs/util'
-  import Moment from'moment'
+
   export default {
 	name: 'dwellTimeFlowSelector',
 	mixins: [selectMixin],

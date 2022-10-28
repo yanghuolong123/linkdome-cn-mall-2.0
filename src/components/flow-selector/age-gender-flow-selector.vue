@@ -77,7 +77,7 @@
 <script>
   import selectMixin from '@/mixin/selectMixin.js'
   import { formatEntityData, getCascadeFstLeaf } from '@/libs/util'
-
+  import Moment from'moment'
   export default {
     name: 'ageGenderFlowSelector',
     mixins: [selectMixin],

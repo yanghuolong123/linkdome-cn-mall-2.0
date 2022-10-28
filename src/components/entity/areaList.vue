@@ -203,6 +203,7 @@ export default {
       let that = this
       let id = this.floorInfo[0].property_id
       zones(id).then(function (res) {
+        console.log(res)
         if (res.data.code == 200) {
           that.zoneList = that.addValuesToEle2(res.data.data)
           that.gateList = that.addValuesToEle2(res.data.data)
@@ -280,6 +281,7 @@ export default {
       this.$emit('changeDoorway')
     },
     editDoorWay (value) {
+      console.log(value)
       this.$refs.addDoorway.$refs.modal.showModal();
       this.editDoorWayTitle = '编辑出入口'
       var data = _.cloneDeep(value.data)

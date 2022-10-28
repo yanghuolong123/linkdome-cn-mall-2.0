@@ -987,6 +987,7 @@ export default {
           this.gateTypeList = res.data.data.gate_type;
           getbusinessDate(52).then((resd) => {
             if (resd.data.code == 200) {
+              console.log(this.$store.state.user.role_id)
               this.type = resd.data.data.length > 0 ? 2 : 1;
               this.isEmptyPage = false;
               let temp = resd.data.data;
@@ -1048,6 +1049,8 @@ export default {
         });
     },
     caseDidChange(value, selectedData) {
+      console.log(value)
+      console.log(selectedData)
       let that = this;
       that.nowEntity = selectedData;
       that.addmall = _.find(that.treeData, ["id", selectedData[0].id]);
