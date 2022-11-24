@@ -70,7 +70,7 @@ export default {
 }
 </style>
 <style lang="stylus" scoped>
-.homemenubox /deep/
+.homemenubox ::v-deep
     >ul
         background-color transparent
         display flex

@@ -1396,7 +1396,7 @@ export default {
 </style>
 <style lang="less">
 //隐藏第一栏被禁用的checkbox
-.cascade-dom /deep/ .el-scrollbar:nth-child(1) .is-disabled {
+.cascade-dom ::v-deep .el-scrollbar:nth-child(1) .is-disabled {
   display: none;
 }
 </style>

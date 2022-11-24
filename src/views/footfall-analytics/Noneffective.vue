@@ -403,7 +403,7 @@
 	}
 </style>
 <style lang="stylus" scoped>
-	.selectorbox /deep/
+	.selectorbox ::v-deep
 	.ivu-card-bordered
 		border none
 	

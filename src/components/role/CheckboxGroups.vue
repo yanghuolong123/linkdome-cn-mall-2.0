@@ -145,7 +145,7 @@ export default {
       margin: 5px 0;
     }
   }
-  /deep/ .ivu-checkbox-wrapper{
+  ::v-deep .ivu-checkbox-wrapper{
     font-size: 14px;
   }
 }

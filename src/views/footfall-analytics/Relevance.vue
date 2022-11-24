@@ -559,7 +559,7 @@ export default {
         width: 560px;
         height: auto;
         margin-left: 10%;
-        /deep/  .d3Chart{
+        ::v-deep  .d3Chart{
           width: 100%;
           height: 630px;
         }

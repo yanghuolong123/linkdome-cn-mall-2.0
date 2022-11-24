@@ -378,7 +378,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-#table-item /deep/
+#table-item ::v-deep
   .vs-component.vs-con-table
     overflow auto
     .vs-table--thead

@@ -352,7 +352,7 @@ export default {
   z-index: 10;
 }
 .ranking-box{
-    /deep/.apexcharts-legend-series{
+    ::v-deep.apexcharts-legend-series{
         margin-top: 10px!important;
     }
 }

@@ -559,7 +559,7 @@
 			}
 			.flex-between {
 				width: 100%;
-				/deep/.ivu-form-item{
+				::v-deep.ivu-form-item{
 					width: 45%;
 				}
 				.input-hidden {
@@ -569,7 +569,7 @@
 				}
 				.w-100 {
 					width: 45%;
-					/deep/.ivu-form-item{
+					::v-deep.ivu-form-item{
 						width: 100%
 					}
 				}

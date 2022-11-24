@@ -181,7 +181,7 @@ export default {
   >div
     &:nth-child(1)
       grid-area age
-    &:nth-child(2) /deep/
+    &:nth-child(2) ::v-deep
       grid-area gender
       .custom-legend-box
         padding 0 4rem

@@ -186,7 +186,7 @@
 </script>
 <style lang="scss" scoped>
 	.mul-table{
-		/deep/ .vs-table--tbody{
+		::v-deep .vs-table--tbody{
 			z-index: 1;
 		}
 	}

@@ -48,7 +48,6 @@ import VeeValidate from 'vee-validate'
 import 'view-design/dist/styles/iview.css';
 // 全局过滤器
 import * as custom from '@/filters/custom'
-import VueAMap from 'vue-amap'
 import icons from '_c/icons'
 // PrismJS
 import 'prismjs'
@@ -77,23 +76,7 @@ Object.keys(custom).forEach(key => {
 // 连接线插件
 import jsPlumb from 'jsplumb'
 Vue.prototype.$jsPlumb = jsPlumb.jsPlumb
-// 高德地图
-Vue.use(VueAMap)
-VueAMap.initAMapApiLoader({
-  key: '256f485dca2b10552a5a17c3f69ae1c7',
-  plugin: [
-    'AMap.Autocomplete',
-    'AMap.PlaceSearch',
-    'AMap.Scale',
-    'AMap.OverView',
-    'AMap.ToolBar',
-    'AMap.MapType',
-    'AMap.PolyEditor',
-    'AMap.CircleEditor'
-  ],
-  // 默认高德 sdk 版本为 1.4.4
-  v: '1.4.4'
-})
+
 // Feather font icon
 Vue.config.productionTip = false
 

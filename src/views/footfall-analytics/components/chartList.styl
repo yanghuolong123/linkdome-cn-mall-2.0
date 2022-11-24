@@ -2,28 +2,28 @@ son-row-flex()
   >.tab-box
     .chart-tab-box
       flex-direction row!important
-.chart-list 
+.chart-list
   display grid
   grid-template-columns repeat(4, minmax(1rem, 1fr))
   grid-gap 20px
-.times /deep/
+.times ::v-deep
   grid-column-end span 2
   son-row-flex()
-.item:nth-child(5):nth-last-child(1) 
+.item:nth-child(5):nth-last-child(1)
   grid-column-end span 3
-.item:nth-child(4):nth-last-child(1) 
+.item:nth-child(4):nth-last-child(1)
   grid-column-end span 4
-.item:nth-child(1):nth-last-child(3) 
+.item:nth-child(1):nth-last-child(3)
   grid-column-end span 2
-.item:nth-child(3):nth-last-child(1) 
+.item:nth-child(3):nth-last-child(1)
   grid-column-end span 4
-.item:nth-child(1):nth-last-child(2) 
+.item:nth-child(1):nth-last-child(2)
   grid-column-end span 1
-.item:nth-child(2):nth-last-child(1) 
+.item:nth-child(2):nth-last-child(1)
   grid-column-end span 3
-.item:nth-child(1):nth-last-child(1) 
+.item:nth-child(1):nth-last-child(1)
   grid-column-end span 4
-// @media (max-width 768px) 
-//   .item 
+// @media (max-width 768px)
+//   .item
 //     grid-column-end span 4 !important
-  
+

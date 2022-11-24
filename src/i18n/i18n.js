@@ -11,9 +11,7 @@
 
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-// import store from '@/store/store'
 
-// console.log(store)
 import zh from './lang/zh'
 import en from './lang/en'
 import ivuZh from 'view-design/dist/locale/zh-CN';
@@ -25,6 +23,7 @@ Vue.use(VueI18n);
 Vue.locale = () => {};
 const i18n = new VueI18n({
   locale: 'zh-CN', // set default locale
+	silentTranslationWarn: true,
   messages: {
 		'zh-CN': Object.assign(zh, zhLocale,ivuZh),
 		'en-US': Object.assign(en, enLocale,ivuEn)
