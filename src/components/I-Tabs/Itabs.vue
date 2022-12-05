@@ -193,7 +193,7 @@ export default {
     >div
       flex-shrink 0
       width 100%
-    .tabitem /deep/
+    .tabitem ::v-deep
       .ivu-table-wrapper
         border none
         .ivu-table:after

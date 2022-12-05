@@ -28,10 +28,10 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-.heatImgbox /deep/
+.heatImgbox ::v-deep
     .ivu-card-head
         padding 20px
-        p 
+        p
             font-weight normal
             font-size 20px
             color #b2b2b2
@@ -41,5 +41,5 @@ export default {
    .pathImg{
        width  80%
        height 80%
-   }     
+   }
 </style>

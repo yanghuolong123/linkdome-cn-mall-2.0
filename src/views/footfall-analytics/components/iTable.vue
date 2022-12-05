@@ -41,7 +41,7 @@
 <style lang="stylus" scoped>
   .vs-con-table .vs-con-tbody .vs-table--tbody-table .vs-table--thead th
     background-color #f8f8f8
-  #i-table-component.vs-component.vs-con-table /deep/
+  #i-table-component.vs-component.vs-con-table ::v-deep
   .vs-table--thead
     >tr
       background-color #f8f8f8

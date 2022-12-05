@@ -353,7 +353,7 @@
 			border-radius: 6px;
 			margin-bottom: 20px;
 			
-			/deep/ .ivu-input {
+			::v-deep .ivu-input {
 				width: 230Px;
 			}
 			

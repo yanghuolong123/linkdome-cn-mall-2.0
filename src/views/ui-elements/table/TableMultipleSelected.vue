@@ -223,7 +223,7 @@
 </script>
 <style lang="scss" scoped>
 	.mul-table{
-		/deep/ .vs-table--tbody{
+		::v-deep .vs-table--tbody{
 			z-index: 1;
 		}
 	}
@@ -233,7 +233,7 @@
 		.m-l-10{
 			margin-left: 10px;
 		}
-		/deep/.ivu-icon{
+		::v-deep.ivu-icon{
 			&:hover {
 				color: #00a0e9!important;
 			}

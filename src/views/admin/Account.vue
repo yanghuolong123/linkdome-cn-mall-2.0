@@ -379,7 +379,7 @@
 					border-radius: 6px;
 					overflow: auto;
 					
-					/deep/ img {
+					::v-deep img {
 						width: 38px;
 						height: 38px;
 						border-radius: 50%;

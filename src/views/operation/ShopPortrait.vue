@@ -325,7 +325,7 @@
 <style lang="less" scoped>
 
 
-    .shop-portrait /deep/ .con-vs-pagination{
+    .shop-portrait ::v-deep .con-vs-pagination{
         margin: 0 auto;
     }
     .shop-portrait {

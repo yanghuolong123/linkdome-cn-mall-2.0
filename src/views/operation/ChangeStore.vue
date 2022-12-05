@@ -500,7 +500,7 @@ export default {
 		width: 120px;
 	}
 
-	.switch-date /deep/ .vs-select--input {
+	.switch-date ::v-deep .vs-select--input {
 		border: 0;
 		padding: 0 10px;
 
@@ -522,14 +522,14 @@ export default {
 			.date-picker {
 				margin-right: 30px;
 
-				/deep/ .ivu-input {
+				::v-deep .ivu-input {
 					width: 230px;
 					height: 43px;
 					font-size: 14px;
 					border: 1px solid rgba(0, 0, 0, .2);
 				}
 
-				/deep/ .ivu-input-suffix {
+				::v-deep .ivu-input-suffix {
 					i {
 						height: 43px;
 						line-height: 43px;

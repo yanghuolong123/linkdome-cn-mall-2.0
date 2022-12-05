@@ -439,7 +439,7 @@ export default {
   background-color: #2b83b7;
   border-color: #2b83b7;
 }
-.login-container/deep/.ivu-form-item-content {
+.login-container::v-deep.ivu-form-item-content {
   font-size: 14px !important;
 }
 .login-container {

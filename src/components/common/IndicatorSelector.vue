@@ -69,7 +69,7 @@ export default {
 }
 </script>
 <style lang="stylus">
-.chartSelector /deep/
+.chartSelector ::v-deep
   width 150px
   .input-select.vs-select--input
     padding 5px

@@ -324,7 +324,7 @@ export default {
     overflow-y:auto;
     display: block;
     text-align: center;
-    /deep/ .ivu-menu{
+    ::v-deep .ivu-menu{
       padding-top:10px;
       text-align: left;
       margin-bottom: 20px;
@@ -336,7 +336,7 @@ export default {
         background: linear-gradient(to right, rgb(55, 181, 237), rgba(55, 181, 237, 0.7));
         border-radius: 4px;
         color:#fff;
-          /deep/i{
+          ::v-deepi{
               font-size: 16px!important;
           }
       }
@@ -393,7 +393,7 @@ export default {
       }
     }
   }
-  /deep/ .ivu-icon-ios-arrow-down:before {
+  ::v-deep .ivu-icon-ios-arrow-down:before {
     content: "";
   }
 }

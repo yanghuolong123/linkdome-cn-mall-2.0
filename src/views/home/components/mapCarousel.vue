@@ -264,7 +264,7 @@ export default {
 .noData
   text-align: center
   line-height: 100%
-.carousel /deep/
+.carousel ::v-deep
   .carouselItem
     height: 100%
     position relative

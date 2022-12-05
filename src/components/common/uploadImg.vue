@@ -109,7 +109,7 @@ export default {
     margin: auto;
 }
 .buttons{
-    /deep/i{
+    ::v-deepi{
         font-size: 22px;
     }
   span{

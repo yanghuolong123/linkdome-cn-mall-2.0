@@ -59,7 +59,7 @@ export default {
   display flex
   justify-content space-between
   flex-wrap wrap
-  >div /deep/
+  >div ::v-deep
     width 24%
     margin-bottom 1.5rem
     // @media (max-width 992px) {
