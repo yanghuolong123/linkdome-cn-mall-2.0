@@ -1,5 +1,7 @@
 <template>
 	<div class="reportOneText" style=" width: 1200px; height: 1682px;">
+		<img src="../../../assets/images/fixation_img/logo/white-logo.png" class="property-logo" style=" width: 346px;" alt="">
+		
 		<div class="report-text" style=" bottom: 110px; padding: 0 82px;">
 			<h2 style="
                 font-size: 36px;
@@ -75,7 +77,10 @@
           case 'customize':
             return this.$store.state.report.customizeReportHeader.reportDate
         }
-      }
+      },
+      property () {
+        return this.$store.state.home.headerData
+      },
     }
   }
 </script>
@@ -86,7 +91,7 @@
 		position: relative;
 		background: url('../../../assets/images/fixation_img/bg/image_back_cover_background.png') no-repeat;
 		background-size: 100% 100%;
-		
+		padding: 86Px 80Px;
 		.report-text {
 			width: 100%;
 			height: auto;
