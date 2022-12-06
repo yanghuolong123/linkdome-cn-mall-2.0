@@ -47,9 +47,11 @@ export default {
       number1: 0,
       mapOptions: {
         container: '',
+        // level:1,
         // mapThemeURL: '../../../data/theme',
         focusAlphaMode: false,
         appName: '测试',
+        mapID:'1351434157796646914',
         key: 'dd96c8b3682ff87587a6dafc3db4b11e'
       },
       allLine: []
@@ -142,6 +144,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+  /*@import "~fengmap/build/toolBarStyle.css";*/
 .path3d{
   .path-picker{
     margin-bottom: 20px;

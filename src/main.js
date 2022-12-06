@@ -84,7 +84,7 @@ const config = {
   errorBagName: 'errorBags', // change if property conflicts.
   fieldsBagName: 'fieldBags'
 }
-Vue.use(VeeValidate, config)
+// Vue.use(VeeValidate, config)
 Vue.use(heatmapjsVue)
 import './libs/rem'
 require('./assets/css/iconfont.css')

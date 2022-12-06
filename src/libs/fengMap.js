@@ -1,3 +1,13 @@
+import  fengmap from 'fengmap'
+// import  "fengmap/build/plugins/fengmap.analyzer.min"; //核心包
+// import "fengmap/build/plugins/fengmap.control.min"; //分析器
+// import "fengmap/build/plugins/fengmap.core.min"; //插件包
+// import "fengmap/build/plugins/fengmap.navi.min"; //插件包
+// import "fengmap/build/plugins/fengmap.render.min"; //插件包
+// import "fengmap/build/plugins/fengmap.effect.min"; //特效包
+// import "fengmap/build/plugins/fengmap.plugins-compositemarker.min"; //复合标注包
+// import "fengmap/build/plugins/fengmap.plugins-mapedit.min"; //绘图包
+// import "fengmap/build/plugins/fengmap.plugins-track-player.min"; //轨迹回放包
 // 定义全局map变量
 var map = null
 // 定义地图ID变量
@@ -26,6 +36,7 @@ export const openMap = (that, data, option) => {
   that.$store.commit('UPDATE_LOADING_STATUS', false)
   // 地图加载完成事件
   map.on('loadComplete', function () {
+    console.log(fengmap)
     naviAnalyser = new fengmap.FMNaviAnalyser(map)
     loadScrollFloorCtrl()
     data.map((list, aI) => {
@@ -61,7 +72,6 @@ function drawNaviLine (colorType) {
   if (fengmap.FMRouteCalcuResult.ROUTE_SUCCESS != analyzeNaviResult) {
     return
   }
-
   // 获取路径分析结果对象，所有路线集合
   var results = naviAnalyser.getNaviResults()
   // 初始化线图层
