@@ -23,7 +23,7 @@
       </div>
     <div v-if="id!=='company'" style="width:100%;height:100%;">
       <template>
-        <div class="carousel" :style="{backgroundImage:`url(${mapCarousel.map_url})`}" >
+        <div class="carousel" :style="{backgroundImage:`url(${mapCarousel.map_url?mapCarousel.map_url:''})`}" >
           <div
             class="positions"
             style="position:absolute"
