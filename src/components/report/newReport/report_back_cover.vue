@@ -1,7 +1,7 @@
 <template>
 	<div class="reportOneText" style=" width: 1200px; height: 1682px;">
 		<img src="../../../assets/images/fixation_img/logo/white-logo.png" class="property-logo" style=" width: 346px;" alt="">
-		
+		<img class="earth" src="../../../assets/images/fixation_img/bg/earth.png" alt="">
 		<div class="report-text" style=" bottom: 110px; padding: 0 82px;">
 			<h2 style="
                 font-size: 36px;
@@ -89,9 +89,16 @@
 		display: inline-block;
 		overflow: hidden;
 		position: relative;
-		background: url('../../../assets/images/fixation_img/bg/image_back_cover_background.png') no-repeat;
+		background: url('../../../assets/images/fixation_img/bg/image_cover_background.png') no-repeat;
 		background-size: 100% 100%;
 		padding: 86Px 80Px;
+		.earth{
+			position: absolute;
+			top: 34%;
+			left: 50%;
+			transform: translate(-50%,-50%);
+			width: 750Px;
+		}
 		.report-text {
 			width: 100%;
 			height: auto;
