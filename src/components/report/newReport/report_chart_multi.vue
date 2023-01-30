@@ -36,8 +36,7 @@
   import reportFlooter from '@/components/report-public/report_flooter'
   import VueHighcharts from 'vue2-highcharts'
   import Bus from '@/libs/bus.js'
-  import _ from 'lodash'
-  import moment from 'moment'
+
   export default {
     name: 'report-month-chart-multi',
     props: {
@@ -71,10 +70,6 @@
         flooterBg: require('@/assets/images/fixation_img/bg/list_bg.png')
       }
     },
-
-    created () {
-
-    },
     mounted () {
       Bus.$on('chartData', () => {
         this.chartDataList()
@@ -88,8 +83,6 @@
         })
       }
     },
-    computed: {
-    }
 
   }
 </script>

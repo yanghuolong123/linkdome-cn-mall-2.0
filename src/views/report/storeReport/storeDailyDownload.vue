@@ -8,30 +8,6 @@
 					titleName='凌图智慧日报'
 					:pageTotal="`${validStoreSelectedList.length*14}`"
 				></report-cover>
-				<!--			&lt;!&ndash; 总览 &ndash;&gt;
-							<report-overview title='客流总览' :enterData='enterData' :listTitle='oneListData'></report-overview>
-							&lt;!&ndash;客流趋势（图表）&ndash;&gt;
-							<report-trend-chart :chartHeight='450' title='客流趋势' page='2' :listTitle='trendTitle'
-												:dataList=trendChartData></report-trend-chart>
-							&lt;!&ndash;客流趋势（表格）&ndash;&gt;
-							<report-ratio-table
-									title='客流趋势'
-									page='3'
-									:listTitle='trendTitle'
-									:tableColumn='ratioTableColumn'
-									:tableData='ratioTableData'
-							></report-ratio-table>
-							&lt;!&ndash;年龄性别趋势分析(图表)&ndash;&gt;
-							<report-age-gender-chart title='年龄性别趋势分析' page='4' :listTitle='ageGenderTitle'
-													 :dataList=ageGenderChartData></report-age-gender-chart>
-							&lt;!&ndash;年龄性别趋势分析(表格)&ndash;&gt;
-							<report-age-gender-table
-									title='年龄性别趋势分析'
-									page='5'
-									:listTitle='ageGenderTitle'
-									:tableColumn='ageGenderTableColumn'
-									:tableData='ageGenderTableData'
-							></report-age-gender-table>-->
 				<div v-for="(store,i) in validStoreSelectedList">
 					<report-chart :chartHeight='600'
 												v-if="storeEnterChartList.length"
@@ -154,8 +130,6 @@
 						:tableData='storeAgeGenderPssbyFlowList[i].tableData'
 						:storeName="storeAgeGenderPssbyFlowList[i].storeName"
 					></report-age-gender-table>
-					<!--				<report-dwell title='店铺客流分析' v-if="storeDwellList.length" :page='(7*i+7).toString()' :enterData='storeDwellList[i]'-->
-					<!--											:listTitle='dwellTitle'></report-dwell>-->
 				</div>
 				<report-back-cover></report-back-cover>
 			</div>
@@ -169,13 +143,12 @@
   import reportDwell from './components/report-dwell'
   import reportBackCover from '@/components/report/newReport/report_back_cover'
 
-  import reportTrendChart from './components/report-trend-chart'
   import reportAgeGenderChart from './components/report-age-gender-chart'
   import reportAgeGenderTable from './components/report-age-gender-table'
   import reportRatioTable from '@/components/report/newReport/report_ratio_table'
   import mixins from '../reportMixin.js'
   import { getGroupOrganization } from '@/api/home'
-  import {  ageGenderPassbyTrend, passbyTrend, ageGenderTrend, getDwellTime } from '@/api/report'
+  import {  ageGenderPassbyTrend, passbyTrend, ageGenderTrend } from '@/api/report'
   import moment from 'moment/moment'
   import { entityFlow } from '@/api/entityNew'
   import { setToken } from '@/libs/util'
@@ -187,7 +160,6 @@
       reportBackCover,
       reportOverview,
       reportChart,
-      reportTrendChart,
       reportRatioTable,
       reportAgeGenderChart,
       reportAgeGenderTable,

@@ -1,22 +1,30 @@
 <template>
   <div class="path3d">
-    <div class="path-picker">
-      <DatePicker
-        type="date"
-        v-model="drainageDate"
-        :placeholder="$t('holder.选择日期')"
-        :options="disabledDate"
-        format="yyyy-MM-dd"
-        style='width:230px;float:left;'
-      ></DatePicker>
-      <div class="drainage-submit" v-on:click="searchData">{{ $t('查询') }}</div>
-      <div class="drainage-submit drainage-reset" v-on:click="reset">{{ $t('重置') }}</div>
+    <div class="selector-container bg-white box-card">
+			<div class="flex-center">
+				<DatePicker
+					type="date"
+					v-model="drainageDate"
+					:placeholder="$t('holder.选择日期')"
+					:options="disabledDate"
+					format="yyyy-MM-dd"
+					class="w-select"
+				></DatePicker>
+				<Select v-model="mapIndex" class="m-l-20 w-select" >
+					<Option v-for="(item,index) in mapInfo" :value="index" :key="item.id">{{ item.type }}</Option>
+				</Select>
+				<Button size="large" class="m-l-20" type="primary" @click="searchData">{{ $t('查询') }}</Button>
+				<Button size="large" class="m-l-20" @click="reset">{{ $t('重置') }}</Button>
+			</div>
+    
     </div>
-    <div class="new-path-center">
+    <div class="new-path-center m-t-20" v-show="mapInfo.length">
       <div id="fengMap" v-if="isFengMap"></div>
       <div class="shield"></div>
     </div>
-    
+    <div class="new-path-center flex-column m-t-20 no-data" v-show="!mapInfo.length">
+			暂无数据
+		</div>
     <div class="maps">
       <pathTab :title="title1" :numbers="number1"></pathTab>
       <img  :src="pathColor" alt="">
@@ -27,7 +35,7 @@
 import pathTab from './components/components/PathTab.vue'
 import { openMap } from '@/libs/fengMap.js'
 import { disabledDate } from '@/libs/util.js'
-import { Path3D } from '@/api/analysis'
+import { Path3D,getFengmapId } from '@/api/analysis'
 import moment from 'moment'
 import _ from 'lodash'
 export default {
@@ -41,24 +49,27 @@ export default {
       isFengMap: true,
       drainageDate: '',
       disabledDate: '',
+      mapIndex:-1,
       floorId: 1,
       floorNumber: [],
       title1: '游逛深度（个）',
       number1: 0,
-      mapOptions: {
-        container: '',
-        // level:1,
-        // mapThemeURL: '../../../data/theme',
-        focusAlphaMode: false,
-        appName: '测试',
-        mapID:'1351434157796646914',
-        key: 'dd96c8b3682ff87587a6dafc3db4b11e'
-      },
-      allLine: []
+      allLine: [],
+			mapInfo:[]
     }
   },
   computed: {
-  
+    mapOptions(){
+      const map = this.mapInfo[this.mapIndex]
+			if(!map)return null
+      return {
+        container: '',
+        focusAlphaMode: false,
+        appName: map.app_name,
+        key:map.app_key,
+        mapId:map.fmap_id
+			}
+		}
   },
   watch: {
     drainageDate (val) {
@@ -78,9 +89,29 @@ export default {
     // let allData = this.allLine, option = this.mapOptions
     // this.$store.commit('UPDATE_LOADING_STATUS', true)
     // openMap(this, allData, option)
-    this.searchData()
+		this.queryMapId().then(()=>{
+      this.searchData()
+		})
+  
   },
   methods: {
+    queryMapId(){
+			return new Promise((resolve,reject)=>{
+        getFengmapId({property_id:this.$store.state.home.headerAction}).then(res=>{
+          this.mapInfo = res.data.data
+					if(this.mapInfo.length){
+					  this.mapIndex = 0
+					}else {
+            this.$store.commit('UPDATE_LOADING_STATUS', false)
+            this.$message.warning('未配置地图信息！')
+            reject()
+					}
+					resolve()
+        }).catch(err=>{
+          reject()
+				})
+			})
+    },
     searchData () {
       this.isFengMap = false
       let property_id = this.$store.state.home.headerAction
@@ -130,8 +161,7 @@ export default {
             })
           })
           allData.reverse()
-          let option = this.mapOptions
-          setTimeout(() => { openMap(this, allData, option) })
+          setTimeout(() => { openMap(this, allData, this.mapOptions) })
         }
       })
     },
@@ -208,6 +238,13 @@ export default {
     position: relative;
     height: 600px;
     overflow: hidden;
+	
+		&.no-data{
+			background: #fff;
+			justify-content: center;
+			text-align: center;
+			font-size: 30px;
+		}
     #fengMap{
       width: 100%;
       height: 600px;

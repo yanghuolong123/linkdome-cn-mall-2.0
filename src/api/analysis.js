@@ -234,3 +234,10 @@ export const getInvalidFlow = params => {
     params
   })
 }
+//获取蜂鸟地图ID
+export const getFengmapId = params => {
+  return naxios.request({
+    url: 'fmap/config',
+    params
+  })
+}

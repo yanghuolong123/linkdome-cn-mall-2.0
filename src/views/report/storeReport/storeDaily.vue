@@ -26,30 +26,6 @@
 				titleName='凌图智慧日报'
 				:pageTotal="`${validStoreSelectedList.length*14}`"
 			></report-cover>
-			<!--			&lt;!&ndash; 总览 &ndash;&gt;
-						<report-overview title='客流总览' :enterData='enterData' :listTitle='oneListData'></report-overview>
-						&lt;!&ndash;客流趋势（图表）&ndash;&gt;
-						<report-trend-chart :chartHeight='450' title='客流趋势' page='2' :listTitle='trendTitle'
-											:dataList=trendChartData></report-trend-chart>
-						&lt;!&ndash;客流趋势（表格）&ndash;&gt;
-						<report-ratio-table
-								title='客流趋势'
-								page='3'
-								:listTitle='trendTitle'
-								:tableColumn='ratioTableColumn'
-								:tableData='ratioTableData'
-						></report-ratio-table>
-						&lt;!&ndash;年龄性别趋势分析(图表)&ndash;&gt;
-						<report-age-gender-chart title='年龄性别趋势分析' page='4' :listTitle='ageGenderTitle'
-												 :dataList=ageGenderChartData></report-age-gender-chart>
-						&lt;!&ndash;年龄性别趋势分析(表格)&ndash;&gt;
-						<report-age-gender-table
-								title='年龄性别趋势分析'
-								page='5'
-								:listTitle='ageGenderTitle'
-								:tableColumn='ageGenderTableColumn'
-								:tableData='ageGenderTableData'
-						></report-age-gender-table>-->
 			<div v-for="(store,i) in validStoreSelectedList">
 				<report-chart :chartHeight='600'
 											v-if="storeEnterChartList.length"
@@ -172,8 +148,6 @@
 					:tableData='storeAgeGenderPssbyFlowList[i].tableData'
 					:storeName="storeAgeGenderPssbyFlowList[i].storeName"
 				></report-age-gender-table>
-<!--				<report-dwell title='店铺客流分析' v-if="storeDwellList.length" :page='(7*i+7).toString()' :enterData='storeDwellList[i]'-->
-<!--											:listTitle='dwellTitle'></report-dwell>-->
 			</div>
 
 			<report-back-cover></report-back-cover>
@@ -187,14 +161,13 @@
   import reportOverview from './components/report-overview'
   import reportDwell from './components/report-dwell'
   import reportBackCover from '@/components/report/newReport/report_back_cover'
-  import reportTrendChart from './components/report-trend-chart'
   import reportAgeGenderChart from './components/report-age-gender-chart'
   import reportAgeGenderTable from './components/report-age-gender-table'
   import reportRatioTable from '@/components/report/newReport/report_ratio_table'
   import mixins from '../reportMixin.js'
   import { getEntity } from '@/api/home'
   import axios from 'axios'
-  import {  ageGenderPassbyTrend, passbyTrend, ageGenderTrend, getDwellTime } from '@/api/report'
+  import {  ageGenderPassbyTrend, passbyTrend, ageGenderTrend } from '@/api/report'
 
   import moment from 'moment/moment'
   import { disabledDate,getToken } from '@/libs/util.js'
@@ -213,7 +186,6 @@
       reportBackCover,
       reportOverview,
       reportChart,
-      reportTrendChart,
       reportRatioTable,
       reportAgeGenderChart,
       reportAgeGenderTable,
@@ -230,32 +202,10 @@
     mixins: [mixins, storeMixin],
     async mounted () {
       const data = await getEntity(this.propertyId, 50)
-      // this.storeListOptions = [{
-      //   name:'全部',
-      //   id:-1
-			// },...data.data.data]
       this.storeListOptions = [...data.data.data]
 			
 
     },
-		watch:{
-      // storeSelected:{
-      //   handler(newval,oldval){
-      //     if(_.differenceWith(newval, oldval)[0] === -1){
-      //       this.storeSelected = this.storeListOptions.map(o=>{
-      //         return o.id
-			// 			})
-			// 		}
-      //     if(_.differenceWith(oldval,newval)[0] === -1){
-      //       this.storeSelected = []
-			// 		}
-      //     if(this.storeSelected.length===1 && this.storeSelected[0] === -1){
-      //       this.storeSelected = []
-			// 		}
-			// 	},
-			// 	deep:true
-			// }
-		},
     methods: {
       downloadReport (type, time) {
         if(!this.storeSelected){
@@ -305,32 +255,6 @@
         const yesterday = moment(this.selectDateTime).subtract(1, 'days').format('YYYY-MM-DD')
         this.showReport = true
 				Promise.all([
-          /*      newReportEnter({
-									property_id: this.propertyId,
-									timeRange: `${this.selectDateTime},${this.selectDateTime}`,
-									report_type: 'day'
-								}),
-								//  查询当天客流趋势
-								getanalysiseeo({
-									bzid: this.bzid,
-									type: 'enter',
-									range: `${this.selectDateTime},${this.selectDateTime}`,
-									innerRange: '1h'
-								}),
-								// 前一天客流趋势
-								getanalysiseeo({ bzid: this.bzid, type: 'enter', range: yesterday + ',' + yesterday, innerRange: '1h' }),
-								//年龄性别趋势(查询当天)3
-								getEntityFlow({ property_id: this.propertyId, range: `${this.selectDateTime},${this.selectDateTime}` }),
-								//年龄性别趋势(前一天)4
-								getEntityFlow({ property_id: this.propertyId, range: yesterday + ',' + yesterday }),
-								//年龄性别趋势（表格）5
-								ageGenderTrend({
-									property_id: this.propertyId,
-									bzid: this.bzid,
-									time1: `${this.selectDateTime},${this.selectDateTime}`,
-									type: 'enter',
-									range: 'Hour'
-								}),*/
           //当日进店客流6
           entityFlow({
             type: 'enter',
@@ -378,26 +302,7 @@
             bzid: this.storeBzids,
             time1: `${this.selectDateTime},${this.selectDateTime}`,
           }),
-          //停留时间10
-          // getDwellTime({
-          //   property_id: this.propertyId,
-          //   bzid: this.storeBzids,
-          //   time1: `${this.selectDateTime},${this.selectDateTime}`,
-          //   range: 'Date'
-          // })
         ]).then(res => {
-          /*          const gender = {
-											today: res[3].data.data.gender_propotion,
-											yesterday: res[4].data.data.gender_propotion
-										}
-										// 客流总览
-										this.reportOneData(res[0].data.data, gender)
-										// 客流趋势
-										this.trendDataList(res[1].data.data, res[2].data.data)
-										//年龄性别趋势
-										this.ageGenderList(res[5].data.data.time1[0])
-										//年龄性别趋势（表格）
-										this.ageGenderTableData = this.ageGenderTable(res[5].data.data.time1[0],'hourly')*/
           
           //门店数据（当日入客流）
           this.storeEnterChartList = Object.freeze(this.storeEnterChart(res[0].data.data))
@@ -419,7 +324,6 @@
           //门店进店年龄性别客流
 
           this.ageGenderChartData = Object.freeze(this.ageGenderList(res[3].data.data.time1,'hourly'));
-          console.log(_.cloneDeep(this.ageGenderChartData))
           this.storeAgeGenderFlowList = Object.freeze(res[3].data.data.time1.map(o => {
             return {
               storeName: o.name,
@@ -442,8 +346,6 @@
               tableData: this.ageGenderTable(o, 'passbyHourly')
             }
           }))
-					//停留时间
-          // this.storeDwellList = res[6].data.data.time1 || []
         })
       },
     },

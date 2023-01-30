@@ -10,8 +10,6 @@ import  fengmap from 'fengmap'
 // import "fengmap/build/plugins/fengmap.plugins-track-player.min"; //轨迹回放包
 // 定义全局map变量
 var map = null
-// 定义地图ID变量
-var fmapID = '1351434157796646914'
 // 定义路径规划对象
 var naviAnalyser = null
 // 起终点坐标
@@ -29,7 +27,7 @@ export const openMap = (that, data, option) => {
   if (last) mapDiv.removeChild(last)
   option.container = document.getElementById('fengMap')
   map = new fengmap.FMMap(option)
-  map.openMapById(fmapID, function (error) {
+  map.openMapById(option.mapId, function (error) {
     openMap(that, data, option)
     console.log(error)
   })
