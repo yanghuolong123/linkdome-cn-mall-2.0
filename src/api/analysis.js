@@ -210,12 +210,13 @@ export const getHeatMapDistribution = params => {
   })
 }
 export const Path3D = params => {
-  const { time, property_id } = params
+  const { time, property_id,type } = params
   return naxios.request({
     url: 'flow/movingTd',
     params: {
       time,
-      property_id
+      property_id,
+      type
     },
     method: 'get'
   })

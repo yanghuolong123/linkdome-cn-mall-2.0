@@ -17,11 +17,12 @@ var coords = []
 // 定义滚动型楼层切换控件
 var scrollFloorControl
 let lastGroupID
-
+var thats
 /**
  * 打开地图
  * */
 export const openMap = (that, data, option) => {
+  thats = that
   var mapDiv = document.getElementById('fengMap')
   var last = mapDiv.lastElementChild
   if (last) mapDiv.removeChild(last)
@@ -66,7 +67,7 @@ export const openMap = (that, data, option) => {
 function drawNaviLine (colorType) {
   // 根据已加载的fengmap.FMMap导航分析，判断路径规划是否成功
   var analyzeNaviResult = naviAnalyser.analyzeNavi(coords[0].groupID, coords[0], coords[1].groupID, coords[1],
-    fengmap.FMNaviMode.MODULE_SHORTEST)
+    fengmap.FMNaviMode.MODULE_BEST)
   if (fengmap.FMRouteCalcuResult.ROUTE_SUCCESS != analyzeNaviResult) {
     return
   }
@@ -133,6 +134,7 @@ function loadScrollFloorCtrl () {
   scrollFloorControl = new fengmap.FMScrollGroupsControl(map, scrollFloorCtlOpt)
   // 楼层切换
   scrollFloorControl.onChange(function (groups, allLayer) {
-    // thats.floorId = groups[0]
+    console.log(groups)
+    thats.floorId = groups[0]
   })
 }
