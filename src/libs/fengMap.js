@@ -67,7 +67,7 @@ export const openMap = (that, data, option) => {
 function drawNaviLine (colorType) {
   // 根据已加载的fengmap.FMMap导航分析，判断路径规划是否成功
   var analyzeNaviResult = naviAnalyser.analyzeNavi(coords[0].groupID, coords[0], coords[1].groupID, coords[1],
-    fengmap.FMNaviMode.MODULE_BEST)
+    fengmap.FMNaviMode.MODULE_SHORTEST)
   if (fengmap.FMRouteCalcuResult.ROUTE_SUCCESS != analyzeNaviResult) {
     return
   }

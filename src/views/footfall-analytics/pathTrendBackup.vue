@@ -217,10 +217,16 @@ export default {
       if (moveData.paths) {
         moveData.paths.forEach(function (m) {
           if (m.enter) {
+            if(m.path.some(o=>{
+              return o.name.indexOf('通道') > -1
+            })){
+              console.log(m)
+            }
             paths.push(m)
           }
         })
       }
+      console.log(paths)
       var maxNumber
       if (paths.length) {
         maxNumber = _.maxBy(paths, 'enter').enter

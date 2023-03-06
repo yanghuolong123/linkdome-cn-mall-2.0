@@ -78,7 +78,7 @@
       },
       floorId () {
         this.number1 = _.filter(this.floorNumber, (o) => {
-          return o.floor === this.floorId
+          return o.id === this.floorId
         })[0].number
       }
     },
@@ -128,7 +128,8 @@
             data.map((list, index) => {
               this.floorNumber.push({
                 floor: list.floor_index,
-                number: list.depthOfWandering
+                number: list.depthOfWandering,
+								id:index+1
               })
 							//过滤无效数据
               list.paths = list.paths.filter(p => {
@@ -137,11 +138,11 @@
                 })
               })
 							//按客流量排序
-              list.paths = _.sortBy(list.paths,function (m) {
-								return m.enter
-              })
-							
-							const front = Math.floor(list.paths.length/3);
+              // list.paths = _.sortBy(list.paths,function (m) {
+							// 	return m.enter
+              // }).reverse()
+              console.log(list.paths)
+              const front = Math.floor(list.paths.length/3);
               const back = list.paths.length - front
               list.paths.map((val, i) => {
                 let arr = []
@@ -166,8 +167,8 @@
             })
             allData.forEach(o=>{
               o.forEach(m=>{
-              	if(m.id === 6){
-                  // console.log(o)
+              	if(m.x === 	13027706.896595905){
+                  console.log(o)
                 }
 							})
 						})

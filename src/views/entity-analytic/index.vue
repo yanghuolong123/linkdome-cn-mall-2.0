@@ -272,27 +272,30 @@ export default {
         property_id: this.$store.state.home.headerAction,
         type: type ? 1 : 0,
       }
-
-      await weatherTrend(data).then((weather) => {
-        weather = weather.data.data
-        if(weather ){
-          this.weathers1 = weather[this.oParams.params.date1Array.toString()][0].list
-          this.weathers2 = this.oParams.isDateCompare()?weather[this.oParams.params.date2Array.toString()][0].list:[]
-        }else {
-          this.weathers1 = []
-          this.weathers2 = []
-        }
-        if(this.weathers1.length){
-          if(!this.weathers1[0].hasOwnProperty('type')){
+      //自定义时间对比时，不显示天气对比
+      if(this.oParams.params.compareType!=='time'){
+        await weatherTrend(data).then((weather) => {
+          weather = weather.data.data
+          if(weather ){
+            this.weathers1 = weather[this.oParams.params.date1Array.toString()][0].list
+            this.weathers2 = this.oParams.isDateCompare()?weather[this.oParams.params.date2Array.toString()][0].list:[]
+          }else {
             this.weathers1 = []
-          }
-        }
-        if(this.weathers2.length){
-          if(!this.weathers2[0].hasOwnProperty('type')){
             this.weathers2 = []
           }
-        }
-      });
+          if(this.weathers1.length){
+            if(!this.weathers1[0].hasOwnProperty('type')){
+              this.weathers1 = []
+            }
+          }
+          if(this.weathers2.length){
+            if(!this.weathers2[0].hasOwnProperty('type')){
+              this.weathers2 = []
+            }
+          }
+        });
+      }
+
       Promise.all(reqList)
         .then((res) => {
           responseList.forEach((o, i) => {
