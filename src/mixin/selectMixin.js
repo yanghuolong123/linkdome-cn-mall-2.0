@@ -12,7 +12,7 @@ import {
 } from '@/libs/util'
 import i18n from '@/i18n/i18n'
 import { getBussinessTree,  getCascadeList } from '@/api/passenger.js'
-import {  getGateTypeList } from '@/api/manager.js'
+import {  getGateTypeList,getIndustry } from '@/api/manager.js'
 import { getBussinessDict } from '@/api/home'
 const selectMixin = {
   components:{
@@ -34,7 +34,7 @@ const selectMixin = {
         bussinessType:[],
       },
       bussinessTypeOptions: [],//业态
-      entityOptions:[],
+
       compareType: 'not',//对比类型
       entityType: '',//单选按钮
       typeOptions: [
@@ -70,7 +70,9 @@ const selectMixin = {
       entitySelectObj:{},
       cascadeAllStore:[],
       gateCascadeOpiton:[],
+      bussinessCascadeOpiton:[],
       gateCascadeData:[],
+      busiCascadeData:[],
     }
   },
   watch: {
@@ -149,9 +151,41 @@ const selectMixin = {
       }else {
         return []
       }
+    },
+    entityOptions(){
+      return [
+        {
+          label: this.$t('楼层'),
+          value: 'floor'
+        },
+        {
+          label: this.$t('商铺'),
+          value: 'store'
+        },
+        {
+          label: this.$t('区域'),
+          value: 'area'
+        },
+        {
+          label: this.$t('出入口'),
+          value: 'gate',
+          itype:'gate',
+          cascadeOption:this.gateCascadeOpiton,
+          cascadeData:this.gateCascadeData
+        },
+        {
+          label: this.$t('业态'),
+          value: 'bussiness',
+          cascadeOption:this.bussinessCascadeOpiton,
+          cascadeData:this.busiCascadeData
+        },
+      ]
     }
   },
   methods: {
+    getCascadeOption(){
+     return _.find(this.entityOptionsCom,['value',this.entityType])
+    },
     getBussinessDict () {
       getBussinessDict({ property_id: this.$store.state.home.headerAction }).then(res => {
         res = res.data.data
@@ -172,6 +206,12 @@ const selectMixin = {
     getGateTypeList(){
       getGateTypeList({ property_id: this.$store.state.home.headerAction }).then(res=>{
         this.gateCascadeOpiton = res.data.data || [];
+      })
+    },
+    //按业态选择店铺
+    getIndustry(){
+      getIndustry({ property_id: this.$store.state.home.headerAction }).then(res=>{
+        this.bussinessCascadeOpiton = res.data.data || [];
       })
     },
     getStoreCascadeOpiton(){
@@ -242,17 +282,19 @@ const selectMixin = {
             obj.belongsType = '商铺'
             entitys.push(obj)
           })
-        } else if(this.entityType === 'gate'){
-          this.gateCascadeData.map(list => {
+        } else if(['gate','bussiness'].includes(this.entityType) ){
+          const option = _.find(this.entityOptions,['value',this.entityType])
+
+          option.cascadeData.map(list => {
             let obj = {}
-            obj.itype = 'gate'
+            obj.itype = option.itype
             obj.id = list[1]
-            const node = deepFind(this.gateCascadeOpiton, o => {
+            const node = deepFind(option.cascadeOption, o => {
               return o.id === Number(list[1])
             }, 'children')
             obj.name = node.name
             obj.label = node.name
-            obj.belongsType = '出入口'
+            obj.belongsType = option.label
             entitys.push(obj)
           })
         }else {
@@ -489,6 +531,7 @@ const selectMixin = {
   },
   mounted(){
     this.getGateTypeList()
+
     this.entityType = this.entityOptions[0] && this.entityOptions[0].value;
   }
 }

@@ -253,7 +253,7 @@
         if (data1 && data1.length) {
           this.statisticList[0].total1 = _.sumBy(data1, 'unique_visits')
           this.statisticList[1].total1 = formatNumber(_.sumBy(data1, 'visits') - this.statisticList[0].total1)
-          this.statisticList[2].total1 = formatNumber(_.sumBy(data1, 'avgFrequencyVisits') / data1.length)
+          this.statisticList[2].total1 = data[0].totalAvgFrequencyVisits
         }
 
         const params = this.oParams.getParams()

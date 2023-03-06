@@ -42,8 +42,18 @@
 				:props="cascadeProps"
 				:options="entityCascaderOption"
 			></el-cascader>
+			<el-cascader
+				v-show="compareType === 'entity'&& entityType === 'bussiness'"
+				:placeholder=" $t('holder.请选择') "
+				class="w-select"
+				v-model="busiCascadeData"
+				collapse-tags
+				:props="{ multiple: true,expandTrigger:'hover',label:'name',value:'id' }"
+				:options="bussinessCascadeOpiton"
+			>
+			</el-cascader>
 			<Select v-model="queryParams.selectList" :max-tag-count="1" multiple class="w-select"
-					v-show="compareType === 'entity'&& entityType !== 'store'">
+					v-show="compareType === 'entity'&&!['store','gate','bussiness'].includes(entityType)">
 				<Option v-for="item in selectOptions"
 					:value="item.id"
 					:key="item.id">
@@ -90,23 +100,32 @@
 				checkStrictly: true,
 				expandTrigger:'hover'
 			},
-			entityOptions:[
-				{
-					label:'购物中心',
-					value:'shop'
-				},{
-					label:'楼层',
-					value:'floor'
-				}, {
-					label:'商铺',
-					value:'store'
-				}, {
-					label:'区域',
-					value:'area'
-				},
-			],
 		}
 	},
+		computed:{
+	 		entityOptions(){
+	 		  return [
+          {
+            label:'购物中心',
+            value:'shop'
+          },{
+            label:'楼层',
+            value:'floor'
+          }, {
+            label:'商铺',
+            value:'store'
+          }, {
+            label:'区域',
+            value:'area'
+          },{
+            label: this.$t('业态'),
+            value: 'bussiness',
+            cascadeOption:this.bussinessCascadeOpiton,
+            cascadeData:this.busiCascadeData
+          },
+        ]
+			}
+		},
 	methods:{
       handleBussinessTreeData(data){
         const cascadeAuthData = _.cloneDeep(data).filter(o => { return o.property_id === this.$store.state.home.headerAction })
@@ -122,6 +141,9 @@
         this.handleClick()
         this.cascadeDataAddAll(this.entityCascaderOption)
       },
-	}
+	},
+		created () {
+      this.getIndustry()
+    }
   }
 </script>

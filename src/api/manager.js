@@ -485,3 +485,9 @@ export const getGateTypeList =  (params) => {
     params
   })
 }
+export const getIndustry = params => {
+  return axios.request({
+    url: '/bzone/industry',
+    params
+  })
+}

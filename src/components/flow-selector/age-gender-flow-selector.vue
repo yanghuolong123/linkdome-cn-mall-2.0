@@ -48,6 +48,16 @@
 			>
 			</el-cascader>
 			<el-cascader
+				v-show="compareType === 'entity'&& entityType === 'bussiness'"
+				:placeholder=" $t('holder.请选择') "
+				class="w-select"
+				v-model="busiCascadeData"
+				collapse-tags
+				:props="{ multiple: true,expandTrigger:'hover',label:'name',value:'id' }"
+				:options="bussinessCascadeOpiton"
+			>
+			</el-cascader>
+			<el-cascader
 				v-show="compareType !== 'entity'&&compareType !== 'businessType'"
 				v-model="entityCascaderData"
 				collapse-tags
@@ -57,7 +67,7 @@
 			>
 			</el-cascader>
 			<Select v-model="queryParams.selectList" :max-tag-count="1" multiple class="w-select"
-							v-show="compareType === 'entity'&& !['store','gate'].includes(entityType)">
+							v-show="compareType === 'entity'&& !['store','gate','bussiness'].includes(entityType)">
 				<Option v-for="item in selectOptions"
 								:value="item.id"
 								:key="item.id">{{ item.label }}
@@ -84,21 +94,7 @@
     data () {
       return {
        
-        entityOptions: [
-          {
-            label: '楼层',
-            value: 'floor'
-          }, {
-            label: '商铺',
-            value: 'store'
-          }, {
-            label: '区域',
-            value: 'area'
-          }, {
-            label: '出入口',
-            value: 'gate'
-          },
-        ],
+
         cascadeProps: {
           multiple: true,
           checkStrictly: true,
@@ -174,6 +170,7 @@
 		created () {
       //获取所有业态
       this.getBussinessDict()
+      this.getIndustry()
     }
   }
 </script>

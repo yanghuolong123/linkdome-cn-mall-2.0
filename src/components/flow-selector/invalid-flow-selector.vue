@@ -17,7 +17,7 @@
 										 @selectDate="dateSelect"></i-date-picker>
 		</div>
 		<div class="flex-center raido-group" v-show="compareType === 'entity'">
-			<vs-radio v-model="entityType" :vs-value="item.value" :key="item.value" v-for="item in entityOptionsCom"
+			<vs-radio v-model="entityType" :vs-value="item.value" :key="item.value" v-for="item in entityOptions"
 								class="mr-4">{{item.label}}
 			</vs-radio>
 		</div>
@@ -51,6 +51,16 @@
 			>
 			</el-cascader>
 			<el-cascader
+				v-show="compareType === 'entity'&& entityType === 'bussiness'"
+				:placeholder=" $t('holder.请选择') "
+				class="w-select"
+				v-model="busiCascadeData"
+				collapse-tags
+				:props="{ multiple: true,expandTrigger:'hover',label:'name',value:'id' }"
+				:options="bussinessCascadeOpiton"
+			>
+			</el-cascader>
+			<el-cascader
 				v-show="compareType !== 'entity'&&compareType !== 'businessType'"
 				:placeholder=" $t('holder.请选择') "
 				v-model="entityCascaderData"
@@ -61,7 +71,7 @@
 			>
 			</el-cascader>
 			<Select v-model="queryParams.selectList" :max-tag-count="1" multiple class="w-select"
-							v-show="compareType === 'entity'&& !['store','gate'].includes(entityType) ">
+							v-show="compareType === 'entity'&& !['store','gate','bussiness'].includes(entityType) ">
 				<Option v-for="item in selectOptions"
 								:value="item.id"
 								:key="item.id">{{ item.label }}
@@ -90,7 +100,6 @@
       return {
         bussinessTypeOptions: [],//业态
         typeOptions: [],
-        entityOptions: [],
         cascadeProps: {
           multiple: true,
           checkStrictly: true,
@@ -114,27 +123,6 @@
         ]
         return this.typeOptions
       },
-      entityOptionsCom() {
-        this.entityOptions =  [
-          {
-            label: this.$t('楼层'),
-            value: 'floor'
-          },
-          {
-            label: this.$t('商铺'),
-            value: 'store'
-          },
-          {
-            label: this.$t('区域'),
-            value: 'area'
-          },
-          {
-            label: this.$t('出入口'),
-            value: 'gate'
-          },
-        ]
-        return this.entityOptions
-      }
     },
     methods: {
       paramsPrepare (params) {
@@ -230,6 +218,7 @@
     created () {
       //获取所有业态
       this.getBussinessDict()
+      this.getIndustry()
     }
   }
 </script>
