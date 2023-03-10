@@ -13,8 +13,8 @@
 					<Option v-for="item in gateList" :value="item.value" :key="item.value">{{item.label}}</Option>
 				</Select>
 			</FormItem>
-			<FormItem :label="$t('出入口类型')" prop="gate_type_id">
-				<Select v-model="formData.gate_type_id">
+			<FormItem :label="$t('出入口类型')" prop="gate_type">
+				<Select v-model="formData.gate_type">
 					<Option v-for="item in gateTypeList" :value="item.id" :key="item.id">{{item.name}}</Option>
 				</Select>
 			</FormItem>
@@ -30,8 +30,11 @@
   import Modal from '_c/common/Modal.vue'
   import {
     addGate,
-    updateFloorGate
+    updateFloorGate,
+    createEntity,
+    updateEntity
   } from '@/api/manager.js'
+  import { mapState } from 'vuex'
 
   export default {
     props: {
@@ -39,13 +42,10 @@
         type: String,
         default: '添加出入口'
       },
-      floorInfo: {
-        type: Array,
-        required: true
-      },
-      parent_id: {
-        type: Array,
-        required: true
+      entityInfo: {
+        type: Object,
+        required: true,
+        default:()=>{}
       },
       gateList: {
         type: Array,
@@ -64,7 +64,7 @@
           name: '',
           gate_id: '',
           description: '',
-          gate_type_id: ''
+          gate_type: ''
         },
         ruleInline: {
           name: [{
@@ -78,7 +78,7 @@
             trigger: 'change',
             type: 'number'
           }],
-          gate_type_id: [{
+          gate_type: [{
             required: true,
             message: this.$t('请选择'),
             trigger: 'change',
@@ -92,6 +92,9 @@
       gateTypeList () {
         return this.getGateTypeList() || []
       },
+      ...mapState({
+        propertyId: state => state.home.headerAction,
+      }),
     },
     components:{Modal},
     methods: {
@@ -115,36 +118,35 @@
       },
       addDoorWay () {
         var that = this
-        var property_id = that.floorInfo[0].property_id
-        var parent_id = _.last(that.floorInfo).id
-        var data = {}
-        data.name = that.formData.name
-        data.description = that.formData.description
-        data.gate_id = that.formData.gate_id
-        data.type = 'gate'
-        if (!that.isModify) {
-          addGate(property_id, that.formData.name, parent_id, that.formData.gate_id, that.formData.description, that.formData.gate_type_id).then((res) => {
+        let data = _.cloneDeep(this.formData)
+        data.zoneIds = [this.formData.gate_id]
+        data.parent_id = this.entityInfo.id
+        data.type_id = 502//502 出入口
+        data.type_name = 'gate'
+        data.property_id = this.propertyId
+				data.zone_id = this.formData.gate_id
+        if (!this.isModify) {
+          createEntity(data).then(res=>{
             this.$refs.modal.resetOkButton()
-            if (res.data.code == 200) {
-              data.id = res.data.data.bzid
+            if (res.data.code === 200) {
+              data.id = res.data.data.id
               that.closeEdit()
               this.$message.success(this.$t('fn.successTo', [this.$t('添加出入口')]))
               that.$emit('addTypeData', data)
             }
-          })
+					})
+
         } else {
           that.gate_id = that.formData.gate_id
-          data.gate_id = that.gate_id
-          var bzid = that.formData.id
-          updateFloorGate(property_id, that.formData.name, parent_id, that.gate_id, that.formData.description, bzid, that.formData.gate_type_id).then((res) =>{
+					updateEntity(data.id,data).then(res=>{
             this.$refs.modal.resetOkButton()
-            if (res.data.code == 200) {
-              data.id = that.formData.id
+            if (res.data.code === 200) {
               that.closeEdit()
               this.$message.success(this.$t('fn.successTo', [this.$t('编辑出入口')]))
               that.$emit('updateTypeData', data)
             }
-          })
+					})
+
         }
       },
     }

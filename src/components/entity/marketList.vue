@@ -3,7 +3,7 @@
 		<table-multiple-selected
 				:tableName='tableName'
 				:tableList='tableList'
-				:titleName='titleName'
+				titleName='基本信息'
 				:userLvl="userLvl"
 				@imgConfig="imgConfig"
 				@tableData='editMail'
@@ -30,7 +30,6 @@
     },
     data () {
       return {
-        titleName: '基本信息',
         tableList: []
       }
     },
@@ -97,7 +96,7 @@
             obj.saleGoal = sumMonthSale +this.$t('元')
         }
         obj.address = obj.address ? obj.address : ' '
-        obj.describe = obj.description ? obj.description : ' '
+        obj.description = obj.description ? obj.description : ' '
         console.log(obj)
         this.tableList.push(obj)
       },
@@ -118,7 +117,7 @@
     },
 
     mounted () {
-      this.init()
+      // this.init()
     }
 
   }

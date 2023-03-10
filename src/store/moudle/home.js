@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import _ from 'lodash'
-import { getBussinessDict } from '@/api/home'
+import { getBussinessDict,getBzoneTree,getGroupOrganization } from '@/api/home'
 
 var savecomprotList
 export default {
@@ -88,6 +88,16 @@ export default {
           resolve(res.data.data)
           commit('isGetDict', false)
         }).catch(err => {
+          reject(err)
+        })
+      })
+    },
+    updateOrganizationData({state,commit}){
+      return new Promise((resolve,reject)=>{
+        getGroupOrganization().then(res=>{
+          commit('saveOrganizationData',res.data.data||[])
+          resolve(res.data.data)
+        }).catch(err=>{
           reject(err)
         })
       })

@@ -281,55 +281,11 @@ export const addmall = (ids, companyId, name, province, city, address, descripti
 }
 
 // 编辑商场
-export const updateMallrData = (ids, companyId, name, province, city, address, description,
-  flowType, sumFlow, saleType, sumSale, zones, daily_start, daily_end, obj, obj2, area_size, years, bzid, property_id) => {
+export const updateMall = (data) => {
   return axios.request({
     url: businesstreeApi,
     method: 'put',
-    params: {
-      itype: ids,
-      company_id: companyId,
-      name: name,
-      province: province,
-      city: city,
-      address: address,
-      description: description,
-      flow_type: flowType,
-      sum_flow: sumFlow,
-      sale_type: saleType,
-      sum_sale: sumSale,
-      zones: zones,
-      daily_start: daily_start,
-      daily_end: daily_end,
-      flow_target_1: obj.Jan,
-      flow_target_2: obj.Feb,
-      flow_target_3: obj.Mar,
-      flow_target_4: obj.Apr,
-      flow_target_5: obj.May,
-      flow_target_6: obj.Jun,
-      flow_target_7: obj.Jul,
-      flow_target_8: obj.Aug,
-      flow_target_9: obj.Sep,
-      flow_target_10: obj.Oct,
-      flow_target_11: obj.Nov,
-      flow_target_12: obj.Dec,
-      sale_target_1: obj2.Jan,
-      sale_target_2: obj2.Feb,
-      sale_target_3: obj2.Mar,
-      sale_target_4: obj2.Apr,
-      sale_target_5: obj2.May,
-      sale_target_6: obj2.Jun,
-      sale_target_7: obj2.Jul,
-      sale_target_8: obj2.Aug,
-      sale_target_9: obj2.Sep,
-      sale_target_10: obj2.Oct,
-      sale_target_11: obj2.Nov,
-      sale_target_12: obj2.Dec,
-      area_size: area_size,
-      year: years,
-      bzid: bzid,
-      property_id: property_id
-    }
+    data
   })
 }
 
@@ -489,5 +445,38 @@ export const getIndustry = params => {
   return axios.request({
     url: '/bzone/industry',
     params
+  })
+}
+/*实体管理  20230309*/
+
+//修改购物中心
+export const updateShopmall = (id,data) => {
+  return axios.request({
+    method: 'put',
+    url: `/property/${id}`,
+    data
+  })
+}
+//添加实体
+export const createEntity = (data) => {
+  return axios.request({
+    method: 'post',
+    url: `/bzone`,
+    data
+  })
+}
+//修改实体
+export const updateEntity = (id,data) => {
+  return axios.request({
+    method: 'put',
+    url: `/bzone/${id}`,
+    data
+  })
+}
+//删除实体
+export const delEntity = (id) => {
+  return axios.request({
+    method: 'delete',
+    url: `/bzone/${id}`,
   })
 }

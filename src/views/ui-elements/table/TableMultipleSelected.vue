@@ -35,8 +35,8 @@
 						{{data[indextr].address}}
 					</vs-td>
 					<!-- 描述 -->
-					<vs-td :data="data[indextr].describe" v-if="data[indextr].describe">
-						{{data[indextr].describe}}
+					<vs-td :data="data[indextr].description" v-if="data[indextr].description">
+						{{data[indextr].description}}
 					</vs-td>
 					<!--图片配置-->
 					<vs-td v-if="data[indextr].imgConfig && userLvl=='admin'">

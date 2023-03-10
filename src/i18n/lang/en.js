@@ -377,7 +377,7 @@ module.exports =  {
   本年客流目标: "Passenger flow target of this year",
   本年销售目标: "Sales target of this year",
   详情地址: "Detailed address",
-  描述: "Describe",
+  描述: "Description",
   图片配置: "Picture configuration",
   操作: "operation",
   节假日名称: "Holiday Name",

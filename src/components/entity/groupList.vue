@@ -17,9 +17,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
-import { deleteData } from '@/api/manager.js'
-
 import addDoorway from './components/addDoorway'
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import editFloorinfor from './components/editFloorinfor'
@@ -44,7 +41,7 @@ export default {
   },
   props: {
     storeInfo: {
-      type: Array,
+      type: Object,
       required: true
     },
     userLvl: {
@@ -58,19 +55,12 @@ export default {
     },
     tableList () {
       var arr = []
-      if (this.storeInfo[2]) {
-        var element = this.storeInfo[2]
-        var obj = {}
-        obj.name = element.name
-        obj.label = element.label
-        obj.id = element.id
-        obj.value = element.value
-        obj.itype = element.itype
-        obj.parent_id = element.parent_id
-        obj.describe = element.description ? element.description : ' '
-        obj.zones = element.zones
-        obj.area = element.area_size
-        obj.modal5 = element.business_type_id
+      if (this.storeInfo) {
+        var obj = this.storeInfo
+        obj.description = obj.description ? obj.description : ' '
+        obj.zones = obj.zones
+        obj.area = obj.area_size
+        obj.modal5 = obj.business_type_id
         obj.operation = true
         obj.imgConfig = false
         arr.push(obj)

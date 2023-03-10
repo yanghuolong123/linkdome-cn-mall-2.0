@@ -23,7 +23,7 @@
           <div class="left-floor">
             <table-multiple-selected
                 :tableName='tableNameCommon'
-                :tableList='areaTable'
+                :tableList="subTable('area')"
                 :titleName='areaTitle'
                 :userLvl="userLvl"
                 @tableData='editArea'
@@ -44,7 +44,7 @@
       <!-- 出入口 -->
         <table-multiple-selected
             :tableName='tableNameCommon'
-            :tableList='inletTable'
+            :tableList="subTable('gate')"
             :titleName='inletTitle'
             :userLvl="userLvl"
             @tableData='editDoorWay'
@@ -57,8 +57,7 @@
             @updateTypeData="updateTypeData"
             :userLvl="userLvl"
             :gateList="gateList"
-            :floorInfo="floorInfo"
-            :parent_id="parent_id"
+            :entityInfo="entityInfo"
             :editDoorWayTitle="editDoorWayTitle"
         >
         </addDoorway>
@@ -68,8 +67,7 @@
             @updateTypeData="updateTypeData"
             :userLvl="userLvl"
             :zoneList="zoneList"
-            :floorInfo="floorInfo"
-            :parent_id="parent_id"
+            :entityInfo="entityInfo"
             :editAreaTitle="editAreaTitle"
         >
         </addArea>
@@ -79,11 +77,12 @@
 
 <script>
 import _ from 'lodash'
-import { zones, deleteData } from '@/api/manager.js'
+import { zones, deleteData,delEntity } from '@/api/manager.js'
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import addDoorway from '_c/entity/components/addDoorway.vue'
 import addArea from '_c/entity/components/addArea.vue'
-
+import {deepFind} from '@/libs/util'
+import { mapState } from 'vuex'
 export default {
   components: {
     TableMultipleSelected,
@@ -119,80 +118,58 @@ export default {
     }
   },
   props: {
-    floorInfo: {
-      typy: Array,
-      required: true
-    },
-    parent_id: {
-      typy: Array,
-      required: true
+    entityInfo: {
+      type: Object,
+      default: ()=>{}
     },
     userLvl: {
       type: String,
       default: 'admin'
+    },
+    tree:{
+      type:Array,
+      default:()=>[]
     }
   },
   computed: {
+    ...mapState({
+      propertyId: state => state.home.headerAction,
+    }),
       tableName(){
-          if(this.userLvl === 'admin'){
+          if(this.userLvl === 'admin' && this.entityInfo.type_name === 'floor'){
               return ['名称', '描述','图片配置', '操作']
           }else {
               return ['名称', '描述', '操作']
           }
       },
-    inletTable: {
-      get () {
-        var arr = []
-        if (this.floorInfo[1]) {
-          if (this.floorInfo[1].gate) {
-            this.floorInfo[1].gate.forEach((element, index) => {
-              var obj = {}
-              obj.name = element.name
-              obj.index = index
-              obj.id = element.id
-              obj.gate = element.zones
-              obj.gate_type_id = element.gate_type_id
-              obj.describe = element.description ? element.description : ' '
-              obj.operation = true
-              arr.push(obj)
-            })
-          }
-        }
-        return arr
-      }
-    },
-    areaTable: {
-      get () {
-        var arr = []
-        if (this.floorInfo[1]) {
-          if (this.floorInfo[1].area) {
-            this.floorInfo[1].area.forEach((element, index) => {
-              var obj = {}
-              obj.name = element.name
-              obj.index = index
-              obj.id = element.id
-              obj.zone = element.zones
-              obj.describe = element.description ? element.description : ' '
-              obj.operation = true
-              arr.push(obj)
-            })
-          }
-        }
-        return arr
-      }
+    subTable(){
+     return function (typeName) {
+       let arr = [];
+       const node = deepFind(this.tree,o=>{
+         return o.id === this.entityInfo.id
+       })
+       if(node && node.children){
+         arr = node.children.filter(o=>{
+           return o.type_name === typeName
+         })
+         arr.forEach((o,index)=>{
+           o.description = o.description?o.description:' ';
+           o.operation = true;
+           o.zone = o.zoneIds;
+           o.gate = o.zoneIds;
+           o.index = index
+         })
+       }
+       return arr
+     }
     },
     floorTable () {
-      var arr = []
-      var obj = {}
-      if (this.floorInfo[1]) {
-        obj.name = this.floorInfo[1].name
-        obj.id = this.floorInfo[1].id
-        obj.zones = this.floorInfo[1].zones
-        obj.parent_id = this.floorInfo[1].parent_id
-        obj.zone_index = this.floorInfo[1].zone_index
-        obj.describe = this.floorInfo[1].description ? this.floorInfo[1].description : ' '
+      let arr = []
+      let obj = this.entityInfo
+      if (obj) {
+        obj.description = obj.description ? obj.description : ' '
         obj.operation = true
-        obj.imgConfig = this.userLvl === 'admin'
+        obj.imgConfig = this.userLvl === 'admin' && this.entityInfo.type_name === 'floor'
         arr.push(obj)
       }
       return arr
@@ -200,20 +177,16 @@ export default {
   },
   methods: {
     getZones () {
-      let that = this
-      let id = this.floorInfo[0].property_id
-      zones(id).then(function (res) {
-        console.log(res)
-        if (res.data.code == 200) {
-          that.zoneList = that.addValuesToEle2(res.data.data)
-          that.gateList = that.addValuesToEle2(res.data.data)
-        }
+      zones(this.propertyId).then((res) => {
+        this.gateList = this.zoneList = this.addValuesToEle2(res.data.data)
       })
     },
     adDoorway () {
+      this.$refs.addDoorway.isModify = false
       this.$refs.addDoorway.$refs.modal.showModal()
     },
     addArea () {
+      this.$refs.addArea.isModify = false
       this.$refs.addArea.$refs.modal.showModal()
     },
       imgConfig(){
@@ -233,59 +206,27 @@ export default {
     },
     /* 获取出入口区域关联数据 */
     addTypeData (data) {
-      var that = this
-      var floorInfo
-      switch (data.type) {
-        case 'area':
-          if (!that.floorInfo[1].area) that.floorInfo[1].area = []
-          floorInfo = _.cloneDeep(that.floorInfo)
-          floorInfo[1].area.push(data)
-          that.floorInfo = floorInfo
-          break
-        case 'queue':
-          that.floorInfo[1].queue.push(data)
-          break
-        case 'gate':
-          if (!that.floorInfo[1].gate) that.floorInfo[1].gate = []
-          floorInfo = _.cloneDeep(that.floorInfo)
-          data.zones = [data.gate_id]
-          floorInfo[1].gate.push(data)
-          that.floorInfo = floorInfo
-          break
+      let node = deepFind(this.tree,o=>{
+        return o.id ===this.entityInfo.id
+      })
+      if(Array.isArray(node.children)){
+        node.children.push(data)
+      }else {
+        this.$set(node,'children', [data])
       }
-      this.$emit('changeDoorway')
     },
     updateTypeData (data) {
-      var that = this
-      var index, floorInfo
-      switch (data.type) {
-        case 'area':
-          index = _.findIndex(that.floorInfo[1].area, ['id', data.id])
-          that.floorInfo[1].area.splice(index, 1)
-          floorInfo = _.cloneDeep(that.floorInfo)
-          floorInfo[1].area.push(data)
-          that.floorInfo = floorInfo
-          break
-        case 'queue':
-          that.floorInfo[1].queue.push(data)
-          break
-        case 'gate':
-          index = _.findIndex(that.floorInfo[1].gate, ['id', data.id])
-          that.floorInfo[1].gate.splice(index, 1)
-          floorInfo = _.cloneDeep(that.floorInfo)
-          data.zones = [data.gate_id]
-          floorInfo[1].gate.push(data)
-          that.floorInfo = floorInfo
-          break
-      }
-      this.$emit('changeDoorway')
+      //更新数据
+      let node = deepFind(this.tree,o=>{
+        return o.id ===data.id
+      })
+      node = Object.assign(node,data)
     },
     editDoorWay (value) {
       console.log(value)
       this.$refs.addDoorway.$refs.modal.showModal();
       this.editDoorWayTitle = '编辑出入口'
       var data = _.cloneDeep(value.data)
-      data.description = data.describe
       data.gate_id = data.gate[0]
       this.$refs.addDoorway.formData = data
       this.$refs.addDoorway.isModify = true
@@ -293,7 +234,6 @@ export default {
     editArea (value) {
       this.$refs.addArea.$refs.modal.showModal()
       var data = _.cloneDeep(value.data)
-      data.description = data.describe
       this.editAreaTitle = '编辑区域'
       this.$refs.addArea.formData = data
       this.$refs.addArea.isModify = true
@@ -306,11 +246,15 @@ export default {
         confirm: () => {
           deleteData(value.data.id).then((res)=> {
             if (res.data.code == 200) {
-              this.floorInfo[1].area = _.remove(this.floorInfo[1].area, (o, i)=> {
-                return o.id != value.data.id
+              const floor = deepFind(this.tree,o=>{
+                return o.id === this.entityInfo.id
               })
+              const index = floor.children.findIndex(o=>{
+                return o.id === value.id
+              })
+              floor.children.splice(index,1)
+
               this.$message.success(this.$t('删除成功'))
-              this.$emit('changeDoorway')
             }
           })
         }
@@ -324,11 +268,14 @@ export default {
         confirm: () => {
           deleteData(value.data.id,'gate').then((res)=> {
             if (res.data.code == 200) {
-              this.floorInfo[1].gate = _.remove(this.floorInfo[1].gate,  (o, i)=> {
-                return i != value.data.index
+              const floor = deepFind(this.tree,o=>{
+                return o.id === this.entityInfo.id
               })
+              const index = floor.children.findIndex(o=>{
+                return o.id === value.id
+              })
+              floor.children.splice(index,1)
               this.$message.success(this.$t('删除成功'))
-              this.$emit('changeDoorway')
             }
           })
         }

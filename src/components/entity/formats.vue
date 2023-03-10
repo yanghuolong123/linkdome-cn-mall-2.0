@@ -56,17 +56,11 @@ import {
   getStoreByDefaultEntity,
   saveFormateRelatedStore
 } from '@/api/formats.js'
-
+import {mapState} from 'vuex'
 export default {
   components: {
     TableMultipleSelected,
     Modal
-  },
-  props: {
-    propertyId: {
-      type: Number,
-      default: 0
-    }
   },
   data () {
     return {
@@ -96,12 +90,15 @@ export default {
       }
     }
   },
-  watch: {
-    propertyId () {
-      this.dataList()
-    }
-  },
+  // watch: {
+  //   propertyId () {
+  //     this.dataList()
+  //   }
+  // },
   computed: {
+    ...mapState({
+      propertyId: state => state.home.headerAction,
+    }),
     othersId () { // ‘其他’业态的id
       const data = this.tableData.find(o => {
         return o.name === this.$t('其他')

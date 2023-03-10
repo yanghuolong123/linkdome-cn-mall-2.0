@@ -420,15 +420,23 @@ export const getSaleReach = (params) => {
 }
 /*
 * @查询所有实体
-* params:type_id 50 store/502 gate/51 floor/ 52 property
+* params:type_id 50 store 商铺 | 51 floor 楼层 | 52 property 商场 | 54 area 区域 | 502 gate 出入口
 * */
-export const getEntity = (property_id,type_id) => {
+export const getEntity = (property_id,type_id,business_type_id) => {
   return naxios.request({
     url: 'bzone',
     params:{
       property_id,
-      type_id
+      type_id,
+      business_type_id
     }
   })
 }
 
+/*获取组织结构树 20230309*/
+export const getBzoneTree = (params) => {
+  return naxios.request({
+    url:'bzone/tree',
+    params
+  })
+}

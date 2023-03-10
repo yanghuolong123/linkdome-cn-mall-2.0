@@ -434,7 +434,7 @@ export const formatEntityData = (data, role_id, checklist) => {
     }
   }
 }
-export const deepFind = (arr, condition, children) => {
+export const deepFind = (arr, condition, children='children') => {
   let result = null
   // 用try方案方便直接中止所有递归的程序
   try {
@@ -666,4 +666,30 @@ export const getCompareDate = (originDate,compateType) => {
     }
   }
 
+}
+/*
+* arr : 组织结构树
+* typeNames : 需要的实体类型数组
+* */
+export const filterTreeByType = (arr,typeNames)=>{
+  let emptyArr = [];
+  for (let item of arr) {
+    if (typeNames.includes(item.type_name) ) {
+      if (item.children &&Array.isArray(item.children)&& item.children.length > 0) {
+        item.children = filterTreeByType(item.children,typeNames);
+        if(!item.children.length){
+          delete item.children
+        }
+      }
+      emptyArr.push(item);
+    } else if (item.children&&Array.isArray(item.children) && item.children.length > 0) {
+      item.children = filterTreeByType(item.children,typeNames);
+      if (item.children.length) {
+        emptyArr.push(item);
+      }else {
+        delete item.children
+      }
+    }
+  }
+  return emptyArr;
 }

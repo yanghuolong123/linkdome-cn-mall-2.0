@@ -4,6 +4,7 @@
 			class-name="cn-modal"
 			ref="modal"
 			:loading="loading"
+			:mask-closable="false"
 			@on-ok="handleOk"
 			@on-cancel="onCancel"
 			:width="width"

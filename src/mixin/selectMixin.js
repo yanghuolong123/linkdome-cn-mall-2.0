@@ -8,12 +8,13 @@ import {
   deepFind,
   getCompareDate,
   getUnique,
-  isEmpty
+  isEmpty,
+  filterTreeByType
 } from '@/libs/util'
 import i18n from '@/i18n/i18n'
 import { getBussinessTree,  getCascadeList } from '@/api/passenger.js'
 import {  getGateTypeList,getIndustry } from '@/api/manager.js'
-import { getBussinessDict } from '@/api/home'
+import { getBussinessDict,getBzoneTree } from '@/api/home'
 const selectMixin = {
   components:{
     iDatePicker
@@ -407,12 +408,16 @@ const selectMixin = {
           reject(i18n.t('fn.请选择',[i18n.t('购物中心')]))
           return
         }
-        getBussinessTree({ entity: 52 }).then(res => {
+        getBzoneTree({property_id:this.$store.state.home.headerAction}).then(res=>{
           res = res.data.data;
-          resolve(res)
-        }).catch(err => {
-          reject(err)
+          resolve(filterTreeByType(res,['mall', 'floor', 'other', 'store']))
         })
+        // getBussinessTree({ entity: 52 }).then(res => {
+        //   res = res.data.data;
+        //   resolve(res)
+        // }).catch(err => {
+        //   reject(err)
+        // })
       })
 
     },
