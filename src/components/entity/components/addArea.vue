@@ -1,7 +1,7 @@
 <template>
 	<modal ref="modal"
 				 :width="500"
-				 :title="$t(editAreaTitle)"
+				 :title="isModify?$t('编辑区域'):$t('添加区域')"
 				 @onOk="handleSubmit('formData')"
 				 @onCancel="closeEdit">
 		<Form :model="formData" label-position="right"
@@ -23,7 +23,7 @@
 			</FormItem>
 			<FormItem :label="$t('区域关联')" prop="zone" v-if="userLvl=='admin'">
 				<Select v-model="formData.zone" multiple>
-					<Option v-for="item in zoneList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+					<Option v-for="item in zoneList" :value="item.id" :key="item.id">{{ item.name }}</Option>
 				</Select>
 			</FormItem>
 			<FormItem :label="$t('描述')" prop="description" :label-width="85">
@@ -39,8 +39,6 @@
   import {deepTraversal} from '@/libs/util'
   import i18n from "@/i18n/i18n";
   import {
-    addAreas,
-    updateFloorData,
     createEntity,
     updateEntity
   } from '@/api/manager.js'
@@ -170,6 +168,8 @@
               that.closeEdit()
               this.$message.success(this.$t('fn.successTo', [this.$t('添加区域')]))
               that.$emit('addTypeData', data)
+            }else {
+              this.$message.error(res.data.msg)
             }
           })
         } else {
@@ -179,7 +179,9 @@
               that.closeEdit()
               this.$message.success(this.$t('fn.successTo', [this.$t('编辑区域')]))
               that.$emit('updateTypeData', data)
-						}
+						}else {
+              this.$message.error(res.data.msg)
+            }
 					})
         }
       },

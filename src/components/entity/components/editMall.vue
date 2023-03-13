@@ -297,10 +297,8 @@
   import { initMonthsData } from '@/libs/util'
   import {
     updateShopmall,
-    updateMall,
     zones,
   } from "@/api/manager.js";
-  import { getGroupOrganization } from "@/api/home.js";
   import { getYearList } from "@/api/operate";
   import { mapState } from 'vuex'
   export default {

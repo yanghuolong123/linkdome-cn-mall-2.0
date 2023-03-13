@@ -1,7 +1,7 @@
 <template>
   <div style="position:relative">
     <!--客流数据指标-->
-      <flow-selector @paramsPrepare="paramsPrepare"></flow-selector>
+      <flow-selector :maxEntity="false" @paramsPrepare="paramsPrepare"></flow-selector>
         <home-ranking
         ref='ranking'
         :orderName='orderName'

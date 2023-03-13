@@ -19,11 +19,9 @@
 <script>
 import addDoorway from './components/addDoorway'
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
-import editFloorinfor from './components/editFloorinfor'
 export default {
   components: {
     addDoorway,
-    editFloorinfor,
     TableMultipleSelected
   },
 

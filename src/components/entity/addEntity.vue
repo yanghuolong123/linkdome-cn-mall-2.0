@@ -85,10 +85,6 @@ import i18n from "@/i18n/i18n";
 import Modal from '_c/common/Modal.vue'
 import {deepTraversal,findKey} from '@/libs/util'
 import {
-  addtype,
-  updateFloorData,
-  addAreas,
-  updateAreas,
   createEntity,
   updateEntity,
   zones,
@@ -100,10 +96,6 @@ import {mapState} from 'vuex'
 export default {
   name: "addEntity",
   props: {
-    addmall: {
-      required: true,
-    },
-
     userLvl: {
       type: String,
       default: "admin",

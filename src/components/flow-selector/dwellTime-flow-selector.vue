@@ -74,7 +74,7 @@
 </template>
 <script>
   import selectMixin from '@/mixin/selectMixin.js'
-  import { formatEntityData, getCascadeFstLeaf,deepTraversal,findParentNodes,filterTreeByType } from '@/libs/util'
+  import { deepTraversal,findParentNodes,filterTreeByType } from '@/libs/util'
 
   export default {
 	name: 'dwellTimeFlowSelector',

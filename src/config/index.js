@@ -85,6 +85,9 @@ export default {
     },{
       value:'store',
       name:'商铺'
+    },{
+      value:'company',
+      name:'集团'
     },
   ]
 }

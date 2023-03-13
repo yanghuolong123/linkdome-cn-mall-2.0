@@ -7,7 +7,6 @@
 				:userLvl="userLvl"
 				@imgConfig="imgConfig"
 				@tableData='editMail'
-				@removeData='delMail'
 		>
 		</table-multiple-selected>
 	</div>
@@ -54,6 +53,7 @@
         let obj = {}
         obj = _.find(data.property, ['property_id', shoppingInfoDate.property_id])
         obj.operation = true
+				obj.hideDelBtn = true
         obj.imgConfig = this.userLvl === 'admin'
         //获取当年年份
         const currentYear = new Date().getFullYear()
@@ -106,19 +106,7 @@
       editMail (value) {
         this.$emit('editMail', value.data)
       },
-      delMail (value) {
-        let alertText = {}
-        alertText.title = this.$t('删除实体')
-        alertText.text = this.$t('确认删除实体')
-        alertText.bg = '#00A0E9'
-        alertText.confirm = true
-        this.$emit('delMail', true, alertText, value.data)
-      }
     },
-
-    mounted () {
-      // this.init()
-    }
 
   }
 </script>

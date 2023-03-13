@@ -57,7 +57,7 @@
 </template>
 <script>
   import selectMixin from '@/mixin/selectMixin.js'
-  import { formatEntityData, getCascadeFstLeaf} from '@/libs/util'
+  import { deepTraversal,findParentNodes} from '@/libs/util'
 
   export default {
     name: 'saleFlowSelector',
@@ -79,10 +79,12 @@
     },
     methods: {
       handleBussinessTreeData (data) {
-        const cascadeAuthData = _.cloneDeep(data).filter(o => {
-          return o.property_id === this.$store.state.home.headerAction
+        deepTraversal(data,'children',o=>{
+          this.$set(o,'disabled',false)
+          const parentNodes = findParentNodes(o.id,data,true)
+          this.$set(o,'cascadeValue',parentNodes)
         })
-        this.entityCascaderOption = _.compact(formatEntityData(cascadeAuthData, this.$store.state.user.role_id, this.$store.state.user.checklist))
+        this.entityCascaderOption = data
         this.entityCascaderOption.forEach(list => {
           delete list.children
         })

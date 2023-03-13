@@ -89,7 +89,7 @@
 	</div>
 </template>
 <script>
-  import { formatEntityData, getCompareDate } from '@/libs/util'
+  import { getCompareDate } from '@/libs/util'
   import selectMixin from '@/mixin/selectMixin.js'
   import { getBussinessDict } from '@/api/home'
   import Moment from 'moment'

@@ -1,7 +1,7 @@
 <template>
 	<modal ref="modal"
 				 :width="500"
-				 :title="$t(editDoorWayTitle)"
+				 :title="isModify?$t('编辑出入口'):$t('添加出入口')"
 				 @onOk="handleSubmit('formData')"
 				 @onCancel="closeEdit">
 		<Form :model="formData" label-position="right" :label-width="100" ref="formData" :rules="ruleInline">
@@ -21,7 +21,7 @@
 			</FormItem>
 			<FormItem :label="$t('出入口关联')" prop="gate_id" v-if="userLvl==='admin'">
 				<Select v-model="formData.gate_id">
-					<Option v-for="item in gateList" :value="item.value" :key="item.value">{{item.label}}</Option>
+					<Option v-for="item in gateList" :value="item.id" :key="item.id">{{item.name}}</Option>
 				</Select>
 			</FormItem>
 			<FormItem :label="$t('出入口类型')" prop="gate_type">
@@ -41,8 +41,6 @@
   import Modal from '_c/common/Modal.vue'
   import i18n from "@/i18n/i18n";
   import {
-    addGate,
-    updateFloorGate,
     createEntity,
     updateEntity
   } from '@/api/manager.js'
@@ -50,10 +48,6 @@
   import {deepTraversal} from '@/libs/util'
   export default {
     props: {
-      editDoorWayTitle: {
-        type: String,
-        default: '添加出入口'
-      },
       entityInfo: {
         type: Object,
         required: true,
@@ -181,7 +175,9 @@
               that.closeEdit()
               this.$message.success(this.$t('fn.successTo', [this.$t('添加出入口')]))
               that.$emit('addTypeData', data)
-            }
+            }else {
+              this.$message.error(res.data.msg)
+						}
 					})
 
         } else {
@@ -192,6 +188,8 @@
               that.closeEdit()
               this.$message.success(this.$t('fn.successTo', [this.$t('编辑出入口')]))
               that.$emit('updateTypeData', data)
+            }else {
+              this.$message.error(res.data.msg)
             }
 					})
 

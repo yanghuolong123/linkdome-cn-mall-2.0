@@ -340,7 +340,7 @@ export default {
                 names.push(
                   `${
                     this.entitys.find((o) => Number(o.id) === Number(e.id))
-                      .label
+                      .name
                   }`
                 );
               if (cate === "time") names.push(e[cate].split(",").join(" - "));
@@ -398,7 +398,7 @@ export default {
         keys.forEach((k) => {
           if (k === "id")
             categories.push(
-              `${this.entitys.find((o) => Number(o.id) === Number(e.id)).label}`
+              `${this.entitys.find((o) => Number(o.id) === Number(e.id)).name}`
             );
           if (k === "time") categories.push(e[k].split(",").join(" - "));
         });

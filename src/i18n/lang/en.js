@@ -317,8 +317,7 @@ module.exports =  {
   区域关联: "Area association",
   添加区域: "Add Area",
   编辑区域: "Edit Area",
-  确认删除此区域信息: "Confirm to delete this area information?",
-  确认删除此出入口信息: "Confirm to delete this gate information?",
+  确认删除此实体信息: "Confirm to delete this entity information?",
   活动管理: "Activity management",
   用户信息列表: "User information list",
   // Cross.vue

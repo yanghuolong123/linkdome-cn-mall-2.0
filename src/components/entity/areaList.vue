@@ -6,7 +6,7 @@
         <table-multiple-selected
             :tableName='tableName'
             :tableList='floorTable'
-            :titleName='floorTitle'
+            titleName='基本信息'
             :userLvl="userLvl"
             @imgConfig="imgConfig"
             @tableData='editFloor'
@@ -24,10 +24,10 @@
             <table-multiple-selected
                 :tableName='tableNameCommon'
                 :tableList="subTable('area')"
-                :titleName='areaTitle'
+                titleName='区域信息'
                 :userLvl="userLvl"
                 @tableData='editArea'
-                @removeData='delArea'
+                @removeData='delEntity'
             >
             </table-multiple-selected>
           </div>
@@ -45,10 +45,10 @@
         <table-multiple-selected
             :tableName='tableNameCommon'
             :tableList="subTable('gate')"
-            :titleName='inletTitle'
+            titleName='出入口信息'
             :userLvl="userLvl"
             @tableData='editDoorWay'
-            @removeData='delDoorWay'
+            @removeData='delEntity'
         >
         </table-multiple-selected>
         <addDoorway
@@ -57,9 +57,8 @@
             :tree="tree"
             @updateTypeData="updateTypeData"
             :userLvl="userLvl"
-            :gateList="gateList"
+            :gateList="zoneList"
             :entityInfo="entityInfo"
-            :editDoorWayTitle="editDoorWayTitle"
         >
         </addDoorway>
         <addArea
@@ -70,7 +69,6 @@
             :tree="tree"
             :zoneList="zoneList"
             :entityInfo="entityInfo"
-            :editAreaTitle="editAreaTitle"
         >
         </addArea>
     </div>
@@ -79,7 +77,7 @@
 
 <script>
 import _ from 'lodash'
-import { zones, deleteData,delEntity } from '@/api/manager.js'
+import { zones, delEntity } from '@/api/manager.js'
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import addDoorway from '_c/entity/components/addDoorway.vue'
 import addArea from '_c/entity/components/addArea.vue'
@@ -93,30 +91,8 @@ export default {
   },
   data () {
     return {
-      theDoorWay: '', // 当前选中的出入口
-      theArea: '',
-      editDoorWayTitle: '添加出入口',
-      editAreaTitle: '添加区域',
-      floorTitle: '基本信息',
-      areaTitle: '区域信息',
-      lineUpTitle: '排队信息',
-      lineUpTable: [],
-      inletTitle: '出入口信息',
-      showAddCompany: false,
-      showArea: false,
-      delCompany: false,
-      addAreas: false,
-      addQueuings: false,
       zoneList: [],
-      dataIndex: 0,
-      tem: {
-        description: '',
-        name: '',
-        bzid: '',
-        type: ''
-      },
-      gateList: [],
-        tableNameCommon:['名称','实体类型', '描述', '操作']
+      tableNameCommon:['名称','实体类型', '描述', '操作']
     }
   },
   props: {
@@ -180,7 +156,7 @@ export default {
   methods: {
     getZones () {
       zones(this.propertyId).then((res) => {
-        this.gateList = this.zoneList = this.addValuesToEle2(res.data.data)
+        this.zoneList = res.data.data||[]
       })
     },
     adDoorway () {
@@ -193,20 +169,8 @@ export default {
       this.$refs.addArea.isModify = false
       this.$refs.addArea.showModal()
     },
-      imgConfig(){
-          this.$emit('imgConfig')
-      },
-    /* 格式化选择器数据
-    *@method addValuesToEle2
-    *@param {obj} pArray 需要格式化的数据对象
-    *@return null
-    */
-    addValuesToEle2 (pArray) {
-      return pArray.map(function (ele) {
-        ele.value = ele.id
-        ele.label = ele.name
-        return ele
-      })
+    imgConfig(){
+        this.$emit('imgConfig')
     },
     /* 获取出入口区域关联数据 */
     addTypeData (data) {
@@ -228,8 +192,6 @@ export default {
       node = Object.assign(node,data)
     },
     editDoorWay (value) {
-      console.log(value)
-      this.editDoorWayTitle = '编辑出入口'
       var data = _.cloneDeep(value.data)
       data.gate_id = data.gate[0]
       this.$refs.addDoorway.formData = data
@@ -241,20 +203,19 @@ export default {
     },
     editArea (value) {
       var data = _.cloneDeep(value.data)
-      this.editAreaTitle = '编辑区域'
       this.$refs.addArea.formData = data
       this.$refs.addArea.isModify = true
       this.$refs.addArea.formData.parentNode = findParentNodes(value.data.id,this.tree)
       this.$refs.addArea.showModal()
     },
-    delArea (value) {
+    delEntity (value) {
       this.$alert({
-        content: this.$t('确认删除此区域信息'),
+        content: this.$t('确认删除此实体信息'),
         cancel () {
         },
         confirm: () => {
-          deleteData(value.data.id).then((res)=> {
-            if (res.data.code == 200) {
+          delEntity(value.data.id).then((res)=> {
+            if (res.data.code === 200) {
               const floor = deepFind(this.tree,o=>{
                 return o.id === this.entityInfo.id
               })
@@ -264,27 +225,8 @@ export default {
               floor.children.splice(index,1)
 
               this.$message.success(this.$t('删除成功'))
-            }
-          })
-        }
-      })
-    },
-    delDoorWay (value) {
-      this.$alert({
-        content: this.$t('确认删除此出入口信息'),
-        cancel () {
-        },
-        confirm: () => {
-          deleteData(value.data.id,'gate').then((res)=> {
-            if (res.data.code == 200) {
-              const floor = deepFind(this.tree,o=>{
-                return o.id === this.entityInfo.id
-              })
-              const index = floor.children.findIndex(o=>{
-                return o.id === value.id
-              })
-              floor.children.splice(index,1)
-              this.$message.success(this.$t('删除成功'))
+            }else {
+              this.$message.error(res.data.msg)
             }
           })
         }

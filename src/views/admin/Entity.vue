@@ -29,7 +29,6 @@
 					:userLvl="userLvl"
 					@imgConfig="imgConfig"
 					@editMail="editMall"
-					@delMail="delMail"
 					ref="marketlist"
 				></market-list>
 				<!-- 楼层列表 -->
@@ -39,7 +38,7 @@
 					:userLvl="userLvl"
 					@imgConfig="imgConfig"
 					@editFloor="editEntity"
-					@delFloor="delFloor"
+					@delFloor="deleteEntity"
 					@changeDoorway="changeDoorway"
 					ref="arealist"
 					:entityInfo="floorInfo"
@@ -70,7 +69,6 @@
 		<!-- 添加商场 -->
 		<add-Entity
 			ref="entityModal"
-			:addmall="addmall"
 			:userLvl="userLvl"
 			@updateSuc="updateSuc"
 			@addSuc="addSuc"
@@ -137,10 +135,10 @@
 				</div>
 				<div class="part">
 					<span>{{ $t('操作') }}</span>
-					<span v-if="addType === 1">{{ $t('首页实体展示图配置') }}</span>
+					<span v-if="currentEntityType === 'mall'">{{ $t('首页实体展示图配置') }}</span>
 					<div class="flex-center">
 						<Select
-							v-if="addType === 1"
+							v-if="currentEntityType === 'mall'"
 							:disabled="!isConfigDataSame"
 							v-model="property"
 							style="width:200px"
@@ -155,13 +153,13 @@
 						</Select>
 						<uploadImg
 							@changeImg="changeImg"
-							:disabled="property === '' && addType === 1"
-							v-if="currentWay.itype && currentWay.itype !== 'property'"
-							:style="{ marginLeft: addType === 1 ? '20px' : '' }"
+							:disabled="property === '' && currentEntityType === 'mall'"
+							v-if="currentWay.type_name && currentWay.type_name !== 'mall'"
+							:style="{ marginLeft: currentEntityType === 'mall' ? '20px' : '' }"
 						>{{ $t('上传') }}
 						</uploadImg>
 					</div>
-					<span v-if="addType === 1">{{ $t('首页展示图出入口坐标配置') }}</span>
+					<span v-if="currentEntityType === 'mall'">{{ $t('首页展示图出入口坐标配置') }}</span>
 					<span v-else
 					>{{ floorInfo && floorInfo.name
             }}{{ $t('下属出入口店铺坐标配置') }}</span
@@ -187,14 +185,14 @@
 							{{ hasSymbol ? $t('删除坐标') : $t('放置坐标') }}
 						</Button>
 						<Button
-							v-if="addType === 3"
+							v-if="currentEntityType === 'store'"
 							:disabled="!way"
 							style="margin-left: 20px"
 							@click="previewClick"
 						>{{ $t('预览') }}
 						</Button>
 					</div>
-					<div class="part" v-if="['gate', 'store'].includes(currentWay.itype)">
+					<div class="part" v-if="['gate', 'store'].includes(currentWay.type_name)">
 						<span>{{ $t('是否为热力图') }}</span>
 						<i-switch
 							:disabled="!way"
@@ -265,19 +263,13 @@
   import marketList from '_c/entity/marketList.vue'
   import addEntity from '_c/entity/addEntity.vue'
   import editMall from '_c/entity/components/editMall.vue'
-  import emptyPage from '_c/entity/components/emptyPage.vue'
   import formats from '_c/entity/formats.vue'
   import imgconfigModal from '_c/common/Modal.vue'
-  import alert from '@/components/alert.vue'
   import flowNode from './components/node'
   import _ from 'lodash'
   import {
     getDataEntity,
-    deletemall,
-    deleteFloor,
-    deleteData,
     configEntity,
-    getConfigStructure,
     getCameraImageUrl,
     delEntity
   } from '@/api/manager.js'
@@ -300,8 +292,6 @@
       areaList,
       marketList,
       addEntity,
-      alert,
-      emptyPage,
       formats,
       flowNode,
       editMall
@@ -309,27 +299,19 @@
     data () {
       return {
         gateTypeList: [],
-        noBuy: require('@/assets/images/pages/noBuy.png'),
-        alertText: {
-          title: '',
-          text: '',
-          bg: '',
-          confirm: false,
-        },
-        nowEntity: [], // 当前选中的实体
-        theMail: '', // 当前选中的商场
-        theFloor: '', // 当前选中的楼层
-        theStore: '',
-        addmall: [], // 把当前购物中心传递给添加实体组件中
-        delType: '',
-        addType: 0,
         id: '',
-        entitydata: '',
-        // shoppingInfoDate: [],
         floorInfo: {},
         storeInfo: {},
         entityInfo: {},
         treeData: [],
+        cascadeProps: {
+          multiple: false,
+          checkStrictly: true,
+          expandTrigger: 'hover',
+          value: 'id',
+          label: 'name'
+        },
+        originTreeData:[],//未经过滤的bzoneTree
         cascaderCanshow: false,
         defaultValue: [],
         userLvl: '',
@@ -359,14 +341,7 @@
         storeImageUrl: '', //预览时显示的店铺图片
         cameraImageUrl: '',
         jsPlumb: null,
-        cascadeProps: {
-          multiple: false,
-          checkStrictly: true,
-          expandTrigger: 'hover',
-          value: 'id',
-          label: 'name'
-        },
-				originTreeData:[],//未经过滤的bzoneTree
+
       }
     },
     created () {
@@ -393,6 +368,7 @@
         propertyId: state => state.home.headerAction,
         organizationData: state => state.home.organizationData,
         shoppingInfoDate: state => state.user.shoppingInfoDate,
+        companyId: state => state.user.companyId
       }),
       currentEntityType () {        //判断当前选择的实体类型
         let type
@@ -417,7 +393,7 @@
               return o.id === this.property
             })
             if (property) {
-              if (property.itype === 'company') {
+              if (property.type_name === 'company') {
                 return require('@/assets/images/fixation_img/bg/map.png')
               } else {
                 return property.map_url
@@ -494,6 +470,8 @@
                 this.$message.success(this.$t('删除成功'))
                 this.defaultValue = [this.defaultValue[0]]
                 this.getData()
+              }else {
+                this.$message.error(res.data.msg)
               }
             })
           },
@@ -622,15 +600,15 @@
       handleSave () {
         this.saveLoading = true
         let image_type
-        switch (this.addType) {
-          case 1:
+        switch (this.currentEntityType) {
+          case 'mall':
             image_type =
-              this.currentWay.itype === 'property' ? 'company' : 'property'
+              this.currentWay.type_name === 'mall' ? 'company' : 'mall'
             break
-          case 2:
+          case 'floor':
             image_type = 'floor'
             break
-          case 3:
+          case 'store':
             image_type = 'store'
             break
         }
@@ -667,12 +645,12 @@
         configEntity(data)
           .then(async (res) => {
             this.$message.success(this.$t('fn.successTo', [this.$t('保存')]))
-            if (this.currentWay.itype === 'property') {
+            if (this.currentWay.type_name === 'mall') {
               const orgData = await getGroupOrganization()
               this.$store.commit('saveOrganizationData', orgData.data.data)
             }
             //保存成功之后重新拉取数据库的数据，并展示当前选择的节点
-            if (this.addType === 1) {
+            if (this.currentEntityType === 'mall') {
               this.imgConfig(this.way, this.property)
             } else {
               this.imgConfig(this.way)
@@ -788,7 +766,7 @@
       //图片配置
       async imgConfig (way, property) {
         this.propertyList = []
-        const orgData = await getConfigStructure()
+        const orgData = await getBzoneTree({company_id: this.companyId})
         this.$refs.imgcofig.showModal()
         this.orgData = orgData.data.data
         let floor, floorId
@@ -799,13 +777,13 @@
               this.orgData.forEach((o) => {
                 this.propertyList.push({
                   ...o,
-                  id: `${o.itype}_${o.id}`,
+                  id: `${o.type_name}_${o.id}`,
                 })
                 if (o.children && o.children.length) {
                   o.children.forEach((child) => {
                     this.propertyList.push({
                       ...child,
-                      id: `${child.itype}_${child.id}`,
+                      id: `${child.type_name}_${child.id}`,
                     })
                   })
                 }
@@ -814,25 +792,29 @@
               this.propertyChange(this.property, way)
               break
             case 'floor':
+              this.wayList = []
               floorId = this.floorInfo.id
               floor = deepFind(
                 this.orgData,
                 (o) => {
-                  return o.bz_id === floorId
+                  return o.id === floorId
                 },
                 'children'
               )
-              this.wayList = _.compact(floor.store.concat(floor.gate))
+							deepTraversal([floor],'children',o=>{
+							  if(['store','gate'].includes(o.type_name)){
+							    this.wayList.push(o)
+								}
+							})
               this.wayList.forEach((o) => {
-                o.id = o.bz_id
                 //因为保存的时候存的是symbol的指向点，所以此时要恢复0,0,点坐标
-                if (o.position_x > -1 && !isEmpty(o.position_x)) {
+                if (o.position_x !== 0 && !isEmpty(o.position_x)) {
                   o.position_x = (
                     (o.position_x * img.offsetWidth - 13.5) /
                     img.offsetWidth
                   ).toFixed(4)
                 }
-                if (o.position_y > -1 && !isEmpty(o.position_y)) {
+                if (o.position_y !== 0 && !isEmpty(o.position_y)) {
                   o.position_y = (
                     (o.position_y * img.offsetHeight - 35) /
                     img.offsetHeight
@@ -864,17 +846,17 @@
         })
       },
       changeImg (img) {
-        switch (this.addType) {
-          case 1:
+        switch (this.currentEntityType) {
+          case 'mall':
             const property = _.find(this.propertyList, (o) => {
               return o.id === this.property
             })
             property.map_url = img
             break
-          case 2:
+          case 'floor':
             if (this.floorInfo) this.floorInfo.map_url = img
             break
-          case 3:
+          case 'store':
             this.storeImageUrl = img
         }
 
@@ -893,10 +875,9 @@
         } else {
           //放置坐标
           this.addStatus = true
-          const modalEl = document.getElementsByClassName('ivu-modal')[0]
+          const modalEl = this.$refs.imgcofig.$el.querySelector('.ivu-modal')
           const imgContainer = this.$refs.imgContainer
-          this.symbol.left =
-            e.x - 13.5 - modalEl.offsetLeft - imgContainer.offsetLeft
+          this.symbol.left = e.x - 13.5 - modalEl.offsetLeft - imgContainer.offsetLeft
           this.symbol.top = e.y - 20 - modalEl.offsetTop - imgContainer.offsetTop
           this.symbol.name = this.currentWay.name
           this.symbol.id = this.currentWay.id
@@ -904,7 +885,7 @@
       },
       handleMouseMove (e) {
         if (this.addStatus) {
-          const modalEl = document.getElementsByClassName('ivu-modal')[0]
+          const modalEl = this.$refs.imgcofig.$el.querySelector('.ivu-modal')
           const imgContainer = this.$refs.imgContainer
           this.symbol.left =
             e.x - 13.5 - modalEl.offsetLeft - imgContainer.offsetLeft
@@ -940,16 +921,16 @@
           const value = val.split('_')
           //waylist 是购物中心下的所有出入口gate
           this.wayList = []
-          deepTraversal(this.orgData, 'children', (o) => {
-            if (o.itype === value[0] && o.id === Number(value[1])) {
-              if (o.children && o.children.length) {
-                const gateList = o.children.map((child) => {
-                  return child.gate
-                })
-                this.wayList = _.compact(gateList.flat())
+					const mall = deepFind(this.orgData,o=>{
+					  return o.id === Number(value[1])
+					})
+					if(mall){
+            deepTraversal([mall],'children',child=>{
+              if(child.type_name === 'gate'){
+                this.wayList.push(child)
               }
-            }
-          })
+            })
+					}
           if (!this.wayList.length) {
             this.way = ''
             this.$message.warning(this.$t('notices.configGate'))
@@ -957,7 +938,7 @@
           }
         }
         this.wayList.forEach((o) => {
-          if (val.indexOf('company') === -1) o.id = o.bz_id
+          // if (val.indexOf('company') === -1) o.id = o.bz_id
           //因为保存的时候存的是symbol的指向点，所以此时要恢复0,0,点坐标
           if (o.gate_position_x > -1 && !isEmpty(o.gate_position_x)) {
             o.position_x = (
@@ -983,8 +964,10 @@
         if (!this.wayList.length) return
         const wayList = this.wayList.filter((o) => {
           return (
-            o.position_x > -1 &&
-            o.position_y > -1 &&
+            o.position_x > 0 &&
+            o.position_x !== -1&&
+            o.position_y > 0 &&
+            o.position_y !== -1&&
             !isEmpty(o.position_x) &&
             !isEmpty(o.position_y)
           )
@@ -1052,10 +1035,7 @@
         return arr
       },
       caseDidChange (value = this.defaultValue) {
-        console.log(value)
         const selectedData = this.getCascadeNode()
-        this.nowEntity = selectedData;
-        // that.addmall = _.find(that.treeData, ["id", selectedData[0].id]);
         switch (this.currentEntityType) {
           case 'mall':
             const property = _.find(this.organizationData.property, ['property_id', selectedData[0].property_id])
@@ -1160,50 +1140,19 @@
         this.$refs.shopmall.showModal()
 
       },
-      delMail (value, alertText, obj) {
-        this.$alert({
-          content: this.$t('确认删除此购物中心信息？'),
-          cancel () {
-          },
-          confirm: () => {
-            deletemall('mall', obj.property_id, obj.bzid).then((res) => {
-              if (res.data.code === 200) {
-                this.$message.success(this.$t('删除成功'))
-                this.defaultValue = []
-                this.getData()
-              }
-            })
-          },
-        })
-      },
-      delFloor (obj) {
-        this.$alert({
-          content: this.$t('确认删除此楼层信息？'),
-          cancel () {
-          },
-          confirm: () => {
-            deleteFloor('floor', obj.id).then((res) => {
-              if (res.data.code === 200) {
-                this.$message.success(this.$t('删除成功'))
-                this.defaultValue = [this.defaultValue[0]]
-                this.getData()
-              }
-            })
-          },
-        })
-      },
       delStore (value, alertText, obj) {
         this.$alert({
           content: this.$t('确认删除此商铺？'),
           cancel () {
           },
           confirm: () => {
-            deleteData(obj.id).then((res) => {
+            delEntity(obj.id).then((res) => {
               if (res.data.code === 200) {
                 this.$message.success(this.$t('删除成功'))
                 this.defaultValue = findParentNodes(obj.id,this.treeData)
-                this.addType = 2
                 this.getData()
+              }else {
+                this.$message.error(res.data.msg)
               }
             })
           },

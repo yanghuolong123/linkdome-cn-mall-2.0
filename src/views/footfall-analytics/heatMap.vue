@@ -174,8 +174,7 @@ import {
   getHeatMapDistribution,
   getHeatMapFloorData,
 } from "@/api/analysis.js";
-import {getBzoneList} from '@/api/home'
-import { disabledDate, formatEntityData, deepFind,deepTraversal,findParentNodes } from "@/libs/util.js";
+import { disabledDate, deepFind,deepTraversal,findParentNodes } from "@/libs/util.js";
 import relevanceTab from "./components/components/RelevanceTab";
 let flowDistributionCharts = null;
 const yesterday = moment(new Date())

@@ -25,7 +25,7 @@
 					class="w-select"
 					v-model="storeCascadeData"
 					collapse-tags
-					:props="cascadeProps"
+					:props="{ multiple: true,expandTrigger:'hover',label:'name',value:'id' }"
 					:options="storeCascadeOpiton"
 			>
 			</el-cascader>

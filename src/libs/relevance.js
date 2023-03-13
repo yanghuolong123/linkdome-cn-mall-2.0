@@ -1,6 +1,6 @@
 import NP from 'number-precision'
 import { directionData } from '@/api/analysis'
-import { formatEntityData, deepTraversal,findParentNodes,filterTreeByType } from '@/libs/util.js'
+import { deepTraversal,findParentNodes,filterTreeByType } from '@/libs/util.js'
 import moment from 'moment'
 // 商铺列表
 export const formatCascadeAuthData = (that, data) => {
@@ -23,19 +23,6 @@ export const formatCascadeAuthData = (that, data) => {
     const parentNodes = findParentNodes(o.id,that.relevanceList,true)
     that.$set(o,'cascadeValue',parentNodes)
   })
-
-  //
-  // 去掉没有商铺的楼层
-  // for (let i = 0; i < that.relevanceList.length; i++) {
-  //   if (!that.relevanceList[i].children || !that.relevanceList[i].children.length) {
-  //     that.relevanceList.splice(i, 1)
-  //     i--
-  //   }
-  // }
-  // 清除出入口
-  // that.relevanceList.forEach(list => {
-  //   _.remove(list.children, (value) => { return value.itype == 'gate' })
-  // })
   deepTraversal(that.relevanceList, 'children', get20RelevanceValue)
   that.relevanceDataClick()
 }

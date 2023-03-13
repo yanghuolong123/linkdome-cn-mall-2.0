@@ -98,7 +98,7 @@
 				    v-on:click.stop="tableData(data[indextr])">
             <vs-icon icon="ivu-icon-md-create" icon-pack='ivu-icon'></vs-icon>
           </span>
-						<span v-if="userLvl=='admin'" class="account-remove" :title="$t('删除')"
+						<span v-if="userLvl=='admin' && !data[indextr].hideDelBtn" class="account-remove" :title="$t('删除')"
               v-on:click.stop="removeData(data[indextr])">
             <Icon type="ios-trash"/>
           </span>

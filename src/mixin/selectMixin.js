@@ -176,7 +176,7 @@ const selectMixin = {
         {
           label: this.$t('出入口'),
           value: 'gate',
-          itype:'gate',
+          type_name:'gate',
           cascadeOption:this.gateCascadeOpiton,
           cascadeData:this.gateCascadeData
         },
@@ -282,21 +282,12 @@ const selectMixin = {
               name:node.name
             })
           })
-          // this.storeCascadeData.map(list => {
-          //   let obj = {}
-          //   obj.itype = 'store'
-          //   obj.id = list[1]
-          //   obj.label = _.find(this.cascadeAllStore, (v) => v.id == list[1]).name
-          //   obj.name = obj.label
-          //   obj.belongsType = '商铺'
-          //   entitys.push(obj)
-          // })
         } else if(['gate','bussiness'].includes(this.entityType) ){
           const option = _.find(this.entityOptions,['value',this.entityType])
 
           option.cascadeData.map(list => {
             let obj = {}
-            obj.itype = option.itype
+            obj.type_name = option.type_name
             obj.id = list[1]
             const node = deepFind(option.cascadeOption, o => {
               return o.id === Number(list[1])
@@ -362,7 +353,7 @@ const selectMixin = {
               id: node.id,
               label: node.label,
               name: node.name,
-              itype: node.itype,
+              type_name: node.type_name,
               property_id:node.property_id,
               belongsType: node.belongsType
             })

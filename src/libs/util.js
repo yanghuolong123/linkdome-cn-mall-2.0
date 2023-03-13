@@ -349,83 +349,7 @@ export const disabledDate = {
     return date && date.valueOf() > Date.now() - 86400000
   }
 }
-// 处理实体权限级联数据
-export const formatEntityData = (data, role_id, checklist) => {
-  let organization = data.map(function (m, index) {
 
-    m.itype = m.itype
-    m.disabled = false
-    m.cascadeValue = [m.id]
-    if (m.children) {
-      m.children.forEach(function (e) {
-        e.disabled = false
-        e.itype = e.itype
-        e.cascadeValue = m.cascadeValue.concat([e.id])
-        if (e.children) {
-          e.children.forEach(function (k) {
-            k.disabled = false
-            k.itype = k.itype
-            k.cascadeValue = e.cascadeValue.concat([k.id])
-          })
-        }
-        if (e.gate) {
-          e.gate.forEach(function (gate) {
-            let kk = {}
-            kk.id = gate.id
-            kk.disabled = false
-            kk.value = gate.id
-            kk.parent_id = e.id
-            kk.itype = gate.itype
-            kk.cascadeValue = e.cascadeValue.concat([kk.id])
-            if (!(e.children)) {
-              e.children = []
-            }
-            e.children.push(kk)
-          })
-        }
-        if (e.area) {
-          e.area.forEach(function (area) {
-            let kk = {}
-            kk.id = area.id
-            kk.disabled = false
-            kk.value = area.id
-            kk.label = area.name
-            kk.parent_id = e.id
-            kk.name = area.name
-            kk.itype = area.itype
-            kk.cascadeValue = e.cascadeValue.concat([kk.id])
-            if (!e.children) {
-              e.children = []
-            }
-            e.children.push(kk)
-          })
-        }
-      })
-    }
-    return m
-  })
-  if (role_id < 3) {
-    return organization
-  } else {
-    let temp = []
-    let role_property = checklist
-    if (role_property.length) {
-      let tem = role_property
-      if (role_property.indexOf(',') > -1) {
-        tem = role_property.split(',')
-      }
-      tem.map(function (m) {
-        return Number(m)
-      })
-      tem.forEach(function (m) {
-        temp.push(_.find(organization, ['property_id', m]))
-      })
-      return temp
-    } else {
-      return _.find(organization, ['property_id', role_property])
-    }
-  }
-}
 export const deepFind = (arr, condition, children='children') => {
   let result = null
   // 用try方案方便直接中止所有递归的程序
@@ -473,7 +397,7 @@ export const deepTraversal = (arr, child, callback) => {
 export const findCascadeLastLevel = (arr, child, callback) => {
   function traversal (a) {
     for (let i = 0; i < a.length; i++) {
-      if (a[i][child] && a[i][child].length ||a[i].type_name==='floor') {//a[i].itype==='floor'  专为解决楼层下无实体时，全部按钮加在了楼层列
+      if (a[i][child] && a[i][child].length ||a[i].type_name==='floor') {//a[i].type_name==='floor'  专为解决楼层下无实体时，全部按钮加在了楼层列
         traversal(a[i][child]||[])
       } else {
         callback(a)

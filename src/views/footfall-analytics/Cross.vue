@@ -42,7 +42,7 @@
           popper-class="cascade-dom"
           class="w-select"
           collapse-tags
-          @change="selectStart()"
+          @change="selectStart"
           :props="{
             multiple: true,
             checkStrictly: true,
@@ -233,14 +233,13 @@
 </template>
 <script>
 import VueApexCharts from "vue-apexcharts";
-import { getBussinessTree } from "@/api/passenger.js";
 import { getBzoneTree } from "@/api/home.js";
 import { crossData } from "@/api/analysis";
 import TableDefault from "../ui-elements/table/TableDefault.vue";
 import moment from "moment";
 import NP from "number-precision";
 import _ from "lodash";
-import { disabledDate, formatEntityData, initTimes,findParentNodes,deepTraversal } from "@/libs/util.js";
+import { disabledDate, initTimes,findParentNodes,deepTraversal } from "@/libs/util.js";
 export default {
   name: "Cross",
   components: {
@@ -576,14 +575,14 @@ export default {
     fromBzid() {
       return this.startValue
         .map((o) => {
-          return o[1];
+          return o[o.length-1];
         })
         .flat();
     },
     toBzid() {
       return this.endValue
         .map((o) => {
-          return o[1];
+          return o[o.length-1];
         })
         .flat();
     },
@@ -658,23 +657,6 @@ export default {
             .add(size, "d")
             .format("YYYY-MM-DD"),
         ];
-      }
-    },
-    // 起点终点相互禁用对方选项
-    cascaderChange(value) {
-      const that = this;
-      function conversionEndlistNodeStatus(node) {
-        if (node.itype === "floor") return; // 楼层总是禁用状态
-        if (value === "startValue")
-          node.disabled = that.fromBzid.includes(node.id);
-        else node.disabled = that.toBzid.includes(node.id);
-      }
-      if (value === "startValue") {
-        this.endList;
-        this.fromBzid.forEach;
-        // deepTraversal(this.endList, 'children', conversionEndlistNodeStatus)
-      } else {
-        // deepTraversal(this.startList, 'children', conversionEndlistNodeStatus)
       }
     },
     onResize() {
@@ -765,31 +747,24 @@ export default {
           console.log(err);
         });
     },
-    formatCascadeAuthData(data) {
+    formatCascadeAuthData(data,removeFst = true) {
       deepTraversal(data,'children',o=>{
         this.$set(o,'disabled',!['store','gate','area'].includes(o.type_name))
         const parentNodes = findParentNodes(o.id,data,true)
         this.$set(o,'cascadeValue',parentNodes)
       })
       this.startList = data
-      // this.startList = _.compact(
-      //   formatEntityData(
-      //     data,
-      //     this.$store.state.user.role_id,
-      //     this.$store.state.user.checklist
-      //   )
-      // );
-      this.startList = this.startList[0] && this.startList[0].children;
-      this.startList.forEach((o) => {
-        o.disabled = true;
-      });
       // 去掉没有商铺的楼层
-      for (let i = 0; i < this.startList.length; i++) {
-        if (!this.startList[i].children || !this.startList[i].children.length) {
-          this.startList.splice(i, 1);
-          i--;
+      if(removeFst){
+        this.startList = this.startList[0] && this.startList[0].children;
+        for (let i = 0; i < this.startList.length; i++) {
+          if (!this.startList[i].children || !this.startList[i].children.length) {
+            this.startList.splice(i, 1);
+            i--;
+          }
         }
       }
+
       this.endList = _.cloneDeep(this.startList);
     },
     allZoneList() {
@@ -797,17 +772,6 @@ export default {
         res = res.data.data;
         this.formatCascadeAuthData(res)
       })
-      // 所有 商铺 楼层 出入口 数据
-      getBussinessTree({ entity: 52 })
-        .then((res) => {
-          const cascadeAuthData = res.data.data.filter((o) => {
-            return o.property_id === this.$store.state.home.headerAction;
-          }); // 找到当前购物中心的treeData
-          this.formatCascadeAuthData(cascadeAuthData);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     },
     crossTitleData(data) {
       // 标题数据
@@ -1124,19 +1088,14 @@ export default {
     // 选择起点
     selectStart() {
       var that = this;
-      that.endList.map(function(d) {
-        d.children.map((l) => {
-          l.disabled = false;
-        });
-      });
-      this.startValue.map(function(v) {
-        that.endList.map(function(d) {
-          d.children.map((l) => {
-            if (v[1] === l.id) l.disabled = true;
-          });
-          // if (v[1] === d.value) d.action = true
-        });
-      });
+      const ids = this.startValue.map(o=>{
+        return o[o.length-1]
+      })
+      deepTraversal(this.endList,'children',o=>{
+        if(!['store','gate','area'].includes(o.type_name) || ids.includes(o.id)){
+          this.$set(o,'disabled',true)
+        }
+      })
     },
     // 终点选择
     selectEnd(value) {
@@ -1213,9 +1172,7 @@ export default {
       this.selectType = 0;
       this.startValue = [];
       this.endValue = [];
-      // 重置已禁用的节点
-      this.cascaderChange("startValue");
-      this.cascaderChange("endValue");
+      this.formatCascadeAuthData(this.startList,false)
     },
   },
 };

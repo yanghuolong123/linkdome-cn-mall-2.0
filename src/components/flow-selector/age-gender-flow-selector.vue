@@ -86,7 +86,7 @@
 </template>
 <script>
   import selectMixin from '@/mixin/selectMixin.js'
-  import { formatEntityData, deepTraversal,getCascadeFstLeaf,findParentNodes } from '@/libs/util'
+  import {  deepTraversal,findParentNodes } from '@/libs/util'
   import Moment from'moment'
   export default {
     name: 'ageGenderFlowSelector',
