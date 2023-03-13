@@ -500,8 +500,7 @@ export default {
       );
       if (node) {
         return (
-          this.$t(findKey(config.dictionary, "value", node.itype, "name")) ||
-          this.$t("购物中心")
+          this.$t(findKey(config.entityType, "value", node.type_name, "name"))
         );
       } else {
         return "";

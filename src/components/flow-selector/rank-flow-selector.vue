@@ -25,7 +25,7 @@
 					class="w-select"
 					v-model="storeCascadeData"
 					collapse-tags
-					:props="{ multiple: true,expandTrigger:'hover' }"
+					:props="cascadeProps"
 					:options="storeCascadeOpiton"
 			>
 			</el-cascader>
@@ -53,7 +53,7 @@
 							v-show=" compareType === 'entity'&& !['store','gate','bussiness'].includes(entityType) ">
 				<Option v-for="item in selectOptions"
 						:value="item.id"
-						:key="item.id">{{ item.label }}</Option>
+						:key="item.id">{{ item.name }}</Option>
 			</Select>
 			<Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('查询') }}</Button>
 			<Button size="large" @click="resetClick" class="m-l-20">{{ $t('重置') }}</Button>

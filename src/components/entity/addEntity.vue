@@ -14,6 +14,17 @@
 												 :key="item.value"></el-option>
 						</el-select>
 					</el-form-item>
+				<el-form-item :label="$t('父节点')" prop="parentNode" v-if="userLvl === 'admin'">
+					<el-cascader
+						v-model="formValidate.parentNode"
+						:placeholder="$t('fn._', [$t('holder.请选择'), $t('父节点')])"
+						class="w-select "
+						style="width: 100%"
+						:props="cascadeProps"
+						:options="parentNodeCascade"
+					>
+					</el-cascader>
+				</el-form-item>
 				<el-form-item :label="$t('楼层')" prop="zone_index" v-show="formValidate.type_name === 'floor'">
 					<el-select v-model="formValidate.zone_index"
 										 class="w-100"
@@ -43,17 +54,7 @@
 						</el-select>
 					</el-form-item>
 					
-					<el-form-item :label="$t('父节点')" prop="parentNode" v-if="userLvl === 'admin'">
-						<el-cascader
-							v-model="formValidate.parentNode"
-							:placeholder="$t('fn._', [$t('holder.请选择'), $t('父节点')])"
-							class="w-select "
-							style="width: 100%"
-							:props="cascadeProps"
-							:options="parentNodeCascade"
-						>
-						</el-cascader>
-					</el-form-item>
+				
 					
 					<el-form-item :label="$t('业态')" prop="business_type_id" v-show="formValidate.type_name === 'store'">
 						<el-select v-model="formValidate.business_type_id"
@@ -145,7 +146,7 @@ export default {
         business_type_id: "", // 业态
         area_size: "",
       },
-      ruleValidate: {
+      rule: {
         name: [
           {
             required: true,
@@ -166,7 +167,7 @@ export default {
           {
             required: true,
             tips: "区域关联",
-            validator: validSelect,
+            validator: this.validSelect,
             trigger: "change",
           },
         ],
@@ -280,6 +281,21 @@ export default {
     ...mapState({
       propertyId: state => state.home.headerAction,
     }),
+    ruleValidate(){
+      let rule = _.cloneDeep(this.rule)
+      if(this.formValidate.type_name !== 'store'){
+        return  Object.assign(rule,{
+          zoneIds: [
+            {
+              required: false,
+              trigger: "change",
+            },
+          ],
+				})
+			}else {
+        return this.rule
+			}
+		},
     title(){
       if(this.isModify){
         return this.$t("fn.编辑", [this.$t("实体")])
@@ -317,6 +333,18 @@ export default {
   },
 
   methods: {
+    validSelect(rule, value, callback){
+      if(this.formValidate.type_name === 'store'){
+        if (value === "" || (rule.field == "zoneIds" && !value[0])) {
+          callback(new Error(this.$t("fn.请选择", [this.$t(rule.tips)])));
+        } else {
+          callback();
+        }
+			}else {
+        callback()
+			}
+
+		},
     showModal(){
       this.$refs.modal.showModal()
       this.getZones();

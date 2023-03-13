@@ -47,6 +47,8 @@
             multiple: true,
             checkStrictly: true,
             expandTrigger: 'hover',
+            value: 'id',
+            label: 'name'
           }"
           :options="startList"
         >
@@ -62,6 +64,8 @@
             multiple: true,
             checkStrictly: true,
             expandTrigger: 'hover',
+            value: 'id',
+            label: 'name'
           }"
           :options="endList"
         >
@@ -230,12 +234,13 @@
 <script>
 import VueApexCharts from "vue-apexcharts";
 import { getBussinessTree } from "@/api/passenger.js";
+import { getBzoneTree } from "@/api/home.js";
 import { crossData } from "@/api/analysis";
 import TableDefault from "../ui-elements/table/TableDefault.vue";
 import moment from "moment";
 import NP from "number-precision";
 import _ from "lodash";
-import { disabledDate, formatEntityData, initTimes } from "@/libs/util.js";
+import { disabledDate, formatEntityData, initTimes,findParentNodes,deepTraversal } from "@/libs/util.js";
 export default {
   name: "Cross",
   components: {
@@ -589,7 +594,7 @@ export default {
           value: 0,
         },
         {
-          text: this.$t("自定义对比"),
+          text: this.$t("自定义时间对比"),
           value: 1,
         },
         {
@@ -761,13 +766,19 @@ export default {
         });
     },
     formatCascadeAuthData(data) {
-      this.startList = _.compact(
-        formatEntityData(
-          data,
-          this.$store.state.user.role_id,
-          this.$store.state.user.checklist
-        )
-      );
+      deepTraversal(data,'children',o=>{
+        this.$set(o,'disabled',!['store','gate','area'].includes(o.type_name))
+        const parentNodes = findParentNodes(o.id,data,true)
+        this.$set(o,'cascadeValue',parentNodes)
+      })
+      this.startList = data
+      // this.startList = _.compact(
+      //   formatEntityData(
+      //     data,
+      //     this.$store.state.user.role_id,
+      //     this.$store.state.user.checklist
+      //   )
+      // );
       this.startList = this.startList[0] && this.startList[0].children;
       this.startList.forEach((o) => {
         o.disabled = true;
@@ -782,6 +793,10 @@ export default {
       this.endList = _.cloneDeep(this.startList);
     },
     allZoneList() {
+      getBzoneTree({property_id:this.$store.state.home.headerAction}).then(res=>{
+        res = res.data.data;
+        this.formatCascadeAuthData(res)
+      })
       // 所有 商铺 楼层 出入口 数据
       getBussinessTree({ entity: 52 })
         .then((res) => {

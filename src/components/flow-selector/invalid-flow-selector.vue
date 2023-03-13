@@ -36,7 +36,7 @@
 				v-model="storeCascadeData"
 				filterable
 				collapse-tags
-				:props="{ multiple: true,expandTrigger:'hover' }"
+				:props="cascadePropsCheck"
 				:options="storeCascadeOpiton"
 			>
 			</el-cascader>
@@ -46,7 +46,7 @@
 				class="w-select"
 				v-model="gateCascadeData"
 				collapse-tags
-				:props="{ multiple: true,expandTrigger:'hover',label:'name',value:'id' }"
+				:props="cascadePropsCheck"
 				:options="gateCascadeOpiton"
 			>
 			</el-cascader>
@@ -56,7 +56,7 @@
 				class="w-select"
 				v-model="busiCascadeData"
 				collapse-tags
-				:props="{ multiple: true,expandTrigger:'hover',label:'name',value:'id' }"
+				:props="cascadePropsCheck"
 				:options="bussinessCascadeOpiton"
 			>
 			</el-cascader>
@@ -74,7 +74,7 @@
 							v-show="compareType === 'entity'&& !['store','gate','bussiness'].includes(entityType) ">
 				<Option v-for="item in selectOptions"
 								:value="item.id"
-								:key="item.id">{{ item.label }}
+								:key="item.id">{{ item.name }}
 				</Option>
 			</Select>
 			<Select v-model="queryParams.enterType" class="w-select m-l-20">
@@ -89,7 +89,7 @@
 	</div>
 </template>
 <script>
-  import { formatEntityData, getCompareDate } from '@/libs/util'
+  import { formatEntityData, getCompareDate,deepTraversal,findParentNodes } from '@/libs/util'
   import selectMixin from '@/mixin/selectMixin.js'
   import Moment from 'moment'
   import { getBussinessDict } from '@/api/home'
@@ -100,10 +100,11 @@
       return {
         bussinessTypeOptions: [],//业态
         typeOptions: [],
-        cascadeProps: {
+        cascadePropsCheck: {
           multiple: true,
-          checkStrictly: true,
-          expandTrigger: 'hover'
+          expandTrigger: 'hover',
+          value: 'id',
+          label: 'name'
         },
       }
     },
@@ -157,10 +158,12 @@
         }
       },
       handleBussinessTreeData (data) {
-        const cascadeAuthData = _.cloneDeep(data).filter(o => {
-          return o.property_id === this.$store.state.home.headerAction
+        deepTraversal(data,'children',o=>{
+          this.$set(o,'disabled',false)
+          const parentNodes = findParentNodes(o.id,data,true)
+          this.$set(o,'cascadeValue',parentNodes)
         })
-        this.entityCascaderOption = _.compact(formatEntityData(cascadeAuthData, this.$store.state.user.role_id, this.$store.state.user.checklist))
+        this.entityCascaderOption = data
         this.handleEntityPrivilege()
         //给级联设置默认值
         this.setEntityCascaderDataDefaultValue()

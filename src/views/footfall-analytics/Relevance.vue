@@ -18,7 +18,7 @@
           class="cascade-dom w-select"
           collapse-tags
           popper-class="relevance-cascade-dom"
-          :props="{ multiple: true,expandTrigger:'hover'}"
+          :props="{ multiple: true,expandTrigger:'hover',value: 'id',label: 'name'}"
           :options="relevanceList"
         ></el-cascader>
         <div class="cascade" v-else></div>
@@ -140,6 +140,7 @@ import relevanceTab from './components/components/RelevanceTab'
 import dependencywheel from '@/components/charts/dependency.vue'
 import TableDefault from '../ui-elements/table/TableDefault.vue'
 import { getBussinessTree } from '@/api/passenger.js'
+import { getBzoneTree } from '@/api/home.js'
 import { relevanceData, directionData } from '@/api/analysis'
 import moment from 'moment'
 import _ from 'lodash'
@@ -261,13 +262,17 @@ export default {
     allZoneList () {
       this.isSelected = false
       let propertyId = this.$store.state.home.headerAction
-      getBussinessTree({ entity: 52, without: 502 }).then(res => {
-        const cascadeAuthData = res.data.data.filter(o => { return o.property_id === propertyId })// 找到当前购物中心的treeData
-        formatCascadeAuthData(this, cascadeAuthData)
+      getBzoneTree({property_id:this.$store.state.home.headerAction}).then(res=>{
+        formatCascadeAuthData(this,res.data.data)
         this.isSelected = true
-      }).catch(err => {
-        console.log(err)
       })
+      // getBussinessTree({ entity: 52, without: 502 }).then(res => {
+      //   const cascadeAuthData = res.data.data.filter(o => { return o.property_id === propertyId })// 找到当前购物中心的treeData
+      //   formatCascadeAuthData(this, cascadeAuthData)
+      //   this.isSelected = true
+      // }).catch(err => {
+      //   console.log(err)
+      // })
     },
     // 点击查询
     relevanceDataClick () {
@@ -282,7 +287,7 @@ export default {
         return false
       }
       let ListId = _.clone(this.relevanceValue)
-      let bzid = ListId.map(o => { return o[1] }).join(',')
+      let bzid = ListId.map(o => { return o[o.length-1] }).join(',')
       this.$refs.relecanceTotle.flowType = 0
       Promise.all([
         relevanceData({ bzid, time }),

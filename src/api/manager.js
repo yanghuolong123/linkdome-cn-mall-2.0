@@ -480,3 +480,4 @@ export const delEntity = (id) => {
     url: `/bzone/${id}`,
   })
 }
+

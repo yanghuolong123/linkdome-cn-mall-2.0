@@ -57,6 +57,7 @@
 				<area-list v-if="currentEntityType === 'other'"
 									 ref="otherList"
 									 @editFloor="editEntity"
+									 @refresh="getData"
 									 :tree="originTreeData"
 									 @delFloor="deleteEntity"
 									 @changeDoorway="changeDoorway"
@@ -280,7 +281,7 @@
     getCameraImageUrl,
     delEntity
   } from '@/api/manager.js'
-  import { initMonthsData, deepTraversal, isEmpty, deepFind, filterTreeByType } from '@/libs/util'
+  import { initMonthsData, deepTraversal, isEmpty, deepFind, filterTreeByType,findParentNodes } from '@/libs/util'
   import { getGroupOrganization, getBzoneTree } from '@/api/home.js'
   import uploadImg from '_c/common/uploadImg.vue'
   import { mapState } from 'vuex'
@@ -469,13 +470,12 @@
 				})
         node = Object.assign(node,data)
         this.originTreeData = Object.assign(this.originTreeData,this.treeData)
+				this.getData()
       },
       addSuc(data){
-        console.log(data)
         let node = deepFind( this.treeData,o=>{
           return o.id === data.parent_id
         })
-        console.log(node)
         if(Array.isArray(node.children)){
           node.children.push(data)
         }else {
@@ -501,22 +501,12 @@
       },
       editEntity (data) {
         this.$refs.entityModal.formValidate = Object.assign(this.$refs.entityModal.formValidate,data)
-        this.$refs.entityModal.formValidate.parentNode = []
-        this.getParentNodes(data.id,this.$refs.entityModal.formValidate.parentNode)
+        this.$refs.entityModal.formValidate.parentNode = findParentNodes(data.id,this.treeData)
         this.$refs.entityModal.isModify = true
 				this.$refs.entityModal.showModal()
 
       },
-			//通过当前id找到所有的父节点id
-			getParentNodes(id,arr){
-        const node = deepFind(this.treeData,o=>{
-          return o.id === id
-				})
-				if(node.parent_id){
-          arr.unshift(node.parent_id)
-				  this.getParentNodes(node.parent_id,arr)
-				}
-			},
+
       symbolClick (symbol) {
         this.way = symbol.id
         this.wayChange(this.way)
@@ -1015,7 +1005,7 @@
           res = res.data.data
 					this.originTreeData = _.cloneDeep(res)
           //级联数据不显示出入口和区域
-          let treeData = filterTreeByType(res, ['mall', 'floor', 'other', 'store'])
+          let treeData = filterTreeByType(res, ['area','gate'])
           if (this.$store.state.user.role_id < 3) {
             this.treeData = treeData
           } else {
@@ -1093,39 +1083,7 @@
         this.$refs.entityModal.showModal()
         this.$refs.entityModal.isModify = false
       },
-      editFloor (values) {
-        this.$refs.entityModal.isModify = true
-        this.$refs.entityModal.showModal()
-        var value = _.cloneDeep(values)
-        console.log(value)
-        var that = this
-        value.description = value.describe
-        value.parentNode = value.parent_id
-        value.floor = value.zone_index
-        value.spc = 2
-        that.$refs.entityModal.formValidate = value
-        that.$refs.entityModal.isModify = true
-        that.$refs.entityModal.disabledSpc = true
-        that.$refs.entityModal.disabledFloor = false
-        that.$refs.entityModal.disabledParentNode = false
-        that.$refs.entityModal.disabledZones = false
-      },
-      editStore (values) {
-        var value = _.cloneDeep(values)
-        var that = this
-        value.description = value.describe
-        value.parentNode = value.parent_id
-        value.floor = value.zone_index
-        value.spc = 3
-        that.$refs.entityModal.isModify = true
-        that.$refs.entityModal.formValidate = value
-        that.$refs.entityModal.disabledSpc = true
-        that.$refs.entityModal.disabledFloor = true
-        that.$refs.entityModal.disabledParentNode = true
-        that.$refs.entityModal.disabledZones = true
-        that.$refs.entityModal.disabledModal5 = false
-        this.$refs.entityModal.gettype()
-      },
+
       editMall (values) {
         var value = _.cloneDeep(values)
         value.area_size = value.goal_sale[0].area_size
@@ -1243,8 +1201,7 @@
             deleteData(obj.id).then((res) => {
               if (res.data.code === 200) {
                 this.$message.success(this.$t('删除成功'))
-                this.defaultValue = []
-								this.getParentNodes(obj.id,this.defaultValue)
+                this.defaultValue = findParentNodes(obj.id,this.treeData)
                 this.addType = 2
                 this.getData()
               }

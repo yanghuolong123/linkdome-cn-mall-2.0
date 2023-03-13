@@ -66,4 +66,25 @@ export default {
     }
   ],
   noPropertyPages:['Dashboard','EntityManage','HolidayManage','VipCustom','Account','Role'],//不需要选择购物中心的路由名称
+  entityType:[
+    {
+      value:'area',
+      name:'区域'
+    },{
+      value:'floor',
+      name:'楼层'
+    },{
+      value:'mall',
+      name:'购物中心'
+    },{
+      value:'gate',
+      name:'出入口'
+    },{
+      value:'other',
+      name:'其他'
+    },{
+      value:'store',
+      name:'商铺'
+    },
+  ]
 }

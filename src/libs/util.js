@@ -351,25 +351,19 @@ export const disabledDate = {
 }
 // 处理实体权限级联数据
 export const formatEntityData = (data, role_id, checklist) => {
-  console.log(_.cloneDeep(data))
   let organization = data.map(function (m, index) {
-    m.value = m.id
-    m.label = m.name
+
     m.itype = m.itype
     m.disabled = false
     m.cascadeValue = [m.id]
     if (m.children) {
       m.children.forEach(function (e) {
-        e.value = e.id
         e.disabled = false
-        e.label = e.name
         e.itype = e.itype
         e.cascadeValue = m.cascadeValue.concat([e.id])
         if (e.children) {
           e.children.forEach(function (k) {
-            k.value = k.id
             k.disabled = false
-            k.label = k.name
             k.itype = k.itype
             k.cascadeValue = e.cascadeValue.concat([k.id])
           })
@@ -380,8 +374,6 @@ export const formatEntityData = (data, role_id, checklist) => {
             kk.id = gate.id
             kk.disabled = false
             kk.value = gate.id
-            kk.label = gate.name
-            kk.name = gate.name
             kk.parent_id = e.id
             kk.itype = gate.itype
             kk.cascadeValue = e.cascadeValue.concat([kk.id])
@@ -481,7 +473,7 @@ export const deepTraversal = (arr, child, callback) => {
 export const findCascadeLastLevel = (arr, child, callback) => {
   function traversal (a) {
     for (let i = 0; i < a.length; i++) {
-      if (a[i][child] && a[i][child].length ||a[i].itype==='floor') {//a[i].itype==='floor'  专为解决楼层下无实体时，全部按钮加在了楼层列
+      if (a[i][child] && a[i][child].length ||a[i].type_name==='floor') {//a[i].itype==='floor'  专为解决楼层下无实体时，全部按钮加在了楼层列
         traversal(a[i][child]||[])
       } else {
         callback(a)
@@ -674,7 +666,7 @@ export const getCompareDate = (originDate,compateType) => {
 export const filterTreeByType = (arr,typeNames)=>{
   let emptyArr = [];
   for (let item of arr) {
-    if (typeNames.includes(item.type_name) ) {
+    if (!typeNames.includes(item.type_name) ) {
       if (item.children &&Array.isArray(item.children)&& item.children.length > 0) {
         item.children = filterTreeByType(item.children,typeNames);
         if(!item.children.length){
@@ -692,4 +684,25 @@ export const filterTreeByType = (arr,typeNames)=>{
     }
   }
   return emptyArr;
+}
+/*
+* 通过当前id查询当前节点在树上的所有父节点
+* hasSelf:是否包含自己
+* */
+export const findParentNodes = (id,tree,hasSelf = false)=>{
+  let parentNodes = [];
+  search(id,tree)
+  function search (id,tree) {
+    const node = deepFind(tree,o=>{
+      return o.id === id
+    })
+    if(node&&node.parent_id){
+      parentNodes.unshift(node.parent_id)
+      search(node.parent_id,tree)
+    }
+  }
+  if(hasSelf){
+    parentNodes.push(id)
+  }
+  return parentNodes
 }

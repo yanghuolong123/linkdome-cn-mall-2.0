@@ -440,3 +440,10 @@ export const getBzoneTree = (params) => {
     params
   })
 }
+//获取平级实体
+export const getBzoneList = params => {
+  return naxios.request({
+    url: '/bzone',
+    params
+  })
+}

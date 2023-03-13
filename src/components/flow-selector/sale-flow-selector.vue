@@ -67,7 +67,7 @@
         entityOptions: [
           {
             label: '购物中心',
-            value: 'shop'
+            value: 'mall'
           }
         ],
         cascadeProps: {

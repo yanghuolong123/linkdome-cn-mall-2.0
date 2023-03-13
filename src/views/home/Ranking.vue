@@ -287,7 +287,7 @@ export default {
         })
 
         pieSeriesData.push({
-          name: e.label,
+          name: e.name,
           y: tmlValue
         })
       })

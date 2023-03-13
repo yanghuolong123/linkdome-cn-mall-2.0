@@ -234,7 +234,7 @@ export default {
       },
       chartTableName: ["实体名称", "停留时间"],
       chartTableListL: [],
-      tableName: ["实体名称", "实体类型", "平均停留时间"],
+      tableName: ["实体名称", "实体类别", "平均停留时间"],
       tableList: [],
       chartTableList: [],
       columnsList: [],
@@ -458,9 +458,9 @@ export default {
       // 表格 标题
       this.titleText = [];
       if (value === "") {
-        this.tableName = ["实体名称", "实体类型", "平均停留时间"];
+        this.tableName = ["实体名称", "实体类别", "平均停留时间"];
       } else {
-        this.tableName = ["实体名称", "实体类型", "时间点", "平均停留时间"];
+        this.tableName = ["实体名称", "实体类别", "时间点", "平均停留时间"];
       }
     },
     chartTableData(categories, series, charType) {

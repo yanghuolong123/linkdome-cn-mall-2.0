@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     tableName(){
-      return [ '名称', '描述', '操作']
+      return [ '名称','实体类型', '描述', '操作']
     },
     tableList () {
       var arr = []

@@ -34,7 +34,7 @@
 				class="w-select"
 				v-model="storeCascadeData"
 				collapse-tags
-				:props="{ multiple: true,expandTrigger:'hover' }"
+				:props="{ multiple: true,expandTrigger:'hover',label:'name',value:'id' }"
 				:options="storeCascadeOpiton"
 			>
 			</el-cascader>
@@ -70,7 +70,7 @@
 							v-show="compareType === 'entity'&& !['store','gate','bussiness'].includes(entityType)">
 				<Option v-for="item in selectOptions"
 								:value="item.id"
-								:key="item.id">{{ item.label }}
+								:key="item.id">{{ item.name }}
 				</Option>
 			</Select>
 			<Select v-model="queryParams.enterType" class="w-select m-l-20">
@@ -86,20 +86,14 @@
 </template>
 <script>
   import selectMixin from '@/mixin/selectMixin.js'
-  import { formatEntityData, getCascadeFstLeaf } from '@/libs/util'
+  import { formatEntityData, deepTraversal,getCascadeFstLeaf,findParentNodes } from '@/libs/util'
   import Moment from'moment'
   export default {
     name: 'ageGenderFlowSelector',
     mixins: [selectMixin],
     data () {
       return {
-       
 
-        cascadeProps: {
-          multiple: true,
-          checkStrictly: true,
-          expandTrigger: 'hover'
-        },
       }
     },
     computed: {
@@ -142,10 +136,12 @@
         }
       },
       handleBussinessTreeData (data) {
-        const cascadeAuthData = _.cloneDeep(data).filter(o => {
-          return o.property_id === this.$store.state.home.headerAction
+        deepTraversal(data,'children',o=>{
+          this.$set(o,'disabled',false)
+          const parentNodes = findParentNodes(o.id,data,true)
+          this.$set(o,'cascadeValue',parentNodes)
         })
-        this.entityCascaderOption = _.compact(formatEntityData(cascadeAuthData, this.$store.state.user.role_id, this.$store.state.user.checklist))
+        this.entityCascaderOption = data
         this.handleEntityPrivilege()
         //给级联设置默认值
         this.setEntityCascaderDataDefaultValue()

@@ -18,9 +18,9 @@ export default [
        title: '客流分析'
     },
     name: 'Dashboard',
-    redirect: '/dashboard/analytics',
+    redirect: '/dashboard/index',
     children: [{
-      path: '/dashboard/analytics',
+      path: '/dashboard/index',
       name: 'dashboardAnalytics',
       component: () =>
         import ('@/views/DashboardAnalytics.vue')
@@ -135,20 +135,20 @@ export default [
           pageTitle: '无效客流分析'
         }
       },
-      { // 排队货架分析
-        path: 'queue',
-        name: 'Queue',
-        component: () =>
-          import ('@/views/footfall-analytics/queue.vue'),
-        meta: {
-          breadcrumb: [
-            { title: '客流分析', url: '/' },
-            { title: '客流分析', url: '/footfall' },
-            { title: '排队货架分析', active: true },
-          ],
-          pageTitle: '排队货架分析'
-        }
-      },
+      // { // 排队货架分析
+      //   path: 'queue',
+      //   name: 'Queue',
+      //   component: () =>
+      //     import ('@/views/footfall-analytics/queue.vue'),
+      //   meta: {
+      //     breadcrumb: [
+      //       { title: '客流分析', url: '/' },
+      //       { title: '客流分析', url: '/footfall' },
+      //       { title: '排队货架分析', active: true },
+      //     ],
+      //     pageTitle: '排队货架分析'
+      //   }
+      // },
       // { // 到店次数统计
       //   path: 'arrival',
       //   name: 'Arrival',
@@ -487,14 +487,14 @@ export default [
   {
     path: '/admin',
     component: main,
-    redirect: '/admin/entity',
+    redirect: '/admin/basic',
     name: 'Admin',
     meta: {
       icon: 'SettingsIcon'
     },
     children: [
 			{ //实体管理
-				path: 'entity',
+				path: 'basic',
 				name: 'EntityManage',
 				component: () =>
 					import ('@/views/admin/Entity.vue'),

@@ -22,6 +22,9 @@
 					<vs-td :data="data[indextr].name" v-if="data[indextr].name">
 						{{data[indextr].name}}
 					</vs-td>
+					<vs-td :data="data[indextr].type_name" v-if="data[indextr].type_name">
+						{{findKey(typeList,'value',data[indextr].type_name,'name')}}
+					</vs-td>
 					<!-- 客流目标 -->
 					<vs-td :data="data[indextr].enterGoal" v-if="data[indextr].enterGoal">
 						{{data[indextr].enterGoal}}
@@ -110,7 +113,8 @@
 </template>
 
 <script>
-
+	import {findKey} from '../../../libs/util'
+  import config from '@/config/index';
   export default {
     props: {
       titleName: {
@@ -148,7 +152,8 @@
         pageColor: '#00A0E9',
         currentx: 20,
         selected: [],
-        disabled:false
+        disabled:false,
+				typeList:config.entityType
       }
     },
     components: {
@@ -180,7 +185,10 @@
           type: 'edit'
         }
         this.$emit('tableData', user)
-      }
+      },
+      findKey(arr,valueKey,value,targetkey){
+        return findKey(arr,valueKey,value,targetkey)
+			}
     }
   }
 </script>

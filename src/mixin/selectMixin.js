@@ -35,7 +35,13 @@ const selectMixin = {
         bussinessType:[],
       },
       bussinessTypeOptions: [],//业态
-
+      cascadeProps: {
+        multiple: true,
+        checkStrictly: true,
+        expandTrigger: 'hover',
+        value: 'id',
+        label: 'name'
+      },
       compareType: 'not',//对比类型
       entityType: '',//单选按钮
       typeOptions: [
@@ -145,7 +151,7 @@ const selectMixin = {
     selectOptions(){
       const all = {
         id: -1,
-        label: i18n.t('全部实体')
+        name: i18n.t('全部实体')
       }
       if(this.entitySelectObj[this.entityType]){
         return [all,...this.entitySelectObj[this.entityType]]
@@ -220,22 +226,14 @@ const selectMixin = {
       this.cascadeAllStore = []
       getCascadeList({ property_id: this.$store.state.home.headerAction }).then(res=>{
         let data = res.data.data
-        let cascadeList = Object.keys(data)
-        cascadeList.forEach(list => {
-          let obj = {}
-          obj.value = list
-          obj.label = list
-          obj.children = []
-          data[list].forEach(shop => {
-            let shopObj = {}
-            shopObj.value = shop.id
-            shopObj.label = shop.name
-            shopObj.name = shop.name
-            this.cascadeAllStore.push(shopObj)
-            obj.children.push(shopObj)
+        for(let key in data){
+          this.storeCascadeOpiton.push({
+            id:key,
+            name:key,
+            children:data[key]
           })
-          this.storeCascadeOpiton.push(obj)
-        })
+          this.cascadeAllStore = this.cascadeAllStore.concat(data[key])
+        }
       })
     },
     compareTypeChange(val){
@@ -274,15 +272,25 @@ const selectMixin = {
       // 判断是否是实体对比
       if (this.compareType === 'entity') {
         if (this.entityType === 'store') {
-          this.storeCascadeData.map(list => {
-            let obj = {}
-            obj.itype = 'store'
-            obj.id = list[1]
-            obj.label = _.find(this.cascadeAllStore, (v) => v.value == list[1]).label
-            obj.name = obj.label
-            obj.belongsType = '商铺'
-            entitys.push(obj)
+          this.storeCascadeData.forEach(o=>{
+            const node = deepFind(this.storeCascadeOpiton,store=>{
+              return store.id === o[o.length-1]
+            })
+            entitys.push({
+              type_name:'store',
+              id:node.id,
+              name:node.name
+            })
           })
+          // this.storeCascadeData.map(list => {
+          //   let obj = {}
+          //   obj.itype = 'store'
+          //   obj.id = list[1]
+          //   obj.label = _.find(this.cascadeAllStore, (v) => v.id == list[1]).name
+          //   obj.name = obj.label
+          //   obj.belongsType = '商铺'
+          //   entitys.push(obj)
+          // })
         } else if(['gate','bussiness'].includes(this.entityType) ){
           const option = _.find(this.entityOptions,['value',this.entityType])
 
@@ -332,7 +340,7 @@ const selectMixin = {
         }).map(o=>{
           return {
             id:o,
-            label:_.find(this.bussinessTypeOptions,b=>{return b.id===o}).name
+            name:_.find(this.bussinessTypeOptions,b=>{return b.id===o}).name
           }
         })
       }else {
@@ -410,7 +418,7 @@ const selectMixin = {
         }
         getBzoneTree({property_id:this.$store.state.home.headerAction}).then(res=>{
           res = res.data.data;
-          resolve(filterTreeByType(res,['mall', 'floor', 'other', 'store']))
+          resolve(res)
         })
         // getBussinessTree({ entity: 52 }).then(res => {
         //   res = res.data.data;
@@ -423,54 +431,25 @@ const selectMixin = {
     },
     //获取实体选择时多选下拉框
     getSelectOption (res) {
-      const property = res.find(o => {
-        return o.property_id === this.$store.state.home.headerAction
-      })
       let obj = {}
-      if (property) {
-        obj.shop = [{
-          id: property.id,
-          label: property.name,
-          itype: 'shop',
-          belongsType: '购物中心'
-        }]
-        if (Array.isArray(property.children)) {
-          obj.floor = [];
-          obj.area = [];
-          property.children.forEach(o => {
-            const floor = {
-              id: o.id,
-              label: o.name,
-              itype: 'floor',
-              belongsType: '楼层'
-            }
-            obj.floor.push(floor);
-            if (Array.isArray(o.area)){
-              o.area.forEach(a=>{
-                const area = {
-                  id:a.id,
-                  label:a.name,
-                  itype: 'area',
-                  belongsType: '区域'
-                }
-                obj.area.push(area)
-              })
-            }
-          })
+      deepTraversal(res,'children',o=>{
+        if(obj[o.type_name] && Array.isArray(obj[o.type_name])){
+          obj[o.type_name].push(o)
+        }else {
+          obj[o.type_name] = [o]
         }
 
-      }
+      })
       this.entitySelectObj = obj
     },
     //给级联数据最后一级加全部按钮
     cascadeDataAddAll (data) {
       findCascadeLastLevel(data, 'children', addAll)
-
       function addAll (levelNode) {
         const parent_id = levelNode[levelNode.length - 1].parent_id
         levelNode.unshift({
-          value: 'all' + parent_id,
-          label: i18n.t('全部')
+          id: 'all' + parent_id,
+          name: i18n.t('全部')
         })
       }
     },

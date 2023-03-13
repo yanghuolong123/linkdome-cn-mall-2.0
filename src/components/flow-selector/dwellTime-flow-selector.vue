@@ -31,7 +31,7 @@
 				class="w-select"
 				v-model="storeCascadeData"
 				collapse-tags
-				:props="{ multiple: true,expandTrigger:'hover' }"
+				:props="cascadeProps"
 				:options="storeCascadeOpiton"
 			></el-cascader>
 			<el-cascader
@@ -57,7 +57,7 @@
 				<Option v-for="item in selectOptions"
 					:value="item.id"
 					:key="item.id">
-					{{ $t(item.label) }}
+					{{ $t(item.name) }}
 				</Option>
 			</Select>
 			<Select v-model="queryParams.enterType" class="w-select m-l-20">
@@ -74,7 +74,7 @@
 </template>
 <script>
   import selectMixin from '@/mixin/selectMixin.js'
-  import { formatEntityData, getCascadeFstLeaf } from '@/libs/util'
+  import { formatEntityData, getCascadeFstLeaf,deepTraversal,findParentNodes,filterTreeByType } from '@/libs/util'
 
   export default {
 	name: 'dwellTimeFlowSelector',
@@ -95,11 +95,7 @@
 	},
 	data () {
 		return {
-			cascadeProps:{
-				multiple: true,
-				checkStrictly: true,
-				expandTrigger:'hover'
-			},
+
 		}
 	},
 		computed:{
@@ -107,7 +103,7 @@
 	 		  return [
           {
             label:'购物中心',
-            value:'shop'
+            value:'mall'
           },{
             label:'楼层',
             value:'floor'
@@ -128,13 +124,13 @@
 		},
 	methods:{
       handleBussinessTreeData(data){
-        const cascadeAuthData = _.cloneDeep(data).filter(o => { return o.property_id === this.$store.state.home.headerAction })
-        this.entityCascaderOption = _.compact(formatEntityData(cascadeAuthData, this.$store.state.user.role_id, this.$store.state.user.checklist))
-        this.entityCascaderOption.forEach(list => {
-          list.children.forEach(l => {
-            _.remove(l.children, (value) => { return value.itype === 'gate' })
-          })
+        deepTraversal(data,'children',o=>{
+          this.$set(o,'disabled',false)
+          const parentNodes = findParentNodes(o.id,data,true)
+          this.$set(o,'cascadeValue',parentNodes)
         })
+				//去掉出入口
+        this.entityCascaderOption = filterTreeByType(data,['gate'])
         this.handleEntityPrivilege()
         //给级联设置默认值
         this.setEntityCascaderDataDefaultValue()

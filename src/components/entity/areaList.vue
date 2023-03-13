@@ -54,6 +54,7 @@
         <addDoorway
             ref="addDoorway"
             @addTypeData="addTypeData"
+            :tree="tree"
             @updateTypeData="updateTypeData"
             :userLvl="userLvl"
             :gateList="gateList"
@@ -66,6 +67,7 @@
             @addTypeData="addTypeData"
             @updateTypeData="updateTypeData"
             :userLvl="userLvl"
+            :tree="tree"
             :zoneList="zoneList"
             :entityInfo="entityInfo"
             :editAreaTitle="editAreaTitle"
@@ -81,7 +83,7 @@ import { zones, deleteData,delEntity } from '@/api/manager.js'
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import addDoorway from '_c/entity/components/addDoorway.vue'
 import addArea from '_c/entity/components/addArea.vue'
-import {deepFind} from '@/libs/util'
+import {deepFind,findParentNodes} from '@/libs/util'
 import { mapState } from 'vuex'
 export default {
   components: {
@@ -114,7 +116,7 @@ export default {
         type: ''
       },
       gateList: [],
-        tableNameCommon:['名称', '描述', '操作']
+        tableNameCommon:['名称','实体类型', '描述', '操作']
     }
   },
   props: {
@@ -137,9 +139,9 @@ export default {
     }),
       tableName(){
           if(this.userLvl === 'admin' && this.entityInfo.type_name === 'floor'){
-              return ['名称', '描述','图片配置', '操作']
+              return ['名称', '实体类型','描述','图片配置', '操作']
           }else {
-              return ['名称', '描述', '操作']
+              return ['名称', '实体类型','描述', '操作']
           }
       },
     subTable(){
@@ -182,12 +184,14 @@ export default {
       })
     },
     adDoorway () {
+      this.$refs.addDoorway.formData.parentNode = findParentNodes(this.entityInfo.id,this.tree,true)
       this.$refs.addDoorway.isModify = false
-      this.$refs.addDoorway.$refs.modal.showModal()
+      this.$refs.addDoorway.showModal()
     },
     addArea () {
+      this.$refs.addArea.formData.parentNode = findParentNodes(this.entityInfo.id,this.tree,true)
       this.$refs.addArea.isModify = false
-      this.$refs.addArea.$refs.modal.showModal()
+      this.$refs.addArea.showModal()
     },
       imgConfig(){
           this.$emit('imgConfig')
@@ -207,13 +211,14 @@ export default {
     /* 获取出入口区域关联数据 */
     addTypeData (data) {
       let node = deepFind(this.tree,o=>{
-        return o.id ===this.entityInfo.id
+        return o.id ===data.parent_id
       })
       if(Array.isArray(node.children)){
         node.children.push(data)
       }else {
         this.$set(node,'children', [data])
       }
+      this.$emit('refresh')
     },
     updateTypeData (data) {
       //更新数据
@@ -224,19 +229,23 @@ export default {
     },
     editDoorWay (value) {
       console.log(value)
-      this.$refs.addDoorway.$refs.modal.showModal();
       this.editDoorWayTitle = '编辑出入口'
       var data = _.cloneDeep(value.data)
       data.gate_id = data.gate[0]
       this.$refs.addDoorway.formData = data
+      this.$refs.addDoorway.formData.parentNode = findParentNodes(value.data.id,this.tree)
+  
       this.$refs.addDoorway.isModify = true
+      this.$refs.addDoorway.showModal()
+  
     },
     editArea (value) {
-      this.$refs.addArea.$refs.modal.showModal()
       var data = _.cloneDeep(value.data)
       this.editAreaTitle = '编辑区域'
       this.$refs.addArea.formData = data
       this.$refs.addArea.isModify = true
+      this.$refs.addArea.formData.parentNode = findParentNodes(value.data.id,this.tree)
+      this.$refs.addArea.showModal()
     },
     delArea (value) {
       this.$alert({

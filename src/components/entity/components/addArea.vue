@@ -10,6 +10,17 @@
 			<FormItem :label="$t('区域名称')" prop="name">
 				<Input type="text" v-model="formData.name" :placeholder="$t('fn.请输入', [$t('区域名称')])"></Input>
 			</FormItem>
+			<FormItem :label="$t('父节点')" prop="parentNode" v-if="userLvl==='admin'">
+				<el-cascader
+					v-model="formData.parentNode"
+					:placeholder="$t('fn._', [$t('holder.请选择'), $t('父节点')])"
+					class="w-select "
+					style="width: 100%"
+					:props="cascadeProps"
+					:options="parentNodeCascade"
+				>
+				</el-cascader>
+			</FormItem>
 			<FormItem :label="$t('区域关联')" prop="zone" v-if="userLvl=='admin'">
 				<Select v-model="formData.zone" multiple>
 					<Option v-for="item in zoneList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -25,7 +36,8 @@
 <script>
   import _ from 'lodash'
   import Modal from '_c/common/Modal.vue'
-
+  import {deepTraversal} from '@/libs/util'
+  import i18n from "@/i18n/i18n";
   import {
     addAreas,
     updateFloorData,
@@ -52,14 +64,32 @@
         type: String,
         default: 'admin'
       },
+      tree:{
+        type: Array,
+        default: []
+      }
     },
     data () {
+      const validSelect = (rule, value, callback) => {
+        if (value === "" || (rule.field == "zoneIds" && !value[0])) {
+          callback(new Error(i18n.t("fn.请选择", [i18n.t(rule.tips)])));
+        } else {
+          callback();
+        }
+      };
       return {
         isModify: false,
+        cascadeProps:{
+          checkStrictly: true,
+          expandTrigger:'hover',
+          value:'id',
+          label:'name'
+        },
         formData: {
           name: '',
           zone: [],
           description: '',
+          parentNode:[]
         },
         ruleInline: {
           name: [{
@@ -67,6 +97,14 @@
             message: this.$t('fn.请输入', [this.$t('区域名称')]),
             trigger: 'blur'
           },],
+          parentNode: [
+            {
+              required: true,
+              tips: "父节点",
+              validator: validSelect,
+              trigger: "change",
+            },
+          ],
           zone: [{
             required: true,
             message: this.$t('请选择'),
@@ -81,8 +119,21 @@
       ...mapState({
         propertyId: state => state.home.headerAction,
       }),
+      parentNodeCascade(){
+        //出入口只能挂在楼层和其他下面
+        let tree = _.cloneDeep(this.tree);
+        deepTraversal(tree,'children',t=>{
+          if(['mall','gate','area','store'].includes(t.type_name)){
+            t.disabled = 'disabled'
+          }
+        })
+        return tree
+      },
     },
     methods: {
+      showModal(){
+        this.$refs.modal.showModal();
+      },
       /* 校验表单
 			*@method handleSubmit
 			*@param {String} name 表单的ref值

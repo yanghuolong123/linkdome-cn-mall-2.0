@@ -37,7 +37,8 @@
 <script>
 import Moment from 'moment'
 import selectMixin from '@/mixin/selectMixin.js'
-import {formatEntityData,deepFind} from '@/libs/util'
+import { deepTraversal,findParentNodes,deepFind } from '../../libs/util'
+
 import { getBussinessDict } from '@/api/home'
 const yesterday = Moment(new Date()).add(-1, 'day').format('YYYY-MM-DD')
 
@@ -54,8 +55,6 @@ export default {
         },
         cascadeProps:{
           multiple: false,
-          checkStrictly: true,
-          expandTrigger:'hover'
         },
 	  }
 	},
@@ -70,7 +69,7 @@ export default {
           label: this.$t('业态')
         },{
           value: 'time',
-          label: this.$t('自定义对比')
+          label: this.$t('自定义时间对比')
         },
         {
           value: 'onYear',
@@ -105,9 +104,13 @@ export default {
       this.setEntityCascaderDataDefaultValue()
     },
     handleBussinessTreeData(data){
-      const cascadeAuthData = _.cloneDeep(data).filter(o => { return o.property_id === this.$store.state.home.headerAction })
-      this.entityCascaderOption = _.compact(formatEntityData(cascadeAuthData, this.$store.state.user.role_id, this.$store.state.user.checklist))
-      this.handleEntityPrivilege()
+      deepTraversal(data,'children',o=>{
+        this.$set(o,'disabled',false)
+        const parentNodes = findParentNodes(o.id,data,true)
+        this.$set(o,'cascadeValue',parentNodes)
+      })
+      this.entityCascaderOption = data
+    	 this.handleEntityPrivilege()
       //给级联设置默认值
       this.setEntityCascaderDataDefaultValue()
       this.handleClick()

@@ -21,7 +21,7 @@
         :placeholder="$t('fn.请选择', [$t('实体')])"
         style="width: 200px"
         class="m-l-10"
-        :props="{ multiple: true, checkStrictly: true, expandTrigger: 'hover' }"
+        :props="cascadeProps"
         :options="entityCascaderOption"
       >
       </el-cascader>
@@ -174,7 +174,8 @@ import {
   getHeatMapDistribution,
   getHeatMapFloorData,
 } from "@/api/analysis.js";
-import { disabledDate, formatEntityData, deepFind } from "@/libs/util.js";
+import {getBzoneList} from '@/api/home'
+import { disabledDate, formatEntityData, deepFind,deepTraversal,findParentNodes } from "@/libs/util.js";
 import relevanceTab from "./components/components/RelevanceTab";
 let flowDistributionCharts = null;
 const yesterday = moment(new Date())
@@ -365,16 +366,12 @@ export default {
   },
   methods: {
     handleBussinessTreeData(data) {
-      const cascadeAuthData = _.cloneDeep(data).filter((o) => {
-        return o.property_id === this.$store.state.home.headerAction;
-      });
-      this.entityCascaderOption = _.compact(
-        formatEntityData(
-          cascadeAuthData,
-          this.$store.state.user.role_id,
-          this.$store.state.user.checklist
-        )
-      );
+      deepTraversal(data,'children',o=>{
+        this.$set(o,'disabled',false)
+        const parentNodes = findParentNodes(o.id,data,true)
+        this.$set(o,'cascadeValue',parentNodes)
+      })
+      this.entityCascaderOption = data
       this.handleEntityPrivilege();
       //给级联设置默认值
       this.setEntityCascaderDataDefaultValue();

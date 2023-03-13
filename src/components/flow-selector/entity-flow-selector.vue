@@ -36,7 +36,7 @@
 					v-model="storeCascadeData"
 					filterable
 					collapse-tags
-					:props="{ multiple: true,expandTrigger:'hover' }"
+					:props="{ multiple: true,expandTrigger:'hover',label:'name',value:'id' }"
 					:options="storeCascadeOpiton"
 			>
 			</el-cascader>
@@ -74,7 +74,7 @@
 					v-show="compareType === 'entity'&& !['store','gate','bussiness'].includes(entityType) ">
 				<Option v-for="item in selectOptions"
 						:value="item.id"
-						:key="item.id">{{ item.label }}
+						:key="item.id">{{ item.name }}
 				</Option>
 			</Select>
 			<Select v-model="queryParams.enterType" class="w-select m-l-20">
@@ -93,6 +93,7 @@
   import selectMixin from '@/mixin/selectMixin.js'
   import { getBussinessDict } from '@/api/home'
   import Moment from 'moment'
+  import { deepTraversal,findParentNodes } from '../../libs/util'
 
   export default {
     name: 'flowSelector',
@@ -100,71 +101,15 @@
     data () {
       return {
         bussinessTypeOptions: [],//业态
-        typeOptions: [],
-        // entityOptions: [],
-        cascadeProps: {
-          multiple: true,
-          checkStrictly: true,
-          expandTrigger: 'hover'
-        },
       }
     },
     computed: {
       typeOptionsCom() {
-        this.typeOptions = [
-          {
-            value: 'not',
-            label: this.$t('无对比')
-          }, {
-            value: 'entity',
-            label: this.$t('实体对比')
-          }, {
-            value: 'businessType',
-            label: this.$t('业态对比')
-          }, {
-            value: 'time',
-            label: this.$t('自定义对比')
-          },
-          {
-            value: 'onYear',
-            label: this.$t('同比')
-          },
-          {
-            value: 'onChain',
-            label: this.$t('环比')
-          }
-        ]
+        this.typeOptions.splice(2, 0, {
+          value: 'businessType',
+          label: this.$t('业态对比')
+        })
         return this.typeOptions
-      },
-      entityOptionsCom() {
-        this.entityOptions =  [
-          {
-            label: this.$t('楼层'),
-            value: 'floor'
-          },
-          {
-            label: this.$t('商铺'),
-            value: 'store'
-          },
-          {
-            label: this.$t('区域'),
-            value: 'area'
-          },
-          {
-            label: this.$t('出入口'),
-            value: 'gate',
-						itype:'gate',
-            cascadeOption:this.gateCascadeOpiton,
-            cascadeData:this.gateCascadeData
-          },
-					{
-            label: this.$t('业态'),
-            value: 'bussiness',
-            cascadeOption:this.bussinessCascadeOpiton,
-            cascadeData:this.busiCascadeData
-          },
-        ]
-        return this.entityOptions
       },
     },
     methods: {
@@ -219,10 +164,12 @@
         }
       },
       handleBussinessTreeData (data) {
-        const cascadeAuthData = _.cloneDeep(data).filter(o => {
-          return o.property_id === this.$store.state.home.headerAction
-        })
-        this.entityCascaderOption = _.compact(formatEntityData(cascadeAuthData, this.$store.state.user.role_id, this.$store.state.user.checklist))
+				deepTraversal(data,'children',o=>{
+				  this.$set(o,'disabled',false)
+					const parentNodes = findParentNodes(o.id,data,true)
+				  this.$set(o,'cascadeValue',parentNodes)
+				})
+        this.entityCascaderOption = data
         this.handleEntityPrivilege()
         //给级联设置默认值
         this.setEntityCascaderDataDefaultValue()
