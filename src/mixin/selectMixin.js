@@ -9,7 +9,6 @@ import {
   getCompareDate,
   getUnique,
   isEmpty,
-  filterTreeByType
 } from '@/libs/util'
 import i18n from '@/i18n/i18n'
 import { getBussinessTree,  getCascadeList } from '@/api/passenger.js'
@@ -166,8 +165,10 @@ const selectMixin = {
           value: 'floor'
         },
         {
-          label: this.$t('商铺'),
-          value: 'store'
+          label: this.$t('业态'),
+          value: 'bussiness',
+          cascadeOption:this.bussinessCascadeOpiton,
+          cascadeData:this.busiCascadeData
         },
         {
           label: this.$t('区域'),
@@ -180,12 +181,7 @@ const selectMixin = {
           cascadeOption:this.gateCascadeOpiton,
           cascadeData:this.gateCascadeData
         },
-        {
-          label: this.$t('业态'),
-          value: 'bussiness',
-          cascadeOption:this.bussinessCascadeOpiton,
-          cascadeData:this.busiCascadeData
-        },
+
       ]
     }
   },
