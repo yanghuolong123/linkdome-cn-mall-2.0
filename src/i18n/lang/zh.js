@@ -197,6 +197,7 @@ module.exports =  {
   节假日活动管理: "节假日活动管理",
   账户管理: "账户管理",
   权限管理: "权限管理",
+  更新缓存: "更新缓存",
   // src\views\entity-analytic\index.vue
   实体名称:"实体名称",
   时间点:"时间点",
@@ -662,6 +663,7 @@ module.exports =  {
 	HolidayManage: '节假日活动管理',
 	Account: '账户管理',
 	Role: '权限管理',
+	Cache: '更新缓存',
 
 	HolidayAnalysis: '节假日活动分析',
 	VipCustom: 'VIP 客户管理',

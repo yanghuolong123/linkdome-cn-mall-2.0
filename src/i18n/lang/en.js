@@ -196,6 +196,7 @@ module.exports =  {
   节假日活动管理: "Holiday Manage",
   账户管理: "Account",
   权限管理: "Role",
+  更新缓存: "Cache",
   // src\views\entity-analytic\index.vue
   实体名称: "Entity Name",
   时间点: "Timing",

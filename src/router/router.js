@@ -552,6 +552,20 @@ export default [
           pageTitle: '权限管理',
           access: []
         }
+      },      { // 更新缓存
+        path: 'cache',
+        name: 'Cache',
+        component: () =>
+          import ('@/views/admin/Cache.vue'),
+        meta: {
+          breadcrumb: [
+            { title: 'Analytics', url: '/dashboard/analytics' },
+            { title: '后台管理', url: '/admin' },
+            { title: '更新缓存', active: true },
+          ],
+          pageTitle: '更新缓存',
+          access: []
+        }
       }
     ]
   },

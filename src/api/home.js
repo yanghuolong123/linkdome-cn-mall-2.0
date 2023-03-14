@@ -440,10 +440,17 @@ export const getBzoneTree = (params) => {
     params
   })
 }
-//获取平级实体
+//获取平级实体k
 export const getBzoneList = params => {
   return naxios.request({
     url: '/bzone',
+    params
+  })
+}
+//更新后台数据缓存
+export const updateCache = params => {
+  return naxios.request({
+    url: '/test/clearCache',
     params
   })
 }
