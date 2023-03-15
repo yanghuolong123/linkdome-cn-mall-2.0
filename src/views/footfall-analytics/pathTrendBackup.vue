@@ -44,7 +44,7 @@
             <p class="minNumber">{{minNumber}}</p>
             <img :src="colorBar" width="20">
           </div>
-          <div  v-for="item in titleLists" class="titleList" :title="`${item.name} ${item.enter}(人次)`" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}"></div>
+          <div  v-for="item in titleLists" class="titleList" :title="`${item.name} ${item.from}(人次)`" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}"></div>
         </div>
       </div>
 
@@ -245,6 +245,7 @@ export default {
             obj.y = Math.floor(e.y * that.canvasHeight)
             obj.enter = m.enter
             obj.name = e.name
+            obj.from = m.from
             clickNodes.push(obj)
             titleList.push(obj)
             if (!e.x && !e.y) {

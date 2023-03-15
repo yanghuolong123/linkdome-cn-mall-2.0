@@ -617,7 +617,7 @@
           case 'company':
             data.property_id = Number(this.currentWay.id.split('_')[1])
             break
-          case 'property':
+          case 'mall':
             data.property_id = Number(this.property.split('_')[1])
             data.bz_id = this.currentWay.bz_id
             break
