@@ -619,7 +619,7 @@
             break
           case 'mall':
             data.property_id = Number(this.property.split('_')[1])
-            data.bz_id = this.currentWay.bz_id
+            data.bz_id = this.currentWay.id
             break
           case 'floor':
             data.bz_id = this.currentWay.id
@@ -922,7 +922,7 @@
           //waylist 是购物中心下的所有出入口gate
           this.wayList = []
 					const mall = deepFind(this.orgData,o=>{
-					  return o.id === Number(value[1])
+					  return o.type_name === 'mall' && o.id === Number(value[1])
 					})
 					if(mall){
             deepTraversal([mall],'children',child=>{
