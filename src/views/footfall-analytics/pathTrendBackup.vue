@@ -44,7 +44,7 @@
             <p class="minNumber">{{minNumber}}</p>
             <img :src="colorBar" width="20">
           </div>
-          <div  v-for="item in titleLists" class="titleList" :title="item.name" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}"></div>
+          <div  v-for="item in titleLists" class="titleList" :title="`${item.name} ${item.enter}(人次)`" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}"></div>
         </div>
       </div>
 
