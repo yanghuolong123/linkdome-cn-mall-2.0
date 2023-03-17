@@ -3,7 +3,7 @@ import axios from 'axios'
 
 import qs from 'qs'
 //获取pdf_center请求地址
-export const getPdfCenterUrl = ()=>{
+export const initConfig = ()=>{
   return naxios.request({
     url: 'init/config',
     method: 'get'
@@ -405,13 +405,7 @@ export const postKpiList = params => {
     method: 'post'
   })
 }
-// bi url
-export const getUrl = () => {
-  return naxios.request({
-    url: 'BIUrl',
-    method: 'get'
-  })
-}
+
 export const getSaleReach = (params) => {
   return naxios.request({
     url: 'sale/saleReach',

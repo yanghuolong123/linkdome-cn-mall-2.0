@@ -11,7 +11,7 @@
           icon="MenuIcon"
           @click.stop="showSidebar"
         ></feather-icon>
-        <span class="header-title">{{ systemTitle }}</span>
+        <span class="header-title">{{ systemName }}</span>
         <vs-select
           class="headerSelect"
           labe l=""
@@ -147,11 +147,12 @@ import VxAutoSuggest from "@/components/vx-auto-suggest/VxAutoSuggest.vue";
 import headerAccount from "_c/account-manage/header-account-edit.vue";
 import { weatherTrend } from "@/api/entityNew";
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
-import { getGroupOrganization, getUrl } from "@/api/home.js";
+import { getGroupOrganization } from "@/api/home.js";
 import Moment from "moment";
 import _ from "lodash";
 import Cookies from "js-cookie";
 import LanguageBtn from "@/components/LanguageBtn.vue";
+import { mapState } from 'vuex'
 export default {
   name: "the-navbar",
   components: {
@@ -169,7 +170,6 @@ export default {
   },
   data() {
     return {
-      systemTitle: "",
       count: 0,
       showCompany: false,
       dataList: {},
@@ -187,7 +187,6 @@ export default {
       showBookmarkPagesDropdown: false,
       comprotList: [],
       comprotModel: 0,
-      Biurl: "",
       homeUrl: "",
       today: Moment().format("YYYY-MM-DD"),
       weathers:{},
@@ -228,6 +227,7 @@ export default {
               text: list.name,
               value: list.property_id,
               img: list.map_url,
+              show_actual_val:list.show_actual_val
             };
             this.comprotList.push(l);
           }
@@ -276,19 +276,6 @@ export default {
             }
           });
         }
-        // let currList = [];
-        // let typeId = this.$store.state.user.allType;
-        // let property_type = _.find(typeId, (val) => {
-        //   return val == 52;
-        // });
-        // if (property_type) {
-        //   this.comprotList.map(list => {
-        //     allBzid.map(val => {
-        //       if (list.bzId == val) currList.push(list)
-        //     })
-        //   })
-        //   this.comprotList = currList
-        // }
         this.$store.commit("headerData", this.comprotList[0] || {});
         this.showCompany = this.comprotList.length > 1;
         this.comprotModel = this.$store.state.home.headerAction;
@@ -299,13 +286,6 @@ export default {
     if(this.comprotModel!=0){
       this.getWeather()
     }
-    getUrl().then((res) => {
-      if (res.data.code == 200) {
-        this.Biurl = res.data.data.BI;
-        this.homeUrl = res.data.data.Dashboard;
-        this.systemTitle = res.data.data.sysTitle;
-      }
-    });
   },
   destroyed() {
     document.removeEventListener("click", this.NavFalse);
@@ -339,6 +319,9 @@ export default {
     starredPagesMore() {
       return this.starredPages.slice(10);
     },
+    ...mapState({
+      systemName: state => state.home.systemName,
+    }),
   },
   methods: {
     getWeather(){

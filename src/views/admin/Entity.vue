@@ -783,7 +783,7 @@
                   o.children.forEach((child) => {
                     this.propertyList.push({
                       ...child,
-                      id: `${child.type_name}_${child.id}`,
+                      id: `${child.type_name}_${child.property_id}`,
                     })
                   })
                 }
@@ -922,7 +922,7 @@
           //waylist 是购物中心下的所有出入口gate
           this.wayList = []
 					const mall = deepFind(this.orgData,o=>{
-					  return o.type_name === 'mall' && o.id === Number(value[1])
+					  return o.type_name === 'mall' && o.property_id === Number(value[1])
 					})
 					if(mall){
             deepTraversal([mall],'children',child=>{

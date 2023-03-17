@@ -107,7 +107,6 @@
     },
     methods: {
       getTableData (option) {
-        console.log(option)
         if (isEmpty(option)) return []
 				let optionCopy = _.cloneDeep(option)
         let axle = this.horizontal ? 'yAxis' : 'xAxis'

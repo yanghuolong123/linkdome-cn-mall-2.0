@@ -18,7 +18,8 @@ export default {
     isGetDict: false,
     comprotList: [], // nav下拉框数据
     outSize: 0,
-    intervalTime:'5分钟'
+    intervalTime:'5分钟',
+    systemName:'智慧商城平台'
   },
   mutations: {
     outSize (state, value) {
@@ -77,6 +78,9 @@ export default {
     },
     saveIntervalTime(state,intervalTime){
       state.intervalTime = intervalTime
+    },
+    setSystemName(state,systemName){
+      state.systemName = systemName
     }
   },
 

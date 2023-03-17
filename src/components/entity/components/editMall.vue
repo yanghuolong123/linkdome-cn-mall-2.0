@@ -646,7 +646,7 @@
 							...saleTarget,
               daily_start:this.formValidate.timerange[0],
               daily_end:this.formValidate.timerange[1],
-              zones:this.formValidate.zones.toString(),
+              zone_id:this.formValidate.zones.toString(),
               flow_type,
               flow_year,
               sale_type,

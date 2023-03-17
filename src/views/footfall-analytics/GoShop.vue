@@ -1,7 +1,7 @@
 <template>
   <div>
     <shop-ten v-if="userType"></shop-ten>
-    <tendency style="margin-top:50px;"></tendency>
+    <tendency class="m-t-20"></tendency>
   </div>
 </template>
 <script>

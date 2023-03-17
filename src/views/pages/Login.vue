@@ -78,7 +78,7 @@
 <script>
 import { getMenuList } from "@/api/custom.js";
 import { login } from "@/api/user.js";
-import { getUrl, getGroupOrganization, getPdfCenterUrl } from "@/api/home.js";
+import { getGroupOrganization, initConfig } from "@/api/home.js";
 import moment from "moment";
 import md5 from "md5";
 import config from "@/config/index";
@@ -153,8 +153,9 @@ export default {
   activated() {},
   methods: {
     getPdfCenter() {
-      getPdfCenterUrl().then((res) => {
+      initConfig().then((res) => {
         this.$store.commit("setPdfBaseUrl", res.data.data.pdf_center);
+        this.$store.commit("setSystemName", res.data.data.sys_title);
         // this.$i18n.locale = res.data.data.locale;
       });
     },
@@ -175,121 +176,111 @@ export default {
             .then(async (res) => {
               const data = res.data.data;
               if (res.data.code === 200) {
-                // systemSelect===1 跳转BI
-                if (this.systemSelect === 1) {
-                  if (this.showBI()) {
-                    that.openBILarge();
+                that.getPdfCenter();
+                //  store list
+                that.commitStoreData(data);
+                // 处理当前账户菜单数据为键值对数组类型
+                let res = await getMenuList();
+                if (res.data.code == 200) {
+                  var menuList = res.data.data.main;
+                  var menuarr = [];
+                  menuList.forEach((m) => {
+                    menuarr.push({
+                      id: m.id,
+                      name: m.name,
+                    });
+                    m.subpagesList.forEach((k) => {
+                      menuarr.push({
+                        id: k.id,
+                        name: k.name,
+                      });
+                    });
+                  });
+                  menuList = _.orderBy(menuList, ["id"]);
+                  window.localStorage.setItem(
+                    "saleStatus",
+                    data.sale_feature
+                  ); // 是否需要销售
+                  window.localStorage.setItem(
+                    "menuarr",
+                    JSON.stringify(menuarr)
+                  ); // 存所有菜单键值对到localStorage
+                  window.localStorage.setItem(
+                    "menulist",
+                    JSON.stringify(menuList)
+                  ); // 存所有菜单原始数据到localStorage
+                }
+                // 处理当前用户菜单权限
+                var pages_privilege = [];
+                // 当前用户为超级管理员或者集团管理员
+                if (data.roles_id == 1 || data.roles_id == 2) {
+                  menuList.forEach((m) => {
+                    pages_privilege.push(m.id + "");
+                    m.subpagesList.forEach((k) => {
+                      pages_privilege.push(k.id + "");
+                    });
+                  });
+                  data.pages_privilege = pages_privilege;
+                  that.$store.commit("setAccess", data.pages_privilege);
+                  // 设置帐号类型为"super"
+                  that.$store.commit("setAccountLvl", "super");
+                } else {
+                  // 其它角色的用户
+                  pages_privilege = data.pages_privilege
+                    ? data.pages_privilege.split(",")
+                    : [];
+                  that.$store.commit("setAccess", pages_privilege);
+    
+                  if (data.type_id.indexOf(52) > -1) {
+                    // 设置帐号类型为"shopping" 购物中心
+                    that.$store.commit("setAccountLvl", "shopping");
+                  } else if (data.type_id.indexOf(51) > -1) {
+                    // 设置帐号类型为"floor" 楼层
+                    that.$store.commit("setAccountLvl", "floor");
+                  } else {
+                    // 设置帐号类型为"store" 商铺
+                    that.$store.commit("setAccountLvl", "store");
+                  }
+                }
+  
+                // 当前角色用户菜单排序
+                let theUserPage = _.cloneDeep(pages_privilege);
+                theUserPage.map((m) => {
+                  return isNaN(Number(m)) ? Number(m) : 0;
+                });
+                theUserPage.sort();
+                // 根据权限处理用户跳转的第一个页面
+  
+                // 第一个页面路由下标
+                let homePageIndex = Number(theUserPage[0])
+                  ? Number(theUserPage[0])
+                  : 0;
+                if (homePageIndex) {
+                  let names = _.find(menuarr, ["id", homePageIndex]);
+                  if (names) {
+                    names = { name: names.name };
+                    that.$store.commit("shopUserName", names);
+                    const orgData = await getGroupOrganization();
+                    this.$store.commit(
+                      "saveOrganizationData",
+                      orgData.data.data
+                    );
+                    if (this.isRememberMe) {
+                      Cookies.set("userInfo", this.loginForm);
+                    } else {
+                      Cookies.remove("userInfo");
+                    }
+                    //如果进入的页面需要选择购物中心
+                    // if (!config.noPropertyPages.includes(names.name))
+                    that.setHeaderAction();
+                    that.$router.push(names);
                   } else {
                     that.showHint(this.$t("notices.noPermission"));
-                    this.loading = false;
                   }
                 } else {
-                  that.getPdfCenter();
-                  //  store list
-                  that.commitStoreData(data);
-                  // 处理当前账户菜单数据为键值对数组类型
-                  let res = await getMenuList();
-                  if (res.data.code == 200) {
-                    var menuList = res.data.data.main;
-                    var menuarr = [];
-                    menuList.forEach((m) => {
-                      menuarr.push({
-                        id: m.id,
-                        name: m.name,
-                      });
-                      m.subpagesList.forEach((k) => {
-                        menuarr.push({
-                          id: k.id,
-                          name: k.name,
-                        });
-                      });
-                    });
-                    menuList = _.orderBy(menuList, ["id"]);
-                    window.localStorage.setItem(
-                      "saleStatus",
-                      data.sale_feature
-                    ); // 是否需要销售
-                    window.localStorage.setItem(
-                      "menuarr",
-                      JSON.stringify(menuarr)
-                    ); // 存所有菜单键值对到localStorage
-                    window.localStorage.setItem(
-                      "menulist",
-                      JSON.stringify(menuList)
-                    ); // 存所有菜单原始数据到localStorage
-                  }
-                  // 处理当前用户菜单权限
-                  var pages_privilege = [];
-                  // 当前用户为超级管理员或者集团管理员
-                  if (data.roles_id == 1 || data.roles_id == 2) {
-                    menuList.forEach((m) => {
-                      pages_privilege.push(m.id + "");
-                      m.subpagesList.forEach((k) => {
-                        pages_privilege.push(k.id + "");
-                      });
-                    });
-                    data.pages_privilege = pages_privilege;
-                    that.$store.commit("setAccess", data.pages_privilege);
-                    // 设置帐号类型为"super"
-                    that.$store.commit("setAccountLvl", "super");
-                  } else {
-                    // 其它角色的用户
-                    pages_privilege = data.pages_privilege
-                      ? data.pages_privilege.split(",")
-                      : [];
-                    that.$store.commit("setAccess", pages_privilege);
-
-                    if (data.type_id.indexOf(52) > -1) {
-                      // 设置帐号类型为"shopping" 购物中心
-                      that.$store.commit("setAccountLvl", "shopping");
-                    } else if (data.type_id.indexOf(51) > -1) {
-                      // 设置帐号类型为"floor" 楼层
-                      that.$store.commit("setAccountLvl", "floor");
-                    } else {
-                      // 设置帐号类型为"store" 商铺
-                      that.$store.commit("setAccountLvl", "store");
-                    }
-                  }
-
-                  // 当前角色用户菜单排序
-                  let theUserPage = _.cloneDeep(pages_privilege);
-                  theUserPage.map((m) => {
-                    return isNaN(Number(m)) ? Number(m) : 0;
-                  });
-                  theUserPage.sort();
-                  // 根据权限处理用户跳转的第一个页面
-
-                  // 第一个页面路由下标
-                  let homePageIndex = Number(theUserPage[0])
-                    ? Number(theUserPage[0])
-                    : 0;
-                  if (homePageIndex) {
-                    let names = _.find(menuarr, ["id", homePageIndex]);
-                    if (names) {
-                      names = { name: names.name };
-                      that.$store.commit("shopUserName", names);
-                      const orgData = await getGroupOrganization();
-                      this.$store.commit(
-                        "saveOrganizationData",
-                        orgData.data.data
-                      );
-                      if (this.isRememberMe) {
-                        Cookies.set("userInfo", this.loginForm);
-                      } else {
-                        Cookies.remove("userInfo");
-                      }
-                      //如果进入的页面需要选择购物中心
-                      // if (!config.noPropertyPages.includes(names.name))
-                      that.setHeaderAction();
-                      that.$router.push(names);
-                    } else {
-                      that.showHint(this.$t("notices.noPermission"));
-                    }
-                  } else {
-                    that.showHint(this.$t("notices.noPermission"));
-                  }
-                  this.loading = false;
+                  that.showHint(this.$t("notices.noPermission"));
                 }
+                this.loading = false;
               } else if (res.data.code === 305 || res.data.code === 304) {
                 that.showHint(this.$t("notices.wrongPassword"));
                 this.loading = false;
@@ -307,72 +298,6 @@ export default {
       if (this.organizationData.property.length) {
         const id = this.organizationData.property[0].property_id;
         this.$store.commit("headerAction", id);
-      }
-    },
-    openBILarge() {
-      this.getBiUrl()
-        .then((res) => {
-          this.loading = false;
-          let token = Cookies.get("token");
-          let userName = this.$store.state.user.userName;
-          if (this.Biurl == "") return false;
-          window.location.href =
-            "https://" +
-            this.Biurl +
-            "/#/?homeUrl=" +
-            this.homeUrl +
-            "&user=" +
-            userName +
-            "&token=" +
-            token +
-            "&userSource=login";
-        })
-        .catch((err) => {
-          this.loading = false;
-          this.showHint(err);
-        });
-    },
-    // 获取bi跳转路径
-    getBiUrl() {
-      return new Promise((resolve, reject) => {
-        getUrl()
-          .then((res) => {
-            if (res.data.code == 200) {
-              this.Biurl = res.data.data.BI;
-              this.homeUrl = res.data.data.Dashboard;
-              resolve();
-            } else {
-              reject(
-                this.$t("fn.failedTo", [
-                  this.$t("fn.get", [this.$t("jumpPath")]),
-                ])
-              );
-            }
-          })
-          .catch(() => {
-            reject(
-              this.$t("fn.failedTo", [this.$t("fn.get", [this.$t("jumpPath")])])
-            );
-          });
-      });
-    },
-    showBI() {
-      if (this.$store.state.user.role_id < 3) {
-        return true;
-      } else {
-        let access = this.$store.state.user.access;
-        let menulist = JSON.parse(window.localStorage.getItem("menulist"));
-        let BIid = "";
-        for (let i of menulist) {
-          if (i.subpagesList) {
-            let find = _.find(i.subpagesList, ["name", "BI"]);
-            if (find) {
-              BIid = find.id;
-              break;
-            }
-          }
-        }
-        return access.indexOf("" + BIid) > -1;
       }
     },
     commitStoreData(data) {
