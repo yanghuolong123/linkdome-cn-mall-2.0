@@ -111,6 +111,7 @@ export const goShopTrend = params => {
     method: 'get'
   })
 }
+//按店铺查
 export const drainageData = params => {
   const { time, bzid } = params
   return naxios.request({
@@ -119,6 +120,14 @@ export const drainageData = params => {
       time,
       bzid
     },
+    method: 'get'
+  })
+}
+//按业态查
+export const drainageDataByBussiness = params => {
+  return naxios.request({
+    url: 'matrix/industryDrainage',
+    params,
     method: 'get'
   })
 }

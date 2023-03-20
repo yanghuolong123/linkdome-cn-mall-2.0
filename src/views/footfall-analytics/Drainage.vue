@@ -17,16 +17,29 @@
                     :props="{expandTrigger:'hover'}"
             >
             </el-cascader>
+          <el-select v-model="type" class="m-l-20">
+            <el-option v-for="item in typeList"
+                       :value="item.value"
+                       :label="item.label"
+                       :key="item.value"></el-option>
+          </el-select>
             <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('查询') }}</Button>
             <Button size="large" class="m-l-20" @click="resetData">{{ $t('重置') }}</Button>
         </div>
     </div>
     <!-- 引流图片 -->
     <drainage-map
+      v-show="showType ==='store'"
       :dataList = 'drainageMapList'
       :centerData = 'centerDataList'
       :presentData = 'presentData'
     ></drainage-map>
+    <drainage-map-bussiness
+      v-show="showType ==='bussiness'"
+      :dataList = 'drainageMapListBus'
+       :presentData = 'presentData'>
+      
+    </drainage-map-bussiness>
     <!-- 详细数据 -->
     <drainage-chart
       v-if="Number(shopValue[1])"
@@ -41,8 +54,9 @@
 </template>
 <script>
 import drainageMap from '@/components/drainage/drainageMap'
+import drainageMapBussiness from '@/components/drainage/drainageMapBussiness'
 import { getCascadeList } from '@/api/passenger.js'
-import { drainageData } from '@/api/analysis'
+import { drainageData,drainageDataByBussiness } from '@/api/analysis'
 import moment from 'moment'
 import NP from 'number-precision'
 import drainageChart from './components/FootfallDirection'
@@ -53,7 +67,8 @@ export default {
   name: 'drainage',
   components: {
     drainageMap,
-    drainageChart
+    drainageChart,
+    drainageMapBussiness
   },
   data () {
     return {
@@ -62,10 +77,25 @@ export default {
       shopValue: '',
       shopList: [],
       drainageMapList: {},
+      drainageMapListBus:{
+        to:[],
+        from:[]
+      },
       centerDataList: [],
       presentData: {},
       disabledDate: '',
-      dictSize: 0
+      dictSize: 0,
+      type:'store',
+      showType:'store',
+      typeList:[
+        {
+          value:'store',
+          label:'店铺引流'
+        },{
+          value:'bussiness',
+          label:'业态引流'
+        }
+      ]
     }
   },
   watch: {
@@ -139,7 +169,34 @@ export default {
         return false
       }
       eventBus.$emit('drainageClick', { time: time, id: id })
-      this.dataList(time, id)
+      if(this.type === 'store'){
+        this.dataList(time, id)
+      }else {
+        this.getDataByBussiness(time, id)
+      }
+     
+    },
+    getDataByBussiness(time,bzid){
+      drainageDataByBussiness({bzid,time}).then(res=>{
+        console.log(res)
+        res = res.data.data;
+        res.from.forEach(o=>{
+          o.value =  NP.times(o.rate.toFixed(2), 100)
+          o.action = Number(o.c_rate)<0;
+          o.link = NP.times(o.c_rate.toFixed(2), 100)
+        })
+        res.to.forEach(o=>{
+          o.value =  NP.times(o.rate.toFixed(2), 100)
+          o.action = Number(o.c_rate)<0;
+          o.link = NP.times(o.c_rate.toFixed(2), 100)
+        })
+        res.shop.from_action = Number(res.shop.from_rate)<0;
+        res.shop.from_rate =  NP.times(res.shop.from_rate.toFixed(2), 100)
+        res.shop.to_action = Number(res.shop.to_rate)<0;
+        res.shop.to_rate =  NP.times(res.shop.to_rate.toFixed(2), 100)
+        this.drainageMapListBus = res
+        this.showType = 'bussiness'
+      })
     },
     dataList (time, id) {
       drainageData({ time: time, bzid: id }).then(res => {
@@ -147,8 +204,10 @@ export default {
         this.allData = data
         this.presentData.name = data.entity.name
         this.presentData.img = data.entity.icon
+        this.presentData.enter = data.entity_flow
         this.graphList(data)
         this.centerList(data)
+        this.showType = 'store'
       })
     },
     graphList (data) {
@@ -166,7 +225,8 @@ export default {
         if (Number(e.lastrate.ratio) > 0 || Number(e.lastrate.ratio) == 0) obj.action = false
         else obj.action = true
         obj.link = NP.times(e.lastrate.ratio, 100)
-        if (listObj.direct.length < 5) listObj.direct.push(obj)
+        obj.enter = e.rate.number
+        listObj.direct.push(obj)
       })
       // 间接引入 列表
       data.inStore.stores.map(function (e) {
@@ -176,7 +236,8 @@ export default {
         if (Number(e.lastrate.ratio) > 0 || Number(e.lastrate.ratio) == 0) obj.action = false
         else obj.action = true
         obj.link = NP.times(e.lastrate.ratio, 100)
-        if (listObj.radiation.length < 5) listObj.radiation.push(obj)
+        obj.enter = e.rate.number
+        listObj.radiation.push(obj)
       })
       // 辐射店铺 列表
       data.outStore.stores.map(function (e) {
@@ -186,7 +247,8 @@ export default {
         if (Number(e.lastrate.ratio) > 0 || Number(e.lastrate.ratio) == 0) obj.action = false
         else obj.action = true
         obj.link = NP.times(e.lastrate.ratio, 100)
-        if (listObj.indirect.length < 5) listObj.indirect.push(obj)
+        obj.enter = e.rate.number
+        listObj.indirect.push(obj)
       })
       //  离场客流 列表
       data.outGate.gates.map(function (e) {
@@ -196,16 +258,19 @@ export default {
         if (Number(e.lastrate.ratio) > 0 || Number(e.lastrate.ratio) == 0) obj.action = false
         else obj.action = true
         obj.link = NP.times(e.lastrate.ratio, 100)
-        if (listObj.departure.length < 5) listObj.departure.push(obj)
+        obj.enter = e.rate.number
+        listObj.departure.push(obj)
       })
       this.drainageMapList = listObj
     },
     centerList (data) {
+      console.log(_.cloneDeep(this.drainageMapList))
       this.centerDataList = []
       let arr = []
       // 直接引入占比
       var direct = {}
       direct.value = NP.times(data.inGate.rate.ratio, 100)
+      direct.enter= _.sumBy(this.drainageMapList.direct,'enter')
       var size = Number(data.inGate.rate.crCompare)
       if (size > 0 || size == 0) direct.action = false
       else direct.action = true
@@ -215,6 +280,7 @@ export default {
       // 辐射店铺占比
       var indirect = {}
       indirect.value = NP.times(data.outStore.rate.ratio, 100)
+      indirect.enter= _.sumBy(this.drainageMapList.radiation,'enter')
       var sizeI = Number(data.outStore.rate.crCompare)
       if (sizeI > 0 || sizeI == 0) indirect.action = false
       else indirect.action = true
@@ -225,6 +291,7 @@ export default {
       // 间接引入占比
       var radiation = {}
       radiation.value = NP.times(data.inStore.rate.ratio, 100)
+      radiation.enter= _.sumBy(this.drainageMapList.indirect,'enter')
       var sizeR = Number(data.inStore.rate.crCompare)
       if (sizeR > 0 || sizeR == 0) radiation.action = false
       else radiation.action = true
@@ -235,10 +302,12 @@ export default {
       // 离场客流占比
       var departure = {}
       departure.value = NP.times(data.outGate.rate.ratio, 100)
+      departure.enter =  _.sumBy(this.drainageMapList.departure,'enter')
       var sizeD = Number(data.outGate.rate.crCompare)
       if (sizeD > 0 || sizeD == 0) departure.action = false
       else departure.action = true
       departure.text = '离场客流占比'
+      departure.enter= data.outGate.rate.number
       departure.link = NP.times(data.outGate.rate.crCompare, 100)
       arr.push(departure)
       this.centerDataList = arr
