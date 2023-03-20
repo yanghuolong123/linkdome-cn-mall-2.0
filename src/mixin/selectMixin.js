@@ -165,7 +165,7 @@ const selectMixin = {
           value: 'floor'
         },
         {
-          label: this.$t('业态'),
+          label: '业态/店铺',
           value: 'bussiness',
           cascadeOption:this.bussinessCascadeOpiton,
           cascadeData:this.busiCascadeData

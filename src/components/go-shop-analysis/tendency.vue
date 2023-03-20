@@ -172,8 +172,18 @@ export default {
           this.$nextTick(() => {
             let option = _.cloneDeep(this.chartOption.lineOption)
             option.series.forEach(o=>{
-              o.data = o.data.map(d=>{return d.value + '%'})
+              if(this.headerData.show_actual_val){
+                o.data = o.data.map(d=>{
+                  if(d.to > d.passby){
+                    d.passby = d.to
+                  }
+                  return `${d.value}%(进店人次:${d.to},过店人次:${d.passby})`
+                })
+              }else {
+                o.data = o.data.map(d=>{return d.value + '%'})
+              }
             })
+
             this.$refs.trendChart.initTable(option)
           })
           break
@@ -350,7 +360,7 @@ export default {
       barConfigCopy.series = copyOption.series
       barConfigCopy.tooltip.formatter = (params)=>{
         let html = params[0].axisValue+'<br>';
-        if(!this.headerData.show_actual_val){
+        if(this.headerData.show_actual_val){
           params.forEach(o=>{
             if(o.data.to > o.data.passby){
               o.data.passby = o.data.to

@@ -40,6 +40,7 @@
   import ChartBox from '_c/common/Chart-box'
   import { config as barConfig } from '@/config/echarts-config/bar-chart'
 	import {mapState} from 'vuex'
+  import NP from 'number-precision'
   export default {
     name: 'goShop',
     components: {
@@ -141,8 +142,11 @@
 					  return o.name
 					})
           data.forEach(o=>{
-            o.value = o.rate*100;
-            o.data = [o.rate*100+'%'];
+            if(o.to>o.from){
+              o.from = o.to
+						}
+            o.value = NP.times(o.rate, 100)
+            o.data = [ this.headerData.show_actual_val?NP.times(o.rate, 100)+`%(进店人次:${o.to},过店人次:${o.from})`:NP.times(o.rate, 100)+'%'];
 					})
           options.series = [
 						{
@@ -151,7 +155,7 @@
 						}
 					]
           this.top10Option.barOption = this.setBarOption(options)
-					this.top10Option.tableOption  = {
+          this.top10Option.tableOption  = {
             legend:{
               data:options.xAxis
 						},

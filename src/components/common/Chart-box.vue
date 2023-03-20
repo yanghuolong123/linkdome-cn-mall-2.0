@@ -200,6 +200,7 @@
             }
           })
         })
+        console.log(data)
         return data
       },
       getTableColumn (option) {
@@ -224,12 +225,7 @@
           option.legend.data.map((o, i) => {
             return {
               key: 'entity' + i,
-              width:
-                option.legend.data.length > 10
-                  ? this.isDateCompare
-                  ? o.length * 15
-                  : o.length * 20
-                  : '',
+              width: option.legend.data.length > 10 ? this.isDateCompare ? o.length * 15 : 150 : '',
               title: o + (option.legend.unit?(option.legend.unit[i] ? `(${option.legend.unit[i]})` : `(${this.$t('人次')})`):''),
             }
           })
@@ -253,7 +249,7 @@
             title: this.$t('temperature'),
           })
         }
-
+        console.log(column)
         return column
       },
       //下载
