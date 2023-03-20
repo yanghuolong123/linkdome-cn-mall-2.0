@@ -53,20 +53,6 @@
         <!-- <pathTab :parking="isParking" :title="title2" :numbers="number2" :right="right"></pathTab> -->
       </div>
     </div>
-
-    <div>
-    <!-- 排行占比分析 -->
-    <Ranking
-    v-if="false"
-      class="mx-3"
-      :selectTitle="selectTitle"
-      :time1="topRange"
-      :defaultBizIndicator="bizSalesType"
-      :defaultShopIndicator="shopSalesType"
-      :indicatorSelector="showList"
-      :propertyId="currentPropertyId"
-      :indicatorData="enterIndicator"/>
-        </div>
   </div>
 </template>
 <script>
@@ -99,13 +85,8 @@ export default {
       floor: '',
       colorBar: require('@/assets/images/fixation_img/rest/colorBar.png'),
       map: '',
-      enterIndicator: {
-        enter: { name: '入客流' }
-      },
       currentPropertyId: null,
       outRange: '',
-      bizSalesType: 'enter',
-      shopSalesType: 'enter',
       showList: false,
       drainageDate: [],
       selectTitle: '业态选择',
@@ -216,20 +197,14 @@ export default {
       var paths = []
       if (moveData.paths) {
         moveData.paths.forEach(function (m) {
-          if (m.enter) {
-            if(m.path.some(o=>{
-              return o.name.indexOf('通道') > -1
-            })){
-              console.log(m)
-            }
+          if (m.from) {
             paths.push(m)
           }
         })
       }
-      console.log(paths)
       var maxNumber
       if (paths.length) {
-        maxNumber = _.maxBy(paths, 'enter').enter
+        maxNumber = _.maxBy(paths, 'from').from
       } else {
         maxNumber = 0
       }
@@ -239,15 +214,16 @@ export default {
         if (index < length) {
           var clickNodes = []
           var filterNodes = 1
-          m.path.forEach(function (e) {
+          m.path.forEach((e,ei) =>{
             var obj = {}
             obj.x = Math.floor(e.x * that.canvasWidth)
             obj.y = Math.floor(e.y * that.canvasHeight)
-            obj.enter = m.enter
-            obj.name = e.name
             obj.from = m.from
+            obj.name = e.name
             clickNodes.push(obj)
-            titleList.push(obj)
+            if(ei===0){
+              titleList.push(obj)
+            }
             if (!e.x && !e.y) {
               filterNodes = 0
             }
@@ -272,7 +248,7 @@ export default {
         if (maxNumber == 0) {
           obj.width = 0
         } else {
-          obj.width = Math.ceil((m[0].enter / maxNumber) * 10 / 2)
+          obj.width = Math.ceil((m[0].from / maxNumber) * 10 / 2)
         }
         obj.color = that.colors[5 - obj.width]
         obj.d = 'M' + m[0].x + ' ' + m[0].y + 'Q ' + m[1].x + ' ' + m[1].y + ',' + m[2].x + ' ' + m[2].y
@@ -290,7 +266,7 @@ export default {
       svgList = _.uniq(svgList)
       that.svgList = svgList
       that.showPath = true
-      let sumNumber = _.sumBy(moveData.paths, 'enter')
+      let sumNumber = _.sumBy(moveData.paths, 'from')
       if (sumNumber > 0) {
         var c = 2
         var ctxs = document.getElementById('canvasCircle').getContext('2d')
@@ -298,8 +274,8 @@ export default {
           positions.forEach(function (m) {
             var arrs = []
             if (maxNumber > 0) {
-              var width = Math.ceil((m[0].enter / maxNumber) * 10 / 2)
-              var width1 = Math.ceil((m[0].enter / maxNumber) * 10 / 2)
+              var width = Math.ceil((m[0].from / maxNumber) * 10 / 2)
+              var width1 = Math.ceil((m[0].from / maxNumber) * 10 / 2)
               if (width > 1 && width1 > 1) {
                 arrs.push(m)
               }
