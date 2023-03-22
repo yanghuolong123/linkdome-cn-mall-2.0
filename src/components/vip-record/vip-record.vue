@@ -54,6 +54,8 @@
 import { clearAllVipRecord, readVipRecord, getVipRecord } from '@/api/custom.js'
 import TableMultipleSelected from '@/views/ui-elements/table/TableMultipleSelected.vue'
 import { log } from 'util'
+import { mapState } from 'vuex'
+
 export default {
   props: {
   },
@@ -110,14 +112,16 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      menuList:state => state.home.menuList,
+    }),
   },
   mounted () {
     let show = false
     if (this.$store.state.user.role_id < 4) {
       show = true
     } else {
-      let menulist = JSON.parse(window.localStorage.getItem('menulist'))
-      let temp = _.find(menulist, ['name', 'Dashboard']).subpagesList
+      let temp = _.find(this.menulist, ['name', 'Dashboard']).subpagesList
       temp = _.find(temp, ['name', 'VIPRecode']).id + ''
       if (this.$store.state.user.access.indexOf(temp) > -1) {
         show = true

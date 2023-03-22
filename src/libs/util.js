@@ -35,10 +35,8 @@ const showThisMenuEle = (item, access) => {
      */
     // 菜单列表
 
-export const getMenuByRouter = (list, access) => {
+export const getMenuByRouter = (list, access,saleStatus,menuList) => {
   let res = []
-  let saleStatus = window.localStorage.getItem('saleStatus')
-  let menuList = JSON.parse(window.localStorage.getItem('menulist'))
   let lists = _.cloneDeep(list)
   lists.forEach(function (m) {
     let findOne = _.find(menuList, ['name', m.name])
@@ -73,7 +71,7 @@ export const getMenuByRouter = (list, access) => {
             i18n: e.name,
             meta: e.meta || ''
           }
-          if (hasChild(e) && showThisMenuEle(e, access)) obg.submenu = getMenuByRouter(e.children, access)
+          if (hasChild(e) && showThisMenuEle(e, access)) obg.submenu = getMenuByRouter(e.children, access,saleStatus,menuList)
           if (showThisMenuEle(e, access)) res.push(obg)
         }
       }else{
@@ -84,7 +82,7 @@ export const getMenuByRouter = (list, access) => {
           i18n: e.name,
           meta: e.meta || ''
         }
-        if (hasChild(e) && showThisMenuEle(e, access)) obg.submenu = getMenuByRouter(e.children, access)
+        if (hasChild(e) && showThisMenuEle(e, access)) obg.submenu = getMenuByRouter(e.children, access,saleStatus,menuList)
         if (showThisMenuEle(e, access)) res.push(obg)
       }
     }
@@ -397,7 +395,7 @@ export const deepTraversal = (arr, child, callback) => {
 export const findCascadeLastLevel = (arr, child, callback) => {
   function traversal (a) {
     for (let i = 0; i < a.length; i++) {
-      if (a[i][child] && a[i][child].length ||a[i].type_name==='floor') {//a[i].type_name==='floor'  专为解决楼层下无实体时，全部按钮加在了楼层列
+      if (a[i][child] && a[i][child].length ||['floor','other'].includes(a[i].type_name)) {//a[i].type_name==='floor'  专为解决楼层下无实体时，全部按钮加在了楼层列
         traversal(a[i][child]||[])
       } else {
         callback(a)

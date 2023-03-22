@@ -17,7 +17,7 @@
                     :props="{expandTrigger:'hover'}"
             >
             </el-cascader>
-          <el-select v-model="type" class="m-l-20">
+          <el-select v-model="type" class="w-select m-l-20">
             <el-option v-for="item in typeList"
                        :value="item.value"
                        :label="item.label"
@@ -178,7 +178,6 @@ export default {
     },
     getDataByBussiness(time,bzid){
       drainageDataByBussiness({bzid,time}).then(res=>{
-        console.log(res)
         res = res.data.data;
         res.from.forEach(o=>{
           o.value =  NP.times(o.rate.toFixed(2), 100)

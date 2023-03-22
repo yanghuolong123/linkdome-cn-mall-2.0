@@ -23,7 +23,7 @@ router.beforeEach((to, from, next) => {
   } else if (token && NoLoginPages.includes(to.name)) {
     next({ name: 'Dashboard' })// 跳转到home页
   } else {
-    let menuarr = JSON.parse(window.localStorage.getItem('menuarr'))
+    let menuarr = store.state.home.menuarr
     let isFind = _.find(menuarr, ['name', to.name])
     if (isFind) {
       if (store.state.user.access.indexOf(isFind.id + '') == -1) {

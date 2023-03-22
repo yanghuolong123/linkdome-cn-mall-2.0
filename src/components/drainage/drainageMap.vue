@@ -20,11 +20,11 @@
 					<div class="flex-column info">
 						<img :src="shopImg">
 						<p class="drainage-shop-name">{{presentData.name}}</p>
-						<p class="">{{presentData.enter.toLocaleString()}}人次</p>
+						<p v-if="headerData.show_actual_val">{{presentData.enter.toLocaleString()}}人次</p>
 					</div>
 				</div>
 				<div class="text-location" v-for="item in centerData">
-					<p>{{item.enter}}{{$t('人次')}}</p>
+<!--					<p v-if="headerData.show_actual_val">{{item.enter}}{{$t('人次')}}</p>-->
 					<p>{{ $t(item.text) }}：{{ item.value }}%</p>
 					<p>
 						{{ $t('环比') }}

@@ -19,7 +19,10 @@ export default {
     comprotList: [], // nav下拉框数据
     outSize: 0,
     intervalTime:'5分钟',
-    systemName:'智慧商城平台'
+    systemName:'智慧商城平台',
+    saleStatus:'0',
+    menuList:[],
+    menuarr:[],
   },
   mutations: {
     outSize (state, value) {
@@ -81,6 +84,15 @@ export default {
     },
     setSystemName(state,systemName){
       state.systemName = systemName
+    },
+    setSaleStatus(state,saleStatus){
+      state.saleStatus = saleStatus
+    },
+    setMenuList(state,menuList){
+      state.menuList = menuList
+    },
+    setMenuarr(state,menuarr){
+      state.menuarr = menuarr
     }
   },
 

@@ -197,18 +197,9 @@ export default {
                     });
                   });
                   menuList = _.orderBy(menuList, ["id"]);
-                  window.localStorage.setItem(
-                    "saleStatus",
-                    data.sale_feature
-                  ); // 是否需要销售
-                  window.localStorage.setItem(
-                    "menuarr",
-                    JSON.stringify(menuarr)
-                  ); // 存所有菜单键值对到localStorage
-                  window.localStorage.setItem(
-                    "menulist",
-                    JSON.stringify(menuList)
-                  ); // 存所有菜单原始数据到localStorage
+                  this.$store.commit('setSaleStatus', data.sale_feature) // 是否需要销售
+                  this.$store.commit('setMenuarr', menuarr)  // 存所有菜单键值对到localStorage
+                  this.$store.commit('setMenuList', menuList)// 存所有菜单原始数据到localStorage
                 }
                 // 处理当前用户菜单权限
                 var pages_privilege = [];

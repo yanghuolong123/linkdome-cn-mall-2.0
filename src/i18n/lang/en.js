@@ -160,7 +160,7 @@ module.exports =  {
   节假日活动对比分析: "Comparative analysis of holiday activities",
   购物中心趋势分析: "Shopping center trend analysis",
 
-  //Main.vue => routeTitle
+  //routeTitle
   客流分析:'Analytics',
   顾客行为分析:'Generatrix',
   运营分析:'Operation',

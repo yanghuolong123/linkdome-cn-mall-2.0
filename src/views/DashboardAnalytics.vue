@@ -7,6 +7,7 @@
 <script>
 import shoppingDashboard from "@/views/dashboard-module/shoppingDashboard.vue";
 import groupDashboard from "@/views/dashboard-module/groupDashboard.vue";
+import { mapState } from 'vuex'
 export default {
   name: "dashboardHome",
   components: {
@@ -19,9 +20,7 @@ export default {
     };
   },
   created() {
-    console.log("---");
-    var menuList = JSON.parse(window.localStorage.getItem("menulist"));
-    var Dashboard = _.find(menuList, ["name", "Dashboard"]).subpagesList;
+    var Dashboard = _.find(this.menuList, ["name", "Dashboard"]).subpagesList;
     var GroupCompany = _.find(Dashboard, ["name", "GroupCompany"]).id + "";
     var Shopping = _.find(Dashboard, ["name", "Shopping"]).id + "";
     var showCompany;
@@ -42,39 +41,17 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      menuList:state => state.home.menuList,
+    }),
     headerType() {
       let type;
-      // if (
-      //   this.$store.state.user.role_id == 1 ||
-      //   this.$store.state.user.role_id == 2
-      // ) {
       if (this.$store.state.home.headerAction == 0) {
         type = false;
       } else {
         type = true;
       }
-      // } else {
-      //   let menuList = JSON.parse(window.localStorage.getItem("menulist"));
-      //   let GroupCompany = _.find(menuList, ["name", "Dashboard"]).subpagesList;
-      //   console.log(GroupCompany);
-      //   GroupCompany = _.find(GroupCompany, ["name", "GroupCompany"]).id + "";
-      //   let showCompany =
-      //     _.indexOf(this.$store.state.user.access, GroupCompany) > -1;
-      //   if (showCompany) {
-      //     type = false;
-      //   } else {
-      //     type = true;
-      //     let role_property = this.$store.state.user.checklist;
-      //     this.$store.commit("headerAction", role_property[0]);
-      //   }
-      //   console.log(
-      //     this.$store.state.home.headerAction,
-      //     type,
-      //     this.$store.state.user.access,
-      //     GroupCompany,
-      //     _.indexOf(this.$store.state.user.access, GroupCompany)
-      //   );
-      // }
+
       return type;
     },
   },

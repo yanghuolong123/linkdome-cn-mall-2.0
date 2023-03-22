@@ -349,8 +349,7 @@
       if (theUser.role_id < 3) {
         this.userLvl = theUser.role_id == 1 ? 'admin' : 'common_admin'
       } else {
-        let menulist = JSON.parse(window.localStorage.getItem('menulist'))
-        let temp = _.find(menulist, ['name', 'Admin']).subpagesList
+        let temp = _.find(this.menulist, ['name', 'Admin']).subpagesList
         temp = _.find(temp, ['name', 'EntityManage']).id + ''
         if (theUser.access.indexOf(temp) > -1) {
           this.userLvl = 'common_admin'
@@ -368,7 +367,9 @@
         propertyId: state => state.home.headerAction,
         organizationData: state => state.home.organizationData,
         shoppingInfoDate: state => state.user.shoppingInfoDate,
-        companyId: state => state.user.companyId
+        companyId: state => state.user.companyId,
+        menuList:state => state.home.menuList,
+
       }),
       currentEntityType () {        //判断当前选择的实体类型
         let type

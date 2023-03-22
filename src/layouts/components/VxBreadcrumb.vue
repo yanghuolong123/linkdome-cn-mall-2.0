@@ -31,16 +31,21 @@
 </template>
 
 <script>
-export default{
+  import { mapState } from 'vuex'
+  export default{
   name: 'vx-breadcrumb',
   data () {
 	  return {
 		  homeUrl: ''
 	  }
   },
+	computed:{
+    ...mapState({
+      menuList:state => state.home.menuList,
+    }),
+	},
   mounted () {
-    var menuList = JSON.parse(window.localStorage.getItem('menulist'))
-    var Dashboard = _.find(menuList, ['name', 'Dashboard']).subpagesList
+    var Dashboard = _.find(this.menuList, ['name', 'Dashboard']).subpagesList
     var GroupCompany = _.find(Dashboard, ['name', 'GroupCompany']).id + ''
     var Shopping = _.find(Dashboard, ['name', 'Shopping']).id + ''
     var showCompany

@@ -11,7 +11,7 @@
 			</div>
 			<div class="drainage-center flex-center p-r">
 				<div class="left p-a flex-column">
-					<span v-if="headerData.show_actual_val">{{dataList.shop&&dataList.shop.total_from.toLocaleString()}}人次</span>
+<!--					<span v-if="headerData.show_actual_val">{{dataList.shop&&dataList.shop.total_from.toLocaleString()}}人次</span>-->
 				
 					<div class="flex-center">
 						<span class="thin">环比</span>
@@ -21,7 +21,7 @@
 					</div>
 				</div>
 				<div class="right p-a flex-column">
-					<span v-if="headerData.show_actual_val">{{dataList.shop&&dataList.shop.total_to.toLocaleString()}}人次</span>
+<!--					<span v-if="headerData.show_actual_val">{{dataList.shop&&dataList.shop.total_to.toLocaleString()}}人次</span>-->
 				
 					<div class="flex-center">
 						<span class="thin">环比</span>

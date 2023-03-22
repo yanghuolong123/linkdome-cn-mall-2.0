@@ -205,8 +205,7 @@ export default {
     },
   },
   mounted() {
-    var menuList = JSON.parse(window.localStorage.getItem("menulist"));
-    var GroupCompany = _.find(menuList, ["name", "Dashboard"]).subpagesList;
+    var GroupCompany = _.find(this.menuList, ["name", "Dashboard"]).subpagesList;
     GroupCompany = _.find(GroupCompany, ["name", "GroupCompany"]).id + "";
     var showCompany;
     if (this.$store.state.user.role_id < 3) {
@@ -321,6 +320,8 @@ export default {
     },
     ...mapState({
       systemName: state => state.home.systemName,
+      menuList:state => state.home.menuList,
+  
     }),
   },
   methods: {

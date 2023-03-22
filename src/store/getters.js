@@ -14,7 +14,7 @@ import routers from '@/router/router.js'
 
 const getters = {
   starredPages: state => state.navbarSearchAndPinList.data.filter((page) => page.highlightAction),
-  menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access)
+  menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access,rootState.home.saleStatus,rootState.home.menuList)
 }
 
 export default getters
