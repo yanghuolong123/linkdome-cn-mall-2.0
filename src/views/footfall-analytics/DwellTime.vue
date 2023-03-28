@@ -1,86 +1,93 @@
 <template>
   <div>
-    <flow-selector @paramsPrepare="paramsPrepare"></flow-selector>
-    <div class="dewll_graph flex-column">
-      <div class="dewll_graph_title">
-        <span>{{ $t("停留时间分布") }}</span>
-        <div class="dwell-time-icon" @click="iconClick">
-          <icons
-            v-for="(icon, index) in iconList"
-            :key="index"
-            :data-value="icon.value"
-            :title="iconTitle[icon.type]"
-            :type="icon.type"
-            :size="20"
-            :color="iconIndex === icon.value ? iconColor : '#9D9D9DFF'"
-          ></icons>
-        </div>
-      </div>
-
-      <div class="dwell-chart-box">
-        <vue-apex-charts
-          v-show="iconIndex == 1"
-          height="100%"
-          ref="graphBar"
-          type="bar"
-          :options="graphData.chartOptions"
-          :series="graphData.series"
-        ></vue-apex-charts>
-        <vue-apex-charts
-          class="chartsStyleTwo"
-          v-show="iconIndex == 0"
-          ref="graphLine"
-          height="100%"
-          width="100%"
-          type="line"
-          :options="lineData.chartOptions"
-          :series="lineData.series"
-        ></vue-apex-charts>
-        <div class=" dwell-chart-table" v-show="iconIndex != 1">
-          <dwell-table
-            maxHeight="400px"
-            :columns="columnsList"
-            :data="chartTableList"
-          ></dwell-table>
-        </div>
-      </div>
-    </div>
-    <div class="dwell-time-table">
-      <table-default
-        :tableTitle="tableTitle"
-        :tableName="tableName"
-        :tableList="tableList"
-      ></table-default>
-    </div>
+    <flow-selector @paramsPrepare="paramsPrepare" ref="flowSelector"></flow-selector>
+    <chart-box 	:chart="chart"
+                ref="chart"
+                class="common-card chart m-t-20"
+                @toolClick="toolClick"
+                :toolList="toolList">
+      <i-switch
+        class="ml-20 switch"
+        size="large"
+        v-if="headerData.show_actual_val &&( oParams&&!oParams.isDateCompare())"
+        @on-change="compareTypeChange"
+        v-model="isHour"
+      >
+        <span slot="open">{{ $t("小时") }}</span>
+        <span slot="close">{{ $t("fx.day") }}</span>
+      </i-switch>
+    </chart-box>
+    <table-default
+      class="m-t-20"
+      :tableTitle="tableTitle"
+      :tableName="tableName"
+      :tableList="tableList"
+    ></table-default>
   </div>
 </template>
 
 <script>
-import { isEmpty, downloadEx } from "@/libs/util";
 import Vue from "vue";
 import TableDefault from "../ui-elements/table/TableDefault.vue";
-import VueApexCharts from "vue-apexcharts";
 import VxBreadcrumb from "@/layouts/components/VxBreadcrumb.vue";
-import { dwellTime } from "@/api/analysis";
-import dwellTable from "@/views/footfall-analytics/components/iTable.vue";
+import { dwellTime,dwellTimeNew } from "@/api/analysis";
 import _ from "lodash";
 import FlowSelector from "_c/flow-selector/dwellTime-flow-selector";
 import { initTimes } from "@/libs/util";
-import { exportEx } from "@/api/home.js";
 Vue.component(VxBreadcrumb.name, VxBreadcrumb);
+import ChartBox from '_c/common/Chart-box'
+import { config as barConfig } from '@/config/echarts-config/bar-chart'
+import { config as lineConfig } from '@/config/echarts-config/line-chart'
+
+import { ParamsConstructor } from "@/libs/params-constructor/params.class.js";
+import {mapState} from 'vuex'
 export default {
   name: "DwellTime",
 
   components: {
-    VueApexCharts,
     TableDefault,
-    dwellTable,
+    ChartBox,
     FlowSelector,
+  },
+  computed:{
+    ...mapState({
+      propertyId: state => state.home.headerAction,
+      headerData:state => state.home.headerData,
+  
+    }),
+    toolList(){
+      let list = [
+        {
+          icon: 'zhexiantu',
+          value: 'line',
+          name: '停留时间分布'
+        },
+        {
+          icon: '62',
+          value: 'bar',
+          name: '停留时间分布'
+        }, {
+          icon: 'biaoge-copy',
+          value: 'table',
+          name: '停留时间分布'
+        }, {
+          icon: 'daoru',
+          value: 'download',
+          name: '停留时间分布'
+        }
+      ]
+      if((this.oParams && !this.oParams.isSingleDay())|| this.isHour){
+        return list
+      }else {
+        let listCopy = _.cloneDeep(list)
+        listCopy.shift()
+        return listCopy
+      }
+    }
   },
   data() {
     return {
       tableTitle: "详细数据信息",
-      isGraph: false,
       isTableDate: false,
       iconIndex: 1,
       iconColor: "rgb(34, 128, 215)",
@@ -101,179 +108,306 @@ export default {
           value: 3,
         },
       ],
-      iconTitle: {
-        zhexiantu: "折线图",
-        "62": "柱状图",
-        "biaoge-copy": "详细数据",
-        xiangxia: "查看全部实体排行",
-        ditu: "出入口客流",
-        fenxi: "饼状图",
-        chakan: "查看所有",
-        daoru: "下载",
-      },
-      graphData: {
-        chartOptions: {
-          chart: {
-            toolbar: {
-              show: false,
-              tools: {
-                download: false,
-              },
-            },
-            events: {},
-          },
-          plotOptions: {
-            bar: {
-              horizontal: false,
-              columnWidth: "45%",
-              endingShape: "rounded",
-            },
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          stroke: {
-            show: false,
-            width: 1,
-            colors: ["transparent"],
-          },
-          xaxis: {
-            categories: [],
-          },
-          yaxis: {
-            title: {
-              text: this.$t("时间"),
-            },
-            labels: {
-              show: true,
-              formatter: (value) => {
-                return initTimes(value);
-              },
-            },
-          },
-          fill: {
-            opacity: 1,
-          },
-          tooltip: {
-            y: {
-              formatter: function(val) {
-                return initTimes(val);
-              },
-            },
-          },
-        },
-        series: [
-          {
-            name: "时间",
-            data: [],
-          },
-        ],
-      },
-      lineData: {
-        chartOptions: {
-          chart: {
-            toolbar: {
-              show: false,
-              tools: {
-                download: false,
-              },
-            },
-          },
-          title: {
-            text: "",
-          },
-          stroke: {
-            curve: "straight",
-            width: 2,
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          colors: [
-            "#33B3ED",
-            "#2BD9CF",
-            "#94E2FF",
-            "#FBAB40",
-            "#8D82F0",
-            "#E8585A",
-          ],
-          legend: {
-            height: 30,
-          },
-          yaxis: {
-            title: {
-              text: "时间",
-            },
-            labels: {
-              show: true,
-              formatter: (value) => {
-                return initTimes(value);
-              },
-            },
-          },
-          xaxis: {
-            categories: [],
-          },
-          plotOptions: {
-            bar: {
-              horizontal: false,
-              endingShape: "rounded",
-              columnWidth: "20%",
-              radius: 0,
-            },
-          },
-          tooltip: {
-            y: {
-              formatter: function(val) {
-                return initTimes(val);
-              },
-            },
-          },
-        },
-        series: [],
-      },
       chartTableName: ["实体名称", "停留时间"],
       chartTableListL: [],
       tableName: ["实体名称", "实体类别", "平均停留时间"],
       tableList: [],
-      chartTableList: [],
-      columnsList: [],
-      prepareValue: "",
-      compareData: "",
+      
+      
+      oParams:null,
+      isHour:false,
+      chart:{
+        barChart: null,
+      },
+      chartOption:{
+        lineOption:null,
+        barOption:null,
+        tableOption:null
+      }
+
     };
   },
-  mounted() {
-    this.iconIndex = 1;
-  },
-  activated() {
-    this.isGraph = false;
-    setTimeout(() => {
-      this.isGraph = true;
-    });
-  },
+
   methods: {
+    //按小时开关
+    compareTypeChange(val) {
+      this.$refs.flowSelector.handleClick();
+    },
+    handleData(){
+      if(this.oParams.isDateCompare()){
+        this.isHour = false
+      }
+      let range
+      if(this.isHour){
+        range = 'Hour'
+      }else {
+        range = this.oParams.getParams().range === 'Hour'?'Date':this.oParams.getParams().range
+      }
+      const params = {
+        ...this.oParams.getParams(),
+        property_id:this.propertyId,
+        range
+      }
+      dwellTimeNew(params).then(res=>{
+        res = res.data.data.time1;
+        let legend = [],xAxis=[],series = []
+        res.forEach(o=>{
+          if(this.oParams.isSingleDay()){
+            if(this.oParams.isDateCompare()){
+              xAxis.push(`${o.name}|${params.time1.split(',')[0]}`)
+              xAxis.push(`${o.name}|${params.time2.split(',')[0]}`)
+              series.push({
+                name:`${o.name}|${params.time1.split(',')[0]}`,
+                data:o.time1.map(m=>{
+                  return {
+                    value:m.dwell,
+                    data:initTimes(m.dwell),
+                  }
+                })
+              })
+              series.push({
+                name:`${o.name}|${params.time2.split(',')[0]}`,
+                data:o.time2.map(m=>{
+                  return {
+                    value:m.dwell,
+                    data:initTimes(m.dwell),
+                  }
+                })
+              })
+            }else {
+              if(this.isHour){
+                xAxis = o.time1.map(m=>{
+                  return m.hour
+                })
+                legend.push(o.name)
+                series.push({
+                  name:o.name,
+                  data:o.time1.map(m=>{
+                    return {
+                      value:m.dwell,
+                      data:initTimes(m.dwell),
+                    }
+                  })
+                })
+              }else {
+                xAxis.push(o.name)
+                legend=[params.time1.split(',')[0]]
+                if(!series.length){
+                  series.push({
+                    name:params.time1.split(',')[0],
+                    data:o.time1.map(m=>{
+                      return {
+                        value:m.dwell,
+                        data:initTimes(m.dwell),
+                      }
+                    })
+                  })
+                }else {
+                  series[0].data.push({
+                    value:o.time1[0].dwell,
+                    data:initTimes(o.time1[0].dwell),
+                  })
+                }
+              }
+
+
+            }
+          }else {
+            if(this.oParams.isDateCompare()){
+              if(!xAxis.length){
+                const days = Math.max(res[0].time1.length,res[0].time2.length)
+                for(let i=1;i<=days;i++){
+                  xAxis.push( this.$t("fn.第_天", [i]))
+                }
+              }
+              
+              legend.push(`${o.name}|${params.time1.replace(',',' - ')}`)
+              legend.push(`${o.name}|${params.time2.replace(',',' - ')}`)
+              series.push({
+                name:`${o.name}|${params.time1.replace(',',' - ')}`,
+                data: o.time1.map(m=>{
+                  return {
+                    value:m.dwell,
+                    data:initTimes(m.dwell),
+                  }
+                })
+              })
+              series.push({
+                name:`${o.name}|${params.time2.replace(',',' - ')}`,
+                data: o.time2.map(m=>{
+                  return {
+                    value:m.dwell,
+                    data:initTimes(m.dwell),
+                  }
+                })
+              })
+            }else {
+              xAxis = res[0].time1.map(m=>{
+                return m.hour
+              })
+              legend.push(o.name)
+              series.push({
+                name:o.name,
+                data:o.time1.map(m=>{
+                  return {
+                    value:m.dwell,
+                    data:initTimes(m.dwell),
+                  }
+                })
+              })
+            }
+          }
+        })
+        const options = {
+          legend:{
+            show:!this.oParams.isSingleDay(),
+            data:legend
+          },
+          yAxis:{
+            type: 'value',
+            axisLabel: {
+              formatter: function (value, index) {
+                return initTimes(value)
+              }
+            }
+          },
+          xAxis,
+          series,
+          tooltip:{
+            trigger: 'axis',
+            formatter:(params)=>{
+              let html =`平均停留时间<br>`
+              if(this.oParams.isSingleDay()){
+                html = `平均停留时间<br>`
+              }else {
+                html =  params[0].axisValue+'<br>'
+              }
+              params.forEach(o=>{
+                let inner = ''
+                if(this.oParams.isSingleDay()){
+                  inner =  `${o.marker}${o.axisValue}：${o.data.data}<br>`
+                }else {
+                  inner = `${o.marker}${o.seriesName}：${o.data.data}<br>`
+                }
+                html += inner
+              })
+              return html
+            }
+          }
+        }
+        this.chartOption.barOption = this.setBarOption(options)
+        this.chartOption.lineOption = this.setLineOption(options)
+        this.chartOption.tableOption = this.setTableOption(options)
+        this.toolClick(this.$refs.chart.currentChart)
+      })
+    },
+    setTableOption(options){
+      let optionsCopy = _.cloneDeep(options)
+      optionsCopy.legend.type = this.oParams.isSingleDay()&&!this.isHour?'entity':''
+      optionsCopy.xAxis = {
+        data:optionsCopy.xAxis
+      }
+      optionsCopy.series.forEach(o=>{
+        o.data = o.data.map(m=>{
+          return m.data
+        })
+      })
+      return optionsCopy
+      
+    },
+    setLineOption(options){
+      let lineConfigCopy = _.cloneDeep(lineConfig)
+      if(options.xAxis.length > 20){
+        lineConfigCopy.dataZoom = [
+          {
+            type: "slider",
+            zoomLock: false,
+            show: true, //flase直接隐藏图形
+            xAxisIndex: [0],
+            left: "4%", //滚动条靠左侧的百分比
+            height:24,
+            bottom: 60,
+            start: 0, //滚动条的起始位置
+            end: 100,
+            // end:parseInt((20/length)*100 ) //滚动条的截止位置（按比例分割你的柱状图x轴长度）
+          },
+        ]
+      }else {
+        delete lineConfigCopy.dataZoom
+      }
+
+      const obj = {
+        type: 'line'
+      }
+      let copyOption = _.cloneDeep(options)
+      copyOption.series.forEach(o => {
+        Object.assign(o, obj)
+      })
+      lineConfigCopy.series = copyOption.series
+      lineConfigCopy.xAxis.data = copyOption.xAxis
+      Object.assign(lineConfigCopy.legend, copyOption.legend)
+      Object.assign(lineConfigCopy.yAxis, copyOption.yAxis)
+      lineConfigCopy.tooltip = copyOption.tooltip
+      return lineConfigCopy
+    },
+    setBarOption(options){
+      let barConfigCopy = _.cloneDeep(barConfig)
+      if(options.xAxis.length > 20){
+        barConfigCopy.dataZoom = [
+          {
+            type: "slider",
+            zoomLock: false,
+            show: true, //flase直接隐藏图形
+            xAxisIndex: [0],
+            left: "4%", //滚动条靠左侧的百分比
+            height:24,
+            bottom: 60,
+            start: 0, //滚动条的起始位置
+            end: 100,
+            // end:parseInt((20/length)*100 ) //滚动条的截止位置（按比例分割你的柱状图x轴长度）
+          },
+        ]
+      }else {
+        delete barConfigCopy.dataZoom
+      }
+      const obj = {
+        type: 'bar',
+        barGap: '0%',
+        barMaxWidth:80,
+        itemStyle: {
+          normal: {
+            //柱形图圆角
+            barBorderRadius: [80, 80, 0, 0],
+          },
+        },
+      }
+      let copyOption = _.cloneDeep(options)
+      copyOption.series.forEach(o => {
+        Object.assign(o, obj)
+      })
+      barConfigCopy.xAxis.data = copyOption.xAxis
+      Object.assign(barConfigCopy.legend, copyOption.legend)
+      Object.assign(barConfigCopy.yAxis, copyOption.yAxis)
+      barConfigCopy.series = copyOption.series
+      barConfigCopy.tooltip = copyOption.tooltip
+      return barConfigCopy
+    },
     paramsPrepare(value) {
+      this.oParams = new ParamsConstructor(_.cloneDeep(value), this.isHour);
+      this.handleData()
       var time1 = value.date1Array[0] + "," + value.date1Array[1];
       var time2;
-      this.prepareValue = value;
       var charType = false;
-      this.compareData = value;
-      if (["time", "onYear", "onChain"].includes(value.compareType)) {
-        this.isTableDate = true;
+      if (this.oParams.isDateCompare()) {
         time2 = value.date2Array[0] + "," + value.date2Array[1];
         if (value.date1Array[0] === value.date1Array[1]) {
-          value.date2Array[0] === value.date2Array[1]
-            ? (charType = true)
-            : (charType = false);
+          charType = value.date2Array[0] === value.date2Array[1]
         } else {
-          this.charType = false;
+          charType = false;
         }
       } else {
-        this.isTableDate = false;
         time2 = "";
-        value.date1Array[0] === value.date1Array[1]
-          ? (charType = true)
-          : (charType = false);
+        charType =value.date1Array[0] === value.date1Array[1]
       }
       var bzid = [];
       value.entitys.map(function(d) {
@@ -282,134 +416,20 @@ export default {
       bzid = _.remove(bzid, function(n) {
         return n != 0;
       }).join(",");
-      this.iconIndex = 0;
-      // this.isGraph === true ? this.iconList[0].type = '62' : this.iconList[0].type = 'zhexiantu'
-      this.iconList = [];
-      if (charType === true) {
-        var arr = [
-          {
-            type: "62",
-            color: "#9D9D9DFF",
-            value: 1,
-          },
-          {
-            type: "biaoge-copy",
-            color: "#9D9D9DFF",
-            value: 2,
-          },
-          {
-            type: "daoru",
-            color: "#9D9D9DFF",
-            value: 3,
-          },
-        ];
-        this.iconIndex = 1;
-        this.iconList = arr;
-      } else {
-        var arr = [
-          {
-            type: "zhexiantu",
-            color: "#9D9D9DFF",
-            value: 0,
-          },
-          {
-            type: "62",
-            color: "#9D9D9DFF",
-            value: 1,
-          },
-          {
-            type: "biaoge-copy",
-            color: "#9D9D9DFF",
-            value: 2,
-          },
-          {
-            type: "daoru",
-            color: "#9D9D9DFF",
-            value: 3,
-          },
-        ];
-        this.iconIndex = 0;
-        this.iconList = arr;
-      }
       this.tableType(time2);
-      this.initialData();
       this.dataList(time1, time2, bzid, charType);
     },
     dataList(time1, time2, bzid, charType) {
       var that = this;
       dwellTime({ time1, time2, bzid })
         .then((res) => {
-          // 图表数据
-          that.graphData.chartOptions.xaxis.categories = [];
-          res.data.data.charts.categories.map(function(n) {
-            that.graphData.chartOptions.xaxis.categories.push(n);
-
-            that.lineData.chartOptions.xaxis.categories.push(n);
-          });
-          if (res.data.data.charts.series.length !== 0) {
-            res.data.data.charts.series.map((d) => {
-              var obj = {};
-              const arr = d.name.split(",");
-              let name = d.name.replace(/,/g, " - ");
-              if (arr.length === 2) {
-                if (arr[0].split(" ")[1] === arr[1]) {
-                  name = arr[0];
-                }
-              }
-              obj.name = this.$t(name);
-              obj.data = [];
-              d.data.map((num, index) => {
-                obj.data.push(num);
-              });
-              that.lineData.series.push(obj);
-              that.graphData.series.push(obj);
-            });
-          }
-          // 更新 x 坐标 以及 柱状图宽度
-          if (that.$refs.graphBar) {
-            that.$refs.graphBar.updateOptions({
-              xaxis: that.graphData.chartOptions.xaxis,
-            });
-            if (that.graphData.chartOptions.xaxis.categories.length < 2) {
-              that.graphData.chartOptions.plotOptions.bar.columnWidth = "10%";
-            } else if (
-              that.graphData.chartOptions.xaxis.categories.length < 5
-            ) {
-              that.graphData.chartOptions.plotOptions.bar.columnWidth = "25%";
-            } else if (
-              that.graphData.chartOptions.xaxis.categories.length < 10
-            ) {
-              that.graphData.chartOptions.plotOptions.bar.columnWidth = "55%";
-            } else if (
-              that.graphData.chartOptions.xaxis.categories.length < 15
-            ) {
-              that.graphData.chartOptions.plotOptions.bar.columnWidth = "65%";
-            } else {
-              that.graphData.chartOptions.plotOptions.bar.columnWidth = "80%";
-            }
-            that.$refs.graphBar.updateOptions({
-              plotOptions: that.graphData.chartOptions.plotOptions,
-            });
-          }
-          if (that.$refs.graphLine) {
-            that.$refs.graphLine.updateOptions({
-              xaxis: {
-                categories: that.lineData.chartOptions.xaxis.categories,
-              },
-            });
-          }
-          that.chartTableData(
-            res.data.data.charts.categories,
-            res.data.data.charts.series,
-            charType
-          );
           // 表格数据
           that.tableList = [];
           res.data.data.zones.map((d) => {
             var obj = {};
             obj.name = d.name;
             obj.type = this.$t(d.type == null ? "出入口" : d.type);
-            if (that.isTableDate === false) obj.time = "";
+            if (!this.oParams.isDateCompare()) obj.time = "";
             else {
               let date;
               if (d.date) {
@@ -430,140 +450,51 @@ export default {
           console.log(err);
         });
     },
-    handleDownload(index) {
-      downloadEx(exportEx, "停留时间", [this.columnsList, this.chartTableList]);
-    },
-    iconClick(e) {
-      this.iconIndex = Number(e.target.getAttribute("data-value"));
-      switch (this.iconIndex) {
-        case 1:
+
+    toolClick(chartName){
+      switch (chartName) {
+        case 'table':
           this.$nextTick(() => {
-            this.$refs.graphBar.updateOptions(this.graphData.chartOptions);
-          });
-          break;
-        case 0:
+            this.$refs.chart.initTable(this.chartOption.tableOption)
+          })
+          break
+        case 'line':
           this.$nextTick(() => {
-            this.$refs.graphLine.updateOptions(this.lineData.chartOptions);
-          });
-          break;
-        case 3:
-          // console.log(this.iconIndex);
-          // this.$nextTick(() => {
-          return this.handleDownload(this.iconIndex);
-        // });
+            this.$refs.chart.initLineChart(this.chartOption.lineOption)
+          })
+          break
+        case 'bar':
+          this.$nextTick(() => {
+            this.$refs.chart.initBarChart(this.chartOption.barOption)
+          })
+          break
       }
     },
-
     tableType(value) {
-      // 表格 标题
-      this.titleText = [];
       if (value === "") {
         this.tableName = ["实体名称", "实体类别", "平均停留时间"];
       } else {
         this.tableName = ["实体名称", "实体类别", "时间点", "平均停留时间"];
       }
     },
-    chartTableData(categories, series, charType) {
-      var that = this;
-      that.columnsList = [
-        {
-          title: this.$t("时间"),
-          key: "time",
-        },
-      ];
-      that.chartTableList = [];
-      if (charType === true) {
-        categories.map(function(name, index) {
-          var obj = {};
-          obj.title = name;
-          obj.key = "avg" + index;
-          that.columnsList.push(obj);
-        });
-        var timeType = that.compareData.compareType;
-        series.map((list, index) => {
-          var obj = {};
-          if (["time", "onYear", "onChain"].includes(timeType)) {
-            var num = Number(index) + 1;
-            obj.time = this.$t("fn.第_天", [num]);
-          } else {
-            obj.time = that.compareData.date1Array[0];
-          }
 
-          list.data.map(function(d, index) {
-            var key = "avg" + index;
-            obj[key] = initTimes(d);
-          });
-          that.chartTableList.push(obj);
-        });
-      } else {
-        series.map(function(n, index) {
-          const arr = n.name.split(",");
-          let name = n.name.replace(/,/g, " - ");
-          if (arr.length === 2) {
-            if (arr[0].split(" ")[1] === arr[1]) {
-              name = arr[0];
-            }
-          }
-          var obj = {};
-          var kk = "avg" + index;
-          obj.title = name;
-          obj.key = kk;
-          that.columnsList.push(obj);
-        });
-        categories.map(function(d, index) {
-          var obj = {};
-          obj.time = d;
-          series.map(function(da, iIndexs) {
-            var akey = "avg" + iIndexs;
-            obj[akey] = initTimes(series[iIndexs].data[index]);
-          });
-          that.chartTableList.push(obj);
-        });
-      }
-    },
-    initialData() {
-      var that = this;
-      that.graphData.chartOptions.xaxis.categories = [];
-      that.graphData.series = [];
-      that.lineData.chartOptions.xaxis.categories = [];
-      that.lineData.series = [];
-      that.tableList = [];
-    },
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .dwell-chart-table {
   padding: 20px;
   padding-top: 0;
 }
-.dewll_graph {
-  background: #fff;
-  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
-  border-radius: 0.5rem;
-  margin-top: 20px;
+.chart{
   height: 500px;
-  .dewll_graph_title {
-    padding: 20px;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    .dwell-time-icon {
-      cursor: pointer;
-      font-weight: 500;
-      color: rgba(62, 60, 60, 1);
-      > * + * {
-        margin-left: 10px;
-      }
+  .switch {
+    width: 60px;
+    margin-right: 20px;
+    &.ivu-switch-large.ivu-switch-checked:after {
+      left: 40px;
     }
   }
-  .dwell-chart-box {
-    height: 0;
-    flex: 1;
-  }
 }
-.dwell-time-table {
-  margin-top: 20px;
-}
+
 </style>

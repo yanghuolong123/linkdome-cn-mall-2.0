@@ -253,3 +253,31 @@ export const delEntity = (id) => {
   })
 }
 
+//数据补录列表
+export const getRecordList = params => {
+  return axios.request({
+    url: '/addcounting/config',
+    params
+  })
+}
+export const delRecordData = (data) => {
+  return axios.request({
+    method: 'delete',
+    url: `/addcounting/config`,
+    data
+  })
+}
+export const createRecord = (data) => {
+  return axios.request({
+    method: 'post',
+    url: `/addcounting/config`,
+    data
+  })
+}
+export const updateRecord = (id,data) => {
+  return axios.request({
+    method: 'put',
+    url: `/addcounting/config/${id}`,
+    data
+  })
+}

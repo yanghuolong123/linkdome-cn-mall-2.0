@@ -107,6 +107,7 @@
     },
     methods: {
       getTableData (option) {
+        console.log(option)
         if (isEmpty(option)) return []
 				let optionCopy = _.cloneDeep(option)
         let axle = this.horizontal ? 'yAxis' : 'xAxis'
@@ -204,6 +205,7 @@
         return data
       },
       getTableColumn (option) {
+        console.log(option)
         if (isEmpty(option)) return []
         let flag = false;
         const target = ['出客流','入客流', '店员','外卖人员'];
@@ -215,7 +217,7 @@
 				}
         let column = [
           {
-            title: flag ? this.$t('实体') : this.$t('时间'),
+            title: (flag||option.legend.type ==='entity' )? this.$t('实体') : this.$t('时间'),
             key: 'time',
             fixed: option.legend.data.length > 10 ? 'left' : '',
             width: option.legend.data.length > 10 ? 120 : '',

@@ -7,7 +7,6 @@
 			<template slot="thead" #thead>
 				<vs-th :key="indexs" class="table-title" v-for="(item, indexs) in tableName">{{$t(item)}}</vs-th>
 			</template>
-			
 			<template slot-scope="{data}" #tbody>
 				<vs-tr :data="tr" :disabled="false" :key="indextr" v-for="(tr, indextr) in data">
 					<!-- 头像 -->
@@ -21,6 +20,18 @@
 					<!-- 姓名 -->
 					<vs-td :data="data[indextr].name" v-if="data[indextr].name">
 						{{data[indextr].name}}
+					</vs-td>
+					<vs-td :data="data[indextr].bzone_name" v-if="data[indextr].bzone_name">
+						{{data[indextr].bzone_name}}
+					</vs-td>
+					<vs-td :data="data[indextr].ratio" v-if="data[indextr].ratio">
+						{{data[indextr].ratio+'%'}}
+					</vs-td>
+					<vs-td  :data="data[indextr].status_num" v-if="data[indextr].status_num||data[indextr].status_num===0">
+						<i-switch size="large" v-model="data[indextr].status_num" :true-value="1" :false-value="0" @on-change="val=>{statusChange(val,data[indextr])}">
+							<span slot="open">启用</span>
+							<span slot="close">禁用</span>
+						</i-switch>
 					</vs-td>
 					<vs-td :data="data[indextr].type_name" v-if="data[indextr].type_name">
 						{{findKey(typeList,'value',data[indextr].type_name,'name')}}
@@ -164,6 +175,13 @@
       }
     },
     methods: {
+      statusChange(value,data){
+        const payload = {
+          value,
+					data
+				}
+        this.$emit('statusChange',payload)
+			},
       imgConfig(){
         if(this.disabled)return;
         this.disabled = true;

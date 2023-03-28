@@ -124,7 +124,7 @@ export const drainageData = params => {
   })
 }
 //按业态查
-export const drainageDataByBussiness = params => {
+export const analysis = params => {
   return naxios.request({
     url: 'matrix/industryDrainage',
     params,
@@ -248,6 +248,13 @@ export const getInvalidFlow = params => {
 export const getFengmapId = params => {
   return naxios.request({
     url: 'fmap/config',
+    params
+  })
+}
+//停留时间
+export const dwellTimeNew = params => {
+  return naxios.request({
+    url: 'dwell/trend',
     params
   })
 }

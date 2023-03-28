@@ -553,18 +553,33 @@ export default [
           access: []
         }
       },      { // 更新缓存
-        path: 'cache',
-        name: 'Cache',
+        path: 'other',
+        name: 'Other',
         component: () =>
           import ('@/views/admin/Cache.vue'),
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
             { title: '后台管理', url: '/admin' },
-            { title: '更新缓存', active: true },
+            { title: '其他', active: true },
           ],
-          pageTitle: '更新缓存',
+          pageTitle: '其他',
           access: []
+        }
+      },{ // 数据补录
+        path: 'record',
+        name: 'Record',
+        component: () =>
+          import ('@/views/admin/Record.vue'),
+        meta: {
+          breadcrumb: [
+            { title: 'Analytics', url: '/dashboard/analytics' },
+            { title: '后台管理', url: '/admin' },
+            { title: '数据补录', active: true },
+          ],
+          pageTitle: '数据补录',
+          access: [],
+          hideInMenu: true
         }
       }
     ]

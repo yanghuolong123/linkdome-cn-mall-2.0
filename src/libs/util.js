@@ -335,7 +335,7 @@ export const initTimes = (val) => {
     minute = '00'
   }
   if (second > 0) {
-    second = second > 10 ? second : '0' + second
+    second = second >= 10 ? second : '0' + second
   } else {
     second = '00'
   }
