@@ -8,15 +8,31 @@
 					:label-width="85"
 					class="form-data"
 					ref="formData" :rules="ruleInline">
+			<FormItem label="类别选择" prop="type" v-show="!isModify">
+				<Select v-model="formData.type">
+					<Option v-for="item in typeList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+				</Select>
+			</FormItem>
 			<FormItem label="实体选择" prop="node">
 				<el-cascader
 					v-model="formData.node"
+					:disabled="!formData.type && isModify"
+					collapse-tags
 					class="w-select "
 					style="width: 100%"
 					:props="cascadeProps"
-					:options="treeData"
+					:options="filteredTree"
 				>
 				</el-cascader>
+			</FormItem>
+			<FormItem label="起始日期" prop="date" v-show="!isModify">
+				<DatePicker v-model="formData.date" @on-change="dateChange" type="daterange" placement="bottom-end" style="width: 100%"></DatePicker>
+			</FormItem>
+			<FormItem label="起始时间" prop="hourtime" v-show="!isModify">
+				<TimePicker v-model="formData.hourtime" confirm type="timerange" placement="bottom-end" style="width: 100%"></TimePicker>
+			</FormItem>
+			<FormItem label="起始时间" v-if="isModify" prop="dateTimeRange">
+				<DatePicker type="datetimerange" v-model="formData.dateTimeRange" style="width: 100%"></DatePicker>
 			</FormItem>
 			<FormItem label="补录增幅" prop="ratio" class="p-r">
 				<Input type="number" v-model="formData.ratio" placeholder="请输入补录增幅"></Input>
@@ -35,7 +51,21 @@
   import {createRecord ,updateRecord} from '@/api/manager.js'
   import i18n from "@/i18n/i18n";
   import { mapState } from 'vuex'
-
+  import {filterTreeByType,findCascadeLastLevel,deepFind,getUnique,deepTraversal } from '@/libs/util'
+  const validSelect = (rule, value, callback) => {
+    if (value === "" || (rule.field == "node" && !value[0])) {
+      callback(new Error(i18n.t("fn.请选择", [i18n.t(rule.tips)])));
+    } else {
+      callback();
+    }
+  };
+  const validRatio = (rule, value, callback) => {
+    if (value === "") {
+      callback(new Error('请输入补录增幅'));
+    } else {
+      callback();
+    }
+  };
   export default {
     props:{
       treeData:{
@@ -46,27 +76,95 @@
 		computed:{
       ...mapState({
         propertyId: state => state.home.headerAction,
-
       }),
+      ruleInline(){
+        if(this.isModify){
+          return {
+            ratio: [{
+              required: true,
+              message: '请输入补录增幅',
+              validator: validRatio,
+              trigger: 'blur',
+            }],
+            dateTimeRange:[{  required: true, message: '请选择起始时间',trigger: 'change',type:'array'}]
+
+          }
+				}else {
+          return {
+            node: [
+              {
+                required: true,
+                tips: "实体",
+                validator: validSelect,
+                trigger: "change",
+              },
+            ],
+            ratio: [{
+              required: true,
+              message: '请输入补录增幅',
+              validator: validRatio,
+              trigger: 'blur',
+            }],
+            date:[{  required: true, message: '请选择起始日期',trigger: 'change',type:'array'}],
+            hourtime:[{  required: true, message: '请选择起始时间',trigger: 'change',type:'array'}],
+
+          }
+				}
+			},
+			filteredTree(){
+        let tree = _.cloneDeep(this.treeData)
+				if(!this.isModify){
+          switch (this.formData.type) {
+            case 'mall':
+              return filterTreeByType(tree,['floor','store','gate','area','other']);
+            case 'floor':
+              let floorTree = filterTreeByType(tree,['store','gate','area','other']);
+              deepTraversal(floorTree,'children',t=>{
+                if(t.type_name!=='floor'){
+                  t.disabled = 'disabled'
+                }
+              })
+              return floorTree
+            case 'store':
+              const storeTree = filterTreeByType(tree,['gate','area','other']);
+              deepTraversal(storeTree,'children',t=>{
+                if(t.type_name!=='store'){
+                  t.disabled = 'disabled'
+                }
+              })
+              this.cascadeDataAddAll(storeTree)
+              return storeTree
+            case 'gate':
+              const gateTree = filterTreeByType(tree,['area','store','other']);
+              deepTraversal(gateTree,'children',t=>{
+                if(t.type_name!=='gate'){
+                  t.disabled = 'disabled'
+                }
+              })
+              this.cascadeDataAddAll(gateTree)
+              return gateTree
+            case 'area':
+              const areaTree = filterTreeByType(tree,['gate','store','other']);
+              deepTraversal(areaTree,'children',t=>{
+                if(t.type_name!=='area'){
+                  t.disabled = 'disabled'
+                }
+              })
+              this.cascadeDataAddAll(areaTree)
+              return areaTree
+
+          }
+				}else {
+				  return tree
+				}
+
+			}
 		},
     components:{
       Modal
 		},
     data(){
-      const validSelect = (rule, value, callback) => {
-        if (value === "" || (rule.field == "node" && !value[0])) {
-          callback(new Error(i18n.t("fn.请选择", [i18n.t(rule.tips)])));
-        } else {
-          callback();
-        }
-      };
-      const validRatio = (rule, value, callback) => {
-        if (value === "") {
-          callback(new Error('请输入补录增幅'));
-        } else {
-          callback();
-        }
-      };
+
       return{
         isModify:false,
         statusList:[
@@ -78,8 +176,27 @@
             id:0
 					}
 				],
+        typeList:[
+					{
+					  id:'mall',
+						name:'购物中心'
+					},{
+            id:'floor',
+            name:'楼层'
+          },{
+            id:'gate',
+            name:'出入口'
+          },{
+            id:'area',
+            name:'区域'
+          },{
+            id:'store',
+            name:'店铺'
+          },
+				],
         cascadeProps:{
           checkStrictly: true,
+          multiple: true,
           expandTrigger:'hover',
           value:'id',
           label:'name'
@@ -87,38 +204,54 @@
         formData:{
           ratio:'',
           node:[],
-          status:1
+          status:1,
+					date:[],
+          hourtime:[],
+          dateTimeRange:[],
 				},
-        ruleInline:{
-          node: [
-            {
-              required: true,
-              tips: "实体",
-              validator: validSelect,
-              trigger: "change",
-            },
-          ],
-          ratio: [{
-            required: true,
-            message: '请输入补录增幅',
-            validator: validRatio,
-            trigger: 'blur',
-          }],
-				}
 			}
 		},
 		methods:{
+      dateChange(val){
+        this.$set(this.formData,'date',val)
+      },
+      updateCascader (arr) {
+        // 去重
+        arr = getUnique(_.compact(arr))
+        // 防止视图不更新
+        this.formData.node = []
+        this.formData.node = arr
+      },
+      cascadeDataAddAll (data) {
+        findCascadeLastLevel(data, 'children', addAll)
+        function addAll (levelNode) {
+          const parent_id = levelNode[levelNode.length - 1].parent_id
+          levelNode.unshift({
+            id: 'all' + parent_id,
+            name: i18n.t('全部')
+          })
+        }
+      },
       showModal(){
         this.$refs.modal.showModal();
       },
       addRecord(){
-        const data = {
+        let node = [];
+        this.formData.node.forEach(o=>{
+          const lastId = o[o.length-1]
+          if(lastId.toString().indexOf('all') === -1){
+            node.push(lastId)
+					}
+				})
+        let data = {
           property_id:this.propertyId,
-          bzid:this.formData.node[this.formData.node.length-1],
+          bzid:node.toString(),
           ratio:this.formData.ratio,
-          status:this.formData.status
+          status:this.formData.status,
         }
         if(this.isModify){
+          data.start_time = this.formData.dateTimeRange[0];
+          data.end_time = this.formData.dateTimeRange[1];
           updateRecord(this.formData.id,data).then(res=>{
             if(res.data.code === 200){
               this.$message.success('修改成功');
@@ -130,6 +263,8 @@
             }
 					})
 				}else {
+          data.date = this.formData.date.toString();
+          data.hourtime = this.formData.hourtime.toString()
           createRecord(data).then(res=>{
             if(res.data.code === 200){
               this.$message.success('添加成功');
@@ -149,6 +284,7 @@
 			},
       handleSubmit(name){
         this.$refs[name].validate((valid) => {
+          console.log(valid)
           if (valid) {
             this.addRecord()
           } else {
@@ -159,6 +295,51 @@
       closeEdit () {
         this.$refs.formData.resetFields()
         this.$refs.modal.closeModal()
+      },
+		},
+		watch:{
+      'formData.node': {//根据新旧值的差别来判断勾选了全部还是取消了全部
+        handler (newval, oldval) {
+          if (_.isEmpty(_.differenceWith(newval, oldval, _.isEqual))) {//取消节点
+            const dif = _.differenceWith(oldval, newval, _.isEqual)
+            if (dif.length > 1) return//dif大于一个节点，为数据的变化，页面是只会一个节点一个节点的勾选
+            if (JSON.stringify(dif).indexOf('all') > -1) {//取消的是全部节点
+              const pId = dif[0][dif[0].length - 1].substring(3)
+              const node = deepFind(this.filteredTree, o => {
+                return o.id === Number(pId)
+              }, 'children')
+              const valueList = node.children.map(o => {
+                return JSON.stringify(o.cascadeValue)
+              })
+              //清除节点
+              const cascaderSelectList = _.cloneDeep(this.formData.node)
+              for (let i = 0; i < cascaderSelectList.length; i++) {
+                if (valueList.includes(JSON.stringify(cascaderSelectList[i]))) {
+                  cascaderSelectList.splice(i, 1)
+                  i--
+                }
+              }
+              //更新视图
+              this.updateCascader(cascaderSelectList)
+            }
+          } else {
+            const dif = _.differenceWith(newval, oldval, _.isEqual)
+            if (JSON.stringify(dif).indexOf('all') > -1) {//勾选的是全部节点
+              if (dif.length > 1) return
+              const pId = dif[0][dif[0].length - 1].substring(3)
+
+              const node = deepFind(this.filteredTree, o => {
+                return o.id === Number(pId)
+              }, 'children')
+              //全选节点
+              const cascaderSelectList = this.formData.node.concat(node.children.map(o => {
+                return o.cascadeValue
+              }))
+
+              this.updateCascader(cascaderSelectList)
+            }
+          }
+        }
       },
 		}
 	}

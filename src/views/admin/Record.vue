@@ -44,7 +44,7 @@
   import Modal from '_c/common/Modal.vue'
   import { getBzoneTree } from '@/api/home.js'
   import { getRecordList,delRecordData,updateRecord } from '@/api/manager.js'
-  import { findParentNodes } from '@/libs/util'
+  import { findParentNodes,deepTraversal } from '@/libs/util'
 
   import addRecord from '_c/entity/components/addRecord.vue'
   import { mapState } from 'vuex'
@@ -114,6 +114,7 @@
         })
       },
       addClick(){
+        this.$refs.record.isModify = false
       	this.$refs.record.showModal()
 			},
       statusChange(value){
@@ -159,15 +160,21 @@
       getTree(){
         getBzoneTree({ property_id: this.propertyId }).then(res=>{
           this.treeData = res.data.data;
+          deepTraversal(this.treeData,'children',o=>{
+            this.$set(o,'disabled',false)
+            const parentNodes = findParentNodes(o.id,this.treeData,true)
+            this.$set(o,'cascadeValue',parentNodes)
+          })
 					this.caseDidChange()
         })
 			},
       editData(value){
         this.$refs.record.isModify = true;
-        this.$refs.record.formData.node = findParentNodes(value.data.bzid,this.treeData,true)
+        this.$refs.record.formData.node = [findParentNodes(value.data.bzid,this.treeData,true)]
         this.$refs.record.formData.ratio = value.data.ratio;
         this.$refs.record.formData.status = value.data.status_num;
         this.$refs.record.formData.id = value.data.id;
+        this.$refs.record.formData.dateTimeRange = [value.data.start_time,value.data.end_time]
         this.$refs.record.showModal()
 				
       }
