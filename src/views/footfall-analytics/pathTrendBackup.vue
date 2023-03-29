@@ -44,6 +44,7 @@
             <p class="minNumber">{{minNumber}}</p>
             <img :src="colorBar" width="20">
           </div>
+          <div v-if="showText" class="text-list" v-for="item in svgLists" :style="{left:(item.text.x)+'px',top:(item.text.y)+'px'}">{{item.text.enter}}人次</div>
           <div  v-for="item in titleLists" class="titleList" :title="`${item.name} ${item.from}(人次)`" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}"></div>
         </div>
       </div>
@@ -77,6 +78,7 @@ export default {
   data () {
     return {
       isNewPath: false,
+      showText:false,//仅用于控制长沙步行街项目的客流显示,长沙用to 其他项目用from
       maxNumber: '',
       minNumber: '0',
       pleft: '0px',
@@ -195,16 +197,24 @@ export default {
       var titleList = []
       this.positions = []
       var paths = []
+      that.showText = moveData.show_conver_num
       if (moveData.paths) {
-        moveData.paths.forEach(function (m) {
-          if (m.from) {
-            paths.push(m)
+        moveData.paths.forEach((m) => {
+          if(that.showText){
+            if (m.to) {
+              paths.push(m)
+            }
+          }else {
+            if (m.from) {
+              paths.push(m)
+            }
           }
+
         })
       }
       var maxNumber
       if (paths.length) {
-        maxNumber = _.maxBy(paths, 'from').from
+        maxNumber = this.showText?_.maxBy(paths, 'to').to:_.maxBy(paths, 'from').from
       } else {
         maxNumber = 0
       }
@@ -219,6 +229,7 @@ export default {
             obj.x = Math.floor(e.x * that.canvasWidth)
             obj.y = Math.floor(e.y * that.canvasHeight)
             obj.from = m.from
+            obj.to = m.to
             obj.name = e.name
             clickNodes.push(obj)
             if(ei===0){
@@ -243,12 +254,23 @@ export default {
       this.oneMoveList = pathNodes[0]
       var positions = that.positions
       var svgList = []
-      positions.forEach(function (m, index) {
+      positions.forEach( (m, index)=> {
         let obj = {}
         if (maxNumber == 0) {
           obj.width = 0
         } else {
-          obj.width = Math.ceil((m[0].from / maxNumber) * 10 / 2)
+          if(this.showText){
+            obj.width = Math.ceil((m[0].to / maxNumber) * 10 / 2)
+          }else {
+            obj.width = Math.ceil((m[0].from / maxNumber) * 10 / 2)
+  
+          }
+        }
+        obj.text = {
+          x:m[1].midX,
+          y:m[1].midY,
+          enter:m[0].to,
+          from:m[0].from,
         }
         obj.color = that.colors[5 - obj.width]
         obj.d = 'M' + m[0].x + ' ' + m[0].y + 'Q ' + m[1].x + ' ' + m[1].y + ',' + m[2].x + ' ' + m[2].y
@@ -266,16 +288,22 @@ export default {
       svgList = _.uniq(svgList)
       that.svgList = svgList
       that.showPath = true
-      let sumNumber = _.sumBy(moveData.paths, 'from')
+      let sumNumber = this.showText?_.sumBy(moveData.paths, 'to'):_.sumBy(moveData.paths, 'from')
       if (sumNumber > 0) {
         var c = 2
         var ctxs = document.getElementById('canvasCircle').getContext('2d')
-        this.timer = setInterval(function () {
-          positions.forEach(function (m) {
+        this.timer = setInterval( ()=> {
+          positions.forEach( (m)=> {
             var arrs = []
             if (maxNumber > 0) {
-              var width = Math.ceil((m[0].from / maxNumber) * 10 / 2)
-              var width1 = Math.ceil((m[0].from / maxNumber) * 10 / 2)
+              var width,width1;
+              if(this.showText){
+                width = Math.ceil((m[0].to / maxNumber) * 10 / 2)
+                width1 = Math.ceil((m[0].to / maxNumber) * 10 / 2)
+              }else {
+                width = Math.ceil((m[0].from / maxNumber) * 10 / 2)
+                width1 = Math.ceil((m[0].from / maxNumber) * 10 / 2)
+              }
               if (width > 1 && width1 > 1) {
                 arrs.push(m)
               }
@@ -480,6 +508,17 @@ export default {
             width:30px;
             height:30px;
             cursor:pointer;
+          }
+          .text-list{
+            position:absolute;
+            z-index:3700;
+            color: #fff;
+						padding: 0px 4px;
+						border-radius: 10px;
+            font-size: 12px;
+						font-weight: bold;
+						background: rgba(0,0,0,0.4);
+            transform: translate(-50%,-50%);
           }
           .imgs{
               width: 100%;

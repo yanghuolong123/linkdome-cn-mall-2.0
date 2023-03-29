@@ -18,7 +18,7 @@ export const  drawBezier = (ctx, origin_nodes,color) => {
         bezierNodes  = []
         pathNodes.push(nodesss)
         nodesss = [];
-        return 
+        return
     }
     var nodes = origin_nodes
     t += 0.01
@@ -32,7 +32,7 @@ export const  drawBezier = (ctx, origin_nodes,color) => {
     var next_nodes = []
     _nodes.forEach(function(item, index) {
         var x = item.x,
-            y = item.y    
+            y = item.y
         if(_nodes.length === 1) {
             bezierNodes.push(item)
             if(bezierNodes.length > 1) {
@@ -58,7 +58,7 @@ export const  drawBezier = (ctx, origin_nodes,color) => {
                 })
             }
         }
-    })  
+    })
     if(_nodes.length) {
         for(var i = 0; i < _nodes.length - 1; i++) {
             var arr = [{
@@ -66,10 +66,10 @@ export const  drawBezier = (ctx, origin_nodes,color) => {
                 y: _nodes[i].y
             }, {
                 x: _nodes[i + 1].x,
-                y: _nodes[i + 1].y 
+                y: _nodes[i + 1].y
             }]
             next_nodes.push(bezier(arr, t))
-            
+
         }
         drawnode(ctx,next_nodes,color)
     }
@@ -89,11 +89,11 @@ const bezier = (arr, t) => { //通过各控制点与占比t计算当前贝塞尔
         n = arr.length - 1
     arr.forEach(function(item, index) {
         if(!index) {
-            x += item.x * Math.pow(( 1 - t ), n - index) * Math.pow(t, index) 
-            y += item.y * Math.pow(( 1 - t ), n - index) * Math.pow(t, index) 
+            x += item.x * Math.pow(( 1 - t ), n - index) * Math.pow(t, index)
+            y += item.y * Math.pow(( 1 - t ), n - index) * Math.pow(t, index)
         } else {
-            x += factorial(n) / factorial(index) / factorial(n - index) * item.x * Math.pow(( 1 - t ), n - index) * Math.pow(t, index) 
-            y += factorial(n) / factorial(index) / factorial(n - index) * item.y * Math.pow(( 1 - t ), n - index) * Math.pow(t, index) 
+            x += factorial(n) / factorial(index) / factorial(n - index) * item.x * Math.pow(( 1 - t ), n - index) * Math.pow(t, index)
+            y += factorial(n) / factorial(index) / factorial(n - index) * item.y * Math.pow(( 1 - t ), n - index) * Math.pow(t, index)
         }
     })
     return {
@@ -106,38 +106,38 @@ const bezier = (arr, t) => { //通过各控制点与占比t计算当前贝塞尔
      * @param {obj} ctx canvas的content对象
      * @param {int*} fromX 起始点x坐标
      * @param {int} fromY 起始点y坐标
-     * @param {int} toX 结束点x坐标 
+     * @param {int} toX 结束点x坐标
      * @param {int} toY 结束点y坐标
      * @param {int} theta 箭头夹角
      * @param {int} headlen 斜边长度
      * @param {int} width 箭头宽度
      * @param {string}} color 颜色
      */
-    	
+
     const drawArrow = (ctx, fromX, fromY, toX, toY, theta, headlen, width, color)=>{
         theta = typeof(theta) != 'undefined' ? theta: 30;
         headlen = typeof(theta) != 'undefined' ? headlen: 10;
         width = typeof(width) != 'undefined' ? width: 1;
-        color = typeof(color) != 'color' ? color: '#000'; 
-        var angle = Math.atan2(fromY - toY, fromX - toX) * 180 / Math.PI, 
-            angle1 = (angle + theta) * Math.PI / 180, 
-            angle2 = (angle - theta) * Math.PI / 180, 
-            topX = headlen * Math.cos(angle1), 
-            topY = headlen * Math.sin(angle1), 
-            botX = headlen * Math.cos(angle2), 
-            botY = headlen * Math.sin(angle2); 
+        color = typeof(color) != 'color' ? color: '#000';
+        var angle = Math.atan2(fromY - toY, fromX - toX) * 180 / Math.PI,
+            angle1 = (angle + theta) * Math.PI / 180,
+            angle2 = (angle - theta) * Math.PI / 180,
+            topX = headlen * Math.cos(angle1),
+            topY = headlen * Math.sin(angle1),
+            botX = headlen * Math.cos(angle2),
+            botY = headlen * Math.sin(angle2);
         ctx.save();
-        ctx.beginPath(); 
-        var arrowX = fromX - topX, 
+        ctx.beginPath();
+        var arrowX = fromX - topX,
         arrowY = fromY - topY;
-        arrowX = toX + topX; 
-        arrowY = toY + topY; 
-        ctx.moveTo(arrowX, arrowY); 
-        ctx.lineTo(toX, toY); 
-        arrowX = toX + botX; 
+        arrowX = toX + topX;
+        arrowY = toY + topY;
+        ctx.moveTo(arrowX, arrowY);
+        ctx.lineTo(toX, toY);
+        arrowX = toX + botX;
         arrowY = toY + botY;
-        ctx.lineTo(arrowX, arrowY); 
-        ctx.strokeStyle = color; 
+        ctx.lineTo(arrowX, arrowY);
+        ctx.strokeStyle = color;
         ctx.lineWidth = width;
         ctx.stroke();
         ctx.fillStyle=color;
@@ -150,8 +150,24 @@ export const formatMiddle = (x1,y1,x2,y2,length) =>{
     var y3 = (k1-k2)*(1+k1*k2)*(x1+x2+k1*y2-k1*y1)+2*k1*k2*(Math.pow((k1-k2),2))-2*x1*(k1-k2)*((Math.pow(k1,2)+1))/((2*(Math.pow(k1,2)+1))*(1+k1*k2))+y1
     return x3+","+y3
 }
+/**
+ * @param t      是当前点所占的比例取值是0-1
+ * @param p1 起始点
+ * @param cp 控制点
+ * @param p2 终点
+ * @return 返回t
+ */
+function twoOrderBezier(t, p1, cp, p2) {
+  //参数分别是//t是当前点所占的比例取值是0-1, 起始点,控制点和终点
+  var [x1, y1] = p1,
+    [cx, cy] = cp,
+    [x2, y2] = p2;
+  var x = (1 - t) * (1 - t) * x1 + 2 * t * (1 - t) * cx + t * t * x2,
+    y = (1 - t) * (1 - t) * y1 + 2 * t * (1 - t) * cy + t * t * y2;
+  return [x, y];
+}
 export const formatNode = (x1,y1,x2,y2,length)=>{
-	var angle = Math.atan2(y2-y1,x2-x1);
+	var angle = Math.atan2(y2-y1,x2-x1);//返回两点的角度
     var x3 = (x1+x2)*0.5;
     var y3 = (y1+y2)*0.5;
     var xx = Math.abs(length*Math.cos(angle));
@@ -160,7 +176,7 @@ export const formatNode = (x1,y1,x2,y2,length)=>{
     var y6 = 0;
     if(y2<y1&&x2>x1){  // from left down to right top
         x6 = x3+yy;
-        y6= y3+xx; 
+        y6= y3+xx;
     }
     else if(y1==y2&&x1<x2){ //from left to right
         x6 = x3;
@@ -180,24 +196,28 @@ export const formatNode = (x1,y1,x2,y2,length)=>{
     }
     else if(y2<y1&&x1>x2){//from right bottm to left top
         x6 = x3+yy;
-        y6= y3-xx; 
+        y6= y3-xx;
     }
-    else if(y1-y2<0&&x1-x2>0){ //from right top to left bottom 
+    else if(y1-y2<0&&x1-x2>0){ //from right top to left bottom
         x6 = x3-yy;
-        y6= y3-xx; 
+        y6= y3-xx;
     }
     else if(y1-y2<0&&x2-x1>0){//from left top to right bottom
         x6 = x3-yy;
-        y6= y3+xx; 
+        y6= y3+xx;
     }
-    var obj = {};
+  console.log()
+  const midPoint = twoOrderBezier(0.5, [x1, y1], [x6, y6], [x2, y2])
+  var obj = {};
     obj.x = x6;
     obj.y = y6;
+    obj.midX=midPoint[0]
+    obj.midY=midPoint[1]
 	return obj;
 }
 // export const drawCircle = (ctx,x,y,type) =>{
 //     if(!Boolean(x)&&!Boolean(x)){
-//         return false;   
+//         return false;
 //     }
 //     if(type){
 //         ctx.beginPath()
@@ -214,7 +234,7 @@ export const formatNode = (x1,y1,x2,y2,length)=>{
 // }
 export const drawCircle = (ctx,x,y,type) =>{
 if(!Boolean(x)&&!Boolean(x)){
-    return false;   
+    return false;
 }
     ctx.clearRect(x-50, y-50, 120, 120)
     ctx.beginPath()
