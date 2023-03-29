@@ -78,7 +78,7 @@ export default {
   data () {
     return {
       isNewPath: false,
-      showText:false,//仅用于控制长沙步行街项目的客流显示,长沙用to 其他项目用from
+      showText:false,//仅用于控制长沙步行街项目的客流显示
       maxNumber: '',
       minNumber: '0',
       pleft: '0px',
@@ -200,25 +200,17 @@ export default {
       this.showText = moveData.show_conver_num
       if (moveData.paths) {
         moveData.paths.forEach((m) => {
-          if(that.showText){
-            if (m.to) {
-              paths.push(m)
-            }
-          }else {
-            if (m.from) {
-              paths.push(m)
-            }
+          if (m.to) {
+            paths.push(m)
           }
-
         })
       }
       var maxNumber
       if (paths.length) {
-        maxNumber = this.showText?_.maxBy(paths, 'to').to:_.maxBy(paths, 'from').from
+        maxNumber = _.maxBy(paths, 'to').to
       } else {
         maxNumber = 0
       }
-      paths = _.sortBy(paths,['to']).reverse()
       if(this.showText){
         paths = _.take(paths,6)
       }
@@ -263,12 +255,7 @@ export default {
         if (maxNumber == 0) {
           obj.width = 0
         } else {
-          if(this.showText){
-            obj.width = Math.ceil((m[0].to / maxNumber) * 10 / 2)
-          }else {
-            obj.width = Math.ceil((m[0].from / maxNumber) * 10 / 2)
-  
-          }
+          obj.width = Math.ceil((m[0].to / maxNumber) * 10 / 2)
         }
         obj.text = {
           x:m[1].midX,
@@ -297,29 +284,23 @@ export default {
       svgList = _.uniq(svgList)
       that.svgList = svgList
       that.showPath = true
-      let sumNumber = this.showText?_.sumBy(moveData.paths, 'to'):_.sumBy(moveData.paths, 'from')
+      let sumNumber = _.sumBy(moveData.paths, 'to')
       if (sumNumber > 0) {
         var c = 2
         var ctxs = document.getElementById('canvasCircle').getContext('2d')
-        console.log(positions)
         this.timer = setInterval( ()=> {
           positions.forEach( (m)=> {
             var arrs = []
             if (maxNumber > 0) {
-              var width
-              if(this.showText){
-                width = Math.ceil((m[0].to / maxNumber) * 10 / 2)
-              }else {
-                width = Math.ceil((m[0].from / maxNumber) * 10 / 2)
-              }
-              if (!this.showText && width > 1 ) {
+              var width = Math.ceil((m[0].to / maxNumber) * 10 / 2)
+              if (this.showText ) {
                 arrs.push(m)
               }else {
-                arrs.push(m)
+                if(width > 1){
+                  arrs.push(m)
+                }
               }
             }
-           
-            // arrs = _.uniq(arrs)
             arrs.forEach(function (ms) {
               drawCircle(ctxs, ms[0].x, ms[0].y, c)
               drawCircle(ctxs, ms[2].x, ms[2].y, c)
