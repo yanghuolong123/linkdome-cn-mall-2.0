@@ -49,7 +49,7 @@
         </div>
       </div>
 
-      <div class="maps">
+      <div class="maps" v-if="!showText">
         <pathTab :title="title1" :numbers="number1"></pathTab>
         <!-- <pathTab :parking="isParking" :title="title2" :numbers="number2" :right="right"></pathTab> -->
       </div>
@@ -197,7 +197,7 @@ export default {
       var titleList = []
       this.positions = []
       var paths = []
-      that.showText = moveData.show_conver_num
+      this.showText = moveData.show_conver_num
       if (moveData.paths) {
         moveData.paths.forEach((m) => {
           if(that.showText){
@@ -217,6 +217,10 @@ export default {
         maxNumber = this.showText?_.maxBy(paths, 'to').to:_.maxBy(paths, 'from').from
       } else {
         maxNumber = 0
+      }
+      paths = _.sortBy(paths,['to']).reverse()
+      if(this.showText){
+        paths = _.take(paths,6)
       }
       this.maxNumber = Boolean(maxNumber) > 0 ? maxNumber : 0
       length = this.mainPath ? 3 : 1000
@@ -281,9 +285,14 @@ export default {
         } else {
           obj.transform = 'rotateX(0deg)'
         }
-        if (obj.width > 1) {
+        if(this.showText){
           svgList.push(obj)
+        }else {
+          if (obj.width > 1) {
+            svgList.push(obj)
+          }
         }
+
       })
       svgList = _.uniq(svgList)
       that.svgList = svgList
@@ -292,23 +301,25 @@ export default {
       if (sumNumber > 0) {
         var c = 2
         var ctxs = document.getElementById('canvasCircle').getContext('2d')
+        console.log(positions)
         this.timer = setInterval( ()=> {
           positions.forEach( (m)=> {
             var arrs = []
             if (maxNumber > 0) {
-              var width,width1;
+              var width
               if(this.showText){
                 width = Math.ceil((m[0].to / maxNumber) * 10 / 2)
-                width1 = Math.ceil((m[0].to / maxNumber) * 10 / 2)
               }else {
                 width = Math.ceil((m[0].from / maxNumber) * 10 / 2)
-                width1 = Math.ceil((m[0].from / maxNumber) * 10 / 2)
               }
-              if (width > 1 && width1 > 1) {
+              if (!this.showText && width > 1 ) {
+                arrs.push(m)
+              }else {
                 arrs.push(m)
               }
             }
-            arrs = _.uniq(arrs)
+           
+            // arrs = _.uniq(arrs)
             arrs.forEach(function (ms) {
               drawCircle(ctxs, ms[0].x, ms[0].y, c)
               drawCircle(ctxs, ms[2].x, ms[2].y, c)
