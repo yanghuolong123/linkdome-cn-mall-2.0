@@ -124,7 +124,7 @@ export const drainageData = params => {
   })
 }
 //按业态查
-export const analysis = params => {
+export const drainageDataByBussiness = params => {
   return naxios.request({
     url: 'matrix/industryDrainage',
     params,

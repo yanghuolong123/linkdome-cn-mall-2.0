@@ -51,19 +51,25 @@ export class LineChartConstructor extends BasicData {
       this.config.xAxis.axisLabel = {
         show: true,
         formatter:(value,i)=>{
-          let weather1;
-          if(this.weathers1[i].type === 1){
-            weather1 = this.weathers1[i].temperature + '℃'
-          }else {
-            weather1 = `${this.weathers1[i].low_temperature}℃ - ${this.weathers1[i].high_temperature}℃`
-          }
-          if(this.weathers2.length){
-            let weather2;
-            if(this.weathers2[i].type === 1){
-              weather2 = this.weathers2[i].temperature + '℃'
+          let weather1 = '';
+          if(this.weathers1[i].hasOwnProperty('type')){
+            if(this.weathers1[i].type === 1){
+              weather1 = this.weathers1[i].temperature + '℃'
             }else {
-              weather2 = `${this.weathers2[i].low_temperature}℃ - ${this.weathers2[i].high_temperature}℃`
+              weather1 = `${this.weathers1[i].low_temperature}℃ - ${this.weathers1[i].high_temperature}℃`
             }
+          }
+
+          if(this.weathers2.length){
+            let weather2 = '';
+            if(this.weathers2[i].hasOwnProperty('type')){
+              if(this.weathers2[i].type === 1){
+                weather2 = this.weathers2[i].temperature + '℃'
+              }else {
+                weather2 = `${this.weathers2[i].low_temperature}℃ - ${this.weathers2[i].high_temperature}℃`
+              }
+            }
+
             return `${value}\n{${i===0?'dateShow':'dateHide'}|${this.params.params.date1Array.toString()}}\n{style${i}|}\n${weather1}\n{${i===0?'dateShow':'dateHide'}|${this.params.params.date2Array.toString()}}\n{style2${i}|}\n${weather2}`
 
 
@@ -79,7 +85,7 @@ export class LineChartConstructor extends BasicData {
           width:30,
           height:30,
           backgroundColor:{
-            image:this.weathers1[i].weather_icon
+            image:this.weathers1[i]?this.weathers1[i].weather_icon:''
           }
         }
         if(this.weathers2.length){
@@ -87,7 +93,7 @@ export class LineChartConstructor extends BasicData {
             width:30,
             height:30,
             backgroundColor:{
-              image:this.weathers2[i].weather_icon
+              image:this.weathers2[i]?this.weathers2[i].weather_icon:''
             }
           }
         }

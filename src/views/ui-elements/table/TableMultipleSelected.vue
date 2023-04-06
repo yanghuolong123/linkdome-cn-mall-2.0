@@ -21,11 +21,17 @@
 					<vs-td :data="data[indextr].name" v-if="data[indextr].name">
 						{{data[indextr].name}}
 					</vs-td>
-					<vs-td :data="data[indextr].bzone_name" v-if="data[indextr].bzone_name">
-						{{data[indextr].bzone_name}}
+					<vs-td style="width: 360px"  :title="data[indextr].bzone_name" :data="data[indextr].bzone_name" v-if="data[indextr].bzone_name">
+						{{data[indextr].bzone_name.length>25?data[indextr].bzone_name.substring(0,25)+'...':data[indextr].bzone_name}}
 					</vs-td>
 					<vs-td :data="data[indextr].ratio" v-if="data[indextr].ratio">
 						{{data[indextr].ratio+'%'}}
+					</vs-td>
+					<vs-td :data="data[indextr].exec_date" v-if="data[indextr].exec_date">
+						{{data[indextr].exec_date.replace(',',' - ')}}
+					</vs-td>
+					<vs-td :data="data[indextr].exec_time" v-if="data[indextr].exec_time">
+						{{data[indextr].exec_time.replace(',',' - ')}}
 					</vs-td>
 					<vs-td  :data="data[indextr].status_num" v-if="data[indextr].status_num||data[indextr].status_num===0">
 						<i-switch size="large" v-model="data[indextr].status_num" :true-value="1" :false-value="0" @on-change="val=>{statusChange(val,data[indextr])}">
@@ -235,5 +241,15 @@
 		&:hover {
 			color: #00a0e9;
 		}
+	}
+	.ellipsis-1{
+		text-overflow: -o-ellipsis-lastline;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		-webkit-box-orient: vertical;
+
 	}
 </style>

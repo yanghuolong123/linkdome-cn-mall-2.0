@@ -45,16 +45,30 @@
 					:label="$t('营业时间')"
 					prop="timerange"
 				>
-					<TimePicker
-						confirm
-						type="timerange"
-						v-model="formValidate.timerange"
-						placement="bottom-end"
-						:placeholder="
+					<div class="flex-center w-100">
+						<TimePicker
+							confirm
+							type="time"
+							v-model="formValidate.timerange[0]"
+							placement="bottom-end"
+							:placeholder="
                       $t('fn._', [$t('holder.请选择'), $t('营业时间')])
                     "
-						class="w-100"
-					></TimePicker>
+							class="w-100"
+						></TimePicker>
+						<div class="mid-margin"> 至 </div>
+						<TimePicker
+							confirm
+							type="time"
+							v-model="formValidate.timerange[1]"
+							placement="bottom-end"
+							:placeholder="
+                      $t('fn._', [$t('holder.请选择'), $t('营业时间')])
+                    "
+							class="w-100"
+						></TimePicker>
+					</div>
+				
 				</FormItem>
 				<FormItem
 					:label="$t('区域关联')"
@@ -713,6 +727,10 @@
 		}
 		.left{
 			width: 28%;
+			.mid-margin{
+				margin-left: 5px;
+				margin-right: 5px;
+			}
 		}
 		.right{
 			flex: 1;

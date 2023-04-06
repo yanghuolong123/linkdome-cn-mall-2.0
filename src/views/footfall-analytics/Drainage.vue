@@ -29,13 +29,13 @@
     </div>
     <!-- 引流图片 -->
     <drainage-map
-      v-show="showType ==='store'"
+      v-if="showType ==='store'"
       :dataList = 'drainageMapList'
       :centerData = 'centerDataList'
       :presentData = 'presentData'
     ></drainage-map>
     <drainage-map-bussiness
-      v-show="showType ==='bussiness'"
+      v-if="showType ==='bussiness'"
       :dataList = 'drainageMapListBus'
        :presentData = 'presentData'>
       

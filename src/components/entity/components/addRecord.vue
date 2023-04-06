@@ -4,9 +4,10 @@
 				 :title="isModify?'编辑补录增幅':'添加补录增幅'"
 				 @onOk="handleSubmit('formData')"
 				 @onCancel="closeEdit">
+		<Alert type="warning" show-icon>增幅优先级按照实体的层级越深优先级越高</Alert>
 		<Form :model="formData" label-position="right"
 					:label-width="85"
-					class="form-data"
+					class="form-data m-t-20"
 					ref="formData" :rules="ruleInline">
 			<FormItem label="类别选择" prop="type" v-show="!isModify">
 				<Select v-model="formData.type">
@@ -16,7 +17,7 @@
 			<FormItem label="实体选择" prop="node">
 				<el-cascader
 					v-model="formData.node"
-					:disabled="!formData.type && isModify"
+					:disabled="isModify||(!isModify&&!formData.type)"
 					collapse-tags
 					class="w-select "
 					style="width: 100%"
@@ -25,14 +26,11 @@
 				>
 				</el-cascader>
 			</FormItem>
-			<FormItem label="起始日期" prop="date" v-show="!isModify">
-				<DatePicker v-model="formData.date" @on-change="dateChange" type="daterange" placement="bottom-end" style="width: 100%"></DatePicker>
+			<FormItem label="执行日期" prop="date" >
+				<DatePicker :value="formData.date" format="yyyy-MM-dd" @on-change="dateChange" type="daterange" placement="bottom-end" style="width: 100%"></DatePicker>
 			</FormItem>
-			<FormItem label="起始时间" prop="hourtime" v-show="!isModify">
+			<FormItem label="执行时间" prop="hourtime">
 				<TimePicker v-model="formData.hourtime" confirm type="timerange" placement="bottom-end" style="width: 100%"></TimePicker>
-			</FormItem>
-			<FormItem label="起始时间" v-if="isModify" prop="dateTimeRange">
-				<DatePicker type="datetimerange" v-model="formData.dateTimeRange" style="width: 100%"></DatePicker>
 			</FormItem>
 			<FormItem label="补录增幅" prop="ratio" class="p-r">
 				<Input type="number" v-model="formData.ratio" placeholder="请输入补录增幅"></Input>
@@ -77,40 +75,6 @@
       ...mapState({
         propertyId: state => state.home.headerAction,
       }),
-      ruleInline(){
-        if(this.isModify){
-          return {
-            ratio: [{
-              required: true,
-              message: '请输入补录增幅',
-              validator: validRatio,
-              trigger: 'blur',
-            }],
-            dateTimeRange:[{  required: true, message: '请选择起始时间',trigger: 'change',type:'array'}]
-
-          }
-				}else {
-          return {
-            node: [
-              {
-                required: true,
-                tips: "实体",
-                validator: validSelect,
-                trigger: "change",
-              },
-            ],
-            ratio: [{
-              required: true,
-              message: '请输入补录增幅',
-              validator: validRatio,
-              trigger: 'blur',
-            }],
-            date:[{  required: true, message: '请选择起始日期',trigger: 'change',type:'array'}],
-            hourtime:[{  required: true, message: '请选择起始时间',trigger: 'change',type:'array'}],
-
-          }
-				}
-			},
 			filteredTree(){
         let tree = _.cloneDeep(this.treeData)
 				if(!this.isModify){
@@ -124,6 +88,7 @@
                   t.disabled = 'disabled'
                 }
               })
+              console.log(floorTree)
               return floorTree
             case 'store':
               const storeTree = filterTreeByType(tree,['gate','area','other']);
@@ -207,8 +172,25 @@
           status:1,
 					date:[],
           hourtime:[],
-          dateTimeRange:[],
 				},
+        ruleInline:{
+          node: [
+            {
+              required: true,
+              tips: "实体",
+              validator: validSelect,
+              trigger: "change",
+            },
+          ],
+          ratio: [{
+            required: true,
+            message: '请输入补录增幅',
+            validator: validRatio,
+            trigger: 'blur',
+          }],
+          date:[{  required: true, message: '请选择起始日期',trigger: 'change',type:'array'}],
+          hourtime:[{  required: true, message: '请选择起始时间',trigger: 'change',type:'array'}],
+				}
 			}
 		},
 		methods:{
@@ -248,10 +230,11 @@
           bzid:node.toString(),
           ratio:this.formData.ratio,
           status:this.formData.status,
+          date:this.formData.date.toString(),
+          time:this.formData.hourtime.toString(),
         }
         if(this.isModify){
-          data.start_time = this.formData.dateTimeRange[0];
-          data.end_time = this.formData.dateTimeRange[1];
+
           updateRecord(this.formData.id,data).then(res=>{
             if(res.data.code === 200){
               this.$message.success('修改成功');
@@ -263,8 +246,7 @@
             }
 					})
 				}else {
-          data.date = this.formData.date.toString();
-          data.hourtime = this.formData.hourtime.toString()
+
           createRecord(data).then(res=>{
             if(res.data.code === 200){
               this.$message.success('添加成功');
@@ -284,7 +266,6 @@
 			},
       handleSubmit(name){
         this.$refs[name].validate((valid) => {
-          console.log(valid)
           if (valid) {
             this.addRecord()
           } else {
