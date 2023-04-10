@@ -149,7 +149,7 @@ export default {
         range
       }
       dwellTimeNew(params).then(res=>{
-        res = res.data.data.time1;
+        res = res.data.data;
         let legend = [],xAxis=[],series = []
         res.forEach(o=>{
           if(this.oParams.isSingleDay()){
@@ -177,7 +177,7 @@ export default {
             }else {
               if(this.isHour){
                 xAxis = o.time1.map(m=>{
-                  return m.hour
+                  return m.datetime
                 })
                 legend.push(o.name)
                 series.push({
@@ -243,7 +243,7 @@ export default {
               })
             }else {
               xAxis = res[0].time1.map(m=>{
-                return m.hour
+                return m.datetime
               })
               legend.push(o.name)
               series.push({
