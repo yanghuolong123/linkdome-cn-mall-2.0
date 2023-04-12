@@ -345,6 +345,7 @@ export default {
         );
         barOpiton = BarChart.getPostEntitysCompare();
       }
+      console.log(_.cloneDeep(barOpiton))
       this.$refs[componentName].initBarChart(barOpiton);
     },
     updateChart(componentName, quta = this.enterSelect) {

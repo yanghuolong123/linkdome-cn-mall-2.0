@@ -168,13 +168,7 @@ export const activityDataList = params => {
     method: 'get'
   })
 }
-export const getEffective = (data) => {
-  return naxios.request({
-    url: 'passflow/visits',
-    data,
-    method: 'post'
-  })
-}
+
 export const getHeatMapFloorData = params => {
   const { property_id, type } = params
   return naxios.request({
@@ -255,6 +249,13 @@ export const getFengmapId = params => {
 export const dwellTimeNew = params => {
   return naxios.request({
     url: 'dwell/trend',
+    params
+  })
+}
+//有效客流
+export const validFlow = params => {
+  return naxios.request({
+    url: 'valid_flow/trend',
     params
   })
 }

@@ -20,8 +20,11 @@
 			</div>
 		</div>
 		<div class="chart">
-			<div class="pie-chart flex-center" id="pie-chart-arrival"  v-show="currentChart === 'pie'">
-
+			<div class="pie-chart flex-center"   v-show="currentChart === 'pie'">
+				<div class="entitys flex-column" v-if="entities.length>1">
+					<div class="item" :class="{'active':i===activeEntityIndex}" @click="entityClick(i)" v-for="(item,i) in entities">{{item.name}}</div>
+				</div>
+				<div id="pie-chart-arrival" :class="{'mul-entity':entities.length>1}"></div>
 			</div>
 			<div class="bar-chart" id="bar-chart-arrival" v-show="currentChart === 'bar'"></div>
 			<div class="table" ref="table" v-show="currentChart === 'table'">
@@ -46,6 +49,10 @@
         type: Array,
         default: () => []
       },
+      entities: {
+        type: Array,
+        default: () => []
+      },
       chart: {
         type: Object,
         default: () => {
@@ -55,6 +62,10 @@
           }
         },
       },
+      activeEntityIndex:{
+        type:Number,
+				default:0
+			}
     },
     data () {
       return {
@@ -76,6 +87,9 @@
       },
     },
     methods: {
+      entityClick(index){
+      	this.$emit('changeEntity',index)
+			},
       getTableData1 (option) {
         return option.series[0].data.map(o => {
           return {
@@ -135,6 +149,7 @@
         this.chartOption = option
         this.chart.pieChart.setOption(option, true)
         this.$nextTick(() => {
+          console.log('resize')
           this.chart.pieChart.resize()
         })
       },
@@ -194,10 +209,33 @@
 				width: 100%;
 				height: 100%;
 			}
+			.mul-entity{
+				width: 80%!important;
+			}
 			#bar-chart-arrival,
 			#pie-chart-arrival{
 				height: 100%;
+				width: 100%;
 			}
+			.entitys{
+				flex: 1;
+				height: 70%;
+				overflow-y: scroll;
+				margin-left: 20px;
+				.item{
+					cursor: pointer;
+					&:hover{
+						color: #33B3ED;
+					}
+					&.active{
+						color: #33B3ED;
+					}
+				}
+				.item+.item{
+					margin-top: 15px;
+				}
+			}
+
 			.table {
 				padding: 20px 0;
 				height: 100%;

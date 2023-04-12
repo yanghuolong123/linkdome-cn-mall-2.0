@@ -8,18 +8,31 @@
 								 chartId="tendencyChart"
 								 :chart="tendencyChart"
 								 class="common-card  tendency"></chart-box>
-			<div class="card-box flex-column">
+			<div class="card-box flex-column" 	 v-if="!isMultiEntity">
 				<Cards class="card"
+						
 							 v-for="item in statisticList"
 							 :isTime="oParams&&oParams.isDateCompare()"
 							 :isUp="item.isUp"
 							 :item="item"></Cards>
+			
 			</div>
+			<div class="common-card entity-table" v-else>
+				<Table
+					stripe
+					:columns="tableColumn"
+					:data="tableData"
+				></Table>
+			</div>
+			
 		</div>
 		<div class="flex-center l-2 m-t-20">
 			<arrival-times-chart ref="arrival"
 													 style="width: 45%"
 													 class="common-card chart-2"
+													 :entities="entities"
+													 :activeEntityIndex="activeEntityIndex"
+													 @changeEntity="changeEntity"
 													 @toolClick="arrivalToolClick"
 													 :chart="arrivalChart"
 													 :toolList="arrivalToolList"></arrival-times-chart>
@@ -38,8 +51,7 @@
   import ChartBox from '_c/common/Chart-box'
   import Cards from './components/Cards.vue'
   import VueApexCharts from 'vue-apexcharts'
-  import { getEffective } from '@/api/analysis'
-  import { getEntityFlow } from '@/api/home'
+  import { validFlow } from '@/api/analysis'
 
   import moment from 'moment'
   import _ from 'lodash'
@@ -51,7 +63,7 @@
 
   import { ParamsConstructor } from '@/libs/params-constructor/params.class.js'
   import ArrivalTimesChart from './components/ArrivalTimesChart'
-
+	import {mapState} from 'vuex'
   export default {
     name: 'Effective',
     components: {
@@ -62,6 +74,9 @@
       ArrivalTimesChart
     },
     computed: {
+      ...mapState({
+        propertyId: state => state.home.headerAction,
+      }),
       arrivalToolList () {
         if (this.oParams && this.oParams.isDateCompare()) {
           return [
@@ -95,7 +110,35 @@
             name: '到店次数数据'
           }
         ]
-      }
+      },
+			isMultiEntity(){
+        return this.oParams && this.oParams.params.entitys.length>1
+			},
+      toolList(){
+        let list = [
+            {
+              icon: 'zhexiantu',
+              value: 'line',
+              name: '有效客流趋势'
+            }, {
+              icon: '62',
+              value: 'bar',
+              name: '有效客流趋势'
+            }, {
+              icon: 'biaoge-copy',
+              value: 'table',
+              name: '详细数据'
+            }, {
+              icon: 'daoru',
+              value: 'download',
+              name: '有效客流趋势数据'
+            }
+          ]
+				if(this.oParams && this.oParams.params.entitys.length>1){
+				  return list.splice(1)
+				}
+				return list
+			}
     },
     data () {
       return {
@@ -124,25 +167,7 @@
           barOptions: null
         },
         oParams: null,
-        toolList: [
-          {
-            icon: 'zhexiantu',
-            value: 'line',
-            name: '有效客流趋势'
-          }, {
-            icon: '62',
-            value: 'bar',
-            name: '有效客流趋势'
-          }, {
-            icon: 'biaoge-copy',
-            value: 'table',
-            name: '详细数据'
-          }, {
-            icon: 'daoru',
-            value: 'download',
-            name: '有效客流趋势数据'
-          }
-        ],
+
         freequencyToolList: [
           {
             icon: 'zhexiantu',
@@ -185,11 +210,36 @@
             total1: '',
             total2: '',
           },
-        ]
-
+        ],
+        tableColumn:[
+					{
+					  key:'entity',
+						title:'实体',
+					},{
+            key:'valid',
+            title:'有效客流',
+            width:100
+          },{
+            key:'repeat',
+            title:'重复客流',
+            width:100
+          },{
+            key:'visit',
+            title:'平均到访次数',
+            width:120
+          },
+				],
+        tableData:[],
+				reqData:[],
+        entities:[],
+				activeEntityIndex:0
       }
     },
     methods: {
+      changeEntity(index){
+        this.activeEntityIndex = index
+				this.setPieOption(this.reqData)
+			},
       arrivalToolClick (type) {
         switch (type) {
           case 'table':
@@ -248,21 +298,22 @@
             break
         }
       },
-      statistics (data) {
-        const data1 = data[0].data
+			//卡片统计
+      statistics(data){
+        const data1 = data[0].time1.list
         if (data1 && data1.length) {
-          this.statisticList[0].total1 = _.sumBy(data1, 'unique_visits')
-          this.statisticList[1].total1 = formatNumber(_.sumBy(data1, 'visits') - this.statisticList[0].total1)
-          this.statisticList[2].total1 = data[0].totalAvgFrequencyVisits
+          this.statisticList[0].total1 = _.sumBy(data1, 'validFlow')
+          this.statisticList[1].total1 = formatNumber(_.sumBy(data1, 'flow') - this.statisticList[0].total1)
+          this.statisticList[2].total1 = data[0].time1.total_avg_vist
         }
 
         const params = this.oParams.getParams()
         if (this.oParams.isDateCompare()) {
-          const data2 = data[1].data
+          const data2 = data[0].time2.list
           if (data2 && data2.length) {
-            this.statisticList[0].total2 = _.sumBy(data2, 'unique_visits')
-            this.statisticList[1].total2 = formatNumber(_.sumBy(data2, 'visits') - this.statisticList[0].total2)
-            this.statisticList[2].total2 = formatNumber(_.sumBy(data2, 'avgFrequencyVisits') / data2.length)
+            this.statisticList[0].total2 = _.sumBy(data2, 'validFlow')
+            this.statisticList[1].total2 = formatNumber(_.sumBy(data2, 'flow') - this.statisticList[0].total2)
+            this.statisticList[2].total2 = formatNumber(_.sumBy(data2, 'avg_vist') / data2.length)
           }
           this.statisticList.forEach(o => {
             this.$set(o, 'time1', this.formatDate(params.time1))
@@ -282,52 +333,91 @@
           })
 
         }
-      },
+			},
+
       //有效客流趋势(时间对比)
-      trendByDate (data, option) {
+      trendByDate(data,option){
         let options = {
           ...option,
           series: []
         }
+        data = [data.time1,data.time2]
         option.legend.data.forEach((o, i) => {
           options.series.push({
             name: o,
-            data: data[i].data.map(m => {
-              return m.unique_visits
+            data: data[i].list.map(m => {
+              return m.validFlow
             })
           })
         })
         this.tendencyOption.lineOptions = this.setLineOption(options)
         this.tendencyOption.barOptions = this.setBarOption(options)
         this.toolClick(this.$refs.tendencyChart.currentChart)
-      },
-      //有效客流趋势(无对比)
-      trendByNone (data) {
+			},
+
+
+      trendByMultiEntity(data){
         let options = {
           legend: {
             data: [this.$t('全部客流'), this.$t('有效客流')],
-						unit:[this.$t('人'),this.$t('人')]
+            unit:[this.$t('人'),this.$t('人')]
           },
-          xAxis: [],
+          xAxis: data.map(o=>{
+            return o.name
+          }),
           series: [],
         }
         options.legend.data.forEach((o, i) => {
           options.series.push({
             name: o,
             data: i ? data.map(m => {
-              return m.unique_visits
+              return m.time1.total_validFlow
             }) : data.map(m => {
-              return m.visits
+              return m.time1.total_flow
+            })
+          })
+        })
+        this.tableData = []
+				data.forEach(o=>{
+				  this.tableData.push({
+						entity:o.name,
+						valid:o.time1.total_validFlow.toLocaleString(),
+            repeat:o.time1.total_repeat.toLocaleString(),
+            visit:o.time1.total_avg_vist
+					})
+				})
+        this.tendencyOption.lineOptions = this.setLineOption(options)
+        this.tendencyOption.barOptions = this.setBarOption(options)
+        this.toolClick(this.$refs.tendencyChart.currentChart)
+			},
+      //有效客流趋势(无对比)
+      trendByNone(data){
+        let options = {
+          legend: {
+            data: [this.$t('全部客流'), this.$t('有效客流')],
+            unit:[this.$t('人'),this.$t('人')]
+          },
+          xAxis: [],
+          series: [],
+        }
+        data = data[0].time1.list;
+        options.legend.data.forEach((o, i) => {
+          options.series.push({
+            name: o,
+            data: i ? data.map(m => {
+              return m.validFlow
+            }) : data.map(m => {
+              return m.flow
             })
           })
         })
         data.forEach(o => {
-          options.xAxis.push(o.date_time)
+          options.xAxis.push(o.date)
         })
         this.tendencyOption.lineOptions = this.setLineOption(options)
         this.tendencyOption.barOptions = this.setBarOption(options)
         this.toolClick(this.$refs.tendencyChart.currentChart)
-      },
+			},
       setBarOption (options) {
         let barConfigCopy = _.cloneDeep(barConfig)
         const obj = {
@@ -365,65 +455,79 @@
         Object.assign(lineConfigCopy.legend, copyOption.legend)
         return lineConfigCopy
       },
+
       //平均到访频次趋势（无对比）
-      freequencyByNone (data) {
+      freequencyByNone(data){
+        const list = data[0].time1.list
         let options = {
-          xAxis: [],
-          series: [
-            {
-              name: this.$t('平均到访频次'),
-              data: []
-            }
-          ],
+          xAxis: list.map(o=>{return o.date}),
+          series: [],
           legend: {
-            data: [this.$t('平均到访频次')],
-            show: false
+            data: data.map(o=>{return o.name}),
           },
         }
-        data.forEach(o => {
-          options.xAxis.push(o.date_time)
-          options.series[0].data.push(o.avgFrequencyVisits)
+        options.legend.data.forEach((o, i) => {
+          options.series.push({
+            name: o,
+            data: data[i].time1.list.map(m=>{return m.avg_vist})
+          })
         })
-
         this.freequencyOption.lineOptions = this.setLineOption(options)
         this.freequencyOption.barOptions = this.setBarOption(options)
         this.freequencyToolClick(this.$refs.freequencyChart.currentChart)
-      },
+			},
       //平均到访频次趋势（时间对比）
-      freequencyByDate (data, option) {
+      freequencyByDate(data,option){
         let options = {
           ...option,
           series: []
         }
+        data = [data.time1,data.time2]
         option.legend.data.forEach((o, i) => {
           options.series.push({
             name: o,
-            data: data[i].data.map(m => {
-              return m.avgFrequencyVisits
+            data: data[i].list.map(m => {
+              return m.avg_vist
             })
           })
         })
         this.freequencyOption.lineOptions = this.setLineOption(options)
         this.freequencyOption.barOptions = this.setBarOption(options)
         this.freequencyToolClick(this.$refs.freequencyChart.currentChart)
-      },
+			},
       //到底按次数（时间对比柱状图)
-      setArrivalBarOpiton (data, option) {
-        data = data.map(o => {
-          return o.data.data.arrival_distribution
-        })
+      setArrivalBarOpiton(data){
+        const arrival = data[0].time1.list[0].arrival_distribution
+        const params = this.oParams.getParams()
+        let option = {
+          xAxis: [this.formatDate(params.time1), this.formatDate(params.time2)],
+          legend: []
+        }
+        for (let key in arrival) {
+          if (Number(key) < 5) {
+            option.legend.push(this.$t('fn.times', [this.$t(key)]))
+          } else {
+            option.legend.push(this.$t(key + '次及以上'))
+          }
+        }
+				data = [data[0].time1.list,data[0].time2.list]
         let barConfigCopy = _.cloneDeep(barConfig)
         barConfigCopy.legend.data = option.legend
         barConfigCopy.xAxis.data = option.xAxis
         let series = []
         option.legend.forEach((le, index) => {
+          let time1Data = 0,time2Data=0;
+          data[0].forEach(m=>{
+            time1Data+=(m.arrival_distribution[index+1]||0)
+					})
+          data[1].forEach(m=>{
+            time2Data+=(m.arrival_distribution[index+1]||0)
+					})
           const obj = {
             name: le,
             type: 'bar',
             stack: 'total',
-            data: data.map(o => {
-              return o[index + 1]
-            })
+            data: [time1Data,time2Data]
           }
           series.push(obj)
         })
@@ -432,22 +536,35 @@
         this.arrivalToolClick(this.$refs.arrival.currentChart)
 
       },
-      //到店次数（饼图）
-      setPieOption (res) {
-        let pieConfigCopy = _.cloneDeep(pieConfig)
-        let serierData = [], name = ''
-        for (let key in res) {
-          if (Number(key) < 5) {
-            name = this.$t('fn.times', [this.$t(key)])
-          } else {
-            name = this.$t(key + '次及以上')
-          }
-          serierData.push({
-            value: res[key],
-            name
-          })
+     
 
-        }
+
+      //到店次数（饼图）
+      setPieOption(res){
+        let pieConfigCopy = _.cloneDeep(pieConfig)
+				res = res[this.activeEntityIndex].time1.list;
+        let serierData = [], name = ''
+				for(let i= 0;i<res.length;i++){
+          for (let key in res[i].arrival_distribution){
+            if(Number(key) < 5){
+              name = this.$t('fn.times', [this.$t(key)])
+            } else {
+              name = this.$t(key + '次及以上')
+            }
+            let series = serierData.find(o=>{
+              return o.name === name
+						})
+						if(series){
+              series.value += res[i].arrival_distribution[key]
+						}else {
+              serierData.push({
+								name,
+								value:res[i].arrival_distribution[key]
+							})
+						}
+						
+					}
+				}
         const legend = serierData.map(o => {
           return o.name
         })
@@ -455,7 +572,7 @@
         pieConfigCopy.legend.left = '70%'
         pieConfigCopy.legend.top = 'middle'
         pieConfigCopy.legend.itemGap = 20
-        pieConfigCopy.legend.formatter = function (name) {
+        pieConfigCopy.legend.formatter = (name) =>{
           const value = _.find(serierData, o => {
             return o.name === name
           }).value
@@ -474,68 +591,45 @@
         pieConfigCopy.series[0].data = serierData
         this.arrivalOption.pieOptions = pieConfigCopy
         this.arrivalToolClick(this.$refs.arrival.currentChart)
-
-      },
+			},
+     
+    
       /*
 			*@method 查询
 			*@param {obj} value 查询控件封装的数据
 			*/
       paramsPrepare (value) {
-        if (value.entitys.length == 0) {
+        if (!value.entitys.length) {
           this.$alert({ content: '请选择实体' })
           return
         }
+				if(['time','onYear','onChain'].includes(value.compareType) && value.entitys.length>1){
+          this.$alert({ content: '时间对比不支持多实体查询！' })
+          return
+				}
+        this.activeEntityIndex = 0
+        this.entities = value.entitys
         this.oParams = new ParamsConstructor(value)
         const params = this.oParams.getParams()
         params.range = params.range === 'Hour' ? 'Date' : params.range
-        if (!this.oParams.isDateCompare()) { // 无对比
-          let parmas1 = {
-            start_time: value.date1Array[0],
-            end_time: value.date1Array[1],
-            innerRange: params.range,
-            ...this.oParams.getParams()
-          }
-          let parmas2 = {
-            ...this.oParams.getParams(),
-            range: this.oParams.getParams().time1,
-          }
-
-          getEffective(parmas1).then(res => {
-            this.trendByNone(res.data.data || [])
-            this.freequencyByNone(res.data.data || [])
-            this.statistics([res.data])
-          })
-          getEntityFlow(parmas2).then(res => {
-            res = res.data.data.arrival_distribution
+        validFlow({property_id:this.propertyId,...params}).then(res=>{
+					res = res.data.data;
+					this.reqData = res;
+					//非时间对比
+          if (!this.oParams.isDateCompare()){
+            //多实体
+						
+            if(value.entitys.length > 1){
+             
+              this.trendByMultiEntity(res)
+						}else {
+              this.trendByNone(res)
+             
+						}
             this.setPieOption(res)
-          })
-
-        } else { // 时间对比
-          const params1 = {
-            bzid: params.bzid,
-            start_time: value.date1Array[0],
-            end_time: value.date1Array[1],
-            innerRange: params.range
-          }
-          const params2 = {
-            bzid: params.bzid,
-            start_time: value.date2Array[0],
-            end_time: value.date2Array[1],
-            innerRange: params.range
-          }
-          const params3 = {
-            range: params.time1,
-            bzid: params.bzid
-          }
-          const params4 = {
-            range: params.time2,
-            bzid: params.bzid
-          }
-          //有效客流 & 平均到访频次
-          Promise.all([getEffective(params1), getEffective(params2)]).then(res => {
-            res = res.map(o => {
-              return o.data
-            })
+            this.freequencyByNone(res)
+      
+					}else {
             const type = params.range === 'Month' ? 'Month' : 'day'
             const diff1 = moment(value.date1Array[1]).diff(moment(value.date1Array[0]), type)
             const diff2 = moment(value.date2Array[1]).diff(moment(value.date2Array[0]), type)
@@ -551,28 +645,13 @@
             for (let i = 1; i < diff; i++) {
               options.xAxis.push(params.range === 'Month' ? this.$t('fn.第_月', [i]) : this.$t('fn.第_天', [i]))
             }
-            this.trendByDate(res, options)
-            this.freequencyByDate(res, options)
-            //统计
-            this.statistics(res)
-          })
-          //到店次数
-          Promise.all([getEntityFlow(params3), getEntityFlow(params4)]).then(res => {
-            const arrival = res[0].data.data.arrival_distribution
-            let options = {
-              xAxis: [this.formatDate(params.time1), this.formatDate(params.time2)],
-              legend: []
-            }
-            for (let key in arrival) {
-              if (Number(key) < 5) {
-                options.legend.push(this.$t('fn.times', [this.$t(key)]))
-              } else {
-                options.legend.push(this.$t(key + '次及以上'))
-              }
-            }
-            this.setArrivalBarOpiton(res, options)
-          })
-        }
+     				this.trendByDate(res[0],options)
+            this.freequencyByDate(res[0], options)
+            //到店次数
+            this.setArrivalBarOpiton(res)
+					}
+          this.statistics(res)
+        })
       },
       formatDate (dateStr) {
         if (!dateStr) return ''
@@ -611,9 +690,13 @@
 					
 				}
 			}
+			.entity-table{
+				height: 100%;
+				width: 27%;
+			}
 			.tendency {
 				height: 100%;
-				width: 77.5%;
+				flex: 1;
 				margin-right: 20px;
 			}
 		}

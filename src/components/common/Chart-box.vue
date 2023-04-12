@@ -291,6 +291,7 @@
         })
       },
       initTable (option) {
+        console.log(option)
         this.chartOption = option
         this.tableColumn = this.getTableColumn(option)
         this.tableData = this.getTableData(option)

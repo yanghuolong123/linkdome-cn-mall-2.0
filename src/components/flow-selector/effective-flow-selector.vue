@@ -53,9 +53,7 @@ export default {
           date2Array: [],
           bussinessType:'',
         },
-        cascadeProps:{
-          multiple: false,
-        },
+
 	  }
 	},
   computed: {
@@ -81,7 +79,7 @@ export default {
         }
       ]
       return this.typeOptions
-    }
+    },
   },
 	methods: {
     getBussinessDict () {
@@ -114,19 +112,9 @@ export default {
       //给级联设置默认值
       this.setEntityCascaderDataDefaultValue()
       this.handleClick()
+      this.cascadeDataAddAll(this.entityCascaderOption)
     },
-    setEntityCascaderDataDefaultValue(){
-      if(this.$store.state.user.role_id<3){
-        this.entityCascaderData = this.entityCascaderOption[0].cascadeValue
-      }else {
-        const node = deepFind(this.entityCascaderOption,o=>{
-          return o.disabled===false
-        },'children')
-        if(node){
-          this.entityCascaderData = node.cascadeValue
-        }
-      }
-    },
+
 	},
 	created(){
 	  this.queryParams.date1Array[0] = Moment(yesterday).add(-6,'d').format('YYYY-MM-DD')
