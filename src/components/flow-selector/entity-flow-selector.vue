@@ -15,6 +15,12 @@
 						   :dType="2"
 						   :value='queryParams.date2Array'
 						   @selectDate="dateSelect"></i-date-picker>
+			<Select v-model="queryParams.range" placeholder="查询粒度" class="w-select m-l-20" v-if="isSingleDay">
+				<Option v-for="item in rangeList"
+								:value="item.value"
+								:key="item.value">{{ item.label }}
+				</Option>
+			</Select>
 		</div>
 		<div class="flex-center raido-group" v-show="compareType === 'entity'">
 			<vs-radio v-model="entityType" :vs-value="item.value" :key="item.value" v-for="item in entityOptions"
@@ -101,6 +107,24 @@
     data () {
       return {
         bussinessTypeOptions: [],//业态
+        rangeList:[
+					{
+					  label:'5分钟',
+						value:'5m'
+					},{
+            label:'10分钟',
+            value:'10m'
+          },{
+            label:'15分钟',
+            value:'15m'
+          },{
+            label:'30分钟',
+            value:'30m'
+          },{
+            label:'1小时',
+						value:'Hour'
+					}
+				]
       }
     },
     computed: {
@@ -111,6 +135,9 @@
         })
         return this.typeOptions
       },
+			isSingleDay(){
+				return this.queryParams.date1Array[0] === this.queryParams.date1Array[1] && this.queryParams.date2Array[0] === this.queryParams.date2Array[1]
+			}
     },
     methods: {
       getBussinessDict () {
@@ -178,6 +205,15 @@
       },
     },
     watch: {
+      'isSingleDay':{
+        handler(newval, oldval){
+          if(!newval){
+            this.queryParams.range = ''
+					}else {
+            this.queryParams.range = 'Hour'
+					}
+				}
+			},
       'queryParams.bussinessType': {
         handler (newval, oldval) {
           if (_.differenceWith(newval, oldval)[0] === -1) {
@@ -208,6 +244,7 @@
       },
     },
     created () {
+      this.queryParams.range = 'Hour'
       //获取所有业态
       this.getBussinessDict()
       this.getIndustry()

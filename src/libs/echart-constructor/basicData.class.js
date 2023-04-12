@@ -52,14 +52,14 @@ export class BasicData {
   //时间对比
   dateCompare () {
     switch (this.Params.getInnerRange()) {
-      case 'Hour':
-        this.getConfigByHour1()
-        break
       case 'Date':
         this.getConfig1('fn.第_天')
         break
       case 'Month':
         this.getConfig1('fn.第_月')
+        break
+      default:
+        this.getConfigByHour1()
         break
     }
   }
@@ -115,18 +115,18 @@ export class BasicData {
   //实体对比
   postEntitysCompare () {
     switch (this.Params.getInnerRange()) {
-      case 'Hour':
-        if(this.Params.isSingleDay()){
-          this.getConfig2(11, 16)
-        }else {//多天按小时查询时，需要显示日期
-          this.getConfig2(0, 16)
-        }
-        break
       case 'Date':
         this.getConfig2(0, 10)
         break
       case 'Month':
         this.getConfig2(0, 7)
+        break
+      default:
+        if(this.Params.isSingleDay()){
+          this.getConfig2(11, 16)
+        }else {//多天按小时查询时，需要显示日期
+          this.getConfig2(0, 16)
+        }
         break
     }
   }

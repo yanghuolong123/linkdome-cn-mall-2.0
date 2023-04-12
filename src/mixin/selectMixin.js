@@ -32,6 +32,7 @@ const selectMixin = {
         enterType: '0',
         selectList:[],
         bussinessType:[],
+        range:''
       },
       bussinessTypeOptions: [],//业态
       cascadeProps: {

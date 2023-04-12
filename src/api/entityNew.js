@@ -7,6 +7,13 @@ export const entityFlow = (params) => {
     params,
   });
 };
+//实体客流分析 （按分钟查询）
+export const entityFlowMin = (params) => {
+  return naxios.request({
+    url: "flow/dimensionTrend",
+    params,
+  });
+};
 //天气趋势
 export const weatherTrend = (params) => {
   return naxios.request({

@@ -43,6 +43,9 @@ export class ParamsConstructor{
     if(this.isHour){
       return 'Hour'
     }else {
+      if(this.params.range){
+        return this.params.range
+      }
       const range1 = gotInnerRange(this.params.date1Array);
       const range2 = gotInnerRange(this.params.date2Array);
       if(range1 === '1month' || range2 === '1month'){
