@@ -1,28 +1,43 @@
 <template>
-	<modal ref="modal"  :loading="true" :title="$t(msgTitle)" @onOk="handleSubmit" @onCancel="closeEdit">
+	<modal ref="modal" :width="600"  :title="$t(msgTitle)" @onOk="handleSubmit" @onCancel="closeEdit">
 		<Form class="edit-form" ref="formInline" :model="datas" :rules="ruleInline"
 					:label-width="80">
 			<FormItem prop="name" :label="$t('名称')">
 				<Input v-model="datas.name"></Input>
 			</FormItem>
-			<FormItem prop="begin" :label="$t('开始日期')">
-				<DatePicker v-model="datas.begin" format="yyyy-MM-dd" :editable="false" type="date"
-										:placeholder="$t('holder.选择日期')" @on-change="beginDateDidChange"></DatePicker>
+			<FormItem prop="date" label="活动日期">
+				<DatePicker  style="width: 100%" :value="datas.date" format="yyyy-MM-dd" :editable="false" type="daterange"
+										:placeholder="$t('holder.选择日期')" @on-change="dateDidChange"></DatePicker>
 			</FormItem>
-			<FormItem prop="end" :label="$t('结束日期')">
-				<DatePicker v-model="datas.end" format="yyyy-MM-dd" type="date" :editable="false"
-										:placeholder="$t('holder.选择日期')" @on-change="endDateDidChange"></DatePicker>
-			</FormItem>
-			<FormItem prop="property" :label="$t('活动归属')" class="belongs" v-show="showBelong">
-				<Select v-model="datas.property">
+<!--			<FormItem prop="end" :label="$t('结束日期')">-->
+<!--				<DatePicker v-model="datas.end" format="yyyy-MM-dd" type="date" :editable="false"-->
+<!--										:placeholder="$t('holder.选择日期')" @on-change="endDateDidChange"></DatePicker>-->
+<!--			</FormItem>-->
+			<FormItem prop="property_id" :label="$t('活动归属')" class="belongs" :disabled="isUpdate" v-show="showBelong">
+				<Select v-model="datas.property_id">
 					<Option v-for="item in propertyList" :value="item.value" :key="item.value">{{item.label}}</Option>
 				</Select>
 			</FormItem>
-			<FormItem prop="target_enter" :label="$t('目标客流')">
-				<Input v-model="datas.target_enter" type="number"></Input>
+			<FormItem :label="$t('目标客流')">
+				<RadioGroup v-model="targetType" @on-change="targetTypeChange">
+					<Radio label="总目标"  :disabled="!datas.date.length"></Radio>
+					<Radio label="每日目标"  :disabled="!datas.date.length"></Radio>
+				</RadioGroup>
+			</FormItem>
+			<FormItem prop="target_total" style="margin-top: -20px" :label-width="80" v-show="targetType==='总目标'">
+				<Input v-model="datas.target_total" type="number"></Input>
+			</FormItem>
+			<FormItem prop="target_day" style="margin-top: -30px" :label-width="80" v-show="targetType==='每日目标'">
+				<div class="flex-wrap box">
+					<FormItem :prop="`target_daily_${i}`" :label-width="0" class="inner-input" v-for="(date,i) in dateList">
+						<Input type="number" v-model="datas[`target_daily_${i}`]">
+							<span slot="prepend">{{date}}</span>
+						</Input>
+					</FormItem>
+				</div>
 			</FormItem>
 			<FormItem prop="description" :label="$t('描述')">
-				<Input type="textarea" v-model="datas.description"></Input>
+				<Input type="textarea" :maxlength="50" v-model="datas.description"></Input>
 			</FormItem>
 		</Form>
 	</modal>
@@ -30,7 +45,7 @@
 
 <script>
   import Modal from '_c/common/Modal.vue'
-  import { validName, validRemark } from '@/libs/util'
+  import { validName } from '@/libs/util'
   import { addActiveDays, updateActiveDays } from '@/api/manager.js'
   import moment from 'moment'
 
@@ -41,6 +56,29 @@
     },
     components: {
       Modal
+    },
+		
+    computed: {
+      ruleInline () {
+        let rules = {
+          name: [{ required: true, validator: validName, trigger: 'blur' }],
+          date: [{ required: true, message:'请选择活动日期',trigger: 'change',type:'array' }],
+          property_id: [{ required: true, message:'请选择活动归属', trigger: 'change',type:'number' }],
+          target_total: [{ required: true, trigger: 'blur',message:'请填写客流总目标',}],
+        }
+        if (this.targetType === '总目标') {
+          return rules
+        } else {
+          let ruleCopy = _.cloneDeep(rules);
+          ruleCopy.target_total[0].required = false;
+         	const days = moment(this.datas.date[1]).diff(this.datas.date[0], 'day')
+					for (let i = 0;i<=days;i++){
+					  ruleCopy[`target_daily_${i}`] = [{ required: true, trigger: 'blur',message:'请填写' }]
+					}
+          return ruleCopy
+        }
+      },
+
     },
     created () {
       let propertyList = []
@@ -71,69 +109,40 @@
       this.propertyList = propertyList
     },
     data () {
-      const validateProperty = (rule, value, callback) => {
-        if (value === undefined || value === '') {
-          callback(new Error(this.$t('holder.请选择')))
-        } else {
-          callback()
-        }
-      }
-      const validate = (rule, value, callback) => {
-        if (value === undefined || value === '' || value === 'NaN-NaN-NaN') {
-          callback(new Error(this.$t('holder.请选择')))
-        } else {
-          callback()
-        }
-      }
+
       return {
         propertyList: [],
         isUpdate: false,
         msgTitle: '添加活动',
         showBelong: false,
+        targetType: '总目标',
+        value1: 1,
+        dateList: [],
         datas: {
           name: '',
-          begin: '',
-          end: '',
-          target_enter: '',
+          date:[],
+
+          target_total: '',
           description: '',
-          property: ''
+          property_id: ''
         },
-        ruleInline: {
-          name: [{ required: true, validator: validName, trigger: 'blur' }],
-          begin: [{ required: true, validator: validate, trigger: 'change' }],
-          end: [{ required: true, validator: this.validateEndTime, trigger: 'change' }],
-          property: [{ required: true, validator: validateProperty, trigger: 'change' }],
-          description: [
-            { required: false, validator: validRemark, trigger: 'blur' }
-          ]
-        }
       }
     },
     methods: {
-      validateEndTime (rule, value, callback) {
-        if (value === '') {
-          callback(new Error(this.$t('请选择结束时间')))
-        } else if (moment(value).isBefore(this.datas.begin)) {
-          callback(new Error(this.$t('结束时间应晚于开始时间')))
-        } else {
-          callback()
-        }
-      },
-      formatDate (date) {
-        var nDate = new Date(date)
-        var year = nDate.getFullYear()
-        var month = Number(nDate.getMonth() + 1) >= 10 ? (nDate.getMonth() + 1) : '0' + (nDate.getMonth() + 1)
-        var day = Number(nDate.getDate()) >= 10 ? nDate.getDate() : '0' + (nDate.getDate())
-        return year + '-' + month + '-' + day
+      targetTypeChange(value){
+				if(value === '每日目标'){
+				  const startDate = this.datas.date[0]
+          const days = moment(this.datas.date[1]).diff(startDate, 'day')
+					this.dateList = [];
+          for(let i = 0;i<=days;i++){
+            const date = moment(startDate).add(i,'days').format('MM-DD')
+						this.dateList.push(date)
+						this.$set(this.datas,`target_daily_${i}`,'')
+					}
+				}
       },
       handleSubmit () {
-        var beginString = this.formatDate(this.datas.begin)
-        beginString = beginString.indexOf('NaN') > -1 ? '' : beginString
-        this.datas.begin = beginString
-        var endString = this.formatDate(this.datas.end)
-        endString = endString.indexOf('NaN') > -1 ? '' : endString
-        this.datas.end = endString
-        this.$refs.modal.loading = true
+        console.log(this.datas)
         this.$refs.formInline.validate((valid) => {
           if (valid) {
             this.mok(this.datas)
@@ -142,49 +151,106 @@
           }
         })
       },
-      endDateDidChange (fdate, pdate) {
-        this.datas.end = fdate
-      },
-      beginDateDidChange (fdate, pdate) {
-        this.datas.begin = fdate
-      },
+      dateDidChange(date){
+        this.datas.date = date
+				if(this.targetType === '每日目标'){
+          this.targetTypeChange(this.targetType)
+				}
+			
+			},
       closeEdit () {
-        this.$refs.formInline.resetFields()
-        this.$refs.modal.closeModal()
+        this.targetType = '总目标'
+				this.$nextTick(()=>{
+          this.$refs.formInline.resetFields()
+          this.$refs.modal.closeModal()
+
+        })
       },
       mok (row) {
-        var toBeEdit = row
-        toBeEdit.end = toBeEdit.end + ' 23:59:59'
-        toBeEdit.property_id = toBeEdit.property
-        if (this.isUpdate) {
-          updateActiveDays(toBeEdit).then(res => {
-            if (res.data.message.length > 0) {
-              this.$message.warning(this.$t('活动名称已存在,请修改'))
-              this.$refs.modal.resetOkButton()
-            } else {
-              this.closeEdit()
-              this.$message.success(this.$t('fn.successTo', [this.$t('编辑活动')]))
-              this.$emit('initData', 21, false)
-            }
-          })
+        const data = {
+          ...row,
+          type_id:21,
+          start_date:row.date[0],
+          end_date:row.date[1],
+          target_type:this.targetType === '总目标'?1:2
         }
-        if (!this.isUpdate) {
-          var toBeEdit = _.cloneDeep(this.datas)
-          toBeEdit.property_id = toBeEdit.property
-          toBeEdit.type_id = 21
-          toBeEdit.date = this.selectyear
-          addActiveDays(toBeEdit).then(res => {
-            if (res.data.message.length > 0) {
-              this.$message.warning(this.$t('活动名称已存在,请修改'))
-              this.$refs.modal.resetOkButton()
-            } else {
-              this.closeEdit()
-              this.$message.success(this.$t('fn.successTo', [this.$t('添加活动')]))
-              this.$emit('initData', 21, false)
-            }
+        if(this.targetType === '总目标'){
+          data.target_enter = row.target_total
+          data.target_type = 1
+				}else {
+          data.target_type = 2;
+          data.target_enter = []
+          for(let key in row){
+            if(key.indexOf('target_daily_')>-1){
+              data.target_enter.push(row[key])
+						}
+					}
+          data.target_enter = data.target_enter.toString()
+				}
+        console.log(data)
+        if (this.isUpdate){
+          updateActiveDays(data,data.id).then(res=>{
+            console.log(res)
+            this.closeEdit()
+            this.$emit('refresh')
+            this.$refs.modal.resetOkButton()
+          }).catch(err=>{
+            console.log(err)
+            this.$refs.modal.resetOkButton()
+					})
+				}else {
+          addActiveDays(data).then(res=>{
+            console.log(res)
+            this.closeEdit()
+            this.$emit('refresh')
+            this.$refs.modal.resetOkButton()
+          }).catch(err=>{
+            console.log(err)
+            this.$refs.modal.resetOkButton()
           })
-        }
+				}
+        // var toBeEdit = row
+        // toBeEdit.end = toBeEdit.end + ' 23:59:59'
+        // toBeEdit.property_id = toBeEdit.property
+        // if (this.isUpdate) {
+        //   updateActiveDays(toBeEdit).then(res => {
+        //     if (res.data.message.length > 0) {
+        //       this.$message.warning(this.$t('活动名称已存在,请修改'))
+        //       this.$refs.modal.resetOkButton()
+        //     } else {
+        //       this.closeEdit()
+        //       this.$message.success(this.$t('fn.successTo', [this.$t('编辑活动')]))
+        //       this.$emit('refresh', 21, false)
+        //     }
+        //   })
+        // }
+        // if (!this.isUpdate) {
+        //   var toBeEdit = _.cloneDeep(this.datas)
+        //   toBeEdit.property_id = toBeEdit.property
+        //   toBeEdit.type_id = 21
+        //   toBeEdit.date = this.selectyear
+        //   addActiveDays(toBeEdit).then(res => {
+        //     if (res.data.message.length > 0) {
+        //       this.$message.warning(this.$t('活动名称已存在,请修改'))
+        //       this.$refs.modal.resetOkButton()
+        //     } else {
+        //       this.closeEdit()
+        //       this.$message.success(this.$t('fn.successTo', [this.$t('添加活动')]))
+        //       this.$emit('initData', 21, false)
+        //     }
+        //   })
+        // }
       }
     }
   }
 </script>
+<style>
+	.inner-input {
+		width: 30%;
+		margin: 22px 5px;
+	}
+	.box{
+		max-height: 300px;
+		overflow-y: scroll;
+	}
+</style>

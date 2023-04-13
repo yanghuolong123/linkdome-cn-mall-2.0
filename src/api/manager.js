@@ -1,6 +1,6 @@
 import axios from '@/libs/api.request'
 var userApi = '/mananger/user'
-var activeApi = '/mananger/active'
+var activeApi = '/activity'
 var fetchCompanyApi = '/mananger/company'
 var groupApi = '/mananger/organization'
 var entityManagerApi = '/mananger/businesstree'
@@ -59,15 +59,11 @@ export const deleteUserData = userId => {
 // active manager
 // 20 holiday 21 active
 
-export const getActiveDays = (year, type, propertyId) => {
+export const getActiveDays = (params) => {
   return axios.request({
     url: activeApi,
     method: 'get',
-    params: {
-      date: year,
-      type_id: type,
-      property_id: propertyId
-    }
+    params
   })
 }
 
@@ -79,12 +75,11 @@ export const addActiveDays = event => {
     data: event
   })
 }
-export const updateActiveDays = event => {
+export const updateActiveDays = (data,id) => {
   return axios.request({
-    url: activeApi,
+    url: activeApi+`/${id}`,
     method: 'put',
-
-    params: event
+    data
   })
 }
 
@@ -92,7 +87,6 @@ export const deleteActiveDays = eventId => {
   return axios.request({
     url: activeApi,
     method: 'delete',
-
     params: {
       id: eventId
     }

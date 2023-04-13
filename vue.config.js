@@ -103,6 +103,7 @@ module.exports = {
     // proxy: 'https://shopmall.linkdome.cn/api/v1'
     proxy: 'http://192.168.3.130:7013/api/v1'
 
+
     // proxy: 'https://sale_mall_dev.linkdome.cn/api/v1'
     // proxy: 'https://peacebird_v4.linkdome.cn/api/v1'
     // proxy: 'https://ai_mall_dev.linkdome.cn/api/v1'

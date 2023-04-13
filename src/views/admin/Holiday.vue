@@ -10,90 +10,151 @@
         />
       </vs-select>
     </div>
-    <div class="holidayTable">
-      <TableMultipleSelected
-        class="tables"
-        :titleName="$t(titleName)"
-        :tableName="$t(tableName)"
-        :tableList="showHolidays"
-      >
-      </TableMultipleSelected>
+    <div class="common-card">
+      <div class="title ">节假日活动管理</div>
+      <Table
+        class="m-t-20"
+        stripe
+        :height="280"
+        :columns="holidayColumn"
+        :data="holidayData"
+      ></Table>
       <div class="paginations">
-        <vs-pagination
-          :total="holidayTotal"
-          v-model="currentx"
-          goto
-        ></vs-pagination>
+        <Page :page-size="5" :model-value="holidayPage" :total="holidayTotal" show-elevator @on-change="(page)=>{getHolidays(page)}" />
       </div>
     </div>
-    <div class="holidayTable">
-      <div class="account-add-remove">
+    <div class="common-card m-t-20">
+      <div class="flex-between">
+        <div class="title">活动管理</div>
+        <div class="account-add-remove flex-center">
         <span class="account-add" @click="addData" :title="$t('添加')">
           <Icon type="md-add" />
         </span>
-        <span class="account-add" :title="$t('删除')" @click="deleteMultiple">
+          <span class="account-add" :title="$t('删除')" @click="deleteMultiple">
           <Icon type="md-remove" />
         </span>
+        </div>
       </div>
-      <TableMultipleSelected
-        class="tables"
-        @tableData="tableData"
-        @removeData="removeData"
-        @tableSelect="tableSelect"
-        :isMultiple="true"
-        :titleName="$t(titleName2)"
-        :tableName="$t(tableName2)"
-        :tableList="showEvents"
+      <Table
+        stripe
+        class="m-t-20"
+        :height="280"
+        @on-select="handleSelect"
+        @on-select-cancel="handleSelectCancel"
+        :columns="activityColumn"
+        :data="activityData"
       >
-      </TableMultipleSelected>
+        <template slot-scope="{ row }" slot="operate">
+          <div class="flex-center">
+              <span v-if="userLvl=='common_admin'||userLvl=='admin'" class="icons" :title="$t('编辑')"
+                    @click="editClick(row)">
+            <vs-icon icon="ivu-icon-md-create" icon-pack='ivu-icon'></vs-icon>
+          </span>
+            <span v-if="userLvl=='admin' " class="icons" :title="$t('删除')"
+                  @click="removeClick(row)">
+            <Icon type="ios-trash"/>
+          </span>
+          </div>
+        </template>
+      </Table>
+      
       <div class="paginations">
-        <vs-pagination
-          :total="eventTotal"
-          v-model="currentActive"
-          goto
-        ></vs-pagination>
+        <div class="paginations">
+          <Page :page-size="5" :model-value="actPage" :total="activityTotal" show-elevator @on-change="(page)=>{getActives(page)}" />
+        </div>
       </div>
     </div>
-    <holidayEdit ref="editActive" @initData="initData"></holidayEdit>
+    <holidayEdit ref="editActive" @refresh="getActives"></holidayEdit>
   </div>
 </template>
 
 <script>
-import TableMultipleSelected from "@/views/ui-elements/table/TableMultipleSelected.vue";
 import holidayEdit from "@/components/holiday-manage/holiday-edit.vue";
 import { getActiveDays, deleteActiveDays } from "@/api/manager.js";
-
+import {mapState } from 'vuex'
 import { getYearList } from "@/api/operate";
+import moment from 'moment'
 export default {
   components: {
-    TableMultipleSelected,
     holidayEdit,
+  },
+  computed:{
+    ...mapState({
+      propertyId: state => state.home.headerAction,
+      
+    }),
+    userLvl(){
+      let userLvl;
+      let theUser = this.$store.state.user
+      if (theUser.role_id < 3) {
+        userLvl = theUser.role_id == 1 ? 'admin' : 'common_admin'
+      } else {
+        let temp = _.find(this.menulist, ['name', 'Admin']).subpagesList
+        temp = _.find(temp, ['name', 'EntityManage']).id + ''
+        if (theUser.access.indexOf(temp) > -1) {
+          userLvl = 'common_admin'
+        }
+      }
+      return userLvl
+    }
   },
   data() {
     return {
-      titleName: "节假日活动管理",
-      tableName: ["节假日名称", "开始时间", "结束时间", "持续时间"],
-      titleName2: "活动管理",
-      tableName2: [
-        "节假日名称",
-        "活动归属",
-        "目标客流",
-        "开始时间",
-        "结束时间",
-        "持续时间",
-        "操作",
+      holidayColumn:[
+        {
+          key:'name',
+          title:'节假日名称',
+        },{
+          key:'start_date',
+          title:'开始时间',
+        },{
+          key:'end_date',
+          title:'结束时间',
+        },{
+          key:'duration',
+          title:'持续时间',
+        },
       ],
-      showHolidays: [],
-      showEvents: [],
-      holidayAllData: [],
-      eventAllData: [],
+      holidayData:[],
+      holidayTotal:0,
+      holidayPage:1,
+  
+  
+      actPage:1,
+      activityTotal:0,
+      activityData:[],
+      activityColumn:[
+        {
+          type: 'selection',
+          width: 60,
+          align: 'center'
+        },
+        {
+          key:'name',
+          title:'活动名称',
+        },{
+          key:'property_name',
+          title:'活动归属',
+        },{
+          key:'target_enter',
+          title:'目标客流',
+        },{
+          key:'start_date',
+          title:'开始时间',
+        },{
+          key:'end_date',
+          title:'结束时间',
+        },{
+          key:'duration',
+          title:'持续时间',
+        },{
+          slot:'operate',
+          title:'操作',
+        },
+      ],
+      
       selectYear: new Date().getFullYear(),
-      holidayTotal: 1,
-      eventTotal: 1,
-      currentx: 1,
-      currentActive: 1,
       years: [],
-      id: "",
       currentPropertyId: "",
       selected: [],
     };
@@ -102,34 +163,15 @@ export default {
     "$store.state.home.headerAction"() {
       // 监听是否切换购物中心
       this.currentPropertyId = this.$store.state.home.headerAction;
-      this.initData(21, true); // 刷新节假日活动数据
+      this.getActives()
     },
-    currentx(val) {
-      // 监听节假日表格页码
-      var data = _.cloneDeep(this.holidayAllData);
-      this.showHolidays = data.splice((this.currentx - 1) * 5, 5);
-      this.$nextTick(() => {
-        document.getElementsByClassName(
-          "vs-pagination--input-goto"
-        )[1].value = val;
-      });
-    },
-    currentActive(val) {
-      // 监听活动表格页码
-      var data = _.cloneDeep(this.eventAllData);
-      this.showEvents = data.splice((this.currentActive - 1) * 5, 5);
-      this.$nextTick(() => {
-        document.getElementsByClassName(
-          "vs-pagination--input-goto"
-        )[2].value = val;
-      });
-    },
+
     selectYear: {
       // 切换年份
       handler(newVal, oldVal) {
         if (newVal) {
-          this.initData(20, true);
-          this.initData(21, true);
+          this.getHolidays()
+          this.getActives()
         }
       },
       immediate: false,
@@ -142,24 +184,16 @@ export default {
         return (val = { key: val, value: val });
       });
     });
-    this.initData(20, true);
-    this.initData(21, true);
+    this.getHolidays()
+    this.getActives()
   },
   methods: {
     // 新增活动
     addData() {
       this.$refs.editActive.$refs.modal.showModal();
-      var data = {
-        name: "",
-        begin: "",
-        end: "",
-        description: "",
-      };
       var that = this;
       var checklist = that.$store.state.user.checklist;
       this.$nextTick(() => {
-        that.$refs.editActive.isAlert = false;
-        that.$refs.editActive.datas = data;
         that.$refs.editActive.isUpdate = false;
         that.$refs.editActive.msgTitle = this.$t("添加活动");
 
@@ -175,41 +209,6 @@ export default {
         }
       });
     },
-    tableData(value) {
-      this.$refs.editActive.$refs.modal.showModal();
-      var that = this;
-      var checklist = that.$store.state.user.checklist;
-      this.$nextTick(() => {
-        that.$refs.editActive.isAlert = false;
-        that.$refs.editActive.datas = _.cloneDeep(value.data);
-        that.$refs.editActive.datas.property =
-          that.$refs.editActive.datas.property_id;
-        that.$refs.editActive.isUpdate = true;
-        that.$refs.editActive.msgTitle = this.$t("编辑活动");
-
-        if (that.$store.state.user.role_id < 3) {
-          that.$refs.editActive.showBelong = true;
-        } else {
-          that.$refs.editActive.showBelong = checklist.length > 1;
-        }
-      });
-    },
-    removeData(value) {
-      this.$alert({
-        content: this.$t("确认删除此活动信息？"),
-        cancel() {},
-        confirm: () => {
-          deleteActiveDays(value.data.id).then((res) => {
-            if (res.data.code === 200) {
-              this.$message.success(this.$t("删除成功"));
-              this.initData(21, false);
-            } else {
-              this.$alert({ content: res.data.message });
-            }
-          });
-        },
-      });
-    },
     tableSelect(value) {
       this.selected = value;
     },
@@ -223,96 +222,117 @@ export default {
           content: this.$t("确定要删除所选中的活动管理？"),
           cancel() {},
           confirm: () => {
-            let curLe = this.selected.length;
-            this.selected.forEach((list) => {
-              deleteActiveDays(list.id).then((res) => {
-                this.selected.splice(0, this.selected.length);
-                curLe--;
-                if (curLe == 0) {
-                  this.$message.success(this.$t("删除成功"));
-                  this.initData(21, false);
-                }
-              });
+            const ids = this.selected.map(o=>{
+              return o.id
+            })
+            deleteActiveDays(ids.toString()).then((res) => {
+              this.getActives(1)
             });
           },
         });
       }
     },
-    initData(type, isInit) {
-      var that = this;
-      if (type === 20) {
-        getActiveDays(this.selectYear, 20)
-          .then((res) => {
-            this.loading = false;
-            let data = res.data.data;
-            this.holidayAllData = _.cloneDeep(data);
-            data.forEach((e) => {
-              const day =
-                this.$i18n.locale === "zh-CN"
-                  ? "天"
-                  : e.duration > 1
-                  ? " days"
-                  : " day";
-              e.duration = String(e.duration) + day;
-            });
-            this.holidayTotal = Math.ceil(data.length / 5);
-            this.holidays = _.clone(data);
-            if (isInit) {
-              this.showHolidays = data.splice(0, 5);
-              this.currentx = 1;
-            } else {
-              this.showHolidays = data.splice((this.currentx - 1) * 5, 5);
-            }
-          })
-          .catch((err) => {
-            this.showHolidays = [];
-            this.holidayTotal = 1;
-          });
-      } else if (type === 21) {
-        // 查询所有购物中心的活动
-        let list = [];
-        // 0是集团
-        getActiveDays(that.selectYear, 21, 0)
-          .then((res) => {
-            res = res.data.data;
-            res.forEach((b) => {
-              b.operation = true;
-              const day =
-                this.$i18n.locale === "zh-CN"
-                  ? "天"
-                  : b.duration > 1
-                  ? " days"
-                  : " day";
-              b.duration = String(b.duration) + day;
-              b.enterGoal = b.property_name || " ";
-              if (b.target_enter == 0) {
-                b.saleGoal = 0;
-              } else {
-                b.saleGoal = b.target_enter || " ";
-              }
-              list.push(b);
-            });
-            this.eventAllData = _.cloneDeep(list);
-            this.eventTotal = Math.ceil(this.eventAllData.length / 5);
-            if (isInit) {
-              this.showEvents = list.splice(0, 5);
-              this.currentActive = 1;
-            } else {
-              this.showEvents = list.splice((this.currentActive - 1) * 5, 5);
-              if (
-                this.eventAllData.length > 0 &&
-                this.showEvents.length === 0
-              ) {
-                this.currentActive--;
-                this.showEvents = list.splice((this.currentActive - 1) * 5, 5);
-              }
-            }
-          })
-          .catch((err) => {
-            that.showEvents = [];
-            that.eventTotal = 1;
-          });
+    getHolidays(page = this.holidayPage){
+      this.holidayPage = page
+      const params = {
+        type_id:20,
+        year:this.selectYear,
+        limit:5,
+        page:this.holidayPage
       }
+      getActiveDays(params).then(res=>{
+        this.holidayTotal = res.data.data.total;
+        let list = res.data.data.list || [];
+        list.forEach(o=>{
+          const day =
+            this.$i18n.locale === "zh-CN"
+              ? "天"
+              : e.duration > 1
+              ? " days"
+              : " day";
+          const duration = moment(o.end_date).diff(moment(o.start_date),'days')
+          this.$set(o,'duration',String(duration+1)+day)
+        })
+        this.holidayData = list
+      })
+    },
+    
+    getActives(page = this.actPage){
+      this.actPage = page;
+      const params = {
+        type_id:21,
+        year:this.selectYear,
+        limit:5,
+        page:this.actPage,
+        property_id:this.propertyId
+      }
+      getActiveDays(params).then(res=>{
+        this.activityTotal = res.data.data.total;
+        let list = res.data.data.list || [];
+        list.forEach(o=>{
+          const day =
+            this.$i18n.locale === "zh-CN"
+              ? "天"
+              : e.duration > 1
+              ? " days"
+              : " day";
+          const duration = moment(o.end_date).diff(moment(o.start_date),'days')
+          this.$set(o,'duration',String(duration+1)+day)
+        })
+        this.activityData = list
+      })
+    },
+    handleSelectCancel(value){
+      this.selected = value
+    },
+    handleSelect(value){
+      this.selected = value
+    },
+    removeClick(data){
+      this.$alert({
+        content: this.$t("确认删除此活动信息？"),
+        cancel() {},
+        confirm: () => {
+          deleteActiveDays(data.id).then((res) => {
+            if (res.data.code === 200) {
+              this.$message.success(this.$t("删除成功"));
+              this.getActives(1)
+            } else {
+              this.$alert({ content: res.data.message });
+            }
+          });
+        },
+      });
+    },
+    editClick(data){
+      let row = _.cloneDeep(data)
+      this.$refs.editActive.$refs.modal.showModal();
+      var that = this;
+      var checklist = that.$store.state.user.checklist;
+      this.$nextTick(() => {
+        row.date = [row.start_date,row.end_date]
+        that.$refs.editActive.datas = row
+        if(row.target_type === 2 ){
+          this.$set(this.$refs.editActive,'targetType','每日目标')
+          this.$refs.editActive.targetTypeChange('每日目标')
+          row.target_enter = row.target_enter.split(',')
+          row.target_enter.forEach((o,i)=>{
+            this.$set(row,`target_daily_${i}`,o)
+          })
+        }else {
+          this.$refs.editActive.targetType = '总目标'
+          row.target_total = (row.target_enter)
+        }
+        that.$refs.editActive.datas = row
+        that.$refs.editActive.isUpdate = true;
+        that.$refs.editActive.msgTitle = this.$t("编辑活动");
+    
+        if (that.$store.state.user.role_id < 3) {
+          that.$refs.editActive.showBelong = true;
+        } else {
+          that.$refs.editActive.showBelong = checklist.length > 1;
+        }
+      });
     },
   },
 };
@@ -342,22 +362,16 @@ export default {
   }
 
   .account-add-remove {
-    z-index: 1;
-    position: absolute;
-    top: 5px;
-    right: 20px;
+
 
     .account-add {
-      margin-top: 16px !important;
+      /*margin-top: 16px !important;*/
     }
 
     span {
-      float: left;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       width: 24px;
       height: 24px;
+      line-height: 24px;
       border-radius: 50%;
       text-align: center;
       font-size: 16px;
@@ -377,31 +391,22 @@ export default {
     }
   }
 
-  .holidayTable {
-    position: relative;
-    background-color: #fff;
-    border-radius: 6px;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
+  .title{
+    font-size: 18px;
   }
-
   .paginations {
-    position: relative;
-    bottom: 6px;
-    margin-top: 20px;
+    text-align: center;
+    padding-top: 20px;
   }
-
-  .router-view {
-    padding-bottom: 0px;
+  .icons{
+    font-size: 20px;
+    &:hover{
+      color: #00a0e9;
+      cursor: pointer;
+    }
   }
-
-  .ivu-form-item-error-tip {
-    position: absolute;
-    top: 95%;
-    left: 0;
-    line-height: 1;
-    padding-top: 0px;
-    color: #ed4014;
+  .icons+.icons{
+    margin-left: 10px;
   }
 }
 </style>
