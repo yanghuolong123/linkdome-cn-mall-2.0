@@ -15,7 +15,7 @@
 						   :dType="2"
 						   :value='queryParams.date2Array'
 						   @selectDate="dateSelect"></i-date-picker>
-			<Select v-model="queryParams.range" placeholder="查询粒度" class="w-select m-l-20" v-if="isSingleDay">
+			<Select v-model="queryParams.range" placeholder="查询粒度" class="w-select m-l-20" v-if="isSingleDay && headerData.show_counting_demension">
 				<Option v-for="item in rangeList"
 								:value="item.value"
 								:key="item.value">{{ item.label }}
@@ -100,7 +100,7 @@
   import { getBussinessDict } from '@/api/home'
   import Moment from 'moment'
   import { deepTraversal,findParentNodes } from '../../libs/util'
-
+	import {mapState} from 'vuex'
   export default {
     name: 'flowSelector',
     mixins: [selectMixin],
@@ -128,6 +128,9 @@
       }
     },
     computed: {
+      ...mapState({
+        headerData:state => state.home.headerData,
+      }),
       typeOptionsCom() {
         this.typeOptions.splice(2, 0, {
           value: 'businessType',

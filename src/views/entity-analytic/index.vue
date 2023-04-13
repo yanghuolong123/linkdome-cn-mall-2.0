@@ -153,6 +153,7 @@
     computed: {
       ...mapState({
         propertyId: state => state.home.headerAction,
+        headerData:state => state.home.headerData,
       }),
 			//是否按分钟查询
 			isMin(){

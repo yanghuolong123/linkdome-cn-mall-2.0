@@ -228,6 +228,7 @@ export default {
               img: list.map_url,
               show_actual_val:list.show_actual_val,
               show_add_count:list.show_add_count,
+              show_counting_demension:list.show_counting_demension,
             };
             this.comprotList.push(l);
           }
