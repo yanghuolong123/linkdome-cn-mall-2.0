@@ -223,7 +223,7 @@ export default {
           list.value = d.id
           list.key = d.name
           list.time = d.begin + ',' + d.end
-          list.enter = d.target_enter
+          list.enter = d.target_enter&&d.target_enter.split(',')
           list.action = false
           that.activityList.push(list)
         })
@@ -338,7 +338,12 @@ export default {
         data.map(function (value, index) {
           var time = moment(value.begin).format('YYYY-MM-DD')
           xAxis.push(time)
-          goal.push(goalData)
+          // goal = goal.concat(goalData)
+          if(goalData.length>1){
+            goal.push(goalData[index])
+          }else {
+            goal.push(goalData[0])
+          }
         })
         addUpArr = this.cumsumArr(reallyValue)
       }
@@ -380,7 +385,13 @@ export default {
           barData1.push(reallyValue[index])
           let begin = reallyValue[index] ? (reallyValue[index].toLocaleString()  ) : ' '
           obj.begin = begin
-          var num = (sele.enter / data.length).toFixed(0)
+          var num;
+          if(sele.enter.length>1){
+            num = (sele.enter[index] / data.length).toFixed(0)
+          }else {
+            num = (sele.enter[0] / data.length).toFixed(0)
+          }
+          
           barData2.push(num)
           var end = Number(num).toLocaleString()
           obj.end = end
@@ -414,7 +425,7 @@ export default {
     cumsumArr (arr) {
       let tml = []
       arr.forEach((e, index) => {
-        if (e === undefined || e === 0 || e === null) tml.push(null)
+        if (e === undefined || e === 0 || e === null) tml.push(0)
         else tml.push(_.sumBy(_.take(arr, index + 1)))
       })
       return tml
