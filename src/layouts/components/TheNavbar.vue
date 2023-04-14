@@ -294,7 +294,7 @@ export default {
   computed: {
     // 不是后台管理
     isnotBgmange() {
-      const bgMangeList = ["EntityManage", "HolidayManage", "Account", "Role"];
+      const bgMangeList = ["EntityManage", "HolidayManage", "Account", "Role","Cache"];
       return !bgMangeList.includes(this.$route.name);
     },
     roleName() {

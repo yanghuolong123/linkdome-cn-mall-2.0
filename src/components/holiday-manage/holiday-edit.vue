@@ -121,7 +121,6 @@
         datas: {
           name: '',
           date:[],
-
           target_total: '',
           description: '',
           property_id: ''
@@ -142,7 +141,6 @@
 				}
       },
       handleSubmit () {
-        console.log(this.datas)
         this.$refs.formInline.validate((valid) => {
           if (valid) {
             this.mok(this.datas)
@@ -187,59 +185,25 @@
 					}
           data.target_enter = data.target_enter.toString()
 				}
-        console.log(data)
         if (this.isUpdate){
           updateActiveDays(data,data.id).then(res=>{
-            console.log(res)
             this.closeEdit()
             this.$emit('refresh')
+            this.$message.success(this.$t('fn.successTo', [this.$t('编辑活动')]))
             this.$refs.modal.resetOkButton()
           }).catch(err=>{
-            console.log(err)
             this.$refs.modal.resetOkButton()
 					})
 				}else {
           addActiveDays(data).then(res=>{
-            console.log(res)
             this.closeEdit()
+            this.$message.success(this.$t('fn.successTo', [this.$t('添加活动')]))
             this.$emit('refresh')
             this.$refs.modal.resetOkButton()
           }).catch(err=>{
-            console.log(err)
             this.$refs.modal.resetOkButton()
           })
 				}
-        // var toBeEdit = row
-        // toBeEdit.end = toBeEdit.end + ' 23:59:59'
-        // toBeEdit.property_id = toBeEdit.property
-        // if (this.isUpdate) {
-        //   updateActiveDays(toBeEdit).then(res => {
-        //     if (res.data.message.length > 0) {
-        //       this.$message.warning(this.$t('活动名称已存在,请修改'))
-        //       this.$refs.modal.resetOkButton()
-        //     } else {
-        //       this.closeEdit()
-        //       this.$message.success(this.$t('fn.successTo', [this.$t('编辑活动')]))
-        //       this.$emit('refresh', 21, false)
-        //     }
-        //   })
-        // }
-        // if (!this.isUpdate) {
-        //   var toBeEdit = _.cloneDeep(this.datas)
-        //   toBeEdit.property_id = toBeEdit.property
-        //   toBeEdit.type_id = 21
-        //   toBeEdit.date = this.selectyear
-        //   addActiveDays(toBeEdit).then(res => {
-        //     if (res.data.message.length > 0) {
-        //       this.$message.warning(this.$t('活动名称已存在,请修改'))
-        //       this.$refs.modal.resetOkButton()
-        //     } else {
-        //       this.closeEdit()
-        //       this.$message.success(this.$t('fn.successTo', [this.$t('添加活动')]))
-        //       this.$emit('initData', 21, false)
-        //     }
-        //   })
-        // }
       }
     }
   }

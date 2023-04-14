@@ -461,17 +461,27 @@ export default {
     initialApiData() {
       let year = this.selectYear;
       let propertyId = this.$store.state.home.headerAction;
+      const params1 = {
+        type_id:20,
+        year,
+      }
+      const params2 = {
+        type_id:21,
+        year,
+        property_id:propertyId
+      }
       Promise.all([
-        getActiveDays(year, 20),
-        getActiveDays(year, 21, propertyId),
+        getActiveDays(params1),
+        getActiveDays(params2),
       ]).then((res) => {
         // 节假日
         this.holidays = [];
         this.holidayActives1 = [];
         this.holidayActives2 = [];
         this.AllHolidayData = [];
+        console.log(res[0].data)
         if (res[0].data.code == 200) {
-          let data = res[0].data.data;
+          let data = res[0].data.data.list;
           this.holidays.push({ key: "全部节假日活动", value: "" });
           data.map((list) => {
             this.AllHolidayData.push(list);
@@ -494,7 +504,7 @@ export default {
         }
         // 活动
         if (res[1].data.code == 200) {
-          let data = res[1].data.data;
+          let data = res[1].data.data.list;
           data.map((list) => {
             this.AllHolidayData.push(list);
             let obj = {};
@@ -637,8 +647,8 @@ export default {
         });
       } else {
         let holiday = _.find(this.AllHolidayData, { id: this.selectHoliday });
-        let innerRange = gotInnerRange([holiday.begin, holiday.end]);
-        var range = holiday.begin + "," + holiday.end;
+        let innerRange = gotInnerRange([holiday.start_date, holiday.end_date]);
+        var range = holiday.start_date + "," + holiday.end_date;
         var params = {
           type: "enter",
           bzid: bzid,
@@ -652,6 +662,7 @@ export default {
         var xAxis;
         getanalysiseeo(params).then(function(res) {
           if (innerRange == "1h") {
+            console.log(res)
             xAxis = res.data.data.map(function(m) {
               return m.begin.split(" ")[1];
             });
@@ -696,31 +707,30 @@ export default {
       that.columns2 = ["时间"];
       var compare1 = _.find(this.AllHolidayData, { id: this.compareHoliday1 });
       var compare2 = _.find(this.AllHolidayData, { id: this.compareHoliday2 });
-
       if (!compare1 || !compare2) return;
-      var date1 = { begin: compare1.begin, end: compare1.end };
-      var date2 = { begin: compare2.begin, end: compare2.end };
+      var date1 = { start_date: compare1.start_date, end_date: compare1.end_date };
+      var date2 = { start_date: compare2.start_date, end_date: compare2.end_date };
       var params = {
         date1: {
-          begin: date1.begin,
-          end: date1.end,
+          start_date: date1.start_date,
+          end_date: date1.end_date,
         },
         date2: {
-          begin: date2.begin,
-          end: date2.end,
+          start_date: date2.start_date,
+          end_date: date2.end_date,
         },
         type: "enter",
         bzid: this.selectEntity,
       };
       that.columns2.push(
-        Moment(compare1.begin).format("YYYY") +
+        Moment(compare1.start_date).format("YYYY") +
           compare1.name +
           " ( " +
           this.$t("人次") +
           " )"
       );
       that.columns2.push(
-        Moment(compare2.begin).format("YYYY") +
+        Moment(compare2.start_date).format("YYYY") +
           compare2.name +
           " ( " +
           this.$t("人次") +
@@ -734,14 +744,14 @@ export default {
           xaxis.push(this.$t("fn.第_天", [this.$t(index + 1)]));
         });
         var resData1 = [];
-        if (Moment(compare1.begin).isAfter(Moment(new Date()))) {
+        if (Moment(compare1.start_date).isAfter(Moment(new Date()))) {
           resData1 = data.map(function(m, index) {
             return "";
           });
         } else {
           resData1 = data.map(function(m, index) {
-            // if (Moment(m.date1.belong).isBetween(compare1.begin, compare1.end) ||
-            // Moment(m.date1.belong).isSame(compare1.begin) || Moment(m.date1.belong).isSame(compare1.end)) {
+            // if (Moment(m.date1.belong).isBetween(compare1.start_date, compare1.end_date) ||
+            // Moment(m.date1.belong).isSame(compare1.start_date) || Moment(m.date1.belong).isSame(compare1.end_date)) {
             //   if (!m.date1.enter) return 0
             //   else return m.date1.enter
             // }
@@ -750,14 +760,14 @@ export default {
           });
         }
         var resData2 = [];
-        if (Moment(compare2.begin).isAfter(Moment(new Date()))) {
+        if (Moment(compare2.start_date).isAfter(Moment(new Date()))) {
           resData2 = data.map(function(m, index) {
             return "";
           });
         } else {
           resData2 = data.map(function(m) {
-            // if (Moment(m.date2.belong).isBetween(compare2.begin, compare2.end) ||
-            // Moment(m.date2.belong).isSame(compare2.begin) || Moment(m.date2.belong).isSame(compare2.end)) {
+            // if (Moment(m.date2.belong).isBetween(compare2.start_date, compare2.end_date) ||
+            // Moment(m.date2.belong).isSame(compare2.start_date) || Moment(m.date2.belong).isSame(compare2.end_date)) {
             //   if (!m.date2.enter) return 0
             //   else return m.date2.enter
             // }
@@ -766,10 +776,10 @@ export default {
           });
         }
         var series2 = [{ name: "", data: [] }, { name: "", data: [] }];
-        series2[0].name = Moment(compare1.begin).format("YYYY") + compare1.name;
+        series2[0].name = Moment(compare1.start_date).format("YYYY") + compare1.name;
         series2[0].smooth = true;
         series2[0].data = resData1;
-        series2[1].name = Moment(compare2.begin).format("YYYY") + compare2.name;
+        series2[1].name = Moment(compare2.start_date).format("YYYY") + compare2.name;
         series2[1].smooth = true;
         series2[1].data = resData2;
         that.series2 = series2;
@@ -783,6 +793,7 @@ export default {
         options2.plotOptions.bar.columnWidth = columnWidth;
         that.options2 = options2;
         var tableList2 = [];
+        console.log(resData1)
         resData1.forEach(function(m, index) {
           var obj = {};
           obj.name = xaxis[index] ? xaxis[index] : " ";
