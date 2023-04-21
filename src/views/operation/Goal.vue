@@ -124,27 +124,10 @@ export default {
     this.checkTargetData()
     this.options1 = _.cloneDeep(options0)
     this.marketOptions1 = _.cloneDeep(options0)
-    // this.marketOptions1.tooltip.y = {
-    //   formatter: function (val) {
-    //     console.log(val);
-    //     if (val == undefined || val == null || val == '') {
-    //       return ''
-    //     } else {
-    //       return val.toLocaleString() + '元'
-    //     }
-    //   }
-    // }
+
     this.options2 = _.cloneDeep(options2)
     this.marketOptions2 = _.cloneDeep(options2)
-    // this.marketOptions2.tooltip.y = {
-    //   formatter: function (val) {
-    //     if (val == undefined || val == null || val == '') {
-    //       return ''
-    //     } else {
-    //       return val.toLocaleString() + '元'
-    //     }
-    //   }
-    // }
+
   },
   watch: {
     '$store.state.home.headerAction' () {
@@ -214,7 +197,7 @@ export default {
         var obj = {}
         obj.value = '1'
         obj.key = this.$t('客流量趋势')
-        obj.time = `${this.goalDate}-01-01` + ',' + `${this.goalDate}-12-31`
+        obj.time = `${this.goalDate}-01-01,${this.goalDate}-12-31`
         obj.action = true
         that.activityList.push(obj)
         var data = res.data.data
@@ -275,9 +258,9 @@ export default {
       var that = this
       postEntitysCompare({
         type: 'enter',
-        range: range,
+        range,
         bzid: id,
-        innerRange: innerRange
+        innerRange,
       }).then(res => {
         that.handleRes(res.data.data)
       }).catch(err => {
@@ -334,18 +317,20 @@ export default {
           i++
         }
       } else {
-        var goalData = sele.enter
+        var goalData = sele.enter.map(o=>{
+          return Number(o)
+				})
         data.map(function (value, index) {
           var time = moment(value.begin).format('YYYY-MM-DD')
           xAxis.push(time)
-          // goal = goal.concat(goalData)
           if(goalData.length>1){
-            goal.push(goalData[index])
+
+            goal.push(_.sum(goalData))
           }else {
             goal.push(goalData[0])
           }
         })
-        addUpArr = this.cumsumArr(reallyValue)
+        addUpArr =this.cumsumArr(reallyValue)
       }
       // 线
       this.series1 = [
@@ -387,7 +372,7 @@ export default {
           obj.begin = begin
           var num;
           if(sele.enter.length>1){
-            num = (sele.enter[index] / data.length).toFixed(0)
+            num = sele.enter[index]
           }else {
             num = (sele.enter[0] / data.length).toFixed(0)
           }
@@ -443,8 +428,7 @@ export default {
       })
         .then(res => {
           var dataList = []
-          // this.$vs.loading.close()
-          // this.$store.commit('loadingState', false)
+
           _.forIn(res.data.data, function (value, key) {
             _.forIn(value, function (v, k) {
               var obj = {}

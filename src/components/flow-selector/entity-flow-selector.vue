@@ -15,12 +15,7 @@
 						   :dType="2"
 						   :value='queryParams.date2Array'
 						   @selectDate="dateSelect"></i-date-picker>
-			<Select v-model="queryParams.range" placeholder="查询粒度" class="w-select m-l-20" v-if="isSingleDay && headerData.show_counting_demension">
-				<Option v-for="item in rangeList"
-								:value="item.value"
-								:key="item.value">{{ item.label }}
-				</Option>
-			</Select>
+
 		</div>
 		<div class="flex-center raido-group" v-show="compareType === 'entity'">
 			<vs-radio v-model="entityType" :vs-value="item.value" :key="item.value" v-for="item in entityOptions"
@@ -83,10 +78,10 @@
 						:key="item.id">{{ item.name }}
 				</Option>
 			</Select>
-			<Select v-model="queryParams.enterType" class="w-select m-l-20">
-				<Option v-for="item in customType"
-						:value="item.value"
-						:key="item.value">{{ item.label }}
+			<Select v-model="queryParams.range" placeholder="查询粒度" class="w-select m-l-20" :disabled="!(isSingleDay && !(multiQuta&&multiEntity) &&headerData.show_counting_demension)">
+				<Option v-for="item in rangeList"
+								:value="item.value"
+								:key="item.value">{{ item.label }}
 				</Option>
 			</Select>
 			<Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('查询') }}</Button>
@@ -140,9 +135,35 @@
       },
 			isSingleDay(){
 				return this.queryParams.date1Array[0] === this.queryParams.date1Array[1] && this.queryParams.date2Array[0] === this.queryParams.date2Array[1]
+			},
+			multiEntity(){
+        let flag = false;
+        if(this.compareType === 'entity'){
+          if (this.entityType === 'store'){
+            flag = this.storeCascadeData.length>1
+					}else if (this.entityType === 'gate'){
+            flag = this.gateCascadeData.length>1
+          }else if (this.entityType === 'bussiness'){
+            flag = this.busiCascadeData.length>1
+          }else {
+            flag = this.queryParams.selectList.length>1
+					}
+				}else if(this.compareType === 'businessType'){
+          flag = this.queryParams.bussinessType.length >1
+				}else {
+          flag = this.entityCascaderData.length>1
+				}
+    return flag
 			}
     },
     methods: {
+      resetClick () {
+        const yesterday = Moment(new Date()).add(-1, 'day').format('YYYY-MM-DD')
+        this.queryParams.date1Array = [yesterday,yesterday];
+        this.queryParams.range = 'Hour'
+        this.compareType = 'not';
+        this.setEntityCascaderDataDefaultValue()
+      },
       getBussinessDict () {
         getBussinessDict({ property_id: this.$store.state.home.headerAction }).then(res => {
           res = res.data.data

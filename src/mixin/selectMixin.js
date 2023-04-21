@@ -22,7 +22,12 @@ const selectMixin = {
     maxEntity:{
       type:Boolean,
       default:true
-    }
+    },
+    multiQuta:{
+      type:Boolean,
+      default:false
+    },
+
   },
   data () {
     return {
@@ -378,6 +383,7 @@ const selectMixin = {
       this.$emit('paramsPrepare',this.queryParams)
     },
     resetClick () {
+      console.log(33)
       this.queryParams.date1Array = [yesterday,yesterday];
       this.compareType = 'not';
       this.setEntityCascaderDataDefaultValue()

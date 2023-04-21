@@ -3,6 +3,7 @@
 		<flow-selector
 			:maxEntity="false"
 			ref="flowSelector"
+			:multiQuta="enterSelect.length >1"
 			@paramsPrepare="paramsPrepare"
 		></flow-selector>
 		<chart-box
@@ -62,7 +63,6 @@
 		<div
 			class="common-card m-t-20"
 			ref="enterTable"
-			v-show="enterSelect.length === 1"
 		>
 			<div class="detail-title">{{ $t('fn.detailData', [$t('enter')]) }}</div>
 			<Table
@@ -331,9 +331,7 @@
               this.responseData[o] = res[i].data.data
             })
             this.updateChart('chartEnter')
-            if (this.enterSelect.length < 2) {
               this.enterTable = this.updateTableDetail(this.enterSelect)
-            }
             if (this.showOccu) {
               this.updateChart('chartOccu', ['occupancy'])
               this.occuTable = this.updateTableDetail(['occupancy'])
@@ -346,7 +344,6 @@
       },
       updateLineChart (componentName, quta = this.enterSelect) {
         const lineOpiton = this.getLineOption(quta)
-        console.log(lineOpiton)
         this.$refs[componentName].initLineChart(lineOpiton)
       },
       updateTable (componentName, quta = this.enterSelect) {
@@ -375,7 +372,6 @@
           )
           barOpiton = BarChart.getPostEntitysCompare()
         }
-        console.log(_.cloneDeep(barOpiton))
         this.$refs[componentName].initBarChart(barOpiton)
       },
       updateChart (componentName, quta = this.enterSelect) {
@@ -430,18 +426,16 @@
       },
       //更新表格【客流量,集客量详细数据信息】
       updateTableDetail (quta) {
-        if (!this.oParams || quta.length > 1) {
+        if (!this.oParams ) {
           return {
             columns: [],
             tableData: [],
           }
         }
-        let tableData = []
-        const option = this.getLineOption(quta)
-        const qutaName = findKey(config.dictionary, 'value', quta[0], 'name')
-        const keyName =
-          this.oParams.params.compareType === 'businessType' ? '业态' : '实体'
-        let columns = [
+      
+
+        const keyName = this.oParams.params.compareType === 'businessType' ? '业态' : '实体'
+				let columns = [
           {
             title: `${keyName}名称`,
             key: 'entityName',
@@ -450,13 +444,19 @@
             title: `${keyName}类别`,
             slot: 'entityType',
           },
-          {
-            title: `${qutaName}峰值`,
-            key: 'highest',
-          },
-        ]
+				]
+				quta.forEach(o=>{
+          const qutaName = findKey(config.dictionary, 'value', o, 'name')
+          columns = columns.concat([
+            {
+              title: `${qutaName}峰值`,
+              key: 'highest-'+o,
+            },
+          ])
+				})
+      
         if (this.oParams.params.compareType === 'businessType') {
-          columns.splice(1, 1)
+          columns.splice(1, 1)  //删除实体类别
         }
         if (this.oParams.isDateCompare()) {
           columns.splice(2, 0, {
@@ -465,15 +465,53 @@
           })
         }
         if (!quta.includes('occupancy')) {
-          columns.splice(-1, 0, {
-            title: `累计${qutaName}`,
-            key: 'total',
-          })
+          quta.forEach((o,i)=>{
+            const qutaName = findKey(config.dictionary, 'value', o, 'name')
+            columns.splice((i)-quta.length, 0, {
+              title: `累计${qutaName}`,
+              key: 'total-'+o,
+            })
+					})
+
         }
+        let option,tableData = []
+        if(quta.length>1&&this.oParams.params.entitys.length>1){
+          option = this.getLineOption([quta[0]])
+					quta.forEach(o=>{
+            option = this.getLineOption([o]);
+            tableData = tableData.concat(this.getTableData(quta,option))
+					})
+        }else {
+          option = this.getLineOption(quta)
+          tableData = this.getTableData(quta,option)
+        }
+				
+        if(quta.length > 1){
+          let arr = []
+          tableData.forEach(o=>{
+            let entity = arr.find(a=>{
+							return a&&a.id === o.id
+						})
+            if(entity){
+						  Object.assign(entity,o)
+            }else {
+						  arr.push(o)
+            }
+					})
+          tableData = arr
+        }
+        return {
+          columns,
+          tableData,
+        }
+      },
+			getTableData(quta,option){
+        let tableData = []
         option.legend.data.forEach((d, dIndex) => {
           const data = option.series[dIndex].data
           if (!data.length) return
           const entityName = d.split('|')[0]
+          const qutaType = d.split('|')[1] === '入客流'?'enter':'exit'
           const highestIndex = getMaxIndex(data)
           const total = _.sum(data).toLocaleString() + this.$t('人次')
           let time
@@ -498,31 +536,27 @@
               .format('YYYY-MM-DD')
           }
           if (quta.includes('occupancy')) {
-            tableData.push({
+            let obj = {
               entityName,
               entityType: entityName,
-              highest: `${data[highestIndex].toLocaleString()} ${this.$t(
-                '人次'
-              )} ${highestTime}`,
               time,
-            })
+            }
+            obj[`highest-occupancy`] = `${data[highestIndex].toLocaleString()} ${this.$t('人次')} ${highestTime}`;
+            tableData.push(obj)
           } else {
-            tableData.push({
-              entityName,
+            let obj = {
               entityType: entityName,
-              highest: `${data[highestIndex].toLocaleString()} ${this.$t(
-                '人次'
-              )} ${highestTime}`,
-              total,
+              entityName,
               time,
-            })
+              id:`${entityName}-${time}`
+            }
+            obj[`highest-${qutaType}`] =  `${data[highestIndex].toLocaleString()} ${this.$t('人次')} ${highestTime}`;
+            obj[`total-${qutaType}`] = total
+            tableData.push(obj)
           }
         })
-        return {
-          columns,
-          tableData,
-        }
-      },
+				return tableData
+			},
       getItype (name) {
         const node = deepFind(
           this.$refs.flowSelector.entityCascaderOption,

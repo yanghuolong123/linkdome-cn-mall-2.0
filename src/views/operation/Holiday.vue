@@ -793,7 +793,6 @@ export default {
         options2.plotOptions.bar.columnWidth = columnWidth;
         that.options2 = options2;
         var tableList2 = [];
-        console.log(resData1)
         resData1.forEach(function(m, index) {
           var obj = {};
           obj.name = xaxis[index] ? xaxis[index] : " ";
