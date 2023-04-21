@@ -347,8 +347,8 @@ export default {
           let obj = {}
           obj.name = xAxis[index]
           barData1.push(reallyValue[index])
-          let begin = reallyValue[index] ? (reallyValue[index].toLocaleString() ) : ' '
-          obj.begin = begin
+          let begin = reallyValue[index] ? (reallyValue[index] ) :0
+          obj.enterReal = begin
           var num
 
           if (dataList.is_year == 'year') {
@@ -359,8 +359,8 @@ export default {
             })
           }
           num == null ? barData2.push(0) : barData2.push(num)
-          var end = Number(num).toLocaleString()
-          obj.end = end
+          var end = Number(num)
+          obj.enterTarget = end
           tableData.push(obj)
         })
       } else {
@@ -368,8 +368,8 @@ export default {
           let obj = {}
           obj.name = xAxis[index]
           barData1.push(reallyValue[index])
-          let begin = reallyValue[index] ? (reallyValue[index].toLocaleString()  ) : ' '
-          obj.begin = begin
+          let begin = reallyValue[index] ? reallyValue[index] : 0
+          obj.enterReal = begin
           var num;
           if(sele.enter.length>1){
             num = sele.enter[index]
@@ -378,8 +378,8 @@ export default {
           }
           
           barData2.push(num)
-          var end = Number(num).toLocaleString()
-          obj.end = end
+          var end = Number(num)
+          obj.enterTarget = end
           tableData.push(obj)
         })
       }
@@ -404,6 +404,15 @@ export default {
             optionsBar.plotOptions.bar.columnWidth = '80%'
         }
       this.options2 = optionsBar
+      tableData.push({
+				name:'合计',
+        enterReal:_.sum(tableData.map(o=>{
+          return o.enterReal
+        })),
+        enterTarget:_.sum(tableData.map(o=>{
+          return o.enterTarget
+        })),
+			})
       this.tableData = tableData
     },
     // 数组累加

@@ -83,13 +83,24 @@
 						{{data[indextr].email}}
 					</vs-td>
 					<!-- 开始时间 -->
-					<vs-td :data="data[indextr].begin" v-if="data[indextr].begin">
+					<vs-td :data="data[indextr].begin" v-if="!isEmpty(data[indextr].begin)">
 						{{data[indextr].begin}}
 					</vs-td>
 					<!-- 结束时间 -->
-					<vs-td :data="data[indextr].end" v-if="data[indextr].end">
+					<vs-td :data="data[indextr].end" v-if="!isEmpty(data[indextr].end)">
 						{{data[indextr].end}}
 					</vs-td>
+					
+					
+					<!-- 开始时间 -->
+					<vs-td :data="data[indextr].enterReal" v-if="!isEmpty(data[indextr].enterReal)">
+						{{data[indextr].enterReal.toLocaleString()}}
+					</vs-td>
+					<!-- 结束时间 -->
+					<vs-td :data="data[indextr].enterTarget" v-if="!isEmpty(data[indextr].enterTarget)">
+						{{data[indextr].enterTarget.toLocaleString()}}
+					</vs-td>
+					
 					<!-- 客流 -->
 					<vs-td :data="data[indextr].enter" v-if="data[indextr].enter">
 						{{data[indextr].enter}}
@@ -130,7 +141,7 @@
 </template>
 
 <script>
-	import {findKey} from '../../../libs/util'
+	import {findKey,isEmpty} from '../../../libs/util'
   import config from '@/config/index';
   export default {
     props: {
@@ -181,6 +192,9 @@
       }
     },
     methods: {
+      isEmpty(val){
+        return isEmpty(val)
+			},
       statusChange(value,data){
         const payload = {
           value,
