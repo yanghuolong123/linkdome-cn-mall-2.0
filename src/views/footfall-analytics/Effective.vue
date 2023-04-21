@@ -17,10 +17,11 @@
 							 :item="item"></Cards>
 			
 			</div>
-			<div class="common-card entity-table" v-else>
+			<div class="common-card entity-table" ref="table" v-else>
 				<Table
 					stripe
 					:columns="tableColumn"
+					:height="tableHeight"
 					:data="tableData"
 				></Table>
 			</div>
@@ -142,6 +143,7 @@
     },
     data () {
       return {
+        tableHeight:0,
         arrivalChart: {
           barChart: null,
           pieChart: null,
@@ -223,10 +225,6 @@
             key:'repeat',
             title:'重复客流',
             width:100
-          },{
-            key:'visit',
-            title:'平均到访次数',
-            width:120
           },
 				],
         tableData:[],
@@ -663,6 +661,17 @@
         }
       }
     },
+		watch:{
+      isMultiEntity:{
+        handler(newval){
+          if(newval){
+            this.$nextTick(()=>{
+              this.tableHeight = this.$refs.table.offsetHeight -30
+						})
+					}
+				}
+			}
+		}
   }
 </script>
 
