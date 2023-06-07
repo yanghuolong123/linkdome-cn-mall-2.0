@@ -180,7 +180,7 @@ export const sourceList = (that, name, data) => {
     var obj = {}
     obj.name = d
     obj.color = fill[d3Color(index)]
-    that.d3NameList.push(obj)
+    that.d3NameLists.push(obj)
   })
 
   that.$refs.graph.initCharts(totalList)
@@ -298,6 +298,7 @@ export const tableDataList = (that, data) => {
   let list = []
   let allName = []
   that.d3NameList = []
+  that.d3NameLists = []
   that.disorderChangeTable = []
   data.matrixList.forEach(function (ele, index) {
     let arr = []

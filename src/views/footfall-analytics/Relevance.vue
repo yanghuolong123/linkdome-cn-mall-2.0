@@ -51,11 +51,19 @@
                   style="margin:-15px 0 0 -15px"
                 ></div>
               </div>
-              <ul class='d3NameList'>
-                <li :key="index" v-for="(item,index) in d3NameList">
+              <ul class='d3NameList' v-if="drainageType==1">
+                <li :key="index"  v-for="(item,index) in d3NameList">
                   <span :style="{backgroundColor:item.color}"></span>
                   <p>{{item.name}}</p>
                 </li>
+               
+              </ul>
+              <ul class='d3NameList' v-else>
+                <li :key="index"  v-for="(item,index) in d3NameLists">
+                  <span :style="{backgroundColor:item.color}"></span>
+                  <p>{{item.name}}</p>
+                </li>
+               
               </ul>
             </div>
           </div>
@@ -199,6 +207,7 @@ export default {
       relevanceDate: [],
       listData: [],
       d3NameList: [],
+      d3NameLists: [],
       disabledDate: '',
       relevanceTOP3List: [],
       isStoreData: false,
