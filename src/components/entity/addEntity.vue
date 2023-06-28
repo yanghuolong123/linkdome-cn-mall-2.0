@@ -155,14 +155,14 @@ export default {
           },
         ],
 
-        zoneIds: [
-          {
-            required: true,
-            tips: "区域关联",
-            validator: this.validSelect,
-            trigger: "change",
-          },
-        ],
+        // zoneIds: [
+        //   {
+        //     required: true,
+        //     tips: "区域关联",
+        //     validator: this.validSelect,
+        //     trigger: "change",
+        //   },
+        // ],
         parentNode: [
           {
             required: true,
@@ -274,19 +274,20 @@ export default {
       propertyId: state => state.home.headerAction,
     }),
     ruleValidate(){
-      let rule = _.cloneDeep(this.rule)
-      if(this.formValidate.type_name !== 'store'){
-        return  Object.assign(rule,{
-          zoneIds: [
-            {
-              required: false,
-              trigger: "change",
-            },
-          ],
-				})
-			}else {
-        return this.rule
-			}
+      // let rule = _.cloneDeep(this.rule)
+      // if(this.formValidate.type_name !== 'store'){
+      //   return  Object.assign(rule,{
+      //     zoneIds: [
+      //       {
+      //         required: false,
+      //         trigger: "change",
+      //       },
+      //     ],
+			// 	})
+			// }else {
+      //   return this.rule
+			// }
+      return this.rule
 		},
     title(){
       if(this.isModify){

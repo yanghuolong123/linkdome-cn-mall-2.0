@@ -104,12 +104,12 @@
               trigger: "change",
             },
           ],
-          gate_id: [{
-            required: true,
-            message: this.$t('请选择'),
-            trigger: 'change',
-            type: 'number'
-          }],
+          // gate_id: [{
+          //   required: true,
+          //   message: this.$t('请选择'),
+          //   trigger: 'change',
+          //   type: 'number'
+          // }],
           gate_type: [{
             required: true,
             message: this.$t('请选择'),
@@ -161,7 +161,7 @@
       addDoorWay () {
         var that = this
         let data = _.cloneDeep(this.formData)
-        data.zoneIds = [this.formData.gate_id]
+        data.zoneIds = this.formData.gate_id?[this.formData.gate_id]:[]
         data.parent_id = this.formData.parentNode[this.formData.parentNode.length-1]
         data.type_id = 502//502 出入口
         data.type_name = 'gate'

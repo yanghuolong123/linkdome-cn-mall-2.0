@@ -190,6 +190,7 @@ export default {
         return o.id ===data.id
       })
       node = Object.assign(node,data)
+      this.$emit('refresh')
     },
     editDoorWay (value) {
       var data = _.cloneDeep(value.data)
