@@ -1,279 +1,296 @@
 <template>
-	<!-- 实体管理 -->
-	<div>
-		<div class="content flex-column">
-			<div class="basic-info flex-column common-card">
-				<div class="top flex-between">
-					<el-cascader
-						:options="treeData"
-						:props="cascadeProps"
-						v-model="defaultValue"
-						@change="caseDidChange"
-						class="cascader"
-					>
-					</el-cascader>
-					<div class="icon-area flex-center">
-            <span
-							v-if="isSuperAdmin"
-							:title="$t('添加')"
-							@click="addEntity"
-						>
-              <Icon type="md-add"/>
-            </span>
-					</div>
-				
-				</div>
-				<!-- 商场列表 -->
-				<market-list
-					v-if="currentEntityType === 'mall'"
-					:userLvl="userLvl"
-					@imgConfig="imgConfig"
-					@editMail="editMall"
-					ref="marketlist"
-				></market-list>
-				<!-- 楼层列表 -->
-				<area-list
-					v-if="currentEntityType === 'floor'"
-					:tree="originTreeData"
-					:userLvl="userLvl"
-					@imgConfig="imgConfig"
-					@editFloor="editEntity"
-					@delFloor="deleteEntity"
-					@changeDoorway="changeDoorway"
-					ref="arealist"
-					:entityInfo="floorInfo"
-				></area-list>
-				<!-- 商铺列表 -->
-				<group-list
-					v-if="currentEntityType === 'store'"
-					:userLvl="userLvl"
-					@editStore="editEntity"
-					@delStore="delStore"
-					@changeDoorway="changeDoorway"
-					:storeInfo="storeInfo"
-				></group-list>
-				<!--其他实体-->
-				<area-list v-if="currentEntityType === 'other'"
-									 ref="otherList"
-									 @editFloor="editEntity"
-									 @refresh="getData"
-									 :tree="originTreeData"
-									 @delFloor="deleteEntity"
-									 @changeDoorway="changeDoorway"
-									 :userLvl="userLvl"
-									 :entityInfo="entityInfo"></area-list>
-			</div>
-			<!-- 业态管理 -->
-			<formats></formats>
-		</div>
-		<!-- 添加商场 -->
-		<add-Entity
-			ref="entityModal"
-			:userLvl="userLvl"
-			@updateSuc="updateSuc"
-			@addSuc="addSuc"
-			@init="init"
-			v-cloak
-		></add-Entity>
-		<edit-mall ref="shopmall"
-							 :userLvl="userLvl"
-							 @init="init"
-							 @updateTypeData="getData"></edit-mall>
-		<imgconfig-modal
-			ref="imgcofig"
-			:title="$t('图片配置')"
-			:footerHide="true"
-			:width="1350"
-		>
-			<div class="img-config" @mousemove="handleMouseMove">
-				<div class="part">
-					<div
-						class="img-container"
-						ref="imgContainer"
-						@drop.stop.prevent="handleDropOnPannel($event)"
-						@dragover.stop.prevent
-					>
-						<img
-							class="img-bg"
-							ref="img"
-							:src="configImage"
-							v-if="configImage"
-						/>
-						<img
-							ref="img"
-							class="img-bg"
-							v-else
-							src="../../assets/images/fixation_img/bg/placeholder.jpg"
-						/>
-						<img
-							width="27"
-							height="40"
-							@click="symbolClick(symbol)"
-							:src="
-                currentWay.id == symbol.id
+    <!-- 实体管理 -->
+    <div>
+        <div class="content flex-column">
+            <div class="basic-info flex-column common-card">
+                <div class="top flex-between">
+                    <el-cascader
+                            :options="treeData"
+                            :props="cascadeProps"
+                            v-model="defaultValue"
+                            @change="caseDidChange"
+                            class="cascader"
+                    >
+                    </el-cascader>
+                    <div class="icon-area flex-center">
+                        <span
+                                v-if="isSuperAdmin"
+                                :title="$t('添加')"
+                                @click="addEntity"
+                        >
+                          <Icon type="md-add"/>
+                        </span>
+                    </div>
+                </div>
+                    <!-- 商场列表 -->
+                    <market-list
+                            v-if="currentEntityType === 'mall'"
+                            :userLvl="userLvl"
+                            @imgConfig="imgConfig"
+                            @editMall="editMall"
+                            ref="marketlist"
+                    ></market-list>
+                    <!-- 楼层列表 -->
+                    <area-list
+                            v-if="currentEntityType === 'floor'"
+                            :tree="originTreeData"
+                            :userLvl="userLvl"
+                            @imgConfig="imgConfig"
+                            @heatmapConfig="heatmapConfig"
+                            @editFloor="editEntity"
+                            @delFloor="deleteEntity"
+                            @changeDoorway="changeDoorway"
+                            ref="arealist"
+                            :entityInfo="floorInfo"
+                            :parent_id="parent_id"
+                    ></area-list>
+                    <!-- 商铺列表 -->
+                    <group-list
+                            v-if="currentEntityType === 'store'"
+                            :userLvl="userLvl"
+                            @editStore="editEntity"
+                            @delStore="delStore"
+                            @changeDoorway="changeDoorway"
+                            :storeInfo="storeInfo"
+                    ></group-list>
+                    <!--其他实体-->
+                    <area-list v-if="currentEntityType === 'other'"
+                               ref="otherList"
+                               @editFloor="editEntity"
+                               @refresh="getData"
+                               :tree="originTreeData"
+                               @delFloor="deleteEntity"
+                               @changeDoorway="changeDoorway"
+                               :userLvl="userLvl"
+                               :entityInfo="entityInfo"></area-list>
+                </div>
+            <!-- 业态管理 -->
+            <formats></formats>
+            <!-- 工作人员列表 -->
+            <!-- <staff-list></staff-list> -->
+        </div>
+        <!-- 添加商场 -->
+        <add-Entity
+                ref="entityModal"
+                :userLvl="userLvl"
+                @updateSuc="updateSuc"
+                @addSuc="addSuc"
+                @init="init"
+                v-cloak
+        ></add-Entity>
+        <edit-mall ref="shopmall"
+                   :userLvl="userLvl"
+                   @init="init"
+                   @updateTypeData="getData"></edit-mall>
+        <!--热力图配置-->
+        <heatmap-config-modal ref="heatmapModal"
+                              :floorId=" floorInfo.id"
+                              :imgSrc=" floorInfo.map_url"
+                              :visible="heatmapVisibile"></heatmap-config-modal>
+        <imgconfig-modal
+                ref="imgcofig"
+                :title="$t('图片配置')"
+                :footerHide="true"
+                :width="1350"
+        >
+            <div class="img-config" @mousemove="handleMouseMove">
+                <div class="part">
+                    <div
+                            class="img-container"
+                            ref="imgContainer"
+                            @drop.stop.prevent="handleDropOnPannel($event)"
+                            @dragover.stop.prevent
+                    >
+                        <img
+                                class="img-bg"
+                                ref="img"
+                                :src="configImage"
+                                v-if="configImage"
+                        />
+                        <img
+                                ref="img"
+                                class="img-bg"
+                                v-else
+                                src="../../assets/images/fixation_img/bg/placeholder.jpg"
+                        />
+                        <img
+                                width="27"
+                                height="40"
+                                @click="symbolClick(symbol)"
+                                :src="currentWay.id == symbol.id
                   ? require('@/assets/images/fixation_img/bg/symbol_select.png')
                   : require('@/assets/images/fixation_img/bg/symbol.png')
               "
-							:key="index"
-							class="symbol"
-							:draggable="currentWay.id == symbol.id"
-							@dragstart="handleDragStart($event, symbol.id)"
-							:style="{ top: symbol.top + 'px', left: symbol.left + 'px' }"
-							v-for="(symbol, index) in symbolList"
-						/>
-						<img
-							class="add-symbol"
-							@click="setCoordinate"
-							width="27"
-							height="40"
-							:style="{ top: symbol.top + 'px', left: symbol.left + 'px' }"
-							src="../../assets/images/fixation_img/bg/symbol.png"
-							v-show="addStatus"
-						/>
-					</div>
-					<p>{{ $t('图片建议尺寸') }}:1000×800</p>
-				</div>
-				<div class="part">
-					<span>{{ $t('操作') }}</span>
-					<span v-if="currentEntityType === 'mall'">{{ $t('首页实体展示图配置') }}</span>
-					<div class="flex-center">
-						<Select
-							v-if="currentEntityType === 'mall'"
-							:disabled="!isConfigDataSame"
-							v-model="property"
-							style="width:200px"
-							@on-change="propertyChange"
-						>
-							<Option
-								v-for="(item, index) in propertyList"
-								:value="item.id"
-								:key="index"
-							>{{ item.name }}
-							</Option>
-						</Select>
-						<uploadImg
-							@changeImg="changeImg"
-							:disabled="property === '' && currentEntityType === 'mall'"
-							v-if="currentWay.type_name && currentWay.type_name !== 'mall'"
-							:style="{ marginLeft: currentEntityType === 'mall' ? '20px' : '' }"
-						>{{ $t('上传') }}
-						</uploadImg>
-					</div>
-					<span v-if="currentEntityType === 'mall'">{{ $t('首页展示图出入口坐标配置') }}</span>
-					<span v-else
-					>{{ floorInfo && floorInfo.name
+                                :key="index"
+                                class="symbol"
+                                :draggable="currentWay.id == symbol.id"
+                                @dragstart="handleDragStart($event, symbol.id)"
+                                :style="{ top: symbol.top + 'px', left: symbol.left + 'px' }"
+                                v-for="(symbol, index) in symbolList"
+                        />
+                        <img
+                                class="add-symbol"
+                                @click="setCoordinate"
+                                width="27"
+                                height="40"
+                                :style="{ top: symbol.top + 'px', left: symbol.left + 'px' }"
+                                src="../../assets/images/fixation_img/bg/symbol.png"
+                                v-show="addStatus"
+                        />
+                    </div>
+                    <p>{{ $t('图片建议尺寸') }}:1000×800</p>
+                </div>
+                <div class="part">
+                    <span>{{ $t('操作') }}</span>
+                    <span v-if="currentEntityType === 'mall'">{{ $t('首页实体展示图配置') }}</span>
+                    <div class="flex-center">
+                        <Select
+                                v-if="currentEntityType === 'mall'"
+                                :disabled="!isConfigDataSame"
+                                v-model="property"
+                                style="width:200px"
+                                @on-change="propertyChange"
+                        >
+                            <Option
+                                    v-for="(item, index) in propertyList"
+                                    :value="item.id"
+                                    :key="index"
+                            >{{ item.name }}
+                            </Option>
+                        </Select>
+                        <uploadImg
+                                @changeImg="changeImg"
+                                :disabled="property === '' && currentEntityType === 'mall'"
+                                v-if="currentWay.type_name && currentWay.type_name !== 'mall'"
+                                :style="{ marginLeft: currentEntityType === 'mall' ? '20px' : '' }"
+                        >{{ $t('上传') }}
+                        </uploadImg>
+                    </div>
+                    <span v-if="currentEntityType === 'mall'">{{ $t('首页展示图出入口坐标配置') }}</span>
+                    <span v-else
+                    >{{ floorInfo && floorInfo.name
             }}{{ $t('下属出入口店铺坐标配置') }}</span
-					>
-					<div class="flex-center">
-						<Select
-							v-model="way"
-							:disabled="!isConfigDataSame"
-							style="width:160px"
-							@on-change="wayChange"
-						>
-							<Option v-for="item in wayList" :value="item.id" :key="item.id"
-							>{{ item.name }}
-							</Option>
-						</Select>
-						<Button
-							type="primary"
-							style="margin-left: 20px"
-							:disabled="!way"
-							:loading="uploadLoading"
-							@click="setClick"
-						>
-							{{ hasSymbol ? $t('删除坐标') : $t('放置坐标') }}
-						</Button>
-						<Button
-							v-if="currentEntityType === 'store'"
-							:disabled="!way"
-							style="margin-left: 20px"
-							@click="previewClick"
-						>{{ $t('预览') }}
-						</Button>
-					</div>
-					<div class="part" v-if="['gate', 'store'].includes(currentWay.type_name)">
-						<span>{{ $t('是否为热力图') }}</span>
-						<i-switch
-							:disabled="!way"
-							:true-value="1"
-							:false-value="0"
-							v-model="configData.is_heatmap"
-						></i-switch>
-						<span>{{ $t('是否为路径动线点') }}</span>
-						<i-switch
-							:disabled="!way"
-							:true-value="1"
-							:false-value="0"
-							v-model="configData.is_keypath"
-						></i-switch>
-					</div>
-					
-					<div class="btn-box">
-						<Button
-							type="primary"
-							:disabled="!Object.keys(currentWay).length"
-							@click="handleReset"
-						>{{ $t('重置') }}
-						</Button>
-						<Button
-							:disabled="isConfigDataSame"
-							type="primary"
-							@click="handleSave"
-							:loading="saveLoading"
-						>
-							{{ $t('保存') }}
-						</Button>
-					</div>
-				</div>
-			</div>
-		</imgconfig-modal>
-		<imgconfig-modal
-			ref="preview"
-			:title="$t('预览')"
-			:footerHide="true"
-			:width="650"
-		>
-			<div class="flex-column">
-				<div ref="viewContainer" id="viewContainer">
-					<img
-						v-if="cameraImageUrl"
-						width="500"
-						height="400"
-						:src="cameraImageUrl"
-					/>
-					<img
-						width="500"
-						height="400"
-						v-else
-						src="../../assets/images/fixation_img/bg/placeholder.jpg"
-					/>
-					<template v-for="node in graphViewData.nodeList">
-						<flow-node :id="node.id" :key="'node' + node.id" :node="node">
-						</flow-node>
-					</template>
-				</div>
-			</div>
-		</imgconfig-modal>
-	</div>
+                    >
+                    <div class="flex-center">
+                        <Select
+                                v-model="way"
+                                :disabled="!isConfigDataSame"
+                                style="width:160px"
+                                @on-change="wayChange"
+                        >
+                            <Option v-for="item in wayList" :value="item.id" :key="item.id"
+                            >{{ item.name }}
+                            </Option>
+                        </Select>
+                        <Button
+                                type="primary"
+                                style="margin-left: 20px"
+                                :disabled="!way"
+                                :loading="uploadLoading"
+                                @click="setClick"
+                        >
+                            {{ hasSymbol ? $t('删除坐标') : $t('放置坐标') }}
+                        </Button>
+                        <Button
+                                v-if="currentEntityType === 'store'"
+                                :disabled="!way"
+                                style="margin-left: 20px"
+                                @click="previewClick"
+                        >{{ $t('预览') }}
+                        </Button>
+                    </div>
+                    <div class="part" v-if="['gate', 'store'].includes(currentWay.type_name)">
+                        <span>{{ $t('是否为热力图') }}</span>
+                        <i-switch
+                                :disabled="!way"
+                                :true-value="1"
+                                :false-value="0"
+                                v-model="configData.is_heatmap"
+                        ></i-switch>
+                        <span>{{ $t('是否为路径动线点') }}</span>
+                        <i-switch
+                                :disabled="!way"
+                                :true-value="1"
+                                :false-value="0"
+                                v-model="configData.is_keypath"
+                        ></i-switch>
+                    </div>
+
+                    <div class="btn-box">
+                        <Button
+                                type="primary"
+                                :disabled="!Object.keys(currentWay).length"
+                                @click="handleReset"
+                        >{{ $t('重置') }}
+                        </Button>
+                        <Button
+                                :disabled="isConfigDataSame"
+                                type="primary"
+                                @click="handleSave"
+                                :loading="saveLoading"
+                        >
+                            {{ $t('保存') }}
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </imgconfig-modal>
+        <imgconfig-modal
+                ref="preview"
+                :title="$t('预览')"
+                :footerHide="true"
+                :width="650"
+        >
+            <div class="flex-column">
+                <div ref="viewContainer" id="viewContainer">
+                    <img
+                            v-if="cameraImageUrl"
+                            width="500"
+                            height="400"
+                            :src="cameraImageUrl"
+                    />
+                    <img
+                            width="500"
+                            height="400"
+                            v-else
+                            src="../../assets/images/fixation_img/bg/placeholder.jpg"
+                    />
+                    <template v-for="node in graphViewData.nodeList">
+                        <flow-node :id="node.id" :key="'node' + node.id" :node="node">
+                        </flow-node>
+                    </template>
+                </div>
+            </div>
+        </imgconfig-modal>
+    </div>
 </template>
 <script>
+
+  import { getYearList } from '@/api/operate'
   import groupList from '_c/entity/groupList.vue'
   import areaList from '_c/entity/areaList.vue'
   import marketList from '_c/entity/marketList.vue'
   import addEntity from '_c/entity/addEntity.vue'
   import editMall from '_c/entity/components/editMall.vue'
+  import heatmapConfigModal from '_c/entity/components/heatmapConfigModal.vue'
   import formats from '_c/entity/formats.vue'
   import imgconfigModal from '_c/common/Modal.vue'
+  import alert from '@/components/alert.vue'
   import flowNode from './components/node'
   import _ from 'lodash'
+  import { setTimeout } from 'timers'
   import {
     getDataEntity,
+    getbusinessDate,
+    deletemall,
+    deleteFloor,
+    deleteData,
     configEntity,
+    getConfigStructure,
     getCameraImageUrl,
-    delEntity
+    delEntity,
   } from '@/api/manager.js'
-  import { initMonthsData, deepTraversal, isEmpty, deepFind, filterTreeByType,findParentNodes } from '@/libs/util'
+  import { initMonthsData, deepTraversal, isEmpty, deepFind, filterTreeByType, findParentNodes } from '@/libs/util'
   import { getGroupOrganization, getBzoneTree } from '@/api/home.js'
   import uploadImg from '_c/common/uploadImg.vue'
   import { mapState } from 'vuex'
@@ -286,6 +303,8 @@
       }
     },
     components: {
+      heatmapConfigModal,
+      alert,
       uploadImg,
       imgconfigModal,
       groupList,
@@ -298,6 +317,31 @@
     },
     data () {
       return {
+        type: 0,
+        mallList: [],
+        noBuy: require('@/assets/images/pages/noBuy.png'),
+        isEmptyPage: false,
+        heatmapVisibile: false,
+        alertText: {
+          title: '',
+          text: '',
+          bg: '',
+          confirm: false,
+        },
+        nowEntity: [], // 当前选中的实体
+        theMail: '', // 当前选中的商场
+        theFloor: '', // 当前选中的楼层
+        theStore: '',
+        delType: '',
+        addType: 0,
+        editTitle: '添加购物中心',
+        entity: '',
+        floor_entity: '',
+        entitydata: '',
+        parent_id: '',
+        showAddEntity: false,
+        organaizationData: {},
+        jsPlumb: null,
         gateTypeList: [],
         id: '',
         floorInfo: {},
@@ -311,12 +355,11 @@
           value: 'id',
           label: 'name'
         },
-        originTreeData:[],//未经过滤的bzoneTree
+        originTreeData: [],//未经过滤的bzoneTree
         cascaderCanshow: false,
         defaultValue: [],
         userLvl: '',
         currentYear: new Date().getFullYear(),
-        organaizationData: {},
         // 图片配置相关数据
         addStatus: false,
         orgData: [],
@@ -340,8 +383,6 @@
         },
         storeImageUrl: '', //预览时显示的店铺图片
         cameraImageUrl: '',
-        jsPlumb: null,
-
       }
     },
     created () {
@@ -349,7 +390,8 @@
       if (theUser.role_id < 3) {
         this.userLvl = theUser.role_id == 1 ? 'admin' : 'common_admin'
       } else {
-        let temp = _.find(this.menulist, ['name', 'Admin']).subpagesList
+        let menulist = JSON.parse(window.localStorage.getItem('menulist'))
+        let temp = _.find(menulist, ['name', 'Admin']).subpagesList
         temp = _.find(temp, ['name', 'EntityManage']).id + ''
         if (theUser.access.indexOf(temp) > -1) {
           this.userLvl = 'common_admin'
@@ -362,15 +404,20 @@
         this.getData()
       },
     },
+
+
     computed: {
       ...mapState({
         propertyId: state => state.home.headerAction,
         organizationData: state => state.home.organizationData,
         shoppingInfoDate: state => state.user.shoppingInfoDate,
         companyId: state => state.user.companyId,
-        menuList:state => state.home.menuList,
+        menuList: state => state.home.menuList,
 
       }),
+      dataList () {
+        return this.treeData
+      },
       currentEntityType () {        //判断当前选择的实体类型
         let type
         if (this.defaultValue.length) {
@@ -441,25 +488,25 @@
       this.$store.commit('setMall', { shoppingInfoDate: this.shoppingInfoDate })
     },
     methods: {
-      updateSuc(data){
-        let node = deepFind( this.treeData,o=>{
+      updateSuc (data) {
+        let node = deepFind(this.treeData, o => {
           return o.id === data.id
-				})
-        node = Object.assign(node,data)
-        this.originTreeData = Object.assign(this.originTreeData,this.treeData)
-				this.getData()
+        })
+        node = Object.assign(node, data)
+        this.originTreeData = Object.assign(this.originTreeData, this.treeData)
+        this.getData()
       },
-      addSuc(data){
-        let node = deepFind( this.treeData,o=>{
+      addSuc (data) {
+        let node = deepFind(this.treeData, o => {
           return o.id === data.parent_id
         })
-        if(Array.isArray(node.children)){
+        if (Array.isArray(node.children)) {
           node.children.push(data)
-        }else {
-          this.$set(node,'children', [data])
+        } else {
+          this.$set(node, 'children', [data])
         }
-        this.originTreeData = Object.assign(this.originTreeData,this.treeData)
-			},
+        this.originTreeData = Object.assign(this.originTreeData, this.treeData)
+      },
       deleteEntity (data) {
         this.$alert({
           content: this.$t('确认删除此实体信息？'),
@@ -471,7 +518,7 @@
                 this.$message.success(this.$t('删除成功'))
                 this.defaultValue = [this.defaultValue[0]]
                 this.getData()
-              }else {
+              } else {
                 this.$message.error(res.data.msg)
               }
             })
@@ -479,10 +526,10 @@
         })
       },
       editEntity (data) {
-        this.$refs.entityModal.formValidate = Object.assign(this.$refs.entityModal.formValidate,data)
-        this.$refs.entityModal.formValidate.parentNode = findParentNodes(data.id,this.treeData)
+        this.$refs.entityModal.formValidate = Object.assign(this.$refs.entityModal.formValidate, data)
+        this.$refs.entityModal.formValidate.parentNode = findParentNodes(data.id, this.treeData)
         this.$refs.entityModal.isModify = true
-				this.$refs.entityModal.showModal()
+        this.$refs.entityModal.showModal()
 
       },
 
@@ -764,10 +811,42 @@
         this.configData.position_x = (symbol.left / img.offsetWidth).toFixed(4)
         this.configData.position_y = (symbol.top / img.offsetHeight).toFixed(4)
       },
+      heatmapConfig () {
+        this.$refs.heatmapModal.showModal()
+        console.log('heat')
+      },
+
+      handleMouseMove (e) {
+        if (this.addStatus) {
+          const modalEl = document.getElementsByClassName('ivu-modal')[0]
+          const imgContainer = this.$refs.imgContainer
+          this.symbol.left =
+            e.x - 13.5 - modalEl.offsetLeft - imgContainer.offsetLeft
+          this.symbol.top = e.y - 20 - modalEl.offsetTop - imgContainer.offsetTop
+        }
+      },
+      setCoordinate () {
+        const width = this.$refs.img.offsetWidth
+        const height = this.$refs.img.offsetHeight
+        if (
+          this.symbol.left < width - 13.5 &&
+          this.symbol.left > -13.5 &&
+          this.symbol.top > -35 &&
+          this.symbol.top < height - 35
+        ) {
+          //在范围内
+          this.configData.position_x = (this.symbol.left / width).toFixed(4)
+          this.configData.position_y = (this.symbol.top / height).toFixed(4)
+          this.symbolList.push(_.cloneDeep(this.symbol))
+          this.addStatus = false
+        } else {
+          console.log('cc')
+        }
+      },
       //图片配置
       async imgConfig (way, property) {
         this.propertyList = []
-        const orgData = await getBzoneTree({company_id: this.companyId})
+        const orgData = await getBzoneTree({ company_id: this.companyId })
         this.$refs.imgcofig.showModal()
         this.orgData = orgData.data.data
         let floor, floorId
@@ -802,11 +881,11 @@
                 },
                 'children'
               )
-							deepTraversal([floor],'children',o=>{
-							  if(['store','gate'].includes(o.type_name)){
-							    this.wayList.push(o)
-								}
-							})
+              deepTraversal([floor], 'children', o => {
+                if (['store', 'gate'].includes(o.type_name)) {
+                  this.wayList.push(o)
+                }
+              })
               this.wayList.forEach((o) => {
                 //因为保存的时候存的是symbol的指向点，所以此时要恢复0,0,点坐标
                 if (o.position_x !== 0 && !isEmpty(o.position_x)) {
@@ -883,34 +962,7 @@
           this.symbol.name = this.currentWay.name
           this.symbol.id = this.currentWay.id
         }
-      },
-      handleMouseMove (e) {
-        if (this.addStatus) {
-          const modalEl = this.$refs.imgcofig.$el.querySelector('.ivu-modal')
-          const imgContainer = this.$refs.imgContainer
-          this.symbol.left =
-            e.x - 13.5 - modalEl.offsetLeft - imgContainer.offsetLeft
-          this.symbol.top = e.y - 20 - modalEl.offsetTop - imgContainer.offsetTop
-        }
-      },
-      setCoordinate () {
-        const width = this.$refs.img.offsetWidth
-        const height = this.$refs.img.offsetHeight
-        if (
-          this.symbol.left < width - 13.5 &&
-          this.symbol.left > -13.5 &&
-          this.symbol.top > -35 &&
-          this.symbol.top < height - 35
-        ) {
-          //在范围内
-          this.configData.position_x = (this.symbol.left / width).toFixed(4)
-          this.configData.position_y = (this.symbol.top / height).toFixed(4)
-          this.symbolList.push(_.cloneDeep(this.symbol))
-          this.addStatus = false
-        } else {
-          console.log('cc')
-        }
-      },
+      } ,
       propertyChange (val, way) {
         const img = this.$refs.img
         if (val.indexOf('company') > -1) {
@@ -922,16 +974,16 @@
           const value = val.split('_')
           //waylist 是购物中心下的所有出入口gate
           this.wayList = []
-					const mall = deepFind(this.orgData,o=>{
-					  return o.type_name === 'mall' && o.property_id === Number(value[1])
-					})
-					if(mall){
-            deepTraversal([mall],'children',child=>{
-              if(child.type_name === 'gate'){
+          const mall = deepFind(this.orgData, o => {
+            return o.type_name === 'mall' && o.property_id === Number(value[1])
+          })
+          if (mall) {
+            deepTraversal([mall], 'children', child => {
+              if (child.type_name === 'gate') {
                 this.wayList.push(child)
               }
             })
-					}
+          }
           if (!this.wayList.length) {
             this.way = ''
             this.$message.warning(this.$t('notices.configGate'))
@@ -966,9 +1018,9 @@
         const wayList = this.wayList.filter((o) => {
           return (
             o.position_x > 0 &&
-            o.position_x !== -1&&
+            o.position_x !== -1 &&
             o.position_y > 0 &&
-            o.position_y !== -1&&
+            o.position_y !== -1 &&
             !isEmpty(o.position_x) &&
             !isEmpty(o.position_y)
           )
@@ -987,9 +1039,9 @@
         this.id = this.$route.params.id
         getBzoneTree({ property_id: this.propertyId }).then(res => {
           res = res.data.data
-					this.originTreeData = _.cloneDeep(res)
+          this.originTreeData = _.cloneDeep(res)
           //级联数据不显示出入口和区域
-          let treeData = filterTreeByType(res, ['area','gate'])
+          let treeData = filterTreeByType(res, ['area', 'gate'])
           if (this.$store.state.user.role_id < 3) {
             this.treeData = treeData
           } else {
@@ -1046,13 +1098,13 @@
             })
             break
           case 'floor':
-            this.floorInfo = selectedData[selectedData.length-1]
+            this.floorInfo = selectedData[selectedData.length - 1]
             break
           case 'store':
-            this.storeInfo = selectedData[selectedData.length-1]
+            this.storeInfo = selectedData[selectedData.length - 1]
             break
           case 'other':
-            this.entityInfo = selectedData[selectedData.length-1]
+            this.entityInfo = selectedData[selectedData.length - 1]
             break
 
         }
@@ -1064,7 +1116,6 @@
         this.$refs.entityModal.showModal()
         this.$refs.entityModal.isModify = false
       },
-
       editMall (values) {
         var value = _.cloneDeep(values)
         value.area_size = value.goal_sale[0].area_size
@@ -1150,9 +1201,9 @@
             delEntity(obj.id).then((res) => {
               if (res.data.code === 200) {
                 this.$message.success(this.$t('删除成功'))
-                this.defaultValue = findParentNodes(obj.id,this.treeData)
+                this.defaultValue = findParentNodes(obj.id, this.treeData)
                 this.getData()
-              }else {
+              } else {
                 this.$message.error(res.data.msg)
               }
             })
@@ -1161,136 +1212,136 @@
       },
       changeDoorway () {
         this.getData()
-      },
-    },
+      }
+    }
   }
 </script>
 
 <style scoped lang="less">
-	.content {
-		.basic-info {
-			.top {
-				.cascader {
-					width: 230px;
-				}
-			}
-			
-			.icon-area {
-				> * {
-					width: 24px;
-					height: 24px;
-					line-height: 24px;
-					border-radius: 50%;
-					font-size: 16px;
-					text-align: center;
-					color: #fff;
-					
-					&:hover {
-						cursor: pointer;
-					}
-					
-					&:nth-child(1) {
-						background-color: #2bd9cf;
-					}
-					
-					&:nth-child(2) {
-						background-color: #feb33d;
-						margin-left: 20px;
-					}
-				}
-			}
-		}
-	}
-	
-	/*.cascader {*/
-	/*  width: 230px;*/
-	
-	/*  .ivu-input-wrapper {*/
-	/*    width: 100%;*/
-	
-	/*    .ivu-input {*/
-	/*      width: 230px;*/
-	/*      height: 43px;*/
-	/*      border: 1px solid rgba(0, 0, 0, 0.2);*/
-	/*      font-family: "source_han_sans_cn", "Roboto", sans-serif;*/
-	/*    }*/
-	/*  }*/
-	/*}*/
-	
-	[v-cloak] {
-		display: none;
-	}
-	
-	.img-config {
-		display: flex;
-		align-items: start;
-		
-		.add-symbol {
-			position: absolute;
-			cursor: pointer;
-			z-index: 9999999999999999;
-		}
-		
-		.part:nth-child(1) {
-			width: 65%;
-		}
-		
-		.part:nth-child(2) {
-			flex: 1;
-		}
-		
-		.part {
-			display: flex;
-			flex-direction: column;
-			
-			span {
-				font-size: 14px;
-			}
-			
-			.img-container {
-				position: relative;
-				font-size: 0;
-				
-				.img-bg {
-					width: 100%;
-					height: 500px;
-				}
-				
-				.symbol {
-					position: absolute;
-				}
-			}
-			
-			.flex-center {
-				display: flex;
-				align-items: center;
-			}
-			
-			.btn-box {
-				text-align: right;
-				margin-top: 20px;
-				
-				> * + * {
-					margin-left: 20px;
-				}
-			}
-			
-			> * + * {
-				margin-top: 10px;
-			}
-		}
-		
-		.part + .part {
-			margin-left: 20px;
-		}
-	}
-	
-	#viewContainer {
-		position: relative;
-		width: 100%;
-		
-		img {
-			margin: 0 auto;
-		}
-	}
+    .content {
+        .basic-info {
+            .top {
+                .cascader {
+                    width: 230px;
+                }
+            }
+
+            .icon-area {
+                > * {
+                    width: 24px;
+                    height: 24px;
+                    line-height: 24px;
+                    border-radius: 50%;
+                    font-size: 16px;
+                    text-align: center;
+                    color: #fff;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+
+                    &:nth-child(1) {
+                        background-color: #2bd9cf;
+                    }
+
+                    &:nth-child(2) {
+                        background-color: #feb33d;
+                        margin-left: 20px;
+                    }
+                }
+            }
+        }
+    }
+
+    /*.cascader {*/
+    /*  width: 230px;*/
+
+    /*  .ivu-input-wrapper {*/
+    /*    width: 100%;*/
+
+    /*    .ivu-input {*/
+    /*      width: 230px;*/
+    /*      height: 43px;*/
+    /*      border: 1px solid rgba(0, 0, 0, 0.2);*/
+    /*      font-family: "source_han_sans_cn", "Roboto", sans-serif;*/
+    /*    }*/
+    /*  }*/
+    /*}*/
+
+    [v-cloak] {
+        display: none;
+    }
+
+    .img-config {
+        display: flex;
+        align-items: start;
+
+        .add-symbol {
+            position: absolute;
+            cursor: pointer;
+            z-index: 9999999999999999;
+        }
+
+        .part:nth-child(1) {
+            width: 65%;
+        }
+
+        .part:nth-child(2) {
+            flex: 1;
+        }
+
+        .part {
+            display: flex;
+            flex-direction: column;
+
+            span {
+                font-size: 14px;
+            }
+
+            .img-container {
+                position: relative;
+                font-size: 0;
+
+                .img-bg {
+                    width: 100%;
+                    height: 500px;
+                }
+
+                .symbol {
+                    position: absolute;
+                }
+            }
+
+            .flex-center {
+                display: flex;
+                align-items: center;
+            }
+
+            .btn-box {
+                text-align: right;
+                margin-top: 20px;
+
+                > * + * {
+                    margin-left: 20px;
+                }
+            }
+
+            > * + * {
+                margin-top: 10px;
+            }
+        }
+
+        .part + .part {
+            margin-left: 20px;
+        }
+    }
+
+    #viewContainer {
+        position: relative;
+        width: 100%;
+
+        img {
+            margin: 0 auto;
+        }
+    }
 </style>

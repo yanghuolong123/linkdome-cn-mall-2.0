@@ -1,6 +1,6 @@
 import NP from 'number-precision'
 import { directionData } from '@/api/analysis'
-import { deepTraversal,findParentNodes,filterTreeByType } from '@/libs/util.js'
+import { deepTraversal,findParentNodes, filterTreeByType } from '@/libs/util.js'
 import moment from 'moment'
 // 商铺列表
 export const formatCascadeAuthData = (that, data) => {
@@ -9,7 +9,7 @@ export const formatCascadeAuthData = (that, data) => {
 
   function get20RelevanceValue (node) {
     if (node.type_name === 'store' && that.relevanceValue.length < 20) {
-       that.relevanceValue.push(node.cascadeValue)
+      that.relevanceValue.push(node.cascadeValue)
     }
   }
   // 清除出入口

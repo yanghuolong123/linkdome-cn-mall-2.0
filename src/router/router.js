@@ -108,6 +108,20 @@ export default [
           pageTitle: '热力图分析'
         }
       },
+      // { // 热力图分析
+      //   path: 'heatNew',
+      //   name: 'HeatNew',
+      //   component: () =>
+      //     import ('@/views/footfall-analytics/heatMapNew.vue'),
+      //   meta: {
+      //     breadcrumb: [
+      //       { title: '客流分析', url: '/' },
+      //       { title: '客流分析', url: '/footfall' },
+      //       { title: '热力图分析-新', active: true },
+      //     ],
+      //     pageTitle: '热力图分析-新'
+      //   }
+      // },
       { // 有效客流分析
         path: 'effective',
         name: 'Effective',
@@ -204,20 +218,20 @@ export default [
           pageTitle: '交叉客流分析'
         }
       },
-      // { // 路径动向分析(新)
-      //     path: 'pathTrend',
-      //     name: 'PathTrend',
-      //     component: () =>
-      //         import ('@/views/footfall-analytics/pathTrend.vue'),
-      //     meta: {
-      //         breadcrumb: [
-      //             { title: '客流分析', url: '/' },
-      //             { title: '客流分析', url: '/footfall' },
-      //             { title: '路径动向分析(新)', active: true },
-      //         ],
-      //         pageTitle: '路径动向分析(新)'
-      //     }
-      // },
+      { // 路径动向分析(新)
+          path: 'trailRoute',
+          name: 'TrailRoute',
+          component: () =>
+              import ('@/views/footfall-analytics/trailRoute.vue'),
+          meta: {
+              breadcrumb: [
+                  { title: '客流分析', url: '/' },
+                  { title: '客流分析', url: '/footfall' },
+                  { title: '路径动向分析(新)', active: true },
+              ],
+              pageTitle: '路径动向分析(新)'
+          }
+      },
       { // 路径动向分析
         path: 'oldPath',
         name: 'OldPath',
@@ -230,6 +244,20 @@ export default [
             { title: '路径动向分析', active: true },
           ],
           pageTitle: '路径动向分析'
+        }
+      },
+      { // 路径动向分析(0920)
+        path: '3DNew',
+        name: '3DNew',
+        component: () =>
+          import ('@/views/footfall-analytics/pathMap3DNew.vue'),
+        meta: {
+          breadcrumb: [
+            { title: '客流分析', url: '/' },
+            { title: '顾客行为分析', url: '/generatrix' },
+            { title: '路径动向分析(新)', active: true },
+          ],
+          pageTitle: '路径动向分析(新)'
         }
       },
       { // 路径动向分析

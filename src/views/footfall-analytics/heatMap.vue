@@ -174,6 +174,7 @@ import {
   getHeatMapDistribution,
   getHeatMapFloorData,
 } from "@/api/analysis.js";
+import {heatmapShow} from '../../api/manager'
 import { disabledDate, deepFind,deepTraversal,findParentNodes } from "@/libs/util.js";
 import relevanceTab from "./components/components/RelevanceTab";
 let flowDistributionCharts = null;
@@ -194,13 +195,26 @@ export default {
       timeMarks: {},
       mapOptions: {
         gradient: {
-          ".9": "#ec1313",
-          ".8": "#e8585a",
-          ".66": "#feb33d",
-          ".5": "#86ef40",
-          ".42": "#2bd9cf",
-          ".28": "#33b3ed",
-          ".15": "#7367f0",
+          "1": "#ff0700",
+          ".95": "#fd1e00",
+          ".9": "#ff4200",
+          ".85": "#ff6000",
+          ".8": "#ff8a00",
+          ".75": "#ffae00",
+          ".7": "#ffd200",
+          ".65": "#fff600",
+          ".6": "#d2ff00",
+          ".55": "#a8ff00",
+          ".5": "#75fc07",
+          ".45": "#30ff00",
+          ".4": "#00ff72",
+          ".35": "#00ffa8",
+          ".3": "#00ffd2",
+          ".25": "#00fff0",
+          ".2": "#00f6ff",
+          ".15": "#00e4ff",
+          ".1": "#00ccff",
+          ".05": "#00aeff",
         },
         radius: "",
       },
@@ -444,21 +458,21 @@ export default {
       let type = "";
       if (this.isSingleDay && this.hourTime !== "-1") {
         begin_time = `${moment(this.dayTime[0]).format("YYYY-MM-DD")} ${
-          this.timeFrame
-        }:00:00`;
+                this.timeFrame
+                }:00:00`;
         end_time = `${moment(this.dayTime[0]).format("YYYY-MM-DD")} ${
-          this.timeFrame
-        }:59:59`;
-        type = "hour";
+                this.timeFrame
+                }:59:59`;
+        type = "houly";
       } else {
         begin_time = moment(this.dayTime[0]).format("YYYY-MM-DD");
         end_time = moment(this.dayTime[1]).format("YYYY-MM-DD");
-        type = "day";
+        type = "daily";
       }
       // 判断是否是按照小时查询
       if (this.hourTime !== "-1") {
         // 小时
-        getHeatMapDistribution({
+        heatmapShow({
           floor_bzid: this.floor,
           begin_time,
           end_time,
@@ -468,12 +482,12 @@ export default {
           this.allHeatMapData = data || [];
           this.minTime = Number(moment(data[0].hourly).format("H"));
           this.maxTime = Number(
-            moment(data[data.length - 1].hourly).format("H")
+                  moment(data[data.length - 1].hourly).format("H")
           );
           this.timeFrame = Number(moment(data[0].hourly).format("H"));
         });
       } else {
-        getHeatMapDistribution({
+        heatmapShow({
           // 全天
           floor_bzid: this.floor,
           begin_time,
@@ -641,17 +655,17 @@ export default {
       const height = this.$refs.heatMap.offsetHeight;
       if (data.length) {
         this.maxValue = Math.max.apply(
-          Math,
-          data.map((item) => {
-            return item.enter_num;
-          })
+                Math,
+                data.map((item) => {
+                  return item.enter_num;
+                })
         );
         let listData = data.map((o) => {
           return {
             x: Math.round(width * o.x_num),
             y: Math.round(height * o.y_num),
             value: o.enter_num,
-            radius: Number(width * 0.09),
+            radius: 80,
           };
         });
         //排序后递减，以防热力不明显

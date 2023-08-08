@@ -5,6 +5,7 @@
 				:tableList='tableList'
 				titleName='基本信息'
 				:userLvl="userLvl"
+				:actionList="floorActions"
 				@imgConfig="imgConfig"
 				@tableData='editMail'
 		>
@@ -33,17 +34,29 @@
       }
     },
     computed: {
-      tableName () {
-        if (this.userLvl === 'admin') {
-          return [
-            '名称','实体类别', '本年客流目标', '本年销售目标', '详情地址', '描述', '图片配置', '操作'
-          ]
-        } else {
-          return [
-            '名称','实体类别', '本年客流目标', '本年销售目标', '详情地址', '描述', '操作'
+		tableName () {
+			if (this.userLvl === 'admin') {
+				return [
+					'名称','实体类别', '本年客流目标', '本年销售目标', '详情地址', '描述', '图片配置', '操作'
+				]
+			} else {
+				return [
+					'名称','实体类别', '本年客流目标', '本年销售目标', '详情地址', '描述', '操作']
+
+			}
+		},
+      floorActions(){
+        let arr = [];
+        if(this.userLvl === 'admin'){
+          arr = [
+            {
+              name:'图片配置',
+              icon:'md-image'
+            }
           ]
         }
-      }
+        return arr
+      },
     },
     methods: {
       init () {
@@ -53,7 +66,7 @@
         let obj = {}
         obj = _.find(data.property, ['property_id', shoppingInfoDate.property_id])
         obj.operation = true
-				obj.hideDelBtn = true
+		obj.hideDelBtn = true
         obj.imgConfig = this.userLvl === 'admin'
         //获取当年年份
         const currentYear = new Date().getFullYear()
@@ -97,7 +110,7 @@
         }
         obj.address = obj.address ? obj.address : ' '
         obj.description = obj.description ? obj.description : ' '
-				obj.type_name = 'mall'
+		obj.type_name = 'mall'
         this.tableList.push(obj)
       },
       imgConfig () {
@@ -115,7 +128,7 @@
 		width: 100%;
 		height: auto;
 		margin-top: 20px;
-		
+
 		.vx-card {
 			box-shadow: none;
 		}

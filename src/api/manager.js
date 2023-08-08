@@ -275,3 +275,43 @@ export const updateRecord = (id,data) => {
     data
   })
 }
+//热力图虚拟点位配置
+export const configPoint =  (data) => {
+  return  axios.request({
+    url: '/heatmap/configPoint',
+    method:'post',
+    data
+  })
+}
+export const heatmapShow =  (params) => {
+  return  axios.request({
+    url: '/heatmap/show',
+    params
+  })
+}
+export const getConfigPoint =  (params) => {
+  return  axios.request({
+    url: '/heatmap/configPoint',
+    params
+  })
+}
+//路径动线　点位列表
+export const getTrailPoint =  (params) => {
+  return  axios.request({
+    url: '/trail/points',
+    params
+  })
+}
+export const setTrailPoint =  (data) => {
+  return  axios.request({
+    url: '/trail/conf',
+    method:'post',
+    data
+  })
+}
+export const getTrailPointConfig =  (params) => {
+  return  axios.request({
+    url: '/trail/conf',
+    params
+  })
+}
