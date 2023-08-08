@@ -158,7 +158,7 @@
       },
       floorActions () {
         let arr = []
-        if (this.userLvl === 'admin') {
+        if (this.userLvl === 'admin'&&this.entityInfo.type_name === 'floor') {
           arr = [
             {
               name: '图片配置',
@@ -209,6 +209,7 @@
         this.$emit('imgConfig')
       },
       heatmapConfig () {
+        console.log('ar')
         this.$emit('heatmapConfig')
       },
       /*连通图配置*/

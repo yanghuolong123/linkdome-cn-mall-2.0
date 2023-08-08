@@ -812,6 +812,7 @@
         this.configData.position_y = (symbol.top / img.offsetHeight).toFixed(4)
       },
       heatmapConfig () {
+        console.log('hea1t')
         this.$refs.heatmapModal.showModal()
         console.log('heat')
       },
