@@ -94,14 +94,14 @@ module.exports = {
   productionSourceMap: false,
   // 这里写你调用接口的基础路径，来解决跨域，如果设置了代理，那你本地开发环境的axios的baseUrl要写为 '' ，即空字符串
   devServer: {
-    // proxy: 'https://ai-mall.linkdome.cn/api/v1'
+    proxy: 'https://ai-mall.linkdome.cn/api/v1'
     // proxy: 'http://192.168.3.130:7013/api/v1' //dyc 123456
     // proxy: 'https://dev-ai-mall.linkdome.cn/api/v1'
     // proxy: 'https://enjoycity.linkdome.cn/api/v1'
     // proxy: 'http://wxmall.linkdome.cn/api/v1'
     // proxy:'https://chuangyigu.linkdome.cn/api/v1'
     // proxy: 'https://dev_mall.linkdome.cn/api/v1'  //jnmf-test 123456
-    proxy: 'https://shopmall.linkdome.cn/api/v1'  //shopmall  shopmall654321
+    // proxy: 'https://shopmall.linkdome.cn/api/v1'  //shopmall  shopmall654321
     // proxy: 'http://47.114.144.99:17013/api/v1'
     // proxy: 'https://sale_mall_dev.linkdome.cn/api/v1'
     // proxy: 'https://peacebird_v4.linkdome.cn/api/v1'

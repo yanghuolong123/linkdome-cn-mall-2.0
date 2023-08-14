@@ -485,6 +485,7 @@ export default {
                   moment(data[data.length - 1].hourly).format("H")
           );
           this.timeFrame = Number(moment(data[0].hourly).format("H"));
+          this.changeInput(this.timeFrame)
         });
       } else {
         heatmapShow({
