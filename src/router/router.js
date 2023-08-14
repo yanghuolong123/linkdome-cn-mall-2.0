@@ -218,20 +218,20 @@ export default [
           pageTitle: '交叉客流分析'
         }
       },
-      { // 路径动向分析(新)
-          path: 'trailRoute',
-          name: 'TrailRoute',
-          component: () =>
-              import ('@/views/footfall-analytics/trailRoute.vue'),
-          meta: {
-              breadcrumb: [
-                  { title: '客流分析', url: '/' },
-                  { title: '客流分析', url: '/footfall' },
-                  { title: '路径动向分析(新)', active: true },
-              ],
-              pageTitle: '路径动向分析(新)'
-          }
-      },
+      // { // 路径动向分析(新)
+      //     path: 'trailRoute',
+      //     name: 'TrailRoute',
+      //     component: () =>
+      //         import ('@/views/footfall-analytics/trailRoute.vue'),
+      //     meta: {
+      //         breadcrumb: [
+      //             { title: '客流分析', url: '/' },
+      //             { title: '客流分析', url: '/footfall' },
+      //             { title: '路径动向分析(新)', active: true },
+      //         ],
+      //         pageTitle: '路径动向分析(新)'
+      //     }
+      // },
       { // 路径动向分析
         path: 'oldPath',
         name: 'OldPath',
@@ -246,20 +246,20 @@ export default [
           pageTitle: '路径动向分析'
         }
       },
-      { // 路径动向分析(0920)
-        path: '3DNew',
-        name: '3DNew',
-        component: () =>
-          import ('@/views/footfall-analytics/pathMap3DNew.vue'),
-        meta: {
-          breadcrumb: [
-            { title: '客流分析', url: '/' },
-            { title: '顾客行为分析', url: '/generatrix' },
-            { title: '路径动向分析(新)', active: true },
-          ],
-          pageTitle: '路径动向分析(新)'
-        }
-      },
+      // { // 路径动向分析(0920)
+      //   path: '3DNew',
+      //   name: '3DNew',
+      //   component: () =>
+      //     import ('@/views/footfall-analytics/pathMap3DNew.vue'),
+      //   meta: {
+      //     breadcrumb: [
+      //       { title: '客流分析', url: '/' },
+      //       { title: '顾客行为分析', url: '/generatrix' },
+      //       { title: '路径动向分析(新)', active: true },
+      //     ],
+      //     pageTitle: '路径动向分析(新)'
+      //   }
+      // },
       { // 路径动向分析
         path: '3DPath',
         name: '3DPath',
