@@ -35,15 +35,8 @@
     },
     computed: {
 		tableName () {
-			if (this.userLvl === 'admin') {
-				return [
-					'名称','实体类别', '本年客流目标', '本年销售目标', '详情地址', '描述', '图片配置', '操作'
-				]
-			} else {
-				return [
-					'名称','实体类别', '本年客流目标', '本年销售目标', '详情地址', '描述', '操作']
+			return ['名称','实体类别', '本年客流目标', '本年销售目标', '详情地址', '描述', '操作']
 
-			}
 		},
       floorActions(){
         let arr = [];
@@ -117,7 +110,7 @@
         this.$emit('imgConfig')
       },
       editMail (value) {
-        this.$emit('editMail', value.data)
+        this.$emit('editMall', value.data)
       },
     },
 

@@ -128,13 +128,7 @@
       ...mapState({
         propertyId: state => state.home.headerAction,
       }),
-      tableName () {
-        if (this.userLvl === 'admin' && this.entityInfo.type_name === 'floor') {
-          return ['名称', '实体类型', '描述', '图片配置', '操作']
-        } else {
-          return ['名称', '实体类型', '描述', '操作']
-        }
-      },
+
       subTable () {
         return function (typeName) {
           let arr = []
