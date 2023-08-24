@@ -217,7 +217,7 @@ export const svgChord = (that, data) => {
   d3AllName = _.uniq(d3AllName)
   d3AllName.forEach(value => {
     that.relevanceList.forEach(list => {
-      list.children.forEach(d => {
+      list.children&&list.children.forEach(d => {
         if (d.name == value) d3NameId.push(d.id)
       })
     })
