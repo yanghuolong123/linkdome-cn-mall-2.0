@@ -197,6 +197,7 @@ export default {
                     });
                   });
                   menuList = _.orderBy(menuList, ["id"]);
+
                   this.$store.commit('setSaleStatus', data.sale_feature) // 是否需要销售
                   this.$store.commit('setMenuarr', menuarr)  // 存所有菜单键值对到localStorage
                   this.$store.commit('setMenuList', menuList)// 存所有菜单原始数据到localStorage
@@ -221,7 +222,7 @@ export default {
                     ? data.pages_privilege.split(",")
                     : [];
                   that.$store.commit("setAccess", pages_privilege);
-    
+
                   if (data.type_id.indexOf(52) > -1) {
                     // 设置帐号类型为"shopping" 购物中心
                     that.$store.commit("setAccountLvl", "shopping");
@@ -233,7 +234,7 @@ export default {
                     that.$store.commit("setAccountLvl", "store");
                   }
                 }
-  
+
                 // 当前角色用户菜单排序
                 let theUserPage = _.cloneDeep(pages_privilege);
                 theUserPage.map((m) => {
@@ -241,7 +242,7 @@ export default {
                 });
                 theUserPage.sort();
                 // 根据权限处理用户跳转的第一个页面
-  
+
                 // 第一个页面路由下标
                 let homePageIndex = Number(theUserPage[0])
                   ? Number(theUserPage[0])
