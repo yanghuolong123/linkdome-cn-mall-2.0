@@ -62,7 +62,7 @@ export const getMenuByRouter = (list, access,saleStatus,menuList) => {
   })
   lists.forEach(e => {
     if (!e.meta || (e.meta && !e.meta.hideInMenu)) {
-      if(Number(saleStatus)===0){
+      if(Number(saleStatus)===0){//不显示销售
         if(e.name!=="CommodityAnalytics"&&e.name!=="ChangeStore"&&e.name!=="SalesDimensions"&&e.name!=="ShopPortrait"){
           let obg = {
             url: e.name,

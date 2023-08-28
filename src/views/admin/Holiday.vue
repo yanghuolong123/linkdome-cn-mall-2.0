@@ -57,7 +57,7 @@
           </div>
         </template>
       </Table>
-      
+
       <div class="paginations">
         <div class="paginations">
           <Page :page-size="5" :model-value="actPage" :total="activityTotal" show-elevator @on-change="(page)=>{getActives(page)}" />
@@ -81,7 +81,7 @@ export default {
   computed:{
     ...mapState({
       propertyId: state => state.home.headerAction,
-      
+      menuList:state => state.home.menuList,
     }),
     userLvl(){
       let userLvl;
@@ -89,7 +89,7 @@ export default {
       if (theUser.role_id < 3) {
         userLvl = theUser.role_id == 1 ? 'admin' : 'common_admin'
       } else {
-        let temp = _.find(this.menulist, ['name', 'Admin']).subpagesList
+        let temp = _.find(this.menuList, ['name', 'Admin']).subpagesList
         temp = _.find(temp, ['name', 'EntityManage']).id + ''
         if (theUser.access.indexOf(temp) > -1) {
           userLvl = 'common_admin'
@@ -118,8 +118,8 @@ export default {
       holidayData:[],
       holidayTotal:0,
       holidayPage:1,
-  
-  
+
+
       actPage:1,
       activityTotal:0,
       activityData:[],
@@ -152,7 +152,7 @@ export default {
           title:'操作',
         },
       ],
-      
+
       selectYear: new Date().getFullYear(),
       years: [],
       currentPropertyId: "",
@@ -256,7 +256,7 @@ export default {
         this.holidayData = list
       })
     },
-    
+
     getActives(page = this.actPage){
       this.actPage = page;
       const params = {
@@ -326,7 +326,7 @@ export default {
         that.$refs.editActive.datas = row
         that.$refs.editActive.isUpdate = true;
         that.$refs.editActive.msgTitle = this.$t("编辑活动");
-    
+
         if (that.$store.state.user.role_id < 3) {
           that.$refs.editActive.showBelong = true;
         } else {
