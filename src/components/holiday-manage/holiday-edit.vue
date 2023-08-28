@@ -57,13 +57,13 @@
     components: {
       Modal
     },
-		
+
     computed: {
       ruleInline () {
         let rules = {
           name: [{ required: true, validator: validName, trigger: 'blur' }],
           date: [{ required: true, message:'请选择活动日期',trigger: 'change',type:'array' }],
-          property_id: [{ required: true, message:'请选择活动归属', trigger: 'change',type:'number' }],
+          property_id: [{ required: this.showBelong, message:'请选择活动归属', trigger: 'change',type:'number' }],
           target_total: [{ required: true, trigger: 'blur',message:'请填写客流总目标',}],
         }
         if (this.targetType === '总目标') {
@@ -154,7 +154,7 @@
 				if(this.targetType === '每日目标'){
           this.targetTypeChange(this.targetType)
 				}
-			
+
 			},
       closeEdit () {
         this.targetType = '总目标'
@@ -170,7 +170,8 @@
           type_id:21,
           start_date:row.date[0],
           end_date:row.date[1],
-          target_type:this.targetType === '总目标'?1:2
+          target_type:this.targetType === '总目标'?1:2,
+			property_id:row.property_id?row.property_id:row.property
         }
         if(this.targetType === '总目标'){
           data.target_enter = row.target_total
