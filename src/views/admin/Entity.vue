@@ -819,7 +819,7 @@
 
       handleMouseMove (e) {
         if (this.addStatus) {
-          const modalEl = document.getElementsByClassName('ivu-modal')[0]
+          const modalEl = this.$refs.imgcofig.$el.querySelector('.ivu-modal')
           const imgContainer = this.$refs.imgContainer
           this.symbol.left =
             e.x - 13.5 - modalEl.offsetLeft - imgContainer.offsetLeft
