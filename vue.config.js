@@ -101,8 +101,8 @@ module.exports = {
     // proxy: 'http://wxmall.linkdome.cn/api/v1'
     // proxy:'https://chuangyigu.linkdome.cn/api/v1'
     // proxy: 'https://dev_mall.linkdome.cn/api/v1'  //jnmf-test 123456
-    // proxy: 'https://shopmall.linkdome.cn/api/v1'  //shopmall  shopmall654321
-    proxy: 'https://taixli-mall.linkdome.cn/api/v1'
+    proxy: 'https://shopmall.linkdome.cn/api/v1'  //shopmall  shopmall654321
+    // proxy: 'https://taixli-mall.linkdome.cn/api/v1'
     // proxy: 'http://47.114.144.99:17013/api/v1'
     // proxy: 'https://sale_mall_dev.linkdome.cn/api/v1'
     // proxy: 'https://peacebird_v4.linkdome.cn/api/v1'
