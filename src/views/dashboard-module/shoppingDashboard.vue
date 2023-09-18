@@ -115,7 +115,7 @@
 <!--        :indicatorData="trendIndicators"-->
 <!--        :istotal="showTotal"-->
 <!--      ></Trend>-->
-      
+
       <TrendAnalys class="m-t-20"
                    ref="trend"
                    :date="outRange"
@@ -174,7 +174,7 @@ import singleCard from "@/views/home/components/singleCard.vue";
 import CustomerCharts from "_c/common/CopyChartsTabs";
 import { getBussinessTree } from "@/api/passenger";
 import iDatePicker from "_c/common/idatepicker.vue";
-import { mapMutations } from "vuex";
+import { mapMutations,mapState } from "vuex";
 import Moment from "moment";
 import _ from "lodash";
 import { gotInnerRange, downloadEx } from "@/libs/util";
@@ -276,18 +276,24 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      shoppingCurrentId: state => state.home.headerAction,
+      companyId: state => state.user.companyId,
+      headerData:state => state.home.headerData,
+    }),
     tootipText() {
       return this.$t("passages.tootipText7");
     },
-    companyId() {
-      return this.$store.state.user.companyId;
-    },
-    shoppingCurrentId() {
-      return this.$store.state.home.headerAction;
-    },
+
     customAnalytics() {
       let tml = [];
       if (!Object.keys(this.footFallTypeRes).length) return tml;
+      if(!this.headerData.show_arrival_dist){
+        delete this.footFallTypeRes.arrival_distribution
+      }
+      if(!this.headerData.show_new_old_customer){
+        delete this.footFallTypeRes.new_old_proportion
+      }
       let data = this.footFallTypeRes;
       delete data.clerk_proportion;
       Object.keys(data).forEach((e) => {
@@ -691,7 +697,7 @@ export default {
       this.$nextTick(()=>{
         this.$refs.trend.getTrendData()
       })
-     
+
       // 销售数据
     },
     initDateDuration() {
@@ -773,7 +779,7 @@ export default {
       this.outRange = this.initDateDuration(); // get this month's date range
       this.$nextTick(()=>{
         this.$refs.trend.getTrendData()
-  
+
       })
       let companyId = this.companyId; // companyId
       // request orgnization and instantData of company

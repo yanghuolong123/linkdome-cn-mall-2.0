@@ -228,6 +228,8 @@ export default {
               img: list.map_url,
               show_actual_val:list.show_actual_val,
               show_add_count:list.show_add_count,
+              show_arrival_dist:list.show_mod.show_arrival_dist === 'true',//是否显示首页的到店次数
+              show_new_old_customer:list.show_mod.show_new_old_customer === 'true',//是否显示首页的新老顾客
               show_counting_demension:list.show_counting_demension,
             };
             this.comprotList.push(l);
@@ -261,6 +263,11 @@ export default {
             text: data.name,
             value: 0,
             img: data.map_url,
+            show_actual_val:data.show_actual_val,
+            show_add_count:data.show_add_count,
+            show_arrival_dist:data.show_mod.show_arrival_dist === 'true',//是否显示首页的到店次数
+            show_new_old_customer:data.show_mod.show_new_old_customer === 'true',//是否显示首页的新老顾客
+            show_counting_demension:data.show_counting_demension,
           };
           this.comprotList.push(obj);
         }
@@ -323,7 +330,7 @@ export default {
     ...mapState({
       systemName: state => state.home.systemName,
       menuList:state => state.home.menuList,
-  
+
     }),
   },
   methods: {

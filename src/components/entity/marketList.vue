@@ -104,6 +104,7 @@
         obj.address = obj.address ? obj.address : ' '
         obj.description = obj.description ? obj.description : ' '
 		obj.type_name = 'mall'
+	    obj.logo = obj.map_url
         this.tableList.push(obj)
       },
       imgConfig () {
