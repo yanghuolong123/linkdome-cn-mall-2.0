@@ -74,7 +74,7 @@
     },
     data () {
       return {
-        tableName: ['实体名称', '客流补录增幅', '执行日期', '执行时间', '状态', '操作'],
+        tableName: ['实体名称', '客流补录增幅','任务类型', '执行日期', '执行时间', '状态', '操作'],
         titleName: '补录实体列表',
         tableData: [],
         treeData: [],
@@ -118,14 +118,6 @@
       caseDidChange (value = this.defaultValue) {
         getRecordList({ bzid: value[value.length - 1] }).then(res => {
           this.eventAllData = res.data.data.list
-          this.eventAllData.forEach(o => {
-            if (!o.exec_time) {
-              o.exec_time = ' '
-            }
-            if (!o.exec_date) {
-              o.exec_date = ' '
-            }
-          })
           this.eventTotal = Math.ceil(this.eventAllData.length / 5)
           this.eventAllData.forEach(o => {
             o.operation = true

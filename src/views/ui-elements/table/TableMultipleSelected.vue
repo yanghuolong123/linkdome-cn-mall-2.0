@@ -28,10 +28,13 @@
                     <vs-td :data="data[indextr].ratio" v-if="data[indextr].ratio">
                         {{data[indextr].ratio+'%'}}
                     </vs-td>
-                    <vs-td :data="data[indextr].exec_date" v-if="data[indextr].exec_date">
+                    <vs-td :data="data[indextr].type_id" v-if="hasProperty(data[indextr],'type_id')">
+                        {{data[indextr].type_id === 0?'分解任务':'整体任务'}}
+                    </vs-td>
+                    <vs-td :data="data[indextr].exec_date" v-if="hasProperty(data[indextr],'exec_date')">
                         {{data[indextr].exec_date.replace(',',' - ')}}
                     </vs-td>
-                    <vs-td :data="data[indextr].exec_time" v-if="data[indextr].exec_time">
+                    <vs-td :data="data[indextr].exec_time"  v-if="hasProperty(data[indextr],'exec_time')">
                         {{data[indextr].exec_time.replace(',',' - ')}}
                     </vs-td>
                     <vs-td :data="data[indextr].status_num"
@@ -207,6 +210,9 @@
       }
     },
     methods: {
+      hasProperty(obj,key){
+        return obj.hasOwnProperty(key)
+      },
       isEmpty (val) {
         return isEmpty(val)
       },

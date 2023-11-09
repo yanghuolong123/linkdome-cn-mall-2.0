@@ -207,6 +207,7 @@ export default {
   mounted() {
     var GroupCompany = _.find(this.menuList, ["name", "Dashboard"]).subpagesList;
     GroupCompany = _.find(GroupCompany, ["name", "GroupCompany"]).id + "";
+    console.log(GroupCompany)
     var showCompany;
     if (this.$store.state.user.role_id < 3) {
       this.showCompany = true;
@@ -279,6 +280,8 @@ export default {
                 bzId: list.bzid,
                 value: list.property_id,
                 img: list.map_url,
+                show_arrival_dist:list.show_mod.show_arrival_dist === 'true',//是否显示首页的到店次数
+                show_new_old_customer:list.show_mod.show_new_old_customer === 'true',//是否显示首页的新老顾客
               };
               if (role_property.indexOf(l.value) > -1) this.comprotList.push(l);
             }
