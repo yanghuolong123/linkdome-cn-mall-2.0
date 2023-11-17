@@ -5,7 +5,7 @@
 			<FormItem prop="name" :label="$t('名称')">
 				<Input v-model="datas.name"></Input>
 			</FormItem>
-			<FormItem prop="date" label="活动日期">
+			<FormItem prop="date" :label="$t('活动日期')">
 				<DatePicker  style="width: 100%" :value="datas.date" format="yyyy-MM-dd" :editable="false" type="daterange"
 										:placeholder="$t('holder.选择日期')" @on-change="dateDidChange"></DatePicker>
 			</FormItem>
@@ -20,8 +20,8 @@
 			</FormItem>
 			<FormItem :label="$t('目标客流')">
 				<RadioGroup v-model="targetType" @on-change="targetTypeChange">
-					<Radio label="总目标"  :disabled="!datas.date.length"></Radio>
-					<Radio label="每日目标"  :disabled="!datas.date.length"></Radio>
+					<Radio :label="$t('总目标')"  :disabled="!datas.date.length"></Radio>
+					<Radio :label="$t('每日目标')"  :disabled="!datas.date.length"></Radio>
 				</RadioGroup>
 			</FormItem>
 			<FormItem prop="target_total" style="margin-top: -20px" :label-width="80" v-show="targetType==='总目标'">
@@ -62,9 +62,9 @@
       ruleInline () {
         let rules = {
           name: [{ required: true, validator: validName, trigger: 'blur' }],
-          date: [{ required: true, message:'请选择活动日期',trigger: 'change',type:'array' }],
-          property_id: [{ required: this.showBelong, message:'请选择活动归属', trigger: 'change',type:'number' }],
-          target_total: [{ required: true, trigger: 'blur',message:'请填写客流总目标',}],
+          date: [{ required: true, message:this.$t('fn.请选择', [this.$t('活动日期')]),trigger: 'change',type:'array' }],
+          property_id: [{ required: this.showBelong, message:this.$t('fn.请选择', [this.$t('活动归属')]), trigger: 'change',type:'number' }],
+          target_total: [{ required: true, trigger: 'blur',message:this.$t("fn.require", [this.$t("目标客流")]),}],
         }
         if (this.targetType === '总目标') {
           return rules
@@ -73,7 +73,7 @@
           ruleCopy.target_total[0].required = false;
          	const days = moment(this.datas.date[1]).diff(this.datas.date[0], 'day')
 					for (let i = 0;i<=days;i++){
-					  ruleCopy[`target_daily_${i}`] = [{ required: true, trigger: 'blur',message:'请填写' }]
+					  ruleCopy[`target_daily_${i}`] = [{ required: true, trigger: 'blur',message:this.$t("fn.require", [this.$t('目标')]) }]
 					}
           return ruleCopy
         }

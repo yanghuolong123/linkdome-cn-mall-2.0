@@ -11,7 +11,7 @@
       </vs-select>
     </div>
     <div class="common-card">
-      <div class="title ">节假日活动管理</div>
+      <div class="title ">{{$t('HolidayManage')}}</div>
       <Table
         class="m-t-20"
         stripe
@@ -25,7 +25,7 @@
     </div>
     <div class="common-card m-t-20">
       <div class="flex-between">
-        <div class="title">活动管理</div>
+        <div class="title">{{$t('活动管理')}}</div>
         <div class="account-add-remove flex-center">
         <span class="account-add" @click="addData" :title="$t('添加')">
           <Icon type="md-add" />
@@ -103,16 +103,16 @@ export default {
       holidayColumn:[
         {
           key:'name',
-          title:'节假日名称',
+          title:this.$t('节假日名称'),
         },{
           key:'start_date',
-          title:'开始时间',
+          title:this.$t('开始时间'),
         },{
           key:'end_date',
-          title:'结束时间',
+          title:this.$t('结束时间'),
         },{
           key:'duration',
-          title:'持续时间',
+          title:this.$t('持续时间'),
         },
       ],
       holidayData:[],
@@ -131,25 +131,25 @@ export default {
         },
         {
           key:'name',
-          title:'活动名称',
+          title:this.$t('活动名称'),
         },{
           key:'property_name',
-          title:'活动归属',
+          title:this.$t('活动归属'),
         },{
           key:'target_enter',
-          title:'目标客流',
+          title:this.$t('目标客流'),
         },{
           key:'start_date',
-          title:'开始时间',
+          title:this.$t('开始时间'),
         },{
           key:'end_date',
-          title:'结束时间',
+          title:this.$t('结束时间'),
         },{
           key:'duration',
-          title:'持续时间',
+          title:this.$t('持续时间'),
         },{
           slot:'operate',
-          title:'操作',
+          title:this.$t('操作'),
         },
       ],
 
