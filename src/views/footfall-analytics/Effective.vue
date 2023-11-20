@@ -10,12 +10,12 @@
 								 class="common-card  tendency"></chart-box>
 			<div class="card-box flex-column" 	 v-if="!isMultiEntity">
 				<Cards class="card"
-						
+
 							 v-for="item in statisticList"
 							 :isTime="oParams&&oParams.isDateCompare()"
 							 :isUp="item.isUp"
 							 :item="item"></Cards>
-			
+
 			</div>
 			<div class="common-card entity-table" ref="table" v-else>
 				<Table
@@ -25,7 +25,7 @@
 					:data="tableData"
 				></Table>
 			</div>
-			
+
 		</div>
 		<div class="flex-center l-2 m-t-20">
 			<arrival-times-chart ref="arrival"
@@ -92,7 +92,7 @@
             }, {
               icon: 'daoru',
               value: 'download',
-              name: '到店次数数据'
+              name: '到店次数'
             }
           ]
         }
@@ -108,7 +108,7 @@
           }, {
             icon: 'daoru',
             value: 'download',
-            name: '到店次数数据'
+            name: '到店次数'
           }
         ]
       },
@@ -132,7 +132,7 @@
             }, {
               icon: 'daoru',
               value: 'download',
-              name: '有效客流趋势数据'
+              name: '有效客流趋势'
             }
           ]
 				if(this.oParams && this.oParams.params.entitys.length>1){
@@ -186,7 +186,7 @@
           }, {
             icon: 'daoru',
             value: 'download',
-            name: '平均到访频次趋势数据'
+            name: '平均到访频次趋势'
           }
         ],
         statisticList: [
@@ -534,7 +534,7 @@
         this.arrivalToolClick(this.$refs.arrival.currentChart)
 
       },
-     
+
 
 
       //到店次数（饼图）
@@ -560,7 +560,7 @@
 								value:res[i].arrival_distribution[key]
 							})
 						}
-						
+
 					}
 				}
         const legend = serierData.map(o => {
@@ -590,8 +590,8 @@
         this.arrivalOption.pieOptions = pieConfigCopy
         this.arrivalToolClick(this.$refs.arrival.currentChart)
 			},
-     
-    
+
+
       /*
 			*@method 查询
 			*@param {obj} value 查询控件封装的数据
@@ -616,17 +616,17 @@
 					//非时间对比
           if (!this.oParams.isDateCompare()){
             //多实体
-						
+
             if(value.entitys.length > 1){
-             
+
               this.trendByMultiEntity(res)
 						}else {
               this.trendByNone(res)
-             
+
 						}
             this.setPieOption(res)
             this.freequencyByNone(res)
-      
+
 					}else {
             const type = params.range === 'Month' ? 'Month' : 'day'
             const diff1 = moment(value.date1Array[1]).diff(moment(value.date1Array[0]), type)
@@ -680,23 +680,23 @@
 		.chart-2 {
 			height: 383px;
 		}
-		
+
 		.l-1 {
 			height: 535px;
-			
+
 			.card-box {
 				height: 100%;
 				width: 21%;
 				justify-content: space-between;
-				
+
 				.card {
 					height: 165px;
 				}
-				
+
 				.cards {
 					box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
 					border-radius: 6px;
-					
+
 				}
 			}
 			.entity-table{

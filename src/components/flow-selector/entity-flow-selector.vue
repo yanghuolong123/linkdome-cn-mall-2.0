@@ -107,19 +107,19 @@
         bussinessTypeOptions: [],//业态
         rangeList: [
           {
-            label: '5' + this.$t('分钟'),
+            label: '5 ' + this.$t('分钟'),
             value: '5m'
           }, {
-            label: '10' + this.$t('分钟'),
+            label: '10 ' + this.$t('分钟'),
             value: '10m'
           }, {
-            label: '15' + this.$t('分钟'),
+            label: '15 ' + this.$t('分钟'),
             value: '15m'
           }, {
-            label: '30' + this.$t('分钟'),
+            label: '30 ' + this.$t('分钟'),
             value: '30m'
           }, {
-            label: '1' + this.$t('小时'),
+            label: '1 ' + this.$t('小时'),
             value: 'Hour'
           }
         ]

@@ -500,7 +500,7 @@ export default {
         //   titleName = '销售分析'
         // }
         // this.exportEx == 1 ? name = titleName+'业态排行' : name =titleName+ '商铺排行'
-        downloadEx(exportEx,'实体引流分析业态排行',[this.tableList.coumnOne,this.tableList.dataOne])
+        downloadEx(exportEx,this.$t('实体引流分析业态排行'),[this.tableList.coumnOne,this.tableList.dataOne])
       }
     },
     exportShoptop (type) {
@@ -516,7 +516,7 @@ export default {
         //   titleName = '销售分析'
         // }
         // this.exportEx == 1 ? name = titleName+'业态排行' : name =titleName+ '商铺排行'
-        downloadEx(exportEx,'实体引流分析商铺排行',[this.tableList.coumnTwo,this.tableList.dataTwo])
+        downloadEx(exportEx,this.$t('实体引流分析商铺排行'),[this.tableList.coumnTwo,this.tableList.dataTwo])
       }
     },
     // 请求业态数据传

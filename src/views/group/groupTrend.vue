@@ -566,7 +566,7 @@ export default {
       //     list.time = time[0] + '  ' + list.time
       //   })
       // }
-      downloadEx(exportEx, "集团趋势分析", newTableData);
+      downloadEx(exportEx, this.$t("集团趋势分析"), newTableData);
     },
     enterTableChage(value) {
       this.tableListData = value.data;

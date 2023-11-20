@@ -153,8 +153,8 @@ export default {
       return ['业态排行']
     },
     mallTitle () {
-      if (this.ismallMore) return [`${this.orderName}排行 T O P 10`, `${this.orderName}排行`]
-      else return [ `${this.orderName}排行` ]
+      if (this.ismallMore) return [`${this.$t(this.orderName)} ${this.$t('排行')} T O P 10`, `${this.$t(this.orderName)} ${this.$t('排行')} `]
+      else return [ `${this.$t(this.orderName)} ${this.$t('排行')}` ]
     },
     leftFormatedData () {
       return formatTableData(this.leftTableData, ['enter'])
@@ -209,7 +209,7 @@ export default {
         type: 'enter',
         range: range.toString(),
         innerRange,
-       
+
       }
       if(compareType === 'entity'){
         params.bzid = bzidArr.toString()

@@ -245,9 +245,9 @@ export default {
 							this.$t('集客峰值'),
 							this.$t('有效客流'),
 							this.$t('成交率'),
-							'坪效（元/平方米）',
-							'客单价（元）',
-							'销售额（元）' //this.$t('sales_yuan')
+                            this.$t('坪效(元/平方米)'),
+                          this.$t('客单价(元)'),
+                          this.$t('销售额(元)') //this.$t('sales_yuan')
 						]
 					)
           break

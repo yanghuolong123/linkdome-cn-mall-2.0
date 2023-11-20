@@ -201,7 +201,6 @@
             }
           })
         })
-        console.log(data)
         return data
       },
       getTableColumn (option) {
@@ -257,6 +256,8 @@
         this.$emit('download')//无效客流中要对table数据进行特殊处理，故作延迟处理
         setTimeout(() => {
           this.initTable(this.chartOption)
+          console.log(this.toolList)
+          console.log(this.$t(this.toolList[index].name))
           downloadEx(exportEx, this.$t(this.toolList[index].name), [
             this.tableColumn,
             this.tableData,

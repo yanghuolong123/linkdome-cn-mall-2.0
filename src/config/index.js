@@ -1,3 +1,4 @@
+import i18n from '@/i18n/i18n'
 export default {
   /**
    * @description token在Cookie中存储的天数，默认1天
@@ -69,25 +70,25 @@ export default {
   entityType:[
     {
       value:'area',
-      name:'区域'
+      name:i18n.t('区域')
     },{
       value:'floor',
-      name:'楼层'
+      name:i18n.t('楼层')
     },{
       value:'mall',
-      name:'购物中心'
+      name:i18n.t('购物中心')
     },{
       value:'gate',
       name:'出入口'
     },{
       value:'other',
-      name:'其他'
+      name:i18n.t('其他')
     },{
       value:'store',
-      name:'商铺'
+      name:i18n.t('商铺')
     },{
       value:'company',
-      name:'集团'
+      name:i18n.t('集团')
     },
   ]
 }

@@ -56,7 +56,7 @@
                     "
                                 class="w-100"
                         ></TimePicker>
-                        <div class="mid-margin"> 至</div>
+                        <div class="mid-margin"> {{$t('至')}}</div>
                         <TimePicker
                                 confirm
                                 type="time"
@@ -229,14 +229,14 @@
                                 <i-col span="5" style="margin-left: -6px;">
                                     <FormItem :label="$t(item.name)"></FormItem>
                                 </i-col>
-                                <i-col span="16">
+                                <i-col span="13">
                                     <Input
                                             type="number"
                                             :disabled="disabled"
                                             v-model="item.modal"
                                     ></Input>
                                 </i-col>
-                                <i-col span="2" offset="1">{{ $t('人') }}</i-col>
+                                <i-col span="4" offset="1">{{ $t('人') }}</i-col>
                             </row>
                             <row span="24" offset="0" class="fs16">
                                 {{ $t('全年总计') }}

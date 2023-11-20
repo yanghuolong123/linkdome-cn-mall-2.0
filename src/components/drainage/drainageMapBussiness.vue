@@ -12,9 +12,9 @@
 			<div class="drainage-center flex-center p-r">
 				<div class="left p-a flex-column">
 <!--					<span v-if="headerData.show_actual_val">{{dataList.shop&&dataList.shop.total_from.toLocaleString()}}人次</span>-->
-				
+
 					<div class="flex-center">
-						<span class="thin">环比</span>
+						<span class="thin">{{$t('环比')}}</span>
 						<Icon type="md-arrow-dropdown" v-if="dataList.shop.from_action"/>
 						<Icon type="md-arrow-dropup" v-else/>
 						<span v-bind:class="{ clolorAction: dataList.shop.from_action }">{{dataList.shop.from_rate}}%</span>
@@ -22,9 +22,9 @@
 				</div>
 				<div class="right p-a flex-column">
 <!--					<span v-if="headerData.show_actual_val">{{dataList.shop&&dataList.shop.total_to.toLocaleString()}}人次</span>-->
-				
+
 					<div class="flex-center">
-						<span class="thin">环比</span>
+						<span class="thin">{{$t('环比')}}</span>
 						<Icon type="md-arrow-dropdown" v-if="dataList.shop.to_action"/>
 						<Icon type="md-arrow-dropup" v-else/>
 						<span v-bind:class="{ clolorAction: dataList.shop.to_action }">{{dataList.shop.to_rate}}%</span>
@@ -35,7 +35,7 @@
 				<img class="arrow" :src="centerImg" alt="">
 				<div class="p-a shop-name flex-column">
 					<b>{{dataList.shop&&dataList.shop.name}}</b>
-					<span class="m-t-10" v-if="headerData.show_actual_val">{{dataList.shop&&dataList.shop.enter.toLocaleString()}}人次</span>
+					<span class="m-t-10" v-if="headerData.show_actual_val">{{dataList.shop&&dataList.shop.enter.toLocaleString()}}{{$t('人次')}}</span>
 				</div>
 			</div>
 			<div class="drainage-map-item">
@@ -103,7 +103,7 @@
 		background-color: #fff;
 		.drainage-map-box{
 			padding: 50px;
-		
+
 			.drainage-map-item{
 				width: 30%;
 				flex: none;
@@ -117,7 +117,7 @@
 				flex: 1;
 				.m-t-10{
 					margin-top: 10px;
-					
+
 				}
 				.left{
 					left: 20px;
@@ -146,23 +146,23 @@
 				.thin {
 					color: #929292;
 				}
-				
+
 				.clolorAction {
 					color: #f64f61;
 				}
-				
+
 				.ivu-icon-md-arrow-dropup {
 					font-size: 18px;
 					color: #26b465;
 				}
-				
+
 				.ivu-icon-md-arrow-dropdown {
 					font-size: 18px;
 					color: #f64f61;
 				}
 			}
 		}
-		
+
 		h1 {
 			font-size: 24px;
 			color: #3e3c3c;

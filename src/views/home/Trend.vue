@@ -12,7 +12,7 @@
       @tableChage="TableChageList"
       class="bg-white box-card"
       id="trendLine"
-      title="购物中心趋势分析"
+      :title="$t('购物中心趋势分析')"
     >
       <export-menu slot="export" @onchange="enterExportBiztop"></export-menu>
       <template>
@@ -478,7 +478,7 @@ export default {
       //     list.time = time[0] + '  ' + list.time
       //   })
       // }
-      downloadEx(exportEx, "购物中心趋势分析", newTableData);
+      downloadEx(exportEx, this.$t("购物中心趋势分析"), newTableData);
     },
   },
 };

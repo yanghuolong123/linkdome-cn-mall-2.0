@@ -167,7 +167,7 @@
                 })
               } else {
                 category = Object.keys(this.responseData[o])
-              }
+			  }
             }
           }
         //双Y轴

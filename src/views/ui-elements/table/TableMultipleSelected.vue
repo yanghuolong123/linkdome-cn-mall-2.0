@@ -46,7 +46,7 @@
                         </i-switch>
                     </vs-td>
                     <vs-td :data="data[indextr].type_name" v-if="data[indextr].type_name">
-                        {{findKey(typeList,'value',data[indextr].type_name,'name')}}
+                        {{$t(findKey(typeList,'value',data[indextr].type_name,'name'))}}
                     </vs-td>
                     <!-- 客流目标 -->
                     <vs-td :data="data[indextr].enterGoal" v-if="data[indextr].enterGoal">

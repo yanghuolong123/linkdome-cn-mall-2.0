@@ -63,7 +63,7 @@
 											 :disabled="disabledModal5">
 							<el-option v-for="item in formats"
 												 :value="item.value"
-												 :label="item.label"
+												 :label="$t(item.label)"
 												 :key="item.value"></el-option>
 						</el-select>
 					</el-form-item>

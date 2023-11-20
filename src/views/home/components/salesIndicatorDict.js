@@ -17,7 +17,7 @@ export default {
   //   }
   // },
   SaleAmount: {
-    name: '销售额',
+    name: i18n.t('销售额'),
     icon: 'dangrixiaoshoue',
     color: '#F64F61',
     unit: '（元）',
@@ -33,10 +33,10 @@ export default {
     }
   },
   SquaerMetre: {
-    name: '坪效',
+    name: i18n.t('坪效'),
     icon: 'xingxiaoxiaoguo',
     color: '#1DD9D1',
-    unit: '（元/平方米）',
+    unit: i18n.t('(元/平方米)'),
     yaxis: {
       title: {
         text: i18n.t('坪效（元/平方米）')
@@ -49,10 +49,10 @@ export default {
     }
   },
   CloseRate: {
-    name: '成交率',
+    name: i18n.t('成交率'),
     icon: 'chengjiaohuafen',
     color: '#857AEF',
-    unit: '（%）',
+    unit: '(%)',
     yaxis: {
       title: {
         text:  i18n.t('成交率')+'（%）'
@@ -66,10 +66,10 @@ export default {
     }
   },
   UnitPrice: {
-    name: '客单价',
+    name: i18n.t('客单价'),
     icon: 'jiage',
     color: '#33B3ED',
-    unit: '（元）',
+    unit:  i18n.t('(元)'),
     yaxis: {
       title: {
         text: i18n.t('客单价（元）')
