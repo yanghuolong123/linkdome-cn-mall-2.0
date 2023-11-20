@@ -17,7 +17,7 @@
 								 style="width: 50%"
 								 class="common-card m-t-20 m-l-20 chart-1"></pie-chart>
 		</div>
-		
+
 		<chart-box
 			chartId="invalidChart"
 			:chart="invalidChart"
@@ -69,49 +69,49 @@
           {
             icon: 'fenxi',
             value: 'pie',
-            name: '无效客流占比'
+            name: this.$t('无效客流占比')
           }, {
             icon: 'biaoge-copy',
             value: 'table',
-            name: '详细数据'
+            name: this.$t('详细数据')
           }, {
             icon: 'daoru',
             value: 'download',
-            name: '无效客流占比'
+            name: this.$t('无效客流占比')
           }
         ],
         ranktoolList: [
           {
             icon: '62',
             value: 'bar',
-            name: '无效客流排行'
+            name: this.$t('无效客流排行')
           }, {
             icon: 'biaoge-copy',
             value: 'table',
-            name: '详细数据'
+            name: this.$t('详细数据')
           }, {
             icon: 'daoru',
             value: 'download',
-            name: '无效客流排行'
+            name: this.$t('无效客流排行')
           }
         ],
         toolList: [
           {
             icon: 'zhexiantu',
             value: 'line',
-            name: '无效客流趋势'
+            name: this.$t('无效客流趋势')
           }, {
             icon: '62',
             value: 'bar',
-            name: '无效客流趋势'
+            name: this.$t('无效客流趋势')
           }, {
             icon: 'biaoge-copy',
             value: 'table',
-            name: '详细数据'
+            name: this.$t('详细数据')
           },{
             icon: 'daoru',
             value: 'download',
-            name: '无效客流趋势数据'
+            name: this.$t('无效客流趋势')
           }
         ],
         rankBarOption: null,
@@ -167,14 +167,14 @@
           })
         }
         barConfigCopy.series = []
-        barConfigCopy.legend.data = ['店员', '外卖人员'];
-        ['店员', '外卖人员'].forEach(o => {
+        barConfigCopy.legend.data = [this.$t('店员'), this.$t('外卖人员')];
+        [this.$t('店员'), this.$t('外卖人员')].forEach(o => {
           let data = []
           res.forEach(e => {
             let sum = 0
             if (e.list) {
               Object.values(e.list).forEach(l => {
-                if (o === '店员') {
+                if (o === this.$t('店员')) {
                   sum += l.typeList['1'].enter
                 } else {
                   sum += l.typeList['2'].enter
@@ -217,9 +217,9 @@
         let pieConfigCopy = _.cloneDeep(pieConfig)
         pieConfigCopy.series[0].data = pieData
         pieConfigCopy.compareType = compareType
-        pieConfigCopy.category = ['店员', '外卖人员']
-        pieConfigCopy.tooltip.formatter = function (params) {
-          return `<span style="font-size: 18px">${params.data.name}:${params.data.value}</span><br><span style="line-height: 18px">店员: ${params.data.staff}</span><br><span style="line-height: 18px">外卖人员: ${params.data.takeout}</span>`
+        pieConfigCopy.category = [this.$t('店员'), this.$t('外卖人员')]
+        pieConfigCopy.tooltip.formatter =  (params)=> {
+          return `<span style="font-size: 18px">${params.data.name}:${params.data.value}</span><br><span style="line-height: 18px">${this.$t('店员')}: ${params.data.staff}</span><br><span style="line-height: 18px">${this.$t('外卖人员')}: ${params.data.takeout}</span>`
 
         }
         this.pieOption = pieConfigCopy
@@ -283,10 +283,10 @@
         lineConfigCopy.series = lineSeries
         barConfigCopy.series = barSeries
 
-        barConfigCopy.tooltip.formatter = lineConfigCopy.tooltip.formatter = function (params) {
+        barConfigCopy.tooltip.formatter = lineConfigCopy.tooltip.formatter = (params)=> {
           let result = `${params[0].axisValue}<br>`
           params.forEach(o => {
-            result += `${o.marker}${o.seriesName}:${o.data.value} 店员:${o.data.staff} 外卖人员:${o.data.takeout}<br>`
+            result += `${o.marker}${o.seriesName}:${o.data.value} ${this.$t('店员')}:${o.data.staff} ${this.$t('外卖人员')}:${o.data.takeout}<br>`
           })
           return result
         }
@@ -334,7 +334,7 @@
               let tableOption = _.cloneDeep(this.lineOption)
               tableOption.series.forEach(o => {
                 o.data = o.data.map(d => {
-                  return `${d.value.toLocaleString()}(店员:${d.staff.toLocaleString()} 外卖人员:${d.takeout.toLocaleString()})`
+                  return `${d.value.toLocaleString()}(${this.$t('店员')}:${d.staff.toLocaleString()} ${this.$t('外卖人员')}:${d.takeout.toLocaleString()})`
                 })
               })
               this.$refs.invalidEnter.initTable(tableOption)
@@ -355,7 +355,7 @@
 	.rate_analysis_title {
 		width: 100%;
 		height: auto;
-		
+
 		span {
 			display: inline-block;
 			height: 36px;
@@ -367,7 +367,7 @@
 			margin-bottom: 40px;
 		}
 	}
-	
+
 	.rate_analysis {
 		margin-top: 20px;
 		padding: 0 20px 20px;
@@ -376,7 +376,7 @@
 		-webkit-border-radius: 8px;
 		-moz-border-radius: 8px;
 		border: 1px solid #d7dfe3;
-		
+
 		> p {
 			font-size: 20px;
 			color: #919191;
@@ -387,17 +387,17 @@
 			border-bottom: 1px solid rgba(215, 223, 227, 1);
 		}
 	}
-	
+
 	.bottomRow {
 		margin-top: 16px;
 		height: 40px;
 	}
-	
+
 	.selectorbox {
 		border-radius: 6px;
 		box-shadow: 0 0 9px 0 rgba(166, 168, 169, .4);
 	}
-	
+
 	.chart-1 {
 		height: 540px;
 	}
@@ -406,7 +406,7 @@
 	.selectorbox ::v-deep
 	.ivu-card-bordered
 		border none
-	
+
 	.ivu-card-body
 		padding 20px
 		padding-top 0px

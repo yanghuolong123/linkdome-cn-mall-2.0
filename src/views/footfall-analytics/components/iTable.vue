@@ -1,5 +1,5 @@
 <template>
-  <vs-table stripe :data="data" :maxHeight="maxHeight" :noDataText="noData" id="i-table-component">
+  <vs-table stripe :data="data" :maxHeight="maxHeight" :noDataText="$t(noData)" id="i-table-component">
     <template slot="header">
       <slot name="head"></slot>
     </template>

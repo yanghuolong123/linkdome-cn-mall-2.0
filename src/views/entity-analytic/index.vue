@@ -1,47 +1,47 @@
 <template>
-	<div>
-		<flow-selector
-			:maxEntity="false"
-			ref="flowSelector"
-			:multiQuta="enterSelect.length >1"
-			@paramsPrepare="paramsPrepare"
-		></flow-selector>
-		<chart-box
-			:weathers1="((enterSelect.length > 1 &&
+    <div>
+        <flow-selector
+                :maxEntity="false"
+                ref="flowSelector"
+                :multiQuta="enterSelect.length >1"
+                @paramsPrepare="paramsPrepare"
+        ></flow-selector>
+        <chart-box
+                :weathers1="((enterSelect.length > 1 &&
                   (oParams && oParams.params.entitys.length > 1))||['time'].includes(oParams &&oParams.params.compareType))?[]:weathers1"
-			:weathers2="((enterSelect.length > 1 &&
+                :weathers2="((enterSelect.length > 1 &&
                   (oParams && oParams.params.entitys.length > 1))||['time','not','entity','businessType'].includes(oParams &&oParams.params.compareType))?[]:weathers2"
-			chartId="enter"
-			:chart="enterChart"
-			ref="chartEnter"
-			:isDateCompare="oParams && oParams.isDateCompare()"
-			:showSummary="true"
-			@toolClick="
+                chartId="enter"
+                :chart="enterChart"
+                ref="chartEnter"
+                :isDateCompare="oParams && oParams.isDateCompare()"
+                :showSummary="true"
+                @toolClick="
         (chartName) => {
           handletoolClick(chartName, 'chartEnter');
         }
       "
-			class="common-card m-t-20 chart-1"
-			:toolList="toolList"
-		>
-			<div class="flex-center quota">
-				<span class="quota-label">{{ $t('fx.Data_indicators') }}</span>
-				<Select
-					v-model="enterSelect"
-					multiple
-					:max-tag-count="1"
-					@on-change="enterSelectChange"
-				>
-					<Option
-						v-for="item in enterFlowList"
-						:value="item.value"
-						:key="item.value"
-					>{{ $t(item.name) }}
-					</Option
-					>
-				</Select>
-				<i-switch
-					v-if="
+                class="common-card m-t-20 chart-1"
+                :toolList="toolList"
+        >
+            <div class="flex-center quota">
+                <span class="quota-label">{{ $t('fx.Data_indicators') }}</span>
+                <Select
+                        v-model="enterSelect"
+                        multiple
+                        :max-tag-count="1"
+                        @on-change="enterSelectChange"
+                >
+                    <Option
+                            v-for="item in enterFlowList"
+                            :value="item.value"
+                            :key="item.value"
+                    >{{ $t(item.name) }}
+                    </Option
+                    >
+                </Select>
+                <i-switch
+                        v-if="
             oParams &&
               !oParams.isDateCompare() &&
               !(
@@ -50,60 +50,60 @@
                   (oParams && oParams.params.entitys.length > 1))
               )
           "
-					class="ml-20 switch"
-					size="large"
-					@on-change="compareTypeChange"
-					v-model="isHour"
-				>
-					<span slot="open">{{ $t('小时') }}</span>
-					<span slot="close">{{ $t('fx.day') }}</span>
-				</i-switch>
-			</div>
-		</chart-box>
-		<div
-			class="common-card m-t-20"
-			ref="enterTable"
-		>
-			<div class="detail-title">{{ $t('fn.detailData', [$t('enter')]) }}</div>
-			<Table
-				stripe
-				height="400"
-				:columns="enterTableColumnsTrans"
-				:data="enterTable.tableData"
-			>
-				<template slot-scope="{ row }" slot="entityType">
-					<span>{{ getItype(row.entityName) }}</span>
-				</template>
-			</Table>
-		</div>
-		<chart-box
-			chartId="occu"
-			:chart="occuChart"
-			:weathers1="weathers1"
-			v-show="showOccu"
-			@toolClick="
+                        class="ml-20 switch"
+                        size="large"
+                        @on-change="compareTypeChange"
+                        v-model="isHour"
+                >
+                    <span slot="open">{{ $t('小时') }}</span>
+                    <span slot="close">{{ $t('fx.day') }}</span>
+                </i-switch>
+            </div>
+        </chart-box>
+        <div
+                class="common-card m-t-20"
+                ref="enterTable"
+        >
+            <div class="detail-title">{{ $t('fn.detailData', [$t('enter')]) }}</div>
+            <Table
+                    stripe
+                    height="400"
+                    :columns="enterTableColumnsTrans"
+                    :data="enterTable.tableData"
+            >
+                <template slot-scope="{ row }" slot="entityType">
+                    <span>{{ getItype(row.entityName) }}</span>
+                </template>
+            </Table>
+        </div>
+        <chart-box
+                chartId="occu"
+                :chart="occuChart"
+                :weathers1="weathers1"
+                v-show="showOccu"
+                @toolClick="
         (chartName) => {
           handletoolClick(chartName, 'chartOccu', ['occupancy']);
         }
       "
-			ref="chartOccu"
-			class="common-card m-t-20 chart-1"
-			:toolList="occuTool"
-		></chart-box>
-		<div class="common-card m-t-20" ref="occuTable" v-show="showOccu">
-			<div class="detail-title">{{ $t('fn.detailData', [$t('集客量')]) }}</div>
-			<Table
-				stripe
-				height="400"
-				:columns="occuTableColumnsTrans"
-				:data="occuTable.tableData"
-			>
-				<template slot-scope="{ row }" slot="entityType">
-					<span>{{ getItype(row.entityName) }}</span>
-				</template>
-			</Table>
-		</div>
-	</div>
+                ref="chartOccu"
+                class="common-card m-t-20 chart-1"
+                :toolList="occuTool"
+        ></chart-box>
+        <div class="common-card m-t-20" ref="occuTable" v-show="showOccu">
+            <div class="detail-title">{{ $t('fn.detailData', [$t('集客量')]) }}</div>
+            <Table
+                    stripe
+                    height="400"
+                    :columns="occuTableColumnsTrans"
+                    :data="occuTable.tableData"
+            >
+                <template slot-scope="{ row }" slot="entityType">
+                    <span>{{ getItype(row.entityName) }}</span>
+                </template>
+            </Table>
+        </div>
+    </div>
 </template>
 <script>
   import FlowSelector from '_c/flow-selector/entity-flow-selector'
@@ -116,7 +116,8 @@
   import { getMaxIndex, findKey, deepFind } from '@/libs/util'
   import moment from 'moment'
   import { isEmpty } from '../../libs/util'
-	import {mapState} from 'vuex'
+  import { mapState } from 'vuex'
+
   export default {
     name: 'entity-analytic',
     components: {
@@ -153,12 +154,12 @@
     computed: {
       ...mapState({
         propertyId: state => state.home.headerAction,
-        headerData:state => state.home.headerData,
+        headerData: state => state.home.headerData,
       }),
-			//是否按分钟查询
-			isMin(){
-        return this.oParams&&this.oParams.isSingleDay()&&this.oParams.params.range !=='Hour'
-			},
+      //是否按分钟查询
+      isMin () {
+        return this.oParams && this.oParams.isSingleDay() && this.oParams.params.range !== 'Hour'
+      },
       toolList () {
         if (!this.oParams || !this.oParams.getBzid()) return config.toolList
         //当选择了多指标，多实体时，不显示折线图
@@ -182,7 +183,7 @@
       //显示集客量图表的条件为：选择了购物中心 并且 是单天的数据
       showOccu () {
         if (!this.oParams) return false
-				if(this.isMin) return  false
+        if (this.isMin) return false
         return (
           !isEmpty(this.oParams.getSelectedShopId()) &&
           this.oParams.isSingleDay() &&
@@ -268,28 +269,28 @@
             data.property_id = this.propertyId
             reqList.push(entityFlowMin(data))
           } else {
-            reqList.push(entityFlow(data));
+            reqList.push(entityFlow(data))
           }
 
         })
         //判断是否需要查询集客量数据
         if (this.showOccu) {
-          if (this.isMin){
+          if (this.isMin) {
             reqList.push(
               entityFlowMin({
                 type: 'occupancy',
                 property_id: this.propertyId,
                 ...this.oParams.getParams(true),
               })
-						)
-					}else {
+            )
+          } else {
             reqList.push(
               entityFlow({
                 type: 'occupancy',
                 ...this.oParams.getParams(true),
               })
             )
-					}
+          }
 
           responseList.push('occupancy')
         }
@@ -331,7 +332,7 @@
               this.responseData[o] = res[i].data.data
             })
             this.updateChart('chartEnter')
-              this.enterTable = this.updateTableDetail(this.enterSelect)
+            this.enterTable = this.updateTableDetail(this.enterSelect)
             if (this.showOccu) {
               this.updateChart('chartOccu', ['occupancy'])
               this.occuTable = this.updateTableDetail(['occupancy'])
@@ -426,16 +427,15 @@
       },
       //更新表格【客流量,集客量详细数据信息】
       updateTableDetail (quta) {
-        if (!this.oParams ) {
+        if (!this.oParams) {
           return {
             columns: [],
             tableData: [],
           }
         }
-      
 
         const keyName = this.oParams.params.compareType === 'businessType' ? '业态' : '实体'
-				let columns = [
+        let columns = [
           {
             title: `${keyName}名称`,
             key: 'entityName',
@@ -444,17 +444,17 @@
             title: `${keyName}类别`,
             slot: 'entityType',
           },
-				]
-				quta.forEach(o=>{
+        ]
+        quta.forEach(o => {
           const qutaName = findKey(config.dictionary, 'value', o, 'name')
           columns = columns.concat([
             {
               title: `${qutaName}峰值`,
-              key: 'highest-'+o,
+              key: 'highest-' + o,
             },
           ])
-				})
-      
+        })
+
         if (this.oParams.params.compareType === 'businessType') {
           columns.splice(1, 1)  //删除实体类别
         }
@@ -465,39 +465,39 @@
           })
         }
         if (!quta.includes('occupancy')) {
-          quta.forEach((o,i)=>{
+          quta.forEach((o, i) => {
             const qutaName = findKey(config.dictionary, 'value', o, 'name')
-            columns.splice((i)-quta.length, 0, {
+            columns.splice((i) - quta.length, 0, {
               title: `累计${qutaName}`,
-              key: 'total-'+o,
+              key: 'total-' + o,
             })
-					})
+          })
 
         }
-        let option,tableData = []
-        if(quta.length>1&&this.oParams.params.entitys.length>1){
+        let option, tableData = []
+        if (quta.length > 1 && this.oParams.params.entitys.length > 1) {
           option = this.getLineOption([quta[0]])
-					quta.forEach(o=>{
-            option = this.getLineOption([o]);
-            tableData = tableData.concat(this.getTableData(quta,option))
-					})
-        }else {
+          quta.forEach(o => {
+            option = this.getLineOption([o])
+            tableData = tableData.concat(this.getTableData(quta, option))
+          })
+        } else {
           option = this.getLineOption(quta)
-          tableData = this.getTableData(quta,option)
+          tableData = this.getTableData(quta, option)
         }
-				
-        if(quta.length > 1){
+
+        if (quta.length > 1) {
           let arr = []
-          tableData.forEach(o=>{
-            let entity = arr.find(a=>{
-							return a&&a.id === o.id
-						})
-            if(entity){
-						  Object.assign(entity,o)
-            }else {
-						  arr.push(o)
+          tableData.forEach(o => {
+            let entity = arr.find(a => {
+              return a && a.id === o.id
+            })
+            if (entity) {
+              Object.assign(entity, o)
+            } else {
+              arr.push(o)
             }
-					})
+          })
           tableData = arr
         }
         return {
@@ -505,13 +505,13 @@
           tableData,
         }
       },
-			getTableData(quta,option){
+      getTableData (quta, option) {
         let tableData = []
         option.legend.data.forEach((d, dIndex) => {
           const data = option.series[dIndex].data
           if (!data.length) return
           const entityName = d.split('|')[0]
-          const qutaType = d.split('|')[1] === '入客流'?'enter':'exit'
+          const qutaType = d.split('|')[1] === this.$t('入客流') ? 'enter' : 'exit'
           const highestIndex = getMaxIndex(data)
           const total = _.sum(data).toLocaleString() + this.$t('人次')
           let time
@@ -541,22 +541,22 @@
               entityType: entityName,
               time,
             }
-            obj[`highest-occupancy`] = `${data[highestIndex].toLocaleString()} ${this.$t('人次')} ${highestTime}`;
+            obj[`highest-occupancy`] = `${data[highestIndex].toLocaleString()} ${this.$t('人次')} ${highestTime}`
             tableData.push(obj)
           } else {
             let obj = {
               entityType: entityName,
               entityName,
               time,
-              id:`${entityName}-${time}`
+              id: `${entityName}-${time}`
             }
-            obj[`highest-${qutaType}`] =  `${data[highestIndex].toLocaleString()} ${this.$t('人次')} ${highestTime}`;
+            obj[`highest-${qutaType}`] = `${data[highestIndex].toLocaleString()} ${this.$t('人次')} ${highestTime}`
             obj[`total-${qutaType}`] = total
             tableData.push(obj)
           }
         })
-				return tableData
-			},
+        return tableData
+      },
       getItype (name) {
         const node = deepFind(
           this.$refs.flowSelector.entityCascaderOption,
@@ -582,32 +582,32 @@
   }
 </script>
 <style scoped lang="less">
-	.chart-1 {
-		height: 540px;
-		
-		.quota {
-			font-size: 14px;
-			margin-right: 50px;
-			word-break: keep-all;
-			white-space: nowrap;
-			
-			.quota-label {
-				margin-right: 20px;
-			}
-			
-			.switch {
-				width: 145px;
-				margin-left: 20px;
-				
-				&.ivu-switch-large.ivu-switch-checked:after {
-					left: 50px;
-				}
-			}
-		}
-	}
-	
-	.detail-title {
-		font-size: 18px;
-		margin-bottom: 20px;
-	}
+    .chart-1 {
+        height: 540px;
+
+        .quota {
+            font-size: 14px;
+            margin-right: 50px;
+            word-break: keep-all;
+            white-space: nowrap;
+
+            .quota-label {
+                margin-right: 20px;
+            }
+
+            .switch {
+                width: 145px;
+                margin-left: 20px;
+
+                &.ivu-switch-large.ivu-switch-checked:after {
+                    left: 50px;
+                }
+            }
+        }
+    }
+
+    .detail-title {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
 </style>

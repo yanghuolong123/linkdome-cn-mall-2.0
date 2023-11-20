@@ -53,7 +53,7 @@ export default {
     ...mapState({
       propertyId: state => state.home.headerAction,
       headerData:state => state.home.headerData,
-  
+
     }),
     toolList(){
       let list = [
@@ -112,8 +112,8 @@ export default {
       chartTableListL: [],
       tableName: ["实体名称", "实体类别", "平均停留时间"],
       tableList: [],
-      
-      
+
+
       oParams:null,
       isHour:false,
       chart:{
@@ -220,7 +220,7 @@ export default {
                   xAxis.push( this.$t("fn.第_天", [i]))
                 }
               }
-              
+
               legend.push(`${o.name}|${params.time1.replace(',',' - ')}`)
               legend.push(`${o.name}|${params.time2.replace(',',' - ')}`)
               series.push({
@@ -276,9 +276,9 @@ export default {
           tooltip:{
             trigger: 'axis',
             formatter:(params)=>{
-              let html =`平均停留时间<br>`
+              let html =`${this.$t('平均停留时间')}<br>`
               if(this.oParams.isSingleDay()){
-                html = `平均停留时间<br>`
+                html = `${this.$t('平均停留时间')}<br>`
               }else {
                 html =  params[0].axisValue+'<br>'
               }
@@ -313,7 +313,7 @@ export default {
         })
       })
       return optionsCopy
-      
+
     },
     setLineOption(options){
       let lineConfigCopy = _.cloneDeep(lineConfig)

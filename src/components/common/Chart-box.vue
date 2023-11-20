@@ -1,45 +1,45 @@
 <template>
-	<div class="chart-box flex-column">
-		<div class="flex-between chart-title">
-			<span>{{ $t(toolList[tool] && toolList[tool].name) }}</span>
-			<div class="flex-center">
-				<slot></slot>
-				<span
-					class="icon"
-					@click="changeTab(item,index)"
-					v-for="(item, index) in toolList"
-					:key="index"
-				>
+    <div class="chart-box flex-column">
+        <div class="flex-between chart-title">
+            <span>{{ $t(toolList[tool] && toolList[tool].name) }}</span>
+            <div class="flex-center">
+                <slot></slot>
+                <span
+                        class="icon"
+                        @click="changeTab(item,index)"
+                        v-for="(item, index) in toolList"
+                        :key="index"
+                >
           <icons
-						class="pointer"
-						:type="item.icon"
-						:color="tool === index ? '#37b5ed' : '#9D9D9DFF'"
-						:size="20"
-					></icons>
+                  class="pointer"
+                  :type="item.icon"
+                  :color="tool === index ? '#37b5ed' : '#9D9D9DFF'"
+                  :size="20"
+          ></icons>
         </span>
-			</div>
-		</div>
-		<div class="chart">
-			<div
-				class="line-chart"
-				:id="`line-chart-${chartId}`"
-				v-show="currentChart === 'line'"
-			></div>
-			<div
-				class="bar-chart"
-				:id="`bar-chart-${chartId}`"
-				v-show="currentChart === 'bar'"
-			></div>
-			<div class="table" ref="table" v-show="currentChart === 'table'">
-				<Table
-					stripe
-					:height="tableHeight"
-					:columns="tableColumn"
-					:data="tableData"
-				></Table>
-			</div>
-		</div>
-	</div>
+            </div>
+        </div>
+        <div class="chart">
+            <div
+                    class="line-chart"
+                    :id="`line-chart-${chartId}`"
+                    v-show="currentChart === 'line'"
+            ></div>
+            <div
+                    class="bar-chart"
+                    :id="`bar-chart-${chartId}`"
+                    v-show="currentChart === 'bar'"
+            ></div>
+            <div class="table" ref="table" v-show="currentChart === 'table'">
+                <Table
+                        stripe
+                        :height="tableHeight"
+                        :columns="tableColumn"
+                        :data="tableData"
+                ></Table>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
   import { isEmpty, downloadEx } from '@/libs/util'
@@ -109,7 +109,7 @@
       getTableData (option) {
         console.log(option)
         if (isEmpty(option)) return []
-				let optionCopy = _.cloneDeep(option)
+        let optionCopy = _.cloneDeep(option)
         let axle = this.horizontal ? 'yAxis' : 'xAxis'
         let data = []
         if (this.showSummary) {
@@ -205,19 +205,18 @@
         return data
       },
       getTableColumn (option) {
-        console.log(option)
         if (isEmpty(option)) return []
-        let flag = false;
-        const target = ['出客流','入客流', '店员','外卖人员'];
-        for(let i = 0;i<target.length;i++){
-          if(option.legend.data.includes(target[i])){
-            flag = true;
+        let flag = false
+        const target = [this.$t('出客流'), this.$t('入客流'), this.$t('店员'), this.$t('外卖人员')]
+        for (let i = 0; i < target.length; i++) {
+          if (option.legend.data.includes(target[i])) {
+            flag = true
             break
-					}
-				}
+          }
+        }
         let column = [
           {
-            title: (flag||option.legend.type ==='entity' )? this.$t('实体') : this.$t('时间'),
+            title: (flag || option.legend.type === 'entity') ? this.$t('实体') : this.$t('时间'),
             key: 'time',
             fixed: option.legend.data.length > 10 ? 'left' : '',
             width: option.legend.data.length > 10 ? 120 : '',
@@ -228,7 +227,7 @@
             return {
               key: 'entity' + i,
               width: option.legend.data.length > 10 ? this.isDateCompare ? o.length * 15 : 150 : '',
-              title: o + (option.legend.unit?(option.legend.unit[i] ? `(${option.legend.unit[i]})` : `(${this.$t('人次')})`):''),
+              title: o + (option.legend.unit ? (option.legend.unit[i] ? `(${option.legend.unit[i]})` : `(${this.$t('人次')})`) : ''),
             }
           })
         )
@@ -238,10 +237,10 @@
           const arr = [
             {
               key: 'temperature1',
-              title: this.$t('temperature')+'(' + date1 + ')',
+              title: this.$t('temperature') + '(' + date1 + ')',
             }, {
               key: 'temperature2',
-              title: this.$t('temperature')+'(' + date2 + ')',
+              title: this.$t('temperature') + '(' + date2 + ')',
             }
           ]
           column = column.concat(arr)
@@ -251,20 +250,19 @@
             title: this.$t('temperature'),
           })
         }
-        console.log(column)
         return column
       },
       //下载
       handleDownload (index) {
         this.$emit('download')//无效客流中要对table数据进行特殊处理，故作延迟处理
-				setTimeout(()=>{
+        setTimeout(() => {
           this.initTable(this.chartOption)
-          downloadEx(exportEx, this.toolList[index].name, [
+          downloadEx(exportEx, this.$t(this.toolList[index].name), [
             this.tableColumn,
             this.tableData,
           ])
-				})
-      
+        })
+
       },
       changeTab (item, index) {
         if (item.value === 'download') {
@@ -328,31 +326,31 @@
   }
 </script>
 <style lang="less" scoped>
-	.chart-box {
-		.chart-title {
-			font-size: 18px;
-			
-			.flex-center {
-				.icon + .icon {
-					margin-left: 10px;
-				}
-			}
-		}
-		
-		.chart {
-			height: 0;
-			flex: 1;
-			
-			.line-chart,
-			.bar-chart {
-				width: 100%;
-				height: 100%;
-			}
-			
-			.table {
-				padding: 20px 0;
-				height: 100%;
-			}
-		}
-	}
+    .chart-box {
+        .chart-title {
+            font-size: 18px;
+
+            .flex-center {
+                .icon + .icon {
+                    margin-left: 10px;
+                }
+            }
+        }
+
+        .chart {
+            height: 0;
+            flex: 1;
+
+            .line-chart,
+            .bar-chart {
+                width: 100%;
+                height: 100%;
+            }
+
+            .table {
+                padding: 20px 0;
+                height: 100%;
+            }
+        }
+    }
 </style>

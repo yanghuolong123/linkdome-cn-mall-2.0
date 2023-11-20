@@ -607,9 +607,9 @@ export default {
       return sortedObj;
     },
     exportBiztop() {
-      let bizIndicatorName = this.indicators.find(
-        (val) => val.value == this.bizIndicator
-      ).name
+      let bizIndicatorName = this.indicators.find(o=>{
+        return o.value == this.bizIndicator
+      }).name
       let name;
       if (this.$store.state.home.headerAction === 0)
         name = this.$t("集团业态排行") + "(" + this.$t(bizIndicatorName) + ")";
@@ -632,11 +632,11 @@ export default {
       ).name;
       let name;
       if (this.$store.state.home.headerAction === 0)
-        name = this.$t("购物中心业态排行") + "(" + shopIndicatorName + ")";
+        name = this.$t("购物中心业态排行") + "(" + this.$t(shopIndicatorName) + ")";
       else if (this.$router.currentRoute.name === "SalesAnalytics") {
-        name = this.$t("销售商铺排行") + "(" + shopIndicatorName + ")";
+        name = this.$t("销售商铺排行") + "(" + this.$t(shopIndicatorName) + ")";
       } else {
-        name = this.$t("商铺排行") + "(" + shopIndicatorName + ")";
+        name = this.$t("商铺排行") + "(" + this.$t(shopIndicatorName) + ")";
       }
       downloadEx(exportEx, name, [
         this.tableList.coumnTwo,

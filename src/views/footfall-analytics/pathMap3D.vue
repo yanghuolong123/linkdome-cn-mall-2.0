@@ -11,12 +11,12 @@
 					class="w-select"
 				></DatePicker>
 				<Select v-model="mapIndex" class="m-l-20 w-select">
-					<Option v-for="(item,index) in mapInfo" :value="index" :key="item.id">{{ item.type }}</Option>
+					<Option v-for="(item,index) in mapInfo" :value="index" :key="item.id">{{ $t(item.type) }}</Option>
 				</Select>
 				<Button size="large" class="m-l-20" type="primary" @click="searchData">{{ $t('查询') }}</Button>
 				<Button size="large" class="m-l-20" @click="reset">{{ $t('重置') }}</Button>
 			</div>
-		
+
 		</div>
 		<div class="new-path-center m-t-20" v-show="mapInfo.length">
 			<div id="fengMap" v-if="isFengMap"></div>
@@ -27,7 +27,8 @@
 		</div>
 		<div class="maps">
 			<pathTab :title="title1" :numbers="number1"></pathTab>
-			<img :src="pathColor" alt="">
+			<img v-if="$store.state.language==='en-US'" :src="pathColorEn" alt="">
+			<img v-else :src="pathColor" alt="">
 		</div>
 	</div>
 </template>
@@ -47,6 +48,7 @@
     data () {
       return {
         pathColor: require('@/assets/images/fixation_img/rest/path.png'),
+        pathColorEn: require('@/assets/images/fixation_img/rest/path_en.png'),
         isFengMap: true,
         drainageDate: '',
         disabledDate: '',
@@ -198,15 +200,15 @@
 			box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .05);
 			padding: 18px 30px;
 			border-radius: .5rem;
-			
+
 			.con-select {
 				clear: none;
 			}
-			
+
 			.ivu-date-picker {
 				margin-top: 5px;
 			}
-			
+
 			.ivu-input {
 				width: 230px;
 				height: 43px;
@@ -214,28 +216,28 @@
 				font-size: 16px;
 				font-family: "source_han_sans_cn", "Roboto", sans-serif;
 			}
-			
+
 			.selectExample {
 				float: left;
 				width: 150px;
 				margin-left: 30px;
 			}
-			
+
 			.selectFloor {
 				width: 150px;
 			}
-			
+
 			.ivu-input-suffix {
 				i {
 					height: 43px;
 					line-height: 43px;
 				}
 			}
-			
+
 			.ivu-date-picker .ivu-select-dropdown {
 				z-index: 90000
 			}
-			
+
 			.drainage-submit {
 				display: inline-block;
 				padding: 0.75rem 2rem;
@@ -246,32 +248,32 @@
 				font-size: 1rem;
 				margin-left: 30px;
 				cursor: pointer;
-				
+
 				&:hover {
 					box-shadow: 0 8px 25px -8px #00A0E9;
 				}
 			}
-			
+
 			.drainage-reset {
 				background: #fff !important;
 				color: #37b5ed;
 				border: 1px solid #37b5ed;
 			}
 		}
-		
+
 		.new-path-center {
 			width: 80%;
 			position: relative;
 			height: 600px;
 			overflow: hidden;
-			
+
 			&.no-data {
 				background: #fff;
 				justify-content: center;
 				text-align: center;
 				font-size: 30px;
 			}
-			
+
 			#fengMap {
 				width: 100%;
 				height: 600px;
@@ -279,7 +281,7 @@
 				background-color: #fff;
 				position: relative;
 			}
-			
+
 			.shield {
 				width: 100%;
 				height: 30px;
@@ -289,7 +291,7 @@
 				bottom: 0;
 			}
 		}
-		
+
 		.maps {
 			position: absolute;
 			top: 258px;
@@ -297,12 +299,12 @@
 			width: 18%;
 			height: auto;
 			z-index: 999;
-			
+
 			img {
 				display: block;
 				margin-top: 30px;
 				width: 100%;
-				
+
 				&:hover {
 					border: 1px solid #23aeee !important;
 					border-radius: 6px;

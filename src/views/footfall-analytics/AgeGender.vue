@@ -171,7 +171,7 @@ export default {
           name: this.$t("年龄"),
           key: "age",
           data: flag
-            ? ["少年", "青年", "中年", "老年"]
+            ? [this.$t("少年"), this.$t("青年"), this.$t("中年"), this.$t("老年")]
             : Object.keys(ageCollection[0].data).map((e) => {
                 return e
                   .replace("_", "-")
@@ -453,7 +453,7 @@ export default {
       this.uploadList(this.genderTableList);
     },
     uploadList(value) {
-      downloadEx(exportEx, "年龄性别客流数据", value);
+      downloadEx(exportEx, this.$t("年龄性别客流数据"), value);
     },
   },
 

@@ -85,7 +85,7 @@
         if (isEmpty(option)) return []
         let column = [
           {
-            title: option.compareType === 'businessType' ? '业态' : '实体',
+            title: option.compareType === 'businessType' ? this.$t('业态') : this.$t('实体'),
             key: 'entity',
           }
         ]
@@ -140,23 +140,23 @@
 	.chart-box {
 		.chart-title {
 			font-size: 18px;
-			
+
 			.flex-center {
 				.icon + .icon {
 					margin-left: 10px;
 				}
 			}
 		}
-		
+
 		.chart {
 			height: 0;
 			flex: 1;
-			
+
 			.pie-chart {
 				width: 100%;
 				height: 100%;
 			}
-			
+
 			.table {
 				padding: 20px 0;
 				height: 100%;

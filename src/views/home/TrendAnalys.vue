@@ -88,7 +88,7 @@
         return {
           enter: {
             name: this.$t('客流量'),
-            unit: '（人次）',
+            unit:this.$t('人次'),
             yaxis: {
               title: {
                 text: `${this.$t('客流量')}(${this.$t('人次')})`,
@@ -359,13 +359,13 @@
 	.trend-chart {
 		height: 540px;
 	}
-	
+
 	.quota {
 		font-size: 14px;
 		margin-right: 50px;
 		word-break: keep-all;
 		white-space: nowrap;
-		
+
 		.quota-label {
 			margin-right: 20px;
 		}

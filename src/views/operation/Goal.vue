@@ -376,7 +376,7 @@ export default {
           }else {
             num = (sele.enter[0] / data.length).toFixed(0)
           }
-          
+
           barData2.push(num)
           var end = Number(num)
           obj.enterTarget = end
@@ -405,7 +405,7 @@ export default {
         }
       this.options2 = optionsBar
       tableData.push({
-				name:'合计',
+				name:this.$t('合计'),
         enterReal:_.sum(tableData.map(o=>{
           return o.enterReal
         })),

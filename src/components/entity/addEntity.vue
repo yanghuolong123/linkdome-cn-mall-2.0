@@ -53,9 +53,9 @@
 												 :key="item.value"></el-option>
 						</el-select>
 					</el-form-item>
-					
-				
-					
+
+
+
 					<el-form-item :label="$t('业态')" prop="business_type_id" v-show="formValidate.type_name === 'store'">
 						<el-select v-model="formValidate.business_type_id"
 											 class="w-100"
@@ -67,7 +67,7 @@
 												 :key="item.value"></el-option>
 						</el-select>
 					</el-form-item>
-					
+
 					<el-form-item :label="$t('面积')" prop="area_size"  v-show="formValidate.type_name === 'store'">
 						<el-input  v-model.number="formValidate.area_size" ></el-input>
 					</el-form-item>
@@ -206,31 +206,31 @@ export default {
       disabledModal5: false,
       formats: [],
       floors: [
-        { value: -5, label: "负五楼" },
-        { value: -4, label: "负四楼" },
-        { value: -3, label: "负三楼" },
-        { value: -2, label: "负二楼" },
-        { value: -1, label: "负一楼" },
-        { value: 1, label: "一楼" },
-        { value: 2, label: "二楼" },
-        { value: 3, label: "三楼" },
-        { value: 4, label: "四楼" },
-        { value: 5, label: "五楼" },
-        { value: 6, label: "六楼" },
-        { value: 7, label: "七楼" },
-        { value: 8, label: "八楼" },
-        { value: 9, label: "九楼" },
-        { value: 10, label: "十楼" },
-        { value: 11, label: "十一楼" },
-        { value: 12, label: "十二楼" },
-        { value: 13, label: "十三楼" },
-        { value: 14, label: "十四楼" },
-        { value: 15, label: "十五楼" },
-        { value: 16, label: "十六楼" },
-        { value: 17, label: "十七楼" },
-        { value: 18, label: "十八楼" },
-        { value: 19, label: "十九楼" },
-        { value: 20, label: "二十楼" },
+        { value: -5, label: this.$t('fn.negFloor',[5]) },
+        { value: -4, label: this.$t('fn.negFloor',[4]) },
+        { value: -3, label: this.$t('fn.negFloor',[3]) },
+        { value: -2, label:this.$t('fn.negFloor',[2]) },
+        { value: -1, label: this.$t('fn.negFloor',[1]) },
+        { value: 1, label: this.$t('fn.floor',[1]) },
+        { value: 2, label: this.$t('fn.floor',[2]) },
+        { value: 3, label: this.$t('fn.floor',[3]) },
+        { value: 4, label: this.$t('fn.floor',[4]) },
+        { value: 5, label:this.$t('fn.floor',[5]) },
+        { value: 6, label: this.$t('fn.floor',[6]) },
+        { value: 7, label: this.$t('fn.floor',[7]) },
+        { value: 8, label:this.$t('fn.floor',[8]) },
+        { value: 9, label: this.$t('fn.floor',[9]) },
+        { value: 10, label: this.$t('fn.floor',[10]) },
+        { value: 11, label: this.$t('fn.floor',[11]) },
+        { value: 12, label: this.$t('fn.floor',[12]) },
+        { value: 13, label: this.$t('fn.floor',[13]) },
+        { value: 14, label: this.$t('fn.floor',[14]) },
+        { value: 15, label: this.$t('fn.floor',[15]) },
+        { value: 16, label: this.$t('fn.floor',[16]) },
+        { value: 17, label: this.$t('fn.floor',[17]) },
+        { value: 18, label: this.$t('fn.floor',[18]) },
+        { value: 19, label: this.$t('fn.floor',[19]) },
+        { value: 20, label: this.$t('fn.floor',[20])},
       ],
       isModify: false,
       yearlist: [],
@@ -238,7 +238,7 @@ export default {
       typeList:[
         {
           value: 'floor', label: "楼层",id:51
-          
+
         },{
           value: 'store', label: "商铺",id:50
         },{
@@ -453,7 +453,7 @@ export default {
 					}else {
             this.createEntity(data)
 					}
-        
+
         }else {
           this.$refs.modal.resetOkButton()
         }
@@ -484,7 +484,7 @@ export default {
           this.closeModal()
           this.$emit('addSuc',data)
 				}
-    
+
 			}).catch(err=>{
         this.$message.error(err);
         this.$refs.modal.resetOkButton()

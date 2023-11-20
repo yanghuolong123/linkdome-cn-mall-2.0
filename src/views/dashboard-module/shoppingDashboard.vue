@@ -326,7 +326,7 @@ export default {
             chartObj.labels = {
               name: this.$t("年龄"),
               key: "age",
-              data: ["少年", "青年", "中年", "老年"],
+              data: [this.$t("少年"), this.$t("青年"), this.$t("中年"), this.$t("老年")],
             };
           } else {
             chartObj.labels = {
@@ -891,16 +891,16 @@ export default {
     genderExportBiztop(title) {
       switch (title) {
         case "年龄分布":
-          downloadEx(exportEx, "购物中心年龄分布客流数据", this.obj1);
+          downloadEx(exportEx, this.$t("购物中心年龄分布客流数据"), this.obj1);
           break;
         case "性别分布":
-          downloadEx(exportEx, "购物中心性别分布客流数据", this.obj2);
+          downloadEx(exportEx, this.$t("购物中心性别分布客流数据"), this.obj2);
           break;
         case "新老顾客占比":
-          downloadEx(exportEx, "购物中心新老顾客占比客流数据", this.obj3);
+          downloadEx(exportEx, this.$t("购物中心新老顾客占比客流数据"), this.obj3);
           break;
         case "到店次数":
-          downloadEx(exportEx, "购物中心顾客到店次数客流数据", this.obj4);
+          downloadEx(exportEx, this.$t("购物中心顾客到店次数客流数据"), this.obj4);
           break;
       }
     },

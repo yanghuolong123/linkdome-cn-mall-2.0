@@ -20,7 +20,7 @@
           <el-select v-model="type" class="w-select m-l-20">
             <el-option v-for="item in typeList"
                        :value="item.value"
-                       :label="item.label"
+                       :label="$t(item.label)"
                        :key="item.value"></el-option>
           </el-select>
             <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('查询') }}</Button>
@@ -38,7 +38,7 @@
       v-if="showType ==='bussiness'"
       :dataList = 'drainageMapListBus'
        :presentData = 'presentData'>
-      
+
     </drainage-map-bussiness>
     <!-- 详细数据 -->
     <drainage-chart
@@ -174,7 +174,7 @@ export default {
       }else {
         this.getDataByBussiness(time, id)
       }
-     
+
     },
     getDataByBussiness(time,bzid){
       drainageDataByBussiness({bzid,time}).then(res=>{
