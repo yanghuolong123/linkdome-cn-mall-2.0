@@ -22,7 +22,7 @@
       updateCache(){
         updateCache().then(res=>{
 					if(res.data.code === 200){
-					  this.$message.success('更新成功')
+					  this.$message.success(this.$t('fn.successTo',[this.$t('更新')]))
 					}else {
 					  this.$message.error(res.data.message)
 					}

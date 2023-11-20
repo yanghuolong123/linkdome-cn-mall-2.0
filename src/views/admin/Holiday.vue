@@ -247,7 +247,7 @@ export default {
           const day =
             this.$i18n.locale === "zh-CN"
               ? "天"
-              : e.duration > 1
+              : o.duration > 1
               ? " days"
               : " day";
           const duration = moment(o.end_date).diff(moment(o.start_date),'days')
@@ -273,7 +273,7 @@ export default {
           const day =
             this.$i18n.locale === "zh-CN"
               ? "天"
-              : e.duration > 1
+              : o.duration > 1
               ? " days"
               : " day";
           const duration = moment(o.end_date).diff(moment(o.start_date),'days')

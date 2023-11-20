@@ -508,18 +508,19 @@
         this.originTreeData = Object.assign(this.originTreeData, this.treeData)
       },
       deleteEntity (data) {
+        const that = this;
         this.$alert({
-          content: this.$t('确认删除此实体信息？'),
+          content: that.$t('确认删除此实体信息'),
           cancel () {
           },
           confirm: () => {
             delEntity(data.id).then((res) => {
               if (res.data.code === 200) {
-                this.$message.success(this.$t('删除成功'))
-                this.defaultValue = [this.defaultValue[0]]
-                this.getData()
+                that.$message.success(that.$t('删除成功'))
+                that.defaultValue = [that.defaultValue[0]]
+                that.getData()
               } else {
-                this.$message.error(res.data.msg)
+                that.$message.error(res.data.msg)
               }
             })
           },

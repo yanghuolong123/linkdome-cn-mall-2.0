@@ -560,6 +560,7 @@ module.exports =  {
   坐标:'coordinate',
   全部清除:'Clean all',
   开始打点:'Start managing',
+  更新:'Update',
   "1月":"Jan",
   "2月":"Feb",
   "3月":"Mar",
