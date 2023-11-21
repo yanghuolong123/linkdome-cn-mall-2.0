@@ -200,7 +200,7 @@ const selectMixin = {
         res = res.data.data
         this.bussinessTypeOptions = [{
           id: -1,
-          name: '全部业态'
+          name: this.$t('全部业态')
         }]
         if (res) {
           for (let key in res) {

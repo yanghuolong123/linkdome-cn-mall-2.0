@@ -9,7 +9,7 @@
         <div class="left-chart-box" id="drainageChart">
           <chartTabs :xAxis="chartData.xAxis"
                      :extraOptions="occpuancyOptions"
-                     title='趋势图'
+                     :title='$t("趋势图")'
                      :series="chartData.series"></chartTabs>
         </div>
         <div class="right-card-box">

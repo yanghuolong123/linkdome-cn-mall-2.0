@@ -44,8 +44,8 @@
             <p class="minNumber">{{minNumber}}</p>
             <img :src="colorBar" width="20">
           </div>
-          <div v-if="showText" class="text-list" v-for="item in svgLists" :style="{left:(item.text.x)+'px',top:(item.text.y)+'px'}">{{item.text.enter}}人次</div>
-          <div  v-for="item in titleLists" class="titleList" :title="`${item.name} ${item.from}(人次)`" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}"></div>
+          <div v-if="showText" class="text-list" v-for="item in svgLists" :style="{left:(item.text.x)+'px',top:(item.text.y)+'px'}">{{item.text.enter}}{{$t('人次')}}</div>
+          <div  v-for="item in titleLists" class="titleList" :title="`${item.name} ${item.from}(${$t('人次')})`" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}"></div>
         </div>
       </div>
 
@@ -335,7 +335,7 @@ export default {
         clearInterval(this.timer)
       }
       var canvas = document.getElementById('canvasCircle')
-     
+
         if (canvas) {
         var ctx = canvas.getContext('2d')
         ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -349,7 +349,7 @@ export default {
       let admin = this.$store.state.user.role_id
       let allBzid = this.$store.state.user.bzid
       let property_id = this.$store.state.home.headerAction
-     
+
      setTimeout(() => {
         let canvasBox = document.getElementsByClassName('canvas')[0]
         if (canvasBox) {

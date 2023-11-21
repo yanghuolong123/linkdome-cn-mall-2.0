@@ -579,13 +579,13 @@
         pieConfigCopy.legend.textStyle = {
           rich: {
             a: {
-              width: 80
+              width: 100
             }
           }
         }
         pieConfigCopy.series[0].radius = ['0%', '70%']
         pieConfigCopy.series[0].center = ['30%', '50%']
-        pieConfigCopy.series[0].name = '到店次数'
+        pieConfigCopy.series[0].name = this.$t('到店次数')
         pieConfigCopy.series[0].data = serierData
         this.arrivalOption.pieOptions = pieConfigCopy
         this.arrivalToolClick(this.$refs.arrival.currentChart)

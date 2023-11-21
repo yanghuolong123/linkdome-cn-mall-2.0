@@ -38,7 +38,7 @@ module.exports = {
     cantLessThan: '{0} can not less than {1} characters',
     OperateIndex: 'Operating index {0}',
     EnterUnit: 'Enter({0})',
-    TargetEnterUnit: 'Enter({0})',
+    TargetEnterUnit: 'Target Enter({0})',
     SaleUnit: 'Sales({0})',
     TargetSaleUnit: 'Target Sales({0})',
     entityLimit: 'The number of selected entities cannot exceed {0}',
@@ -283,7 +283,7 @@ module.exports = {
   功能配套: 'Function package',
   楼层分析: 'Floor analysis',
   品牌分析: 'Brand analysis',
-  全部业态: 'All Bussiness Pattern',
+  全部业态: 'All bussiness type',
   全部楼层: 'All Floors',
   异动分析: 'Change analysis',
   上期排名: 'Ranking of the previous period',
@@ -308,7 +308,7 @@ module.exports = {
   // Cards.vue
   重复客流: 'Repeated enter',
   平均到访次数: 'Average visits',
-
+  进店率:'Entering rate',
   // goalCharts.vue => title1
   平均到访频次趋势: 'Average visits trend',
 
@@ -449,8 +449,8 @@ module.exports = {
   省份: 'Province',
   城市: 'City',
   父节点: 'Parent Node',
-  业态: 'Bussiness Pattern',
-  业态名称: 'Bussiness Pattern Name',
+  业态: 'Bussiness Type',
+  业态名称: 'Bussiness Type Name',
   面积: 'the measure of area',
   选择年份: 'Select year',
   客流目标: 'Enter Target',
@@ -605,6 +605,10 @@ module.exports = {
   分钟:'minutes',
   实体引流分析业态排行:"Ranking of physical drainage analysis formats",
   清除缓存:'Clean cache',
+  实体引流客流详细数据:'Detailed data on physical diversion of passenger flow',
+  节假日活动趋势分析:'Analysis of holiday activity trends',
+
+
   '1月': 'Jan',
   '2月': 'Feb',
   '3月': 'Mar',

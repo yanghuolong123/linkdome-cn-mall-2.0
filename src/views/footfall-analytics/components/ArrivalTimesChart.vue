@@ -140,7 +140,7 @@
         this.$emit('toolClick', this.currentChart)
       },
       handleDownload (index) {
-        downloadEx(exportEx, this.toolList[index].name, [
+        downloadEx(exportEx, this.$t(this.toolList[index].name), [
           this.tableColumn,
           this.tableData,
         ])
@@ -193,18 +193,18 @@
 	.chart-box {
 		.chart-title {
 			font-size: 18px;
-			
+
 			.flex-center {
 				.icon + .icon {
 					margin-left: 10px;
 				}
 			}
 		}
-		
+
 		.chart {
 			height: 0;
 			flex: 1;
-			
+
 			.pie-chart {
 				width: 100%;
 				height: 100%;

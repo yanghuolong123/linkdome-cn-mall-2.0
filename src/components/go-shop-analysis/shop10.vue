@@ -29,7 +29,7 @@
 		</div>
 		<chart-box ref="top10" chartId="top10Chart" class="common-card chart m-t-20" @toolClick="top10ToolClick"
 							 :chart="top10Chart" :toolList="top10ToolList"></chart-box>
-	
+
 	</div>
 </template>
 <script>
@@ -165,7 +165,7 @@
             series:data
 					}
           this.top10ToolClick(this.$refs.top10.currentChart)
-         
+
         })
       },
       setBarOption (options) {
@@ -194,9 +194,9 @@
               if(params.data.to > params.data.from){//进店人数大于过点人数时，让他们相当 并等于更大的值
                 params.data.from = params.data.to
               }
-              return `${params.marker}${params.data.name}<br><span>进店率:${params.data.value}%</span><br><span style="line-height: 18px">进店人次: ${params.data.to}</span><br><span style="line-height: 18px">过店人次: ${params.data.from}</span>`
+              return `${params.marker}${params.data.name}<br><span>${this.$t('进店率')}:${params.data.value}%</span><br><span style="line-height: 18px">进店人次: ${params.data.to}</span><br><span style="line-height: 18px">过店人次: ${params.data.from}</span>`
 						}else {
-              return `${params.name}<br>${params.marker}进店率:${params.data}%`
+              return `${params.name}<br>${params.marker}${this.$t('进店率')}:${params.data}%`
 						}
           }
 
@@ -209,7 +209,7 @@
               this.$refs.top10.initTable(this.top10Option.tableOption)
             })
             break
-     
+
           case 'bar':
             this.$nextTick(() => {
               this.$refs.top10.initBarChart(this.top10Option.barOption)
@@ -253,7 +253,7 @@
 				align-items: center;
 				justify-content: center;
 			}
-			
+
 			.go-shop-time-icon {
 				position: absolute;
 				left: 0;
@@ -266,46 +266,46 @@
 				justify-content: space-between;
 				padding: 0 20px;
 				font-size: 18px;
-				
+
 				.flex-center {
 					margin-top: 20px;
 					float: right;
 					margin-right: 50px;
-					
+
 					span {
-						
+
 						cursor: pointer;
 					}
-					
+
 					span + span {
 						margin-left: 10px;
 					}
 				}
-				
+
 				span:nth-child(1) {
 					font-size: 18px;
 				}
 			}
-			
+
 			.shop-line {
 				margin-top: 50px;
 			}
-			
+
 			.shop-line, .shop-table {
 				transition: none !important;
 				transform: translateY(100%);
 			}
-			
+
 			.shop-table {
 				height: 100%;
 				box-shadow: none;
 				overflow: auto;
 			}
-			
+
 			.lineAction {
 				transform: translateY(0%) !important;
 			}
-			
+
 			.tableAction {
 				transform: translateY(-100%) !important;
 			}

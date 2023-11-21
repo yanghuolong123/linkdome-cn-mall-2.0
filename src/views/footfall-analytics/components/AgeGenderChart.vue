@@ -114,7 +114,7 @@ export default {
       this.uploadList(this.genderTabList)
     },
     uploadList (value) {
-       downloadEx(exportEx,'实体引流客流详细数据',value)
+       downloadEx(exportEx,this.$t('实体引流客流详细数据'),value)
     },
     async getAgeGenderData () {
       const { time1, bzid } = this

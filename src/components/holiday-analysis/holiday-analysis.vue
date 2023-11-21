@@ -124,7 +124,7 @@ export default {
         return false
       }
       let name = this.ExcelData.type == 1 ? '节假日活动趋势分析' : '节假日活动对比分析'
-      downloadEx(exportEx,name,data)
+      downloadEx(exportEx,this.$t(name),data)
     }
   }
 }

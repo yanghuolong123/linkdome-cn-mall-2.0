@@ -8,7 +8,7 @@
           v-model="crossDate"
           placement="bottom-end"
           :options="disabledDate"
-          placeholder="选择日期"
+          :placeholder="$t('holder.选择日期')"
           class="w-select"
         ></DatePicker>
         <vs-select
@@ -27,7 +27,7 @@
           v-model="crossDateTwo"
           placement="bottom-end"
           :options="disabledDate"
-          placeholder="选择日期"
+          :placeholder="$t('holder.选择日期')"
           class="w-select m-l-20"
           v-if="selectType == 1"
         ></DatePicker>
@@ -46,7 +46,7 @@
     </div>
     <chart-box ref="trendChart" v-show="!nodata" chartId="trendChart" class="common-card chart m-t-20" @toolClick="toolClick"
                :chart="trendChart" :toolList="toolList"></chart-box>
-    <div v-show="nodata" class="chart no-data common-card m-t-20">暂无数据</div>
+    <div v-show="nodata" class="chart no-data common-card m-t-20">{{$t('暂无数据')}}</div>
   </div>
 </template>
 <script>
@@ -333,7 +333,7 @@ export default {
         const day = range === 'Month' ?this.$t('fn.第_月',[ i+1 ]):this.$t('fn.第_天',[ i+1 ]);
         options.xAxis.push(day)
       })
-      
+
       this.chartOption.lineOption = this.setLineOption(options);
       this.chartOption.barOption = this.setBarOption(options);
       this.toolClick(this.$refs.trendChart.currentChart)
@@ -367,7 +367,7 @@ export default {
             }
             html += `${o.marker}${o.seriesName}:${o.value}%(进店人次:${o.data.to},过店人次:${o.data.passby})<br>`
           })
-         
+
         }else {
           params.forEach(o=>{
             html += `${o.marker}${o.seriesName}:${o.value}%<br>`
@@ -399,7 +399,7 @@ export default {
             }
             html += `${o.marker}${o.seriesName}:${o.value}%(进店人次:${o.data.to},过店人次:${o.data.passby})<br>`
           })
-      
+
         }else {
           params.forEach(o=>{
             html += `${o.marker}${o.seriesName}:${o.value}%<br>`

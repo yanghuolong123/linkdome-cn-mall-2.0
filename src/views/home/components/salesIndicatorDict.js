@@ -20,7 +20,7 @@ export default {
     name: i18n.t('销售额'),
     icon: 'dangrixiaoshoue',
     color: '#F64F61',
-    unit: '（元）',
+    unit: i18n.t('(元)'),
     yaxis: {
       title: {
         text: i18n.t('销售额（元）')
