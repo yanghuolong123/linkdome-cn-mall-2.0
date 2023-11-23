@@ -532,6 +532,7 @@
         barConfigCopy.series = series
         this.arrivalOption.barOptions = barConfigCopy
         this.arrivalToolClick(this.$refs.arrival.currentChart)
+        this.arrivalToolClick('table')
 
       },
 
@@ -589,6 +590,7 @@
         pieConfigCopy.series[0].data = serierData
         this.arrivalOption.pieOptions = pieConfigCopy
         this.arrivalToolClick(this.$refs.arrival.currentChart)
+	  	this.arrivalToolClick('table')
 			},
 
 
