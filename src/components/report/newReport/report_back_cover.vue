@@ -8,40 +8,40 @@
                 width: 360px;
                 margin: 0 auto ;
                 white-space:nowrap;
-            ">苏州凌图科技有限公司</h2>
+            ">{{$t(report.苏州凌图科技有限公司)}}</h2>
 			<p style="
                 font-size: 26px;
                 width: 360px;
                 margin-top: 48px;
                 margin: 48px auto 0 auto;
-            "> 网址：www.linkdome.cn </p>
+            "> {{$t('report.网址')}}：www.linkdome.cn </p>
 			<p style="
                 font-size: 26px;
                 width: 360px;
                 margin-top: 48px;
                 margin: 48px auto 0 auto;
                 white-space:nowrap;
-            "> 邮箱：support@linkdome.cn</p>
+            "> {{$t('邮箱')}}：support@linkdome.cn</p>
 			<p
 				style="
                 font-size: 26px;
                 width: 360px;
                 margin-top: 48px;
                 margin: 48px auto 0 auto;
-            "> 电话：4006699330</p>
+            "> {{$t('report.电话')}}：4006699330</p>
 			<p style="
                 width:360px;
                 text-align: center;
                 font-size: 26px;
                 margin: 48px auto 0 auto;
                 white-space:nowrap;
-            "> 地址：陕西省西安市雁塔区旺座曲江A座23层</p>
+            "> {{$t('report.地址')}}：陕西省西安市雁塔区旺座曲江A座23层</p>
 			<span style="
                 margin-top:150px;
                 padding-bottom: 10px;
                 font-size: 36px;
                 border-bottom: 10px solid #fff;
-            ">报告日期:
+            ">{{$t('report.报告日期')}}:
             {{reportDate}}
             </span>
 			<span style="
@@ -49,7 +49,7 @@
                 padding-bottom: 10px;
                 font-size: 36px;
                 border-bottom: 10px solid #35E9DF;
-            ">生成日期: {{newDate}}</span>
+            ">{{$t('report.生成日期')}}: {{newDate}}</span>
 		</div>
 	</div>
 </template>
@@ -104,30 +104,30 @@
 			height: auto;
 			position: absolute;
 			left: 0;
-			
+
 			h2 {
 				color: #fff;
 				width: 100%;
 				height: auto;
 				text-align: center;
 			}
-			
+
 			p {
 				color: #fff;
 				height: auto;
 			}
-			
+
 			span {
 				color: #fff;
 				font-weight: bold;
 				float: left;
-				
+
 				&:last-child {
 					float: right;
 				}
 			}
 		}
-		
+
 		.property-bg {
 			width: 100%;
 			height: 100%;

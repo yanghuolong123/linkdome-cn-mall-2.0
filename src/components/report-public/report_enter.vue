@@ -33,9 +33,9 @@
             style="font-size: 28px;
 						margin-top: 14px;"
           >
-            累计客流
+            {{$t('report.累计客流')}}
           </h4>
-          <p style="	font-size: 26px;">{{ data.enter }}</p>
+          <p style="	font-size: 26px;" class="ellipsis-1">{{ data.enter }}</p>
           <!-- <div class="left-gender">
 						<span>男性:70%</span>
 						<span>女性:30%</span>
@@ -50,7 +50,7 @@
 				padding: 22px;"
       >
         <div class="right-top">
-          <div class="f1">
+          <div class="f1 flex-start">
             <div
               class="right-top-icon"
               style="width: 90px;
@@ -66,12 +66,12 @@
               />
             </div>
             <div class="right-top-number" style="	margin-left: 18px;">
-              <h4 style="	font-size: 28px;">客流峰值</h4>
-              <p style="font-size: 26px;">{{ data.enterPeak }}</p>
+              <h4 style="	font-size: 28px;">{{$t('客流峰值')}}</h4>
+              <p style="font-size: 26px;" class="ellipsis-1">{{ data.enterPeak }}</p>
               <span style="font-size: 16px;">{{ data.enterTime }}</span>
             </div>
           </div>
-          <div class="f1">
+          <div class="f1 flex-start">
             <div
               class="right-top-icon"
               style="width: 90px;
@@ -87,9 +87,9 @@
               />
             </div>
             <div class="right-top-number" style="	margin-left: 18px;">
-              <h4 style="	font-size: 28px;">集客量峰值</h4>
-              <p style="font-size: 26px;">{{ data.occupancyPeak }}</p>
-              <span style="font-size: 16px;">{{ data.occupancyTime }}</span>
+              <h4 style="	font-size: 28px;">{{$t('report.集客量峰值')}}</h4>
+              <p style="font-size: 26px;" class="ellipsis-1">{{ data.occupancyPeak }}</p>
+              <span style="font-size: 16px;" class="ellipsis-1">{{ data.occupancyTime }}</span>
             </div>
           </div>
         </div>
@@ -99,7 +99,7 @@
 					height: 2px;"
         ></div>
         <div class="right-bottom">
-          <div class="f1">
+          <div class="f1 flex-start">
             <div
               class="right-bottom-icon"
               style="width: 90px;
@@ -115,11 +115,11 @@
               />
             </div>
             <div class="right-bottom-number" style="	margin-left: 18px;">
-              <h4 style="font-size: 28px;">平均客流量</h4>
-              <p style="	font-size: 26px;">{{ data.average }}</p>
+              <h4 style="font-size: 28px;" class="ellipsis-1">{{$t('report.平均客流量')}}</h4>
+              <p style="font-size: 26px;" class="ellipsis-1">{{ data.average }}</p>
             </div>
           </div>
-          <div class="f1">
+          <div class="f1 flex-start">
             <div
               class="right-bottom-icon"
               style="width: 90px;
@@ -135,8 +135,8 @@
               />
             </div>
             <div class="right-bottom-number" style="	margin-left: 18px;">
-              <h4 style="font-size: 28px;">有效客流量</h4>
-              <p style="	font-size: 26px;">{{ data.valid }}</p>
+              <h4 style="font-size: 28px;">{{$t('report.有效客流量')}}</h4>
+              <p style="	font-size: 26px;" class="ellipsis-1">{{ data.valid }}</p>
             </div>
           </div>
         </div>
@@ -231,8 +231,9 @@ export default {
       float: right;
       background: #207ece;
       .f1 {
-        flex: 1;
-				width: 50%;
+        flex: none;
+        width: 50%;
+
       }
       .right-top {
         width: 100%;
@@ -249,8 +250,8 @@ export default {
           }
         }
         .right-top-number {
-          float: left;
-
+          flex: 1;
+          width: 0;
           text-align: left;
           h4 {
             color: #fff;
@@ -287,8 +288,8 @@ export default {
           }
         }
         .right-bottom-number {
-          float: left;
-
+          flex: 1;
+          width: 0;
           h4 {
             color: #fff;
           }

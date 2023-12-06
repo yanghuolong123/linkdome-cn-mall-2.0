@@ -4,7 +4,7 @@
         max-height:420px;">
 		<div class="flex-center title" style=" font-size: 36px;">
 			<img style=" width: 28px;" :src="img" alt="">
-			<span>凌图智慧点评</span>
+			<span>{{$t('report.凌图智慧点评')}}</span>
 		</div>
 		<ul style="  margin-top: 15px;
             padding-left: 35px;">
@@ -44,20 +44,20 @@
 		background-color: #1361a8;
 		opacity: 0.6;
 		overflow: hidden;
-		
+
 		.title {
 			color: #fff;
-			
+
 			img {
 				display: inline-block;
 				margin-right: 10px;
 			}
 		}
-		
+
 		ul {
 			width: 100%;
 			height: auto;
-			
+
 			li {
 				width: 100%;
 				height: auto;

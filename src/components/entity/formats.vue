@@ -122,7 +122,7 @@ export default {
           this.tableData = []
           data.map(list => {
             let obj = {
-              name: this.$t(list.name),
+              name: list.name,
               operation: true,
               id: list.id
             }

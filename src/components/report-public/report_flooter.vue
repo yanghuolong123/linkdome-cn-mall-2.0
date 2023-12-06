@@ -1,17 +1,23 @@
 
+
+
 <template>
     <div class="report-flooter" style=" bottom: 45px;
          padding: 0 80px;">
        <img style=" width: 318px;
             height: 108px;" :src="logo" alt="">
        <p style=" right: 80px;
-            font-size: 28px;">
-           第{{size}}页
+            font-size: 28px;" v-if="language==='en-US'">
+           Page{{size}}
        </p>
+        <p style=" right: 80px;
+            font-size: 28px;" v-else>
+            第{{size}}页
+        </p>
     </div>
 </template>
 <script>
-
+  import { mapState } from "vuex";
 export default {
   name: 'report-flooter',
   props: {
@@ -29,6 +35,10 @@ export default {
 
   },
   computed: {
+    ...mapState({
+      language: (state) => state.language,//en-US
+
+    })
   },
   methods: {
 

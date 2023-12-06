@@ -77,7 +77,7 @@ export default {
               this.series.name +
               ": " +
               this.y.toLocaleString() +
-              "人次"
+              that.$t("人次")
             );
           },
         },
@@ -187,6 +187,7 @@ export default {
       userRole: (state) => state.user.role_name,
       reportType: (state) => state.report.reportHeaderType,
       propertyId: (state) => state.home.headerAction,
+      language: (state) => state.language,//en-US
     }),
     bzid() {
       let property = _.filter(
@@ -299,33 +300,33 @@ export default {
       let tOPDate = tOTime.split(" ")[0] + " " + tOTime.split(" ")[2];
 
       let textList = Object.values(data.comment);
-      let type = this.saveHeaderData.type === "daily" ? "时" : "天";
+      let type = this.saveHeaderData.type === "daily" ? this.$t('report.时') : this.$t('report.天');
 
       this.enterData = [
         {
           // 当前时间数据
-          enter: currentData.enter.total.number.toLocaleString() + "人次",
-          enterPeak: currentData.enter.highest.number.toLocaleString() + "人次",
+          enter: currentData.enter.total.number.toLocaleString() + this.$t("人次"),
+          enterPeak: currentData.enter.highest.number.toLocaleString() + this.$t("人次"),
           enterTime: this.timeTYpe(cEDate, cETime, "客流量"),
           occupancyPeak:
-            currentData.occupancy.highest.number.toLocaleString() + "人次",
+            currentData.occupancy.highest.number.toLocaleString() + this.$t("人次"),
           occupancyTime: this.timeTYpe(cOPDate, cOTime, "集客量"),
           average:
-            currentData.enter.avg.number.toLocaleString() + "人次/" + type,
-          valid: currentData.valid.toLocaleString() + "人",
+            currentData.enter.avg.number.toLocaleString() + this.$t("人次")+"/" + type,
+          valid: currentData.valid.toLocaleString() +this.$t("人"),
         },
         {
           // 昨天时间数据
-          enter: contrastData.enter.total.number.toLocaleString() + "人次",
+          enter: contrastData.enter.total.number.toLocaleString() + this.$t("人次"),
           enterPeak:
-            contrastData.enter.highest.number.toLocaleString() + "人次",
+            contrastData.enter.highest.number.toLocaleString() + this.$t("人次"),
           enterTime: this.timeTYpe(tEDate, tETime, "客流量"),
           occupancyPeak:
-            contrastData.occupancy.highest.number.toLocaleString() + "人次",
+            contrastData.occupancy.highest.number.toLocaleString() + this.$t("人次"),
           occupancyTime: this.timeTYpe(tOPDate, tOTime, "集客量"),
           average:
-            contrastData.enter.avg.number.toLocaleString() + "人次/" + type,
-          valid: contrastData.valid.toLocaleString() + "人"
+            contrastData.enter.avg.number.toLocaleString() + this.$t("人次")+"/" + type,
+          valid: contrastData.valid.toLocaleString() + this.$t("人")
         },
       ];
       if (data2) {
@@ -339,8 +340,8 @@ export default {
           " " +
           laData.occupancy.highest.timeRange.split(" ")[2];
         let obj = {
-          enter: laData.enter.total.number.toLocaleString() + "人次",
-          enterPeak: laData.enter.highest.number.toLocaleString() + "人次",
+          enter: laData.enter.total.number.toLocaleString() + this.$t("人次"),
+          enterPeak: laData.enter.highest.number.toLocaleString() + this.$t("人次"),
           enterTime: this.timeTYpe(
             laEDate,
             laData.enter.highest.timeRange,
@@ -353,8 +354,8 @@ export default {
             laData.occupancy.highest.timeRange,
             "集客量"
           ),
-          average: laData.enter.avg.number.toLocaleString() + "人次/" + type,
-          valid: laData.valid.toLocaleString() + "人",
+          average: laData.enter.avg.number.toLocaleString() + this.$t("人次")+"/" + type,
+          valid: laData.valid.toLocaleString() + this.$t("人"),
         };
         this.enterData.push(obj);
       }
@@ -379,12 +380,12 @@ export default {
     async downloadReport(type, time) {
       if(this.disabled)return
       if (time === "") {
-        this.$alert({ content: "请选择时间" });
+        this.$alert({ content:this.$t('fn.请选择',[this.$t('时间')]) });
         return false;
       }
       await this.getReportSetting()
       if(!this.enabledModules.length){
-        this.$alert({ content: "未配置相关模块！" });
+        this.$alert({ content: this.$t('report.未配置相关模块') });
         return false;
       }
       this.disabled = true
@@ -399,28 +400,28 @@ export default {
       switch (type) {
         case "storeDay":
           download = "downloadStoreDayPdf";
-          name = "门店日报";
+          name = this.$t("门店日报");
           break;
         case "day":
           download = "downloadDayPdf";
-          name = "日报";
+          name = this.$t("日报");
           break;
         case "week":
           download = "downloadWeekPdf";
-          name = "周报";
+          name = this.$t("周报");
           break;
         case "month":
           download = "downloadMonthPdf";
-          name = "月报";
+          name = this.$t("月报");
           break;
         case "customize":
           download = "downloadCustomizePdf";
-          name = "自定义报告";
+          name = this.$t("自定义报告");
           break;
       }
       let url = `${pdfUrl}/#/${download}?propertyId=${
         this.propertyId
-      }&date=${time}&token=${token}&pdfUrl=${this.pdfBaseUrl}&enabledModules=${this.enabledModules.toString()}&showYear=${this.showLastYearData}`;
+      }&date=${time}&token=${token}&pdfUrl=${this.pdfBaseUrl}&enabledModules=${this.enabledModules.toString()}&showYear=${this.showLastYearData}&language=${this.language}`;
       this.$vs.loading();
       const datelist = time.split(",");
       const filename = datelist[0] === datelist[1] ? datelist[0] : time;
@@ -471,25 +472,25 @@ export default {
       let week;
       switch (seWeek) {
         case "Monday":
-          week = "星期一";
+          week = this.$t("周一");
           break;
         case "Tuesday":
-          week = "星期二";
+          week =this.$t("周二");
           break;
         case "Wednesday":
-          week = "星期三";
+          week = this.$t("周三");
           break;
         case "Thursday":
-          week = "星期四";
+          week = this.$t("周四");
           break;
         case "Friday":
-          week = "星期五";
+          week = this.$t("周五");
           break;
         case "Saturday":
-          week = "星期六";
+          week = this.$t("周六");
           break;
         case "Sunday":
-          week = "星期日";
+          week = this.$t("周日");
           break;
       }
       return week;
@@ -508,7 +509,7 @@ export default {
           data: {
             seriesData: [
               {
-                name: "本日客流",
+                name: this.$t('report.今日客流'),
                 color: "#2081d4",
                 type: "column",
                 data: [],
@@ -520,7 +521,7 @@ export default {
           title: {
             name: "当日" + Object.keys(list) + "TOP10店铺客流分析",
             text:
-              "客流时间:" +
+              this.$t('时间')+":" +
               this.saveHeaderData.year +
               "." +
               this.saveHeaderData.time,
@@ -535,7 +536,6 @@ export default {
     },
     // 热力图
     heatMapData(data, type) {
-      console.log(data)
       this.allHeatMap = [];
       data.map((list) => {
         let obj = {
@@ -552,14 +552,14 @@ export default {
         };
         if (type === "本周") {
           obj.title.text =
-            "客流周期:" +
-            this.saveHeaderData.year +
+            `${this.$t('report.客流周期')}:` + this.language === 'en-US'?(`Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
+            (this.saveHeaderData.year +
             "年第" +
             this.saveHeaderData.period +
-            "周";
+            "周");
         } else {
           obj.title.text =
-            "客流时间:" +
+            `${this.$t('report.客流时间')}:` +
             this.saveHeaderData.year +
             "." +
             this.saveHeaderData.time;

@@ -14,7 +14,7 @@
                   <li>
                     <header style="height:75px;font-size: 14px;">
                       <div class="name" style=" width: 120px;line-height: 75px;border-right:2px solid #fff;">
-                         名称
+                         {{$t('名称')}}
                       </div>
                       <div  style="width: 130px;border-right:2px solid #fff;height:100%;padding:7px 0;"
                       :key="index2+100" v-for="(name2,index2) in tableColumn"
@@ -30,7 +30,7 @@
                       {{item.name}}
                     </div>
                     <div style="width:960px;border-bottom:2px solid #D2D2D2;">
-                      <p style=" width: 50px;border-right:2px solid #D2D2D2; " :style="{lineHeight:showLastYearData?'29px':'60px'}">本期</p>
+                      <p class="ellipsis-1" :title="$t('report.本期')" style=" width: 50px;border-right:2px solid #D2D2D2; " :style="{lineHeight:showLastYearData?'29px':'60px'}">{{$t('report.本期')}}</p>
                       <p style=" width:130px;border-right:2px solid #D2D2D2; "
                          :style="{lineHeight:showLastYearData?'29px':'60px'}"
                        :key="cIndex" v-for="(current,cIndex) in item.current">
@@ -38,14 +38,14 @@
                       </p>
                     </div>
                     <div style="width:960px;border-bottom:2px solid #D2D2D2;" v-if="showLastYearData">
-                      <p style=" width: 50px;border-right:2px solid #D2D2D2;  line-height: 29px;">同期</p>
+                      <p style=" width: 50px;border-right:2px solid #D2D2D2;  line-height: 29px;" :title="$t('report.同期')" class="ellipsis-1"> {{$t('report.同期')}}</p>
                       <p style=" width:130px;border-right:2px solid #D2D2D2;  line-height: 29px;"
                       :key="cIndex" v-for="(period,cIndex) in item.period" >
                         {{period}}
                       </p>
                     </div>
                     <div style="width:960px;" v-if="showLastYearData">
-                      <p style=" width: 50px;border-right:2px solid #D2D2D2;  line-height: 29px;">同比</p>
+                      <p style=" width: 50px;border-right:2px solid #D2D2D2;  line-height: 29px;" :title="$t('report.同比')" class="ellipsis-1"> {{$t('report.同比')}}</p>
                       <p style=" width:130px;border-right:2px solid #D2D2D2;  line-height: 29px;"
                       :key="cIndex" v-for="(ratio,cIndex) in item.ratio" >
                         {{ratio}}
@@ -104,7 +104,7 @@ export default {
   methods: {
   },
   computed: {
-  
+
   },
   created () {},
   mounted () {}
@@ -146,7 +146,7 @@ export default {
                     p{
                       color: #666;
                     }
-                    
+
                   }
               }
               li{
@@ -189,7 +189,7 @@ export default {
                   p{
                     float: left;
                     text-align: center;
-                  
+
                     &:last-child{
                       border-right: none!important;
                     }
@@ -198,7 +198,7 @@ export default {
               }
           }
         }
-      
+
         .report-bg{
             display: block;
             width: 100%;
@@ -206,6 +206,12 @@ export default {
             position: absolute;
             left: 0;
             bottom: 0;
+        }
+        .ellipsis-1 {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            word-break: break-all;
         }
     }
 </style>
