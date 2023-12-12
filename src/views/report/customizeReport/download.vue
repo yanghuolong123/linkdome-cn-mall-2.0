@@ -5,23 +5,23 @@
 				<!-- 封面 -->
 				<report-cover
 					:suggestText='suggestText'
-					titleName='凌图智慧报告'
+					:titleName="$t('report.凌图智慧报告')"
 					:pageTotal="`${getTotalPage()}`"
 				></report-cover>
 				<!-- 总览 -->
-				<report-one title='客流总览'
+				<report-one :title="$t('report.客流总览')"
 										v-if="enabledModules.includes(1)"
 										:page="`${getPage(1)}`"
 										:enterData='enterData'
 										:listTitle='oneListData'></report-one>
 				<!--客流趋势  -->
-				<report-chart :chartHeight='600' :clickData='clickData' title='客流趋势'
+				<report-chart :chartHeight='600' :clickData='clickData'  :title="$t('report.客流趋势')"
 											v-if="enabledModules.includes(2)"
 											:page="`${getPage(2)}`"
 											:listTitle='trendTitle'
 											:dataList=trendChartData></report-chart>
 				<report-ratio-table
-					title='客流趋势'
+						:title="$t('report.客流趋势')"
 					v-if="enabledModules.includes(2)"
 					:page="`${getPage(2)+1}`"
 					:listTitle='trendTitle'
@@ -30,14 +30,14 @@
 				></report-ratio-table>
 				<!-- 出入口 -->
 				<report-chart :chartHeight='600'
-											:clickData='clickData' title='出入口客流'
+											:clickData='clickData' :title="$t('report.出入口客流')"
 											v-if="enabledModules.includes(3)"
 											:page="`${getPage(3)}`"
 											:listTitle='gateTitle'
 											:dataList='gateChartData'></report-chart>
 				<!-- 出入口表格 -->
 				<report-week-five
-					title='出入口客流'
+						:title="$t('report.出入口客流')"
 					v-if="enabledModules.includes(3)"
 					:page="`${getPage(3)+1}`"
 					:listTitle="gateTableTitle"
@@ -46,19 +46,19 @@
 				></report-week-five>
 				<!-- 店铺 -->
 				<report-chart :chartHeight='600'
-											:clickData='clickData' title='店铺客流'
+											:clickData='clickData' :title="$t('report.店铺客流')"
 											v-if="enabledModules.includes(4)"
 											:page="`${getPage(4)}`"
 											:listTitle='shopTitle'
 											:dataList='shopChartData'></report-chart>
 				<!-- 楼层下的商铺 -->
-				<report-chart-multi title='店铺客流'
+				<report-chart-multi :title="$t('report.店铺客流')"
 														v-if="enabledModules.includes(5)"
 														:page="`${getPage(5)}`"
 														:listTitle='floorStoreTitle'
 														:dataList='allFloorStore'></report-chart-multi>
 				<!-- 业态下的商铺 -->
-				<report-chart-multi title='店铺客流'
+				<report-chart-multi :title="$t('report.店铺客流')"
 														v-if="enabledModules.includes(6)"
 														:page="`${getPage(6)}`"
 														:listTitle='formatStoreTitle'
@@ -82,20 +82,20 @@
 <!--				<report-table title='店铺关联' :listTitle='disorderTitle' :tableData='disorderData'-->
 <!--											:page='`${10+allHeatMap.length}`'></report-table>-->
 				<!-- 停留时间 业态-->
-				<report-chart :chartHeight='600' :clickData='clickData' title='停留时间' :isRemark='false'
+				<report-chart :chartHeight='600' :clickData='clickData'  :title="$t('report.停留时间')" :isRemark='false'
 											v-if="enabledModules.includes(10)"
 											:page="`${getPage(10)}`"
 											:listTitle='dwellTitle' :dataList='dwellChartData'
 											chartType='dwell'></report-chart>
 				<!-- 停留时间 业态下的商铺-->
 				<report-chart-multi chartType='dwell'
-														title='停留时间'
+									:title="$t('report.停留时间')"
 														v-if="enabledModules.includes(11)"
 														:page="`${getPage(11)}`"
 														:listTitle='formatDwellStoreTitle' :dataList='allDwellFormatStore'></report-chart-multi>
 				<report-back-cover></report-back-cover>
 			</div>
-		
+
 		</div>
 	</div>
 </template>
@@ -183,6 +183,8 @@
       }
       //是否显示同比
       this.showLastYearData = this.$route.query.showYear==='true'
+		this.$i18n.locale = this.$route.query.language
+		this.$store.commit('UPDATE_LANG', this.$i18n.locale)
     },
     methods: {
       parameterData () { // 查找对应的 购物中心 id
@@ -343,7 +345,7 @@
 	#pdfDom {
 		background-color: #fff;
 		overflow: hidden;
-		
+
 		.reportOneText {
 			float: left;
 		}

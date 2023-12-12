@@ -26,11 +26,11 @@
 			<!-- 封面 -->
 			<report-cover
 				:pageTotal="`${getTotalPage()}`"
-				titleName='凌图智慧报告'
+				:titleName="$t('report.凌图智慧报告')"
 				:suggestText='suggestText'
 			></report-cover>
 			<!-- 总览 -->
-			<report-one title='客流总览'
+			<report-one   :title="$t('report.客流总览')"
 									v-if="enabledModules.includes(1)"
 									:page="`${getPage(1)}`"
 									:enterData='enterData'
@@ -38,13 +38,13 @@
 			<!-- 客流趋势 -->
 			<report-chart :chartHeight='600'
 										:clickData='clickData'
-										title='客流趋势'
+						  :title="$t('report.客流趋势')"
 										v-if="enabledModules.includes(2)"
 										:page="`${getPage(2)}`"
 										:listTitle='trendTitle'
 										:dataList=trendChartData></report-chart>
 			<!-- 客流趋势表格 -->
-			<report-ratio-table title='客流趋势'
+			<report-ratio-table   :title="$t('report.客流趋势')"
 													v-if="enabledModules.includes(2)"
 													:page="`${getPage(2)+1}`"
 													:listTitle='trendTitle'
@@ -53,38 +53,38 @@
 			></report-ratio-table>
 			<!-- 出入口 -->
 			<report-chart :chartHeight='600'
-										:clickData='clickData' title='出入口客流'
+										:clickData='clickData' :title="$t('report.出入口客流')"
 										v-if="enabledModules.includes(3)"
 										:page="`${getPage(3)}`"
 										:listTitle='gateTitle'
 										:dataList=gateChartData></report-chart>
 			<!-- 出入口表格 -->
 			<report-week-five
-				title='出入口客流'
+					:title="$t('report.出入口客流')"
 				:tableColumn='tableColumn'
 				v-if="enabledModules.includes(3)"
 				:page="`${getPage(3)+1}`"
 				:listTitle="gateTableTitle"
 				:tableData='tableData'
 			></report-week-five>
-			
-			
+
+
 			<!-- 店铺 -->
 			<report-chart :chartHeight='600'
-										:clickData='clickData' title='店铺客流'
+										:clickData='clickData'   :title="$t('report.店铺客流')"
 										v-if="enabledModules.includes(4)"
 										:page="`${getPage(4)}`"
 										:listTitle='shopTitle'
 										:dataList=shopChartData></report-chart>
-			
+
 			<!-- 楼层下的商铺 -->
-			<report-chart-multi title='店铺客流'
+			<report-chart-multi   :title="$t('report.店铺客流')"
 													v-if="enabledModules.includes(5)"
 													:page="`${getPage(5)}`"
 													:listTitle='floorStoreTitle'
 													:dataList='allFloorStore'></report-chart-multi>
 			<!-- 业态下的商铺 -->
-			<report-chart-multi title='店铺客流'
+			<report-chart-multi   :title="$t('report.店铺客流')"
 													v-if="enabledModules.includes(6)"
 													:page="`${getPage(6)}`" :listTitle='formatStoreTitle'
 													:dataList='allFormatStore'></report-chart-multi>
@@ -107,13 +107,15 @@
 <!--			<report-table title='店铺关联' :listTitle='disorderTitle' :tableData='disorderData'-->
 <!--										:page='`${10+allHeatMap.length}`'></report-table>-->
 			<!-- 停留时间 业态-->
-			<report-chart :chartHeight='600' :clickData='clickData' :isRemark='false' title='停留时间'
+			<report-chart :chartHeight='600'
+						  :clickData='clickData'
+						  :isRemark='false'    :title="$t('report.停留时间')"
 										v-if="enabledModules.includes(10)"
 										:page="`${getPage(10)}`"
 										:listTitle='dwellTitle' :dataList='dwellChartData'
 										chartType='dwell'></report-chart>
 			<!-- 停留时间 业态下的商铺-->
-			<report-chart-multi chartType='dwell' title='停留时间'
+			<report-chart-multi chartType='dwell'    :title="$t('report.停留时间')"
 													v-if="enabledModules.includes(11)"
 													:page="`${getPage(11)}`"
 													:listTitle='formatDwellStoreTitle'
@@ -344,7 +346,7 @@
 <style lang="less" scoped>
 	.report-center {
 		min-width: 1200Px;
-		
+
 		.filter-box {
 			background-color: #fff;
 			margin-top: 9px;
@@ -352,12 +354,12 @@
 			box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
 			border-radius: 6px;
 			margin-bottom: 20px;
-			
+
 			::v-deep .ivu-input {
 				width: 230Px;
 			}
-			
-			
+
+
 			.icon-download {
 				width: 40px;
 				height: 40px;
@@ -371,20 +373,20 @@
 				margin-left: 60px;
 				box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
 				cursor: pointer;
-				
+
 				&:before {
 					content: none
 				}
 			}
 		}
-		
+
 		.pdf-text-box {
 			margin: 0px auto;
 			max-width: 1200Px
 		}
 	}
-	
-	
+
+
 	.day-report-date {
 		margin-top: 9px;
 		padding: 20px 0 20px 30px;
@@ -392,7 +394,7 @@
 		border-radius: 6px;
 		box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
 		position: relative;
-		
+
 		.report-query {
 			float: left;
 			height: 43px;
@@ -406,11 +408,11 @@
 			margin-left: 30px;
 		}
 	}
-	
+
 	.week-select-date {
 		float: left;
 	}
-	
+
 	.icon-download {
 		width: 43px;
 		height: 43px;
@@ -424,7 +426,7 @@
 		margin-left: 60px;
 		box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
 		cursor: pointer;
-		
+
 		&:before {
 			content: none
 		}

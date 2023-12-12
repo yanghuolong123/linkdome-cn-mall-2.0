@@ -8,7 +8,6 @@
           @on-change="selectTimeDate"
           :editable="false"
           :options="options3"
-          placeholder="选择日期"
           v-model="selectDateTime"
         >
         </DatePicker>

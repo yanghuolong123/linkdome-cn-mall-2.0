@@ -8,7 +8,7 @@
                 width: 360px;
                 margin: 0 auto ;
                 white-space:nowrap;
-            ">{{$t(report.苏州凌图科技有限公司)}}</h2>
+            ">{{$t('report.苏州凌图科技有限公司')}}</h2>
 			<p style="
                 font-size: 26px;
                 width: 360px;

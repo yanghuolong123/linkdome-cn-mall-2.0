@@ -505,7 +505,7 @@ export default {
     //是否显示同比
     this.showLastYearData = this.$route.query.showYear==='true'
     this.$i18n.locale = this.$route.query.language
-
+    this.$store.commit('UPDATE_LANG', this.$i18n.locale)
   },
   methods: {
     parameterData() {

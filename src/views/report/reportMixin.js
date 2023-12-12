@@ -546,17 +546,17 @@ export default {
           },
           remarkData: [],
           title: {
-            name: type + Object.keys(list)[0] + "客流分析",
+            name: this.$t('report.'+type) + Object.keys(list)[0] + this.$t("客流分析"),
             text: "",
           },
         };
         if (type === "本周") {
           obj.title.text =
-            `${this.$t('report.客流周期')}:` + this.language === 'en-US'?(`Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
+            `${this.$t('report.客流周期')}:` + (this.language === 'en-US'?(`Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
             (this.saveHeaderData.year +
             "年第" +
             this.saveHeaderData.period +
-            "周");
+            "周"));
         } else {
           obj.title.text =
             `${this.$t('report.客流时间')}:` +
@@ -607,7 +607,7 @@ export default {
       data = _.take(_.orderBy(data, "avg", "desc"), 10);
       this.dwellChartData.option = _.cloneDeep(this.dwellOption);
       let obj = {
-        name: "平均停留时间",
+        name: this.$t("平均停留时间"),
         color: "#2081d4",
         type: "column",
         data: [],

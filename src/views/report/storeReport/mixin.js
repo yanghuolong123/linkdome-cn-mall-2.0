@@ -10,24 +10,24 @@ export default {
         barOption: {},
       },
       ratioTableColumn: {
-        name1: ['时间', '入客流'],
-        name2: ['环比分析'],
-        name3: ['时间', '入客流', '增长率']
+        name1: [this.$t("时间"), this.$t("入客流")],
+        name2: [ this.$t("report.环比分析")],
+        name3: [this.$t("时间"), this.$t("入客流"),this.$t("report.增长率")],
       },
       ratioExitTableColumn: {
-        name1: ['时间', '出客流'],
-        name2: ['环比分析'],
-        name3: ['时间', '出客流', '增长率']
+        name1: [this.$t("时间"), this.$t("出客流")],
+        name2: [this.$t("report.环比分析")],
+        name3: [this.$t("时间"), this.$t("出客流"), this.$t('增长率')]
       },
       ratioTotalTableColumn: {
-        name1: ['时间', '总客流'],
-        name2: ['环比分析'],
-        name3: ['时间', '总客流', '增长率']
+        name1: [this.$t("时间"),this.$t("report.总客流")],
+        name2: [this.$t("report.环比分析")],
+        name3: [this.$t("时间"),this.$t("report.总客流"),  this.$t('增长率')]
       },
       passbyTableColunm: {
-        name1: ['时间', '路经客流'],
-        name2: ['环比分析'],
-        name3: ['时间', '路经客流', '增长率']
+        name1: [this.$t("时间"),this.$t("report.路经客流")],
+        name2:[this.$t("report.环比分析")],
+        name3: [this.$t("时间"),this.$t("report.路经客流"),  this.$t('增长率')]
       },
       ratioTableData: [],
 
@@ -57,11 +57,11 @@ export default {
     }),
     ageGenderTableColumn(){
       return {
-        name1: ['时间'],
-        name2: ['年龄'],
-        name3: ['性别'],
+        name1: [this.$t("时间")],
+        name2: [this.$t('年龄')],
+        name3: [this.$t('性别')],
         name4: Object.values(this.ageGender)||[],
-        name5: ['男', '女']
+        name5: [this.$t('男'), this.$t('女')]
       }
     },
     validStoreSelectedList(){
@@ -86,25 +86,25 @@ export default {
     oneListData () {
       return [
         {
-          name: '当日客流总览',
-          text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
+          name:  this.$t('report.当日客流总览'),
+          text: `${this.$t('report.客流时间')}:` + this.saveHeaderData.year + '.' + this.saveHeaderData.time
         },
         {
-          name: '昨日客流总览',
-          text: '客流时间:' + this.saveHeaderData.yester
+          name: this.$t('report.昨日客流总览'),
+          text: `${this.$t('report.客流时间')}:` + this.saveHeaderData.yester
         }
       ]
     },
     dwellTitle () {
       return {
-        name: '平均停留时间',
-        text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
+        name: this.$t('平均停留时间'),
+        text: `${this.$t('report.客流时间')}:` + this.saveHeaderData.year + '.' + this.saveHeaderData.time
       }
     },
     trendTitle () {
       return {
-        name: '当日客流趋势对比分析',
-        text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
+        name: this.$t('report.当日客流趋势对比分析'),
+        text:`${this.$t('report.客流时间')}:` + this.saveHeaderData.year + '.' + this.saveHeaderData.time
       }
     },
     storeTrendTitle () {
@@ -122,16 +122,16 @@ export default {
             break
         }
         return {
-          name: `当日进店${text}客流`,
-          text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
+          name: this.$t(`report.当日进店${text}客流`),
+          text: `${this.$t('report.客流时间')}:` + this.saveHeaderData.year + '.' + this.saveHeaderData.time
         }
       }
 
     },
     stroePssbyTitle () {
       return {
-        name: '当日路经客流',
-        text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
+        name: this.$t('report.当日路经客流'),
+        text: `${this.$t('report.客流时间')}:` + this.saveHeaderData.year + '.' + this.saveHeaderData.time
       }
     },
     ageGenderTitle () {
@@ -151,8 +151,8 @@ export default {
               break
           }
         return {
-          name: '当日性别年龄'+text+'客流趋势',
-          text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
+          name:this.$t(`report.当日性别年龄${text}客流趋势`),
+          text: `${this.$t('report.客流时间')}:` + this.saveHeaderData.year + '.' + this.saveHeaderData.time
         }
       }
 
@@ -172,15 +172,15 @@ export default {
             break
         }
         return {
-          name: `当日进店年龄性别${text}客流`,
-          text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
+          name: this.$t(`report.当日进店年龄性别${text}客流`),
+          text: `${this.$t('report.客流时间')}:` + this.saveHeaderData.year + '.' + this.saveHeaderData.time
         }
       }
     },
     storeAgeGenderPssbyTitle () {
       return {
-        name: '当日路经年龄性别客流',
-        text: '客流时间:' + this.saveHeaderData.year + '.' + this.saveHeaderData.time
+        name: this.$t('report.当日路经年龄性别客流'),
+        text: `${this.$t('report.客流时间')}:` + this.saveHeaderData.year + '.' + this.saveHeaderData.time
       }
     },
   },
@@ -207,13 +207,13 @@ export default {
       this.trendChartData.lineOption = _.cloneDeep(this.enterOption)
       this.trendChartData.barOption = _.cloneDeep(this.enterOption)
       let todayEnterObj = {
-        name: '当日客流趋势',
+        name: this.$t('report.当日客流趋势'),
         color: '#2081D4',
         type: 'line',
         data: []
       }
       let yesterdayEnterObj = {
-        name: '昨日客流趋势',
+        name: this.$t('report.昨日客流趋势'),
         color: '#745AEF',
         type: 'line',
         data: []
@@ -227,9 +227,9 @@ export default {
         this.ratioTableData.push({
           data: [
             moment(list.begin).format('YYYY-MM-DD-HH:mm'),
-            list.enter.toLocaleString() + '人次',
+            list.enter.toLocaleString() + this.$t('人次'),
             moment(yesterdayData[index].begin).format('YYYY-MM-DD-HH:mm'),
-            yesterdayData[index].enter.toLocaleString() + '人次',
+            yesterdayData[index].enter.toLocaleString() + this.$t('人次'),
             this.sequential(list.enter, yesterdayData[index].enter) + '%'
           ]
         })
@@ -252,10 +252,10 @@ export default {
       })
       this.ratioTableData.push({
         data: [
-          '合计',
-          cuT.toLocaleString() + '人次',
+          this.$t('合计'),
+          cuT.toLocaleString() + this.$t('人次'),
           '-',
-          yeT.toLocaleString() + '人次',
+          yeT.toLocaleString() + this.$t('人次'),
           this.sequential(cuT, yeT) + '%'
         ]
       })
@@ -269,12 +269,12 @@ export default {
         return o.substring(11,16)
       });
       let currentObj = {
-        name: '当日客流',
+        name: this.$t('report.今日客流'),
         color: '#2081d4',
         type: 'column',
         data: []
       },yesterObj = {
-        name: '环比客流',
+        name: this.$t('report.环比客流'),
         type: 'column',
         color: '#2BD9CF',
         data: []
@@ -317,12 +317,12 @@ export default {
           obj.tableData[i].data.push(key.substring(0, 16))
           obj.tableData[i].data.push(time2[key])
           obj.tableData[i].data.push(this.sequential(obj.tableData[i].data[1], obj.tableData[i].data[3]) + '%')
-          obj.tableData[i].data[1] = obj.tableData[i].data[1].toLocaleString() + '人次'
-          obj.tableData[i].data[3] = obj.tableData[i].data[3].toLocaleString() + '人次'
+          obj.tableData[i].data[1] = obj.tableData[i].data[1].toLocaleString() + this.$t('人次')
+          obj.tableData[i].data[3] = obj.tableData[i].data[3].toLocaleString() + this.$t('人次')
           i++
         }
         obj.tableData.push({
-          data: ['合计', time1Total.toLocaleString() + '人次', '-', time12Total.toLocaleString() + '人次', this.sequential(time1Total, time12Total) + '%']
+          data: [this.$t('合计'), time1Total.toLocaleString() + this.$t('人次'), '-', time12Total.toLocaleString() + this.$t('人次'), this.sequential(time1Total, time12Total) + '%']
         })
         result.push(obj)
       })
@@ -366,7 +366,7 @@ export default {
             }
           })
         })
-        total.unshift('合计')
+        total.unshift(this.$t('合计'))
         result.push(total)
       }
       return result
@@ -390,7 +390,7 @@ export default {
         let res = {}
         this.ageGender = {};
         Object.keys(values[0]).forEach(o=>{
-          this.ageGender[o] = o.replace('less','小于').replace('more','大于');
+          this.ageGender[o] = o.replace('less',this.$t('小于')).replace('more',this.$t('大于'));
         })
 
         let series = []
@@ -401,9 +401,9 @@ export default {
         })
         res = Object.values(res)
         res.forEach((o, i) => {
-          const name =  o[0].ageRange.replace('less','小于').replace('more','大于')
+          const name =  o[0].ageRange.replace('less',this.$t('小于')).replace('more',this.$t('大于'))
           series.push({
-            name: name + '(男性)',
+            name: name + `(${this.$t('男性')})`,
             stack: 'male',
             color: colors1[i],
             data: o.map(o => {
@@ -411,7 +411,7 @@ export default {
             })
           })
           series.push({
-            name: name + '(女性)',
+            name: name + `(${this.$t('女性')})`,
             stack: 'female',
             color: colors2[i],
             data: o.map(o => {
@@ -442,27 +442,27 @@ export default {
       let tEDate = tETime.split(' ')[0] + ' ' + tETime.split(' ')[2]
 
       let textList = Object.values(data.comment)
-      let type = this.saveHeaderData.type === 'daily' ? '时' : '天'
+      let type = this.saveHeaderData.type === 'daily' ? this.$t('report.时') :this.$t('report.天')
       const todayFemale = _.sum(gender.today) > 0 ? ((gender.today[0] / _.sum(gender.today)) * 100).toFix(1) : 0
       const todayMale = _.sum(gender.today) > 0 ? ((gender.today[1] / _.sum(gender.today)) * 100).toFix(1) : 0
       const yesFemale = _.sum(gender.yesterday) > 0 ? ((gender.yesterday[0] / _.sum(gender.yesterday)) * 100).toFix(1) : 0
       const yesMale = _.sum(gender.yesterday) > 0 ? ((gender.yesterday[1] / _.sum(gender.yesterday)) * 100).toFix(1) : 0
       this.enterData = [
         { // 当前时间数据
-          enter: currentData.enter.total.number.toLocaleString() + '人次',
-          enterPeak: currentData.enter.highest.number.toLocaleString() + '人次',
+          enter: currentData.enter.total.number.toLocaleString() + this.$t('人次'),
+          enterPeak: currentData.enter.highest.number.toLocaleString() +this.$t('人次'),
           enterTime: this.timeTYpe(cEDate, cETime, '客流量'),
-          occupancyPeak: currentData.occupancy.highest.number.toLocaleString() + '人次',
-          average: currentData.enter.avg.number.toLocaleString() + '人次/' + type,
+          occupancyPeak: currentData.occupancy.highest.number.toLocaleString() +this.$t('人次'),
+          average: currentData.enter.avg.number.toLocaleString() + `${this.$t('人次')}/` + type,
           female: todayFemale,
           male: _.sum([Number(todayFemale), Number(todayMale)]) > 0 ? (100 - todayFemale).toFix(1) : todayMale
         },
         { // 昨天时间数据
-          enter: contrastData.enter.total.number.toLocaleString() + '人次',
-          enterPeak: contrastData.enter.highest.number.toLocaleString() + '人次',
+          enter: contrastData.enter.total.number.toLocaleString() + this.$t('人次'),
+          enterPeak: contrastData.enter.highest.number.toLocaleString() + this.$t('人次'),
           enterTime: this.timeTYpe(tEDate, tETime, '客流量'),
-          occupancyPeak: contrastData.occupancy.highest.number.toLocaleString() + '人次',
-          average: contrastData.enter.avg.number.toLocaleString() + '人次/' + type,
+          occupancyPeak: contrastData.occupancy.highest.number.toLocaleString() + this.$t('人次'),
+          average: contrastData.enter.avg.number.toLocaleString() + `${this.$t('人次')}/` + type,
           female: yesFemale,
           male: _.sum([Number(yesFemale), Number(yesMale)]) > 0 ? (100 - yesFemale).toFix(1) : yesMale
         },

@@ -10,7 +10,7 @@
                   style=" border: 4px dashed #4edbda;
                       border-radius: 8px;
                       margin-top: 12px;"
-                      
+
                   >
                       <div :id="'passengerFlowDistribution'+page" style="width: 100%" :style="{height:chartHeight+'px'}"></div>
                   </div>
@@ -70,13 +70,11 @@ export default {
   },
   watch:{
     clickData(){
-        console.log(1)
         this.initFlowDstrbtCharts(this.dataList.data,this.dataList.maxAvg,this.dataList.workingtime)
     }
   },
   mounted () {
     Bus.$on('chartData', () => {
-        console.log(2)
         this.initFlowDstrbtCharts(this.dataList.data,this.dataList.maxAvg,this.dataList.workingtime)
     })
   },
@@ -96,14 +94,14 @@ export default {
            flowDistributionCharts.setOption(option)
           flowDistributionCharts.resize()
        }
-       
+
     },
   },
   computed: {
   },
- 
+
   created () {},
-  
+
 }
 </script>
 <style scoped lang="less">

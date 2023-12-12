@@ -1,17 +1,17 @@
 <template>
 	<div class="report-center" style="min-width: 1200px;">
-		
+
 		<div class="pdf-text-box">
 			<div id="pdfDom" v-if="showPDF" style="width: 1200px;">
 				<!-- 封面 -->
 				<report-cover
-					titleName='凌图智慧日报'
+						:titleName="$t('report.凌图智慧日报')"
 					:pageTotal="`${validStoreSelectedList.length*14}`"
 				></report-cover>
 				<div v-for="(store,i) in validStoreSelectedList">
 					<report-chart :chartHeight='600'
 												v-if="storeEnterChartList.length"
-												title='店铺客流分析'
+								  :title='$t("report.店铺客流分析")'
 												:page='(14*i+1).toString()'
 												:isRemark="false"
 												:storeName="storeEnterChartList[i].storeName"
@@ -20,7 +20,7 @@
 					<!--门店 当日店铺入客流（表格）-->
 					<report-ratio-table
 						v-if="storeEnterFlowList.length"
-						title='店铺客流分析'
+						:title='$t("report.店铺客流分析")'
 						:page='(14*i+2).toString()'
 						:listTitle='storeTrendTitle("enter")'
 						:tableColumn='ratioTableColumn'
@@ -29,7 +29,7 @@
 					></report-ratio-table>
 					<report-chart :chartHeight='600'
 												v-if="storeExitChartList.length"
-												title='店铺客流分析'
+								  :title='$t("report.店铺客流分析")'
 												:page='(14*i+3).toString()'
 												:isRemark="false"
 												:listTitle='storeTrendTitle("exit")'
@@ -38,7 +38,7 @@
 					<!--门店 当日店铺出客流（表格）-->
 					<report-ratio-table
 						v-if="storeExitFlowList.length"
-						title='店铺客流分析'
+						:title='$t("report.店铺客流分析")'
 						:page='(14*i+4).toString()'
 						:listTitle='storeTrendTitle("exit")'
 						:tableColumn='ratioExitTableColumn'
@@ -47,7 +47,7 @@
 					></report-ratio-table>
 					<report-chart :chartHeight='600'
 												v-if="storeTotalChartList.length"
-												title='店铺客流分析'
+								  :title='$t("report.店铺客流分析")'
 												:page='(14*i+5).toString()'
 												:isRemark="false"
 												:storeName="storeTotalChartList[i].storeName"
@@ -56,7 +56,7 @@
 					<!--门店 当日店铺总客流（表格）-->
 					<report-ratio-table
 						v-if="storeTotalFlowList.length"
-						title='店铺客流分析'
+						:title='$t("report.店铺客流分析")'
 						:page='(14*i+6).toString()'
 						:listTitle='storeTrendTitle("total")'
 						:tableColumn='ratioTotalTableColumn'
@@ -65,7 +65,7 @@
 					></report-ratio-table>
 					<report-chart :chartHeight='600'
 												v-if="storePassbyChartList.length"
-												title='店铺客流分析'
+								  :title='$t("report.店铺客流分析")'
 												:page='(14*i+7).toString()'
 												:isRemark="false"
 												:listTitle='stroePssbyTitle'
@@ -74,14 +74,14 @@
 					<!--门店 当日路经客流-->
 					<report-ratio-table
 						v-if="storePassbyFlowList.length"
-						title='店铺客流分析'
+						:title='$t("report.店铺客流分析")'
 						:page='(14*i+8).toString()'
 						:listTitle='stroePssbyTitle'
 						:tableColumn='passbyTableColunm'
 						:tableData='storePassbyFlowList[i].tableData'
 						:storeName="storePassbyFlowList[i].storeName"
 					></report-ratio-table>
-					<report-age-gender-chart title='店铺客流分析'
+					<report-age-gender-chart :title='$t("report.店铺客流分析")'
 																	 v-if="ageGenderChartData.length"
 																	 :page='(14*i+9).toString()'
 																	 :listTitle='ageGenderTitle("enter")'
@@ -90,7 +90,7 @@
 					<!--当日进店年龄性别入客流-->
 					<report-age-gender-table
 						v-if="storeAgeGenderFlowList.length"
-						title='店铺客流分析'
+						:title='$t("report.店铺客流分析")'
 						:page='(14*i+10).toString()'
 						:listTitle='storeAgeGenderTitle("enter")'
 						:tableColumn='ageGenderTableColumn'
@@ -98,16 +98,16 @@
 						:storeName="storeAgeGenderFlowList[i].storeName"
 					></report-age-gender-table>
 					<!--当日进店年龄性别出客流-->
-					<report-age-gender-chart title='店铺客流分析'
+					<report-age-gender-chart :title='$t("report.店铺客流分析")'
 																	 v-if="ageGenderExitChartData.length"
 																	 :page='(14*i+11).toString()'
 																	 :listTitle='ageGenderTitle("exit")'
 																	 :storeName="ageGenderExitChartData[i].storeName"
 																	 :dataList=ageGenderExitChartData[i].chartData></report-age-gender-chart>
-					
+
 					<report-age-gender-table
 						v-if="storeAgeGenderExitFlowList.length"
-						title='店铺客流分析'
+						:title='$t("report.店铺客流分析")'
 						:page='(14*i+12).toString()'
 						:listTitle='storeAgeGenderTitle("exit")'
 						:tableColumn='ageGenderTableColumn'
@@ -115,7 +115,7 @@
 						:storeName="storeAgeGenderExitFlowList[i].storeName"
 					></report-age-gender-table>
 					<!--当日路经年龄性别客流-->
-					<report-age-gender-chart title='店铺客流分析'
+					<report-age-gender-chart :title='$t("report.店铺客流分析")'
 																	 v-if="storeAgeGenderPssbyFlowChart.length"
 																	 :page='(14*i+13).toString()'
 																	 :listTitle='storeAgeGenderPssbyTitle'
@@ -123,7 +123,7 @@
 																	 :dataList=storeAgeGenderPssbyFlowChart[i].chartData></report-age-gender-chart>
 					<report-age-gender-table
 						v-if="storeAgeGenderPssbyFlowList.length"
-						title='店铺客流分析'
+						:title='$t("report.店铺客流分析")'
 						:page='(14*i+14).toString()'
 						:listTitle='storeAgeGenderPssbyTitle'
 						:tableColumn='ageGenderTableColumn'
@@ -373,7 +373,7 @@
 	#pdfDom {
 		background-color: #fff;
 		overflow: hidden;
-		
+
 		.reportOneText {
 			float: left;
 		}
