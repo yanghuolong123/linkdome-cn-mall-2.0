@@ -1,18 +1,17 @@
 
 <template>
-    <div class="report-header" style=" padding: 76px 80px 0 80px;
-        height: 184px;">
-        <img class="header-logo" style="  width: 318px;" :src="logo" alt="">
+    <div class="report-header flex-between" style=" padding: 40px 80px 0 80px;">
+        <img class="header-logo" style="  width: 168px;" :src="logo" alt="">
         <div class="header-right">
             <p class="text" style="font-size: 24px;
                  line-height: 108px;">
                  {{saveHeaderData}}
                  </p>
-            <div style="width: 100px; height: 108px;margin-left: 30px;line-height: 108px;">
-              <p style="  height: 108px;line-height: 93px;font-size: 36px;">
+            <div style="width: 100px; margin-left: 30px;">
+              <p style="  font-size: 36px;">
                 {{year}}
               </p>
-              <span style="bottom: 43px; width:100px; height: 12px;"></span>
+              <span style="bottom: -45px; width:100px; height: 12px;"></span>
             </div>
         </div>
     </div>

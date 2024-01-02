@@ -1,10 +1,10 @@
 <template>
     <div class="reportOneText" style="width: 1200px;height:1682px;">
-        <div class="report-list" style=" padding-bottom: 180px;">
+        <div class="report-list" style=" padding-bottom: 110px;">
             <report-header></report-header>
             <report-title :title='title'></report-title>
             <div class="name" v-if="storeName">{{storeName}}</div>
-            <div class="report-chart" style=" padding: 0 80px;
+            <div class="report-chart" style=" padding: 0 60px;
                 margin: 30px 0 30px 0;">
                 <title-name :listTitle='listTitle'></title-name>
                 <Row>
@@ -22,7 +22,7 @@
                     </div>
                    </Col>
                 </Row>
-            
+
             </div>
             <report-remark v-if="isRemark" :dataList ='dataList.remarkData' ></report-remark>
             <report-flooter :size='page'></report-flooter>
@@ -99,14 +99,14 @@ export default {
         this.ifOneCharts = true
       })
     },
-  
+
   },
   computed: {
   },
   created () {
-  
+
   },
- 
+
 }
 </script>
 <style scoped lang="less">

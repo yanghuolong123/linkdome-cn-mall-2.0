@@ -1,6 +1,6 @@
 <template>
 	<div class="reportOneText" style="width: 1200px;height:1682px;">
-		<div class="report-list" style=" padding-bottom: 180px;">
+		<div class="report-list" style=" padding-bottom: 110px;">
 			<report-header></report-header>
 			<report-title :title='title'></report-title>
 			<div class="report-chart" style=" padding: 0 80px;
@@ -10,7 +10,7 @@
 						 style=" border: 4px dashed #4edbda;
                       border-radius: 8px;
                       margin-top: 12px;"
-				
+
 				>
 					<div class="heatMap" ref="heatMap">
 						<div class="colorNumber">
@@ -18,7 +18,7 @@
 							<p>
 								<span>{{maxValue}}</span>
 							</p>
-						
+
 						</div>
 						<!--热力分布图-->
 						<heatmapjs-vue id="heat-grid" :max="maxValue" :min="minValue" :options='mapOptions' :data="heatMapDataList"></heatmapjs-vue>
@@ -42,7 +42,7 @@
 
   import titleName from '@/components/report-public/report_title_name'
   import Bus from '@/libs/bus.js'
-	
+
   export default {
     name: 'report-week-one',
     props: {
@@ -200,7 +200,7 @@
 					height: 100%;
 					background-color:rgba(65,62,223,.4) ;
 				}
-				
+
 				.noData {
 					position: relative;
 					left: 0;
@@ -213,23 +213,23 @@
 					z-index: 1;
 					text-align: center;
 				}
-				
-				
+
+
 				#mapImg {
 					width: 100%;
 					height: 670px;
 				}
-				
+
 				.gateDataList {
 					position: absolute;
 					z-index: 1;
-					
+
 					img {
 						width: 30px;
 						height: 30px;
 						cursor: pointer;
 					}
-					
+
 					.gateDataText {
 						position: absolute;
 						background-color: #fff;
@@ -238,7 +238,7 @@
 						padding-bottom: 10px;
 						width: 160px;
 						left: -65px;
-						
+
 						p {
 							font-size: 14px;
 							color: #333;
@@ -251,7 +251,7 @@
 							overflow: hidden;
 							text-overflow: ellipsis;
 						}
-						
+
 						span {
 							display: inline-block;
 							width: 100%;
@@ -261,7 +261,7 @@
 							padding: 0 10px;
 						}
 					}
-					
+
 				}
 			}
 		}

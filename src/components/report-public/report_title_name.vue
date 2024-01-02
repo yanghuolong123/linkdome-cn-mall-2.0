@@ -4,7 +4,7 @@
       	<div class="list-title" style=" padding-left: 20px;">
             <p style=" font-size: 28px;" v-if="listTitle">{{listTitle.name}}</p>
 			<span style=" font-size: 22px;
-                margin-left: 22px;" v-if="listTitle">{{listTitle.text}}</span>
+                margin-left: 15px;" v-if="listTitle">{{listTitle.text}}</span>
         </div>
         <div class="list-line" style="  height: 2px;">
           <span style=" width: 18px;
@@ -64,7 +64,7 @@ export default {
                 display: inline-block;
                 color: #515355;
                 opacity: 0.8;
-                 
+
             }
         }
         .list-line{

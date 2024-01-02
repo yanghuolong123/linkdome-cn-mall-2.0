@@ -805,22 +805,24 @@
             data: [],
           },
         ]
+
         if (gateData.data) {
           gateData.data.forEach((list) => {
             currentObj.data.push(list.enter)
-            let yesterEnter = _.find(
+            const yNode = _.find(
               gateData.contrast,
               (o) => o.bzid === list.bzid
-            ).enter
+            )
+            let yesterEnter = yNode && yNode.enter||0
             yesterObj.data.push(yesterEnter)
-            let lastEnter = _.find(gateData.period, (o) => o.bzid === list.bzid)
-              .enter
+            const lNode =  _.find(gateData.period, (o) => o.bzid === list.bzid)
+            let lastEnter =lNode && lNode.enter || 0
             lastObj.data.push(lastEnter)
-
-            let lastWeekEnter = _.find(
+            const lwNode =  _.find(
               gateData.last_week_day,
               (o) => o.bzid === list.bzid
-            ).enter
+            )
+            let lastWeekEnter =lwNode&&lwNode.enter||0
             lastWeekObj.data.push(lastWeekEnter)
             this.gateTableData.data.push({
               name: list.name,

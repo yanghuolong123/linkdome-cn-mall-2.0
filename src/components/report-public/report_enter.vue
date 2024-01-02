@@ -1,20 +1,20 @@
 <template>
   <div
     class="enter-list"
-    style="padding: 0 80px;
+    style="padding: 0 60px;
 		margin-top: 8px;
 		margin-bottom: 30px;"
   >
     <title-name :listTitle="listTitle"></title-name>
     <div class="list-text" style="margin-top: 16px;" v-if="data">
       <div
-        class="text-left"
+        class="text-left "
         style="	height: 260px;
 				border: 3px dashed #7ecef4;
 				border-radius: 8px;
-				padding:48px 0;"
+				"
       >
-        <div class="left-tetx">
+        <div class="left-tetx flex-column">
           <div
             class="left-icon"
             style="	width: 90px;
@@ -184,12 +184,14 @@ export default {
     overflow: hidden;
 
     .text-left {
-      width: 20%;
+      width: 25%;
       float: left;
 
       background: #207ece;
 
       .left-tetx {
+        justify-content: center;
+        align-items: center;
         width: 80%;
         height: 100%;
         margin: 0 auto;

@@ -205,8 +205,6 @@
     async mounted () {
       const data = await getEntity(this.propertyId, 50)
       this.storeListOptions = [...data.data.data]
-      this.$i18n.locale = this.$route.query.language
-      this.$store.commit('UPDATE_LANG', this.$i18n.locale)
     },
     methods: {
       downloadReport (type, time) {

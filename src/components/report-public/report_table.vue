@@ -1,6 +1,6 @@
 
 <template>
-    <div class="report-chart" style="padding: 0 80px;
+    <div class="report-chart" style="padding: 0 60px;
       margin: 20px 0;">
       	<title-name :listTitle='listTitle'></title-name>
         <ul class="table" style="  border: 4px dashed #4edbda;

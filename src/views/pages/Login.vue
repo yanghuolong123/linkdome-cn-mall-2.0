@@ -63,7 +63,8 @@
       >
     </div>
     <div class="bottom">
-      苏ICP备2021044524号 苏州凌图科技有限公司 Copyright 2019-{{ currentYear }}
+      {{copyright}}
+<!--      苏ICP备2021044524号 苏州凌图科技有限公司 Copyright 2019-{{ currentYear }}-->
     </div>
     <vs-alert
       :active="isalert"
@@ -107,6 +108,7 @@ export default {
       isRememberMe: false,
       Biurl: "",
       homeUrl: "",
+      copyright:'',
     };
   },
   computed: {
@@ -156,6 +158,7 @@ export default {
       initConfig().then((res) => {
         this.$store.commit("setPdfBaseUrl", res.data.data.pdf_center);
         this.$store.commit("setSystemName", res.data.data.sys_title);
+        this.copyright = res.data.data.Copyright
         // this.$i18n.locale = res.data.data.locale;
       });
     },

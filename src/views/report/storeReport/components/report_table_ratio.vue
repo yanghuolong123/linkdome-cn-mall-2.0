@@ -37,7 +37,7 @@
                     height: 35px;
                     border-right:2px solid #D2D2D2;
                     border-bottom: 2px solid #D2D2D2;" :key="index2" v-for="(data,index2) in  list">
-					{{data|formatTableData}}
+					{{formatTableData(data)}}
 				</td>
 			</tr>
 		</table>
@@ -69,13 +69,7 @@
     },
     watch: {},
     filters: {
-      formatTableData (val) {
-        if (typeof val === 'string') {
-          return val
-        } else {
-          return val.toLocaleString() + '人'
-        }
-      }
+
     },
     computed: {
       dateWeek () {
@@ -87,7 +81,15 @@
     },
     mounted () {
     },
-    methods: {}
+    methods: {
+		formatTableData(val){
+			if (typeof val === 'string') {
+				return val
+			} else {
+				return val.toLocaleString() + this.$t('人')
+			}
+		}
+	}
   }
 </script>
 <style scoped lang="less">
@@ -98,33 +100,33 @@
 			height: auto;
 			background-color: #fff;
 			padding: 0;
-			
+
 			tr {
 				width: 100%;
 				margin: 0;
 				padding: 0;
-				
+
 				td {
 					text-align: center;
 					color: #fff;
-					
+
 					&:last-child {
 						border-right: none;
 					}
 				}
-				
+
 			}
-			
+
 			.table-tr {
 				&:last-child {
 					td {
 						border-bottom: none;
 					}
 				}
-				
+
 				td {
 					color: #3D3D3D;
-					
+
 				}
 			}
 		}

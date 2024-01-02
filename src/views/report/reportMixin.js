@@ -536,6 +536,7 @@ export default {
     },
     // 热力图
     heatMapData(data, type) {
+      console.log(data)
       this.allHeatMap = [];
       data.map((list) => {
         let obj = {
@@ -546,7 +547,7 @@ export default {
           },
           remarkData: [],
           title: {
-            name: this.$t('report.'+type) + Object.keys(list)[0] + this.$t("客流分析"),
+            name: this.$t(('report.'+type)) + Object.keys(list)[0] + this.$t("客流分析"),
             text: "",
           },
         };

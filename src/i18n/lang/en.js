@@ -233,7 +233,7 @@ module.exports = {
   出客流峰值: 'Peak Outbound',
   小时: 'Hour',
   默认: 'Default',
-  人次: 'person-time',
+  人次: ' person-time',
   年龄: 'Age',
   类别: 'Category',
   男性: 'Male',
@@ -663,7 +663,9 @@ module.exports = {
     ChooseEntityTooMuch: 'At most 40 entities can be selected due to page effect. Please re select entities',
     customer: 'New customers: the number of people who have been here only once in the selected time period\nRegular customers: the number of people who have been here 2 or more times in the selected time period',
     configGate: 'There are no gates configured under this shopping mall, please configure first',
-    imgFormat: 'Please upload pictures in jpg, jpeg, png format!'
+    imgFormat: 'Please upload pictures in jpg, jpeg, png format!',
+    flowTargetConfig:'Not configured with this year passenger flow target!',
+    saleTargetConfig:'Not configured with this year passenger sale target!',
   },
 
   passages: {
@@ -804,6 +806,8 @@ module.exports = {
     本月每周客流分析:"Weekly passenger flow analysis for this month" ,
     苏州凌图科技有限公司:'Linkdome Technology',
     本周:"This week ",
+    当日:"Today ",
+    本月:"This month ",
     店铺客流分析:'Store passenger flow analysis',
     总客流:'Total passenger flow',
     路经客流:'Passengers passing by',

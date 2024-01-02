@@ -1,16 +1,16 @@
 <template>
-	<div class="entity-center">
-		<table-multiple-selected
-				:tableName='tableName'
-				:tableList='tableList'
-				titleName='基本信息'
-				:userLvl="userLvl"
-				:actionList="floorActions"
-				@imgConfig="imgConfig"
-				@tableData='editMail'
-		>
-		</table-multiple-selected>
-	</div>
+    <div class="entity-center">
+        <table-multiple-selected
+                :tableName='tableName'
+                :tableList='tableList'
+                titleName='基本信息'
+                :userLvl="userLvl"
+                :actionList="floorActions"
+                @imgConfig="imgConfig"
+                @tableData='editMail'
+        >
+        </table-multiple-selected>
+    </div>
 
 </template>
 
@@ -34,17 +34,17 @@
       }
     },
     computed: {
-		tableName () {
-			return ['名称','实体类别', '本年客流目标', '本年销售目标', '详情地址', '描述', '操作']
+      tableName () {
+        return ['名称', '实体类别', '本年客流目标', '本年销售目标', '详情地址', '描述', '操作']
 
-		},
-      floorActions(){
-        let arr = [];
-        if(this.userLvl === 'admin'){
+      },
+      floorActions () {
+        let arr = []
+        if (this.userLvl === 'admin') {
           arr = [
             {
-              name:'图片配置',
-              icon:'md-image'
+              name: '图片配置',
+              icon: 'md-image'
             }
           ]
         }
@@ -59,7 +59,7 @@
         let obj = {}
         obj = _.find(data.property, ['property_id', shoppingInfoDate.property_id])
         obj.operation = true
-		obj.hideDelBtn = true
+        obj.hideDelBtn = true
         obj.imgConfig = this.userLvl === 'admin'
         //获取当年年份
         const currentYear = new Date().getFullYear()
@@ -67,44 +67,53 @@
         const goalFlow = obj.goal_flow.find(f => {
           return f.year === currentYear
         })
-        const flowType = goalFlow.is_year
-        if (!flowType) obj.enterGoal = '0'+this.$t('人')
-        switch (flowType) {
-          case 'year':
-            obj.enterGoal = goalFlow.flow_year ? goalFlow.flow_year.toLocaleString() + this.$t('人') : '0'+this.$t('人')
-            break
-          case 'month':
-            const month = goalFlow.detail.months
-            const number = month.map(function (m) {
-              return formatNumber(Object.values(m)[0])
-            })
-            const sumMonthFlow = thousandSeparator(_.sum(number))
-            obj.enterGoal = sumMonthFlow + this.$t('人')
-            break
+        if (goalFlow) {
+          const flowType = goalFlow.is_year
+          if (!flowType) obj.enterGoal = '0' + this.$t('人')
+          switch (flowType) {
+            case 'year':
+              obj.enterGoal = goalFlow.flow_year ? goalFlow.flow_year.toLocaleString() + this.$t('人') : '0' + this.$t('人')
+              break
+            case 'month':
+              const month = goalFlow.detail.months
+              const number = month.map(function (m) {
+                return formatNumber(Object.values(m)[0])
+              })
+              const sumMonthFlow = thousandSeparator(_.sum(number))
+              obj.enterGoal = sumMonthFlow + this.$t('人')
+              break
+          }
+        } else {
+          this.$message.warning(this.$t('notices.flowTargetConfig'))
         }
 
         // 当年的销售目标
         const goalSale = obj.goal_sale.find(s => {
           return s.year === currentYear
         })
-        const saleType = goalSale.is_year
-        if (!saleType) obj.saleGoal = '0'+this.$t('元')
-        switch (saleType) {
-          case 'year':
-            obj.saleGoal = goalSale.sale_year ? goalSale.sale_year.toLocaleString() + this.$t('元') : '0'+this.$t('元')
-            break
-          case 'month':
-            const monthSale = goalSale.detail.months
-            const numberSale = monthSale.map(function (m) {
-              return formatNumber(Object.values(m)[0])
-            })
-            const sumMonthSale = thousandSeparator(_.sum(numberSale))
-            obj.saleGoal = sumMonthSale +this.$t('元')
+        if (goalSale) {
+          const saleType = goalSale.is_year
+          if (!saleType) obj.saleGoal = '0' + this.$t('元')
+          switch (saleType) {
+            case 'year':
+              obj.saleGoal = goalSale.sale_year ? goalSale.sale_year.toLocaleString() + this.$t('元') : '0' + this.$t('元')
+              break
+            case 'month':
+              const monthSale = goalSale.detail.months
+              const numberSale = monthSale.map(function (m) {
+                return formatNumber(Object.values(m)[0])
+              })
+              const sumMonthSale = thousandSeparator(_.sum(numberSale))
+              obj.saleGoal = sumMonthSale + this.$t('元')
+          }
+        } else {
+          this.$message.warning(this.$t('notices.saleTargetConfig'))
         }
+
         obj.address = obj.address ? obj.address : ' '
         obj.description = obj.description ? obj.description : ' '
-		obj.type_name = 'mall'
-	    obj.logo = obj.map_url
+        obj.type_name = 'mall'
+        obj.logo = obj.map_url
         this.tableList.push(obj)
       },
       imgConfig () {
@@ -118,13 +127,13 @@
   }
 </script>
 <style lang="scss" scoped>
-	.entity-center {
-		width: 100%;
-		height: auto;
-		margin-top: 20px;
+    .entity-center {
+        width: 100%;
+        height: auto;
+        margin-top: 20px;
 
-		.vx-card {
-			box-shadow: none;
-		}
-	}
+        .vx-card {
+            box-shadow: none;
+        }
+    }
 </style>

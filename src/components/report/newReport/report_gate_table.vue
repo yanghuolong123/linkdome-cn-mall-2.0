@@ -2,7 +2,7 @@
 <template>
     <div class="reportOneText" style=" width: 1200px;
         height: 1682px;">
-        <div class="report-list" style=" padding-bottom: 180px;">
+        <div class="report-list" style=" padding-bottom: 110px;">
             <report-header></report-header>
             <report-title :title="title"></report-title>
             <div class="table-list" style="  margin: 12px 0 20px 0; padding: 0 80px;">
@@ -29,7 +29,7 @@
                              {{item.basis}} %
                         </td>
                     </tr>
-                    
+
                 </table>
              </div>
             <report-flooter :size='page'></report-flooter>
@@ -91,7 +91,7 @@ export default {
             position: absolute;
             left: 0;
             top: 0;
-           
+
         }
         .report-bg{
             display: block;
@@ -132,6 +132,6 @@ export default {
             }
         }
     }
-    
+
     }
 </style>

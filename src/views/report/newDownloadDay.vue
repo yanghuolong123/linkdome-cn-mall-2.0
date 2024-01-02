@@ -779,23 +779,30 @@ export default {
       ];
       if (gateData.data) {
         gateData.data.forEach((list) => {
-          currentObj.data.push(list.enter);
-          let yesterEnter = _.find(
-            gateData.contrast,
-            (o) => o.bzid === list.bzid
-          ).enter;
-          yesterObj.data.push(yesterEnter);
-          let lastEnter = _.find(gateData.period, (o) => o.bzid === list.bzid)
-            .enter;
-          lastObj.data.push(lastEnter);
-
-          let lastWeekEnter = _.find(
-            gateData.last_week_day,
-            (o) => o.bzid === list.bzid
-          ).enter;
-          lastWeekObj.data.push(lastWeekEnter);
-          this.gateChartData.option.xAxis.categories.push(list.name);
-        });
+          currentObj.data.push(list.enter)
+          const yNode = _.find(
+                  gateData.contrast,
+                  (o) => o.bzid === list.bzid
+          )
+          let yesterEnter = yNode && yNode.enter||0
+          yesterObj.data.push(yesterEnter)
+          const lNode =  _.find(gateData.period, (o) => o.bzid === list.bzid)
+          let lastEnter =lNode && lNode.enter || 0
+          lastObj.data.push(lastEnter)
+          const lwNode =  _.find(
+                  gateData.last_week_day,
+                  (o) => o.bzid === list.bzid
+          )
+          let lastWeekEnter =lwNode&&lwNode.enter||0
+          lastWeekObj.data.push(lastWeekEnter)
+          this.gateTableData.data.push({
+            name: list.name,
+            curr: list.enter.toLocaleString(),
+            last: lastEnter.toLocaleString(),
+            basis: this.sequential(list.enter, lastEnter),
+          })
+          this.gateChartData.option.xAxis.categories.push(list.name)
+        })
       }
       this.gateChartData.option.series = [
         currentObj,

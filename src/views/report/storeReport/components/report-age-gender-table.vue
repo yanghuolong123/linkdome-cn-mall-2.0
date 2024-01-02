@@ -1,7 +1,7 @@
 <template>
 	<div class="reportOneText" style="  width: 1200px;
         height: 1682px;">
-		<div class="report-list" style="padding-bottom: 180px;">
+		<div class="report-list" style="padding-bottom: 110px;">
 			<report-header></report-header>
 			<report-title :title="title"></report-title>
 			<div class="name" v-if="storeName">{{storeName}}</div>
@@ -68,25 +68,25 @@
 <style scoped lang="less">
 	.reportOneText {
 		display: inline-block;
-		
+
 		overflow: hidden;
 		background-color: #eff5fa;
 		position: relative;
-		
+
 		.report-list {
 			width: 100%;
 			height: 100%;
 			position: absolute;
 			left: 0;
 			top: 0;
-			
+
 			.name {
 				padding: 20Px 80Px;
 				font-size: 50Px;
 				font-weight: bold;
 			}
 		}
-		
+
 		.report-bg {
 			display: block;
 			width: 100%;

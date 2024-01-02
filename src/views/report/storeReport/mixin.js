@@ -17,17 +17,17 @@ export default {
       ratioExitTableColumn: {
         name1: [this.$t("时间"), this.$t("出客流")],
         name2: [this.$t("report.环比分析")],
-        name3: [this.$t("时间"), this.$t("出客流"), this.$t('增长率')]
+        name3: [this.$t("时间"), this.$t("出客流"), this.$t('report.增长率')]
       },
       ratioTotalTableColumn: {
         name1: [this.$t("时间"),this.$t("report.总客流")],
         name2: [this.$t("report.环比分析")],
-        name3: [this.$t("时间"),this.$t("report.总客流"),  this.$t('增长率')]
+        name3: [this.$t("时间"),this.$t("report.总客流"),  this.$t('report.增长率')]
       },
       passbyTableColunm: {
         name1: [this.$t("时间"),this.$t("report.路经客流")],
         name2:[this.$t("report.环比分析")],
-        name3: [this.$t("时间"),this.$t("report.路经客流"),  this.$t('增长率')]
+        name3: [this.$t("时间"),this.$t("report.路经客流"),  this.$t('report.增长率')]
       },
       ratioTableData: [],
 

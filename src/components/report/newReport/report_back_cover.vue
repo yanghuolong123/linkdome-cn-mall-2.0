@@ -1,6 +1,6 @@
 <template>
 	<div class="reportOneText" style=" width: 1200px; height: 1682px;">
-		<img src="../../../assets/images/fixation_img/logo/white-logo.png" class="property-logo" style=" width: 346px;" alt="">
+		<img src="../../../assets/images/fixation_img/logo/white-logo.png" class="property-logo" style=" width: 276px;" alt="">
 		<img class="earth" src="../../../assets/images/fixation_img/bg/earth.png" alt="">
 		<div class="report-text" style=" bottom: 110px; padding: 0 82px;">
 			<h2 style="
@@ -35,19 +35,19 @@
                 font-size: 26px;
                 margin: 48px auto 0 auto;
                 white-space:nowrap;
-            "> {{$t('report.地址')}}：陕西省西安市雁塔区旺座曲江A座23层</p>
+            " v-if="language!=='en-US'"> {{$t('report.地址')}}：陕西省西安市雁塔区旺座曲江A座23层</p>
 			<span style="
-                margin-top:150px;
+                margin-top:180px;
                 padding-bottom: 10px;
-                font-size: 36px;
+                font-size: 30px;
                 border-bottom: 10px solid #fff;
             ">{{$t('report.报告日期')}}:
             {{reportDate}}
             </span>
 			<span style="
-                margin-top:150px;
+                margin-top:180px;
                 padding-bottom: 10px;
-                font-size: 36px;
+                font-size: 30px;
                 border-bottom: 10px solid #35E9DF;
             ">{{$t('report.生成日期')}}: {{newDate}}</span>
 		</div>
@@ -55,6 +55,7 @@
 </template>
 <script>
   import moment from 'moment'
+  import { mapState } from 'vuex'
 
   export default {
     props: {},
@@ -65,6 +66,9 @@
       }
     },
     computed: {
+		...mapState({
+			language: (state) => state.language,//en-US
+		}),
       reportDate () {
         let type = this.$store.state.report.reportHeaderType
         switch (type) {

@@ -1,6 +1,6 @@
 <template>
 	<div class="reportOneText" style="width: 1200px;height:1682px;">
-		<div class="report-list" style=" padding-bottom: 180px;">
+		<div class="report-list" style=" padding-bottom: 110px;">
 			<report-header></report-header>
 			<report-title :title='title'></report-title>
 			<div class="name" v-if="storeName">{{storeName}}</div>
@@ -16,7 +16,7 @@
 							:options="dataList.option"
 					></vue-highcharts>
 				</div>
-			
+
 			</div>
 			<report-flooter :size='page'></report-flooter>
 		</div>
@@ -107,36 +107,36 @@
 		border: 4Px dashed #4edbda;
 		border-radius: 8Px;
 	}
-	
+
 	.report-chart {
 		width: 100%;
-		
+
 		.report-chart-text:extend(.dashed-border) {
 			width: 100%;
 			margin-top: 12Px;
 		}
 	}
-	
+
 	.reportOneText {
 		display: inline-block;
 		overflow: hidden;
 		background-color: #eff5fa;
 		position: relative;
-		
+
 		.report-list {
 			width: 100%;
 			height: 100%;
 			position: absolute;
 			left: 0;
 			top: 0;
-			
+
 			.name {
 				padding: 20Px 80Px 0 80Px;
 				font-size: 50Px;
 				font-weight: bold;
 			}
 		}
-		
+
 		.report-bg {
 			display: block;
 			width: 100%;

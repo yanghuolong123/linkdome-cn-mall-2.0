@@ -2,7 +2,7 @@
 <template>
     <div class="reportOneText" style=" width: 1200px;
         height: 1682px;">
-        <div class="report-list" style=" padding-bottom: 180px;">
+        <div class="report-list" style=" padding-bottom: 110px;">
             <report-header></report-header>
             <report-title :title="title"></report-title>
             <report-table :listTitle='listTitle.relevancy' width='33%' :tableColumn='tableData.relevancy.column' :tableData='tableData.relevancy.table' ></report-table>
@@ -64,7 +64,7 @@ export default {
             position: absolute;
             left: 0;
             top: 0;
-           
+
         }
         .report-bg{
             display: block;

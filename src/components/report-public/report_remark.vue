@@ -1,7 +1,6 @@
 <template>
 	<div class="report-remark" style=" padding: 10px 28px;
-        margin: 0 80px;
-        max-height:420px;">
+        margin: 0 60px;">
 		<div class="flex-center title" style=" font-size: 36px;">
 			<img style=" width: 28px;" :src="img" alt="">
 			<span>{{$t('report.凌图智慧点评')}}</span>

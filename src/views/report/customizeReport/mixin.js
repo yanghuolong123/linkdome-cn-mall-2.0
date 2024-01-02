@@ -260,7 +260,7 @@ export default{
       enter.forEach((list, index) => {
         oneObj.data.push(list.enter)
         twoObj.data.push(lastEnter[index].enter)
-        this.trendChartData.option.xAxis.categories.push(`第${index + 1}天`)
+        this.trendChartData.option.xAxis.categories.push(this.$t("fn.第_天", [index + 1]))
         // 环比数据
         let lastWeekNumber = this.sequential(list.enter, lastEnter[index].enter)
         // 同比数据

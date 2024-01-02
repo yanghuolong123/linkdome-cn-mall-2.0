@@ -725,86 +725,88 @@
         data = data.data.data
         this.gateTableColumn = []
         let that = this
-        for (let i = 0; i < 7; i++) {
-          let obj = {}
-          obj.name = ''
-          obj.time1 = this.$t('report.本期') + Object.keys(data[0].current[i])[0]
-          obj.time2 = this.$t('report.同期') + Object.keys(data[0].contrast[i])[0]
-          switch (i) {
-            case 0:
-              obj.name = this.$t('周一')
-              break
-            case 1:
-              obj.name = this.$t('周二')
-              break
-            case 2:
-              obj.name = this.$t('周三')
-              break
-            case 3:
-              obj.name = this.$t('周四')
-              break
-            case 4:
-              obj.name = this.$t('周五')
-              break
-            case 5:
-              obj.name = this.$t('周六')
-              break
-            case 6:
-              obj.name = this.$t('周日')
-              break
+        if(data.length){
+          for (let i = 0; i < 7; i++) {
+            let obj = {};
+            obj.name = "";
+            obj.time1 = this.$t("report.本期") + Object.keys(data[0].current[i])[0];
+            obj.time2 = this.$t("report.同期") + Object.keys(data[0].contrast[i])[0];
+            switch (i) {
+              case 0:
+                obj.name = this.$t('周一');
+                break;
+              case 1:
+                obj.name = this.$t('周二');
+                break;
+              case 2:
+                obj.name = this.$t('周三');
+                break;
+              case 3:
+                obj.name = this.$t('周四');
+                break;
+              case 4:
+                obj.name = this.$t('周五');
+                break;
+              case 5:
+                obj.name = this.$t('周六');
+                break;
+              case 6:
+                obj.name = this.$t('周日');
+                break;
+            }
+            that.gateTableColumn.push(obj);
           }
-          that.gateTableColumn.push(obj)
+          this.gateTableData = [];
+          data.forEach((o) => {
+            const currData = o.current
+              .map((inner) => {
+                return Object.values(inner);
+              })
+              .flat();
+            o.currTotal = _.sum(currData);
+          });
+          let to10 = _.sortBy(data, "currTotal")
+            .reverse()
+            .splice(0, 10);
+          to10.forEach((list) => {
+            let obj = {};
+            obj.current = [];
+            obj.period = [];
+            obj.ratio = [];
+            obj.name = list.name;
+            list.current.map((e, index) => {
+              let currentEnter = Object.values(e)[0].toLocaleString();
+              obj.current.push(currentEnter);
+              let periodEnter = Object.values(
+                list.contrast[index]
+              )[0].toLocaleString();
+              obj.period.push(periodEnter);
+              let ratio = this.sequential(
+                Object.values(e)[0],
+                Object.values(list.contrast[index])[0]
+              );
+              obj.ratio.push(ratio + "%");
+            });
+            this.gateTableData.push(obj);
+          });
+          let total = {};
+          total.current = [];
+          total.period = [];
+          total.ratio = [];
+          total.name = this.$t("合计");
+          to10[0].current.forEach((list, index) => {
+            let arr = [],
+              arr2 = [];
+            to10.forEach((val) => {
+              arr.push(Object.values(val.current[index])[0]);
+              arr2.push(Object.values(val.contrast[index])[0]);
+            });
+            total.current.push(_.sum(arr).toLocaleString());
+            total.period.push(_.sum(arr2).toLocaleString());
+            total.ratio.push(this.sequential(_.sum(arr), _.sum(arr2)) + "%");
+          });
+          this.gateTableData.push(total);
         }
-        this.gateTableData = []
-        data.forEach((o) => {
-          const currData = o.current
-            .map((inner) => {
-              return Object.values(inner)
-            })
-            .flat()
-          o.currTotal = _.sum(currData)
-        })
-        let to10 = _.sortBy(data, 'currTotal')
-          .reverse()
-          .splice(0, 10)
-        to10.forEach((list) => {
-          let obj = {}
-          obj.current = []
-          obj.period = []
-          obj.ratio = []
-          obj.name = list.name
-          list.current.map((e, index) => {
-            let currentEnter = Object.values(e)[0].toLocaleString()
-            obj.current.push(currentEnter)
-            let periodEnter = Object.values(
-              list.contrast[index]
-            )[0].toLocaleString()
-            obj.period.push(periodEnter)
-            let ratio = this.sequential(
-              Object.values(e)[0],
-              Object.values(list.contrast[index])[0]
-            )
-            obj.ratio.push(ratio + '%')
-          })
-          this.gateTableData.push(obj)
-        })
-        let total = {}
-        total.current = []
-        total.period = []
-        total.ratio = []
-        total.name = this.$t('合计')
-        to10[0].current.forEach((list, index) => {
-          let arr = [],
-            arr2 = []
-          to10.forEach((val) => {
-            arr.push(Object.values(val.current[index])[0])
-            arr2.push(Object.values(val.contrast[index])[0])
-          })
-          total.current.push(_.sum(arr).toLocaleString())
-          total.period.push(_.sum(arr2).toLocaleString())
-          total.ratio.push(this.sequential(_.sum(arr), _.sum(arr2)) + '%')
-        })
-        this.gateTableData.push(total)
       },
       trendDataList (enter, lastEnter, yearEnter) {
         this.trendChartData.option = _.cloneDeep(this.enterOption)

@@ -2,7 +2,7 @@
 <template>
     <div class="reportOneText" style=" width: 1200px;
         height: 1682px;">
-        <div class="report-list" style=" padding-bottom: 180px;">
+        <div class="report-list" style=" padding-bottom: 110px;">
             <report-header></report-header>
             <report-title :title="title"></report-title>
             <div class="table-list" style="  margin: 12px 0 20px 0;

@@ -1,6 +1,6 @@
 <template>
     <div class="reportOneText" style="width: 1200px;height:1682px;">
-        <div class="report-list" style=" padding-bottom: 180px;">
+        <div class="report-list" style=" padding-bottom: 110px;">
             <report-header></report-header>
             <report-title :title='title'></report-title>
               <div class="report-chart" style=" padding: 0 80px;
