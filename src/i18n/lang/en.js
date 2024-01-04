@@ -520,7 +520,8 @@ module.exports = {
   上传图片: 'Upload image',
   上传: 'Upload',
   全部: 'All',
-
+  数据对比:'Data comparison',
+  数据模块:'Data module',
   百分比: 'Percent',
   // Entity.vue
   '确认删除此购物中心信息？': 'Are you sure you want to delete this shopping center information?',
@@ -696,7 +697,13 @@ module.exports = {
     店铺客流:'Store customer flow',
     热力图:'Heat map',
     店铺关联:'Store association',
+    '店铺客流-楼层':'Store association - floor',
+    '店铺客流-业态':'Store association - business format',
+    '店铺关联-无序':'Store association - unordered',
+    '店铺关联-有序':'Store association - orderly',
     停留时间:'Dwell time',
+    '停留时间-业态':'Dwell time - business format',
+    '停留时间-店铺':'Dwell time - store',
     出入口名称:'Name of Entrance/Exit',
     客流量:'Passenger flow',
     客流峰值:'Peak passenger flow',

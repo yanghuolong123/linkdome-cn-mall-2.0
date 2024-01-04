@@ -298,7 +298,7 @@ export default {
       let tOTime = contrastData.occupancy.highest.timeRange;
       let tEDate = tETime.split(" ")[0] + " " + tETime.split(" ")[2];
       let tOPDate = tOTime.split(" ")[0] + " " + tOTime.split(" ")[2];
-
+      console.log(data)
       let textList = Object.values(data.comment);
       let type = this.saveHeaderData.type === "daily" ? this.$t('report.时') : this.$t('report.天');
 

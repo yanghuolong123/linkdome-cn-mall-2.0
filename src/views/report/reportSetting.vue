@@ -2,7 +2,7 @@
 	<div>
 			<CheckboxGroups v-for ="item in dataList" :checkData="item" ></CheckboxGroups>
 		<Button type="primary" @click="handleSave">{{ $t('保存') }}</Button>
-	
+
 	</div>
 </template>
 <script>
@@ -30,7 +30,7 @@
           enable:this.setting.show_last_year===1?1:0,
           subpagesList:[
 						{
-						  cname:'同比',
+						  cname:'report.同比',
 							id:99,
               enable:this.setting.show_last_year===1?1:0
 						}
@@ -73,6 +73,7 @@
           if(res){
             const items = res.items && res.items.split(',')
             this.settingData.forEach(o=>{
+            	this.$set(o,'cname',`report.${o.cname}`)
               this.$set(o,'enable',items && items.includes(String(o.id))?1:0)
             })
 					}

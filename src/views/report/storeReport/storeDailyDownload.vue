@@ -189,7 +189,8 @@
       this.bzids = bzid
       setToken(token, 1)
       this.parameterData()
-
+		this.$i18n.locale = this.$route.query.language
+		this.$store.commit('UPDATE_LANG', this.$i18n.locale)
     },
     methods: {
       parameterData () { // 查找对应的 购物中心 id

@@ -256,33 +256,13 @@ export default {
       },
 
       ratioTableData: [],
-      tableColumn: [this.$t('report.出入口名称'), this.$t('report.客流量'),  this.$t('report.客流峰值'), this.$t('report.平均客流量/天')],
+
       tableData: [],
       lastWeekDate: "",
       lastYearDate: "",
       allFloorStore: [],
       allFormatStore: [],
       allHeatMap: [],
-      orderlyData: {
-        relevancy: {
-          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
-          table: [],
-        },
-        inversion: {
-          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
-          table: [],
-        },
-      },
-      disorderData: {
-        relevancy: {
-          column: [this.$t('report.实体名称'),this.$t('report.实体名称'),  this.$t('report.关联度')],
-          table: [],
-        },
-        inversion: {
-          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
-          table: [],
-        },
-      },
       dwellChartData: {
         option: {},
         remarkData: [],
@@ -503,6 +483,33 @@ export default {
           name:`${this.$t("report.停留时间")}-${this.$t('店铺')}`,
         }
       ]
+    },
+    orderlyData(){
+      return {
+        relevancy: {
+          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
+          table: [],
+        },
+        inversion: {
+          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
+          table: [],
+        },
+      }
+    },
+    disorderData(){
+      return {
+        relevancy: {
+          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
+          table: [],
+        },
+        inversion: {
+          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
+          table: [],
+        },
+      }
+    },
+    tableColumn(){
+      return [this.$t('report.出入口名称'), this.$t('report.客流量'),  this.$t('report.客流峰值'), this.$t('report.平均客流量/天')]
     }
   },
 

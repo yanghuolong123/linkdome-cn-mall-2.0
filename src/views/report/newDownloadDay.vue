@@ -184,39 +184,19 @@ export default {
         option: {},
         remarkData: [],
       },
+      gateTableData: {
+        column: [],
+        data: [],
+      },
       shopChartData: {
         option: {},
         remarkData: [],
       },
-      ratioTableColumn: {
-        name1: [this.$t("时间"), this.$t("入客流")],
-        name2: [ this.$t("report.环比分析")],
-        name3: [this.$t("时间"), this.$t("入客流"),this.$t("report.增长率")],
-      },
+
       ratioTableData: [],
       allFloorStore: [],
       allFormatStore: [],
       allHeatMap: [],
-      orderlyData: {
-        relevancy: {
-          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
-          table: [],
-        },
-        inversion: {
-          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
-          table: [],
-        },
-      },
-      disorderData: {
-        relevancy: {
-          column: [this.$t('report.实体名称'),this.$t('report.实体名称'),  this.$t('report.关联度')],
-          table: [],
-        },
-        inversion: {
-          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
-          table: [],
-        },
-      },
       dwellChartData: {
         option: {},
         remarkData: [],
@@ -402,6 +382,37 @@ export default {
           name:`${this.$t("report.停留时间")}-${this.$t('店铺')}`,
         }
       ]
+    },
+    ratioTableColumn(){
+      return {
+        name1: [this.$t("时间"), this.$t("入客流")],
+        name2: [ this.$t("report.环比分析")],
+        name3: [this.$t("时间"), this.$t("入客流"),this.$t("report.增长率")],
+      }
+    },
+    orderlyData(){
+      return  {
+        relevancy: {
+          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
+          table: [],
+        },
+        inversion: {
+          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
+          table: [],
+        },
+      }
+    },
+    disorderData(){
+      return {
+        relevancy: {
+          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
+          table: [],
+        },
+        inversion: {
+          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
+          table: [],
+        },
+      }
     }
   },
   watch: {},
@@ -751,6 +762,17 @@ export default {
     },
     gateDataList(gateData) {
       this.gateChartData.option = _.cloneDeep(this.enterOption);
+      let reportDate = this.$route.query.date.split(",")[0];
+      let time = moment(reportDate).format('YYYY-MM-DD')
+      let time2 = moment(reportDate)
+              .subtract(1, 'years')
+              .format('YYYY-MM-DD')
+      this.gateTableData.column = [
+        this.$t('出入口名称'),
+        `${this.$t('report.本期')} (${time})`,
+        `${this.$t('report.同期')} (${time2})`,
+        this.$t('report.同比'),
+      ]
       let [currentObj, yesterObj, lastObj, lastWeekObj] = [
         {
           name: this.$t('report.今日客流'),

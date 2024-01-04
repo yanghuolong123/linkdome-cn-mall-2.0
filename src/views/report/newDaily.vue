@@ -234,34 +234,10 @@
           option: {},
           remarkData: [],
         },
-        ratioTableColumn: {
-          name1: [this.$t('时间'), this.$t('入客流')],
-          name2: [this.$t('report.环比分析')],
-          name3: [this.$t('时间'), this.$t('入客流'), this.$t('report.增长率')],
-        },
         ratioTableData: [],
         allFormatStore: [],
         allHeatMap: [],
-        orderlyData: {
-          relevancy: {
-            column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
-            table: [],
-          },
-          inversion: {
-            column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
-            table: [],
-          },
-        },
-        disorderData: {
-          relevancy: {
-            column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
-            table: [],
-          },
-          inversion: {
-            column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
-            table: [],
-          },
-        },
+
         dwellChartData: {
           optin: {},
           remarkData: [],
@@ -447,6 +423,37 @@
             name: `${this.$t('report.停留时间')}-${this.$t('店铺')}`,
           }
         ]
+      },
+      ratioTableColumn(){
+        return {
+          name1: [this.$t('时间'), this.$t('入客流')],
+          name2: [this.$t('report.环比分析')],
+          name3: [this.$t('时间'), this.$t('入客流'), this.$t('report.增长率')],
+        }
+      },
+      orderlyData(){
+        return  {
+          relevancy: {
+            column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
+            table: [],
+          },
+          inversion: {
+            column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
+            table: [],
+          },
+        }
+      },
+      disorderData(){
+        return {
+          relevancy: {
+            column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
+            table: [],
+          },
+          inversion: {
+            column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
+            table: [],
+          },
+        }
       }
     },
     mounted () {

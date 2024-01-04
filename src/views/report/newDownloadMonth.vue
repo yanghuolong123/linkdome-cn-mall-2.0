@@ -228,33 +228,8 @@ export default {
       },
       floorShopChartData: [],
       formatShopChartData: [],
-      ratioTableColumn: {
-        name1: [this.$t('时间'), this.$t('客流量')],
-        name2: [ this.$t("客流峰值")],
-        name3: [this.$t('时间'), this.$t("客流峰值")],
-      },
       ratioTableData: [],
       allHeatMap: [],
-      orderlyData: {
-        relevancy: {
-          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
-          table: [],
-        },
-        inversion: {
-          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
-          table: [],
-        },
-      },
-      disorderData: {
-        relevancy: {
-          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
-          table: [],
-        },
-        inversion: {
-          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
-          table: [],
-        },
-      },
       dwellChartData: {
         option: {},
         remarkData: [],
@@ -490,6 +465,37 @@ export default {
           name:`${this.$t("report.停留时间")}-${this.$t('店铺')}`,
         }
       ]
+    },
+    orderlyData(){
+      return {
+        relevancy: {
+          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
+          table: [],
+        },
+        inversion: {
+          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
+          table: [],
+        },
+      }
+    },
+    disorderData(){
+      return {
+        relevancy: {
+          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
+          table: [],
+        },
+        inversion: {
+          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
+          table: [],
+        },
+      }
+    },
+    ratioTableColumn(){
+      return {
+        name1: [this.$t('时间'), this.$t('客流量')],
+        name2: [ this.$t("客流峰值")],
+        name3: [this.$t('时间'), this.$t("客流峰值")],
+      }
     }
   },
   mounted() {

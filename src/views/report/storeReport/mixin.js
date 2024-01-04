@@ -9,28 +9,7 @@ export default {
         lineOption: {},
         barOption: {},
       },
-      ratioTableColumn: {
-        name1: [this.$t("时间"), this.$t("入客流")],
-        name2: [ this.$t("report.环比分析")],
-        name3: [this.$t("时间"), this.$t("入客流"),this.$t("report.增长率")],
-      },
-      ratioExitTableColumn: {
-        name1: [this.$t("时间"), this.$t("出客流")],
-        name2: [this.$t("report.环比分析")],
-        name3: [this.$t("时间"), this.$t("出客流"), this.$t('report.增长率')]
-      },
-      ratioTotalTableColumn: {
-        name1: [this.$t("时间"),this.$t("report.总客流")],
-        name2: [this.$t("report.环比分析")],
-        name3: [this.$t("时间"),this.$t("report.总客流"),  this.$t('report.增长率')]
-      },
-      passbyTableColunm: {
-        name1: [this.$t("时间"),this.$t("report.路经客流")],
-        name2:[this.$t("report.环比分析")],
-        name3: [this.$t("时间"),this.$t("report.路经客流"),  this.$t('report.增长率')]
-      },
       ratioTableData: [],
-
       ageGender:{},
       ageGenderTableData: [],
       storeEnterChartList:[],
@@ -55,6 +34,34 @@ export default {
     ...mapState({
       propertyId: state => state.home.headerAction,
     }),
+    ratioTableColumn(){
+      return {
+        name1: [this.$t("时间"), this.$t("入客流")],
+        name2: [ this.$t("report.环比分析")],
+        name3: [this.$t("时间"), this.$t("入客流"),this.$t("report.增长率")],
+      }
+    },
+    ratioExitTableColumn(){
+      return {
+        name1: [this.$t("时间"), this.$t("出客流")],
+        name2: [this.$t("report.环比分析")],
+        name3: [this.$t("时间"), this.$t("出客流"), this.$t('report.增长率')]
+      }
+    },
+    ratioTotalTableColumn(){
+      return {
+        name1: [this.$t("时间"),this.$t("report.总客流")],
+        name2: [this.$t("report.环比分析")],
+        name3: [this.$t("时间"),this.$t("report.总客流"),  this.$t('report.增长率')]
+      }
+    },
+    passbyTableColunm(){
+      return {
+        name1: [this.$t("时间"),this.$t("report.路经客流")],
+        name2:[this.$t("report.环比分析")],
+        name3: [this.$t("时间"),this.$t("report.路经客流"),  this.$t('report.增长率')]
+      }
+    },
     ageGenderTableColumn(){
       return {
         name1: [this.$t("时间")],

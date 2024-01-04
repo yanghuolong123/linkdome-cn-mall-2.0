@@ -36,31 +36,11 @@ export default{
         remarkData: []
       },
       ratioTableData: [],
-      tableColumn: [this.$t('出入口名称'), this.$t('report.客流量'),  this.$t('report.客流峰值'),  this.$t('report.平均客流量/天')],
+
       tableData: [],
       allFloorStore: [],
       allFormatStore: [],
       allHeatMap: [],
-      orderlyData: {
-        relevancy: {
-          column: [this.$t('实体名称'), this.$t('实体名称'), this.$t('report.关联度')],
-          table: []
-        },
-        inversion: {
-          column: [this.$t('实体名称'), this.$t('实体名称'), this.$t('report.转换量')],
-          table: []
-        }
-      },
-      disorderData: {
-        relevancy: {
-          column: [this.$t('实体名称'), this.$t('实体名称'), this.$t('report.关联度')],
-          table: []
-        },
-        inversion: {
-          column: [this.$t('实体名称'), this.$t('实体名称'), this.$t('report.转换量')],
-          table: []
-        }
-      },
       dwellChartData: {
         option: {},
         remarkData: []
@@ -69,6 +49,33 @@ export default{
     }
   },
   computed:{
+    tableColumn(){
+      return [this.$t('出入口名称'), this.$t('report.客流量'),  this.$t('report.客流峰值'),  this.$t('report.平均客流量/天')]
+    },
+    disorderData(){
+      return {
+        relevancy: {
+          column: [this.$t('实体名称'), this.$t('实体名称'), this.$t('report.关联度')],
+          table: []
+        },
+        inversion: {
+          column: [this.$t('实体名称'), this.$t('实体名称'), this.$t('report.转换量')],
+          table: []
+        }
+      }
+    },
+    orderlyData(){
+      return {
+        relevancy: {
+          column: [this.$t('实体名称'), this.$t('实体名称'), this.$t('report.关联度')],
+          table: []
+        },
+        inversion: {
+          column: [this.$t('实体名称'), this.$t('实体名称'), this.$t('report.转换量')],
+          table: []
+        }
+      }
+    },
     ratioTableColumn(){
       if(this.showLastYearData){
         return  {

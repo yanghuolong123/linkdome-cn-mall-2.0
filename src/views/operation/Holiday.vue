@@ -134,6 +134,7 @@ import { getDateCompare, getYearList } from "@/api/operate";
 import { getanalysiseeo } from "@/api/home";
 import { getActiveDays, holidayAnalysis } from "@/api/manager.js";
 import {  gotInnerRange } from "@/libs/util.js";
+import {entityFlow} from '../../api/entityNew'
 
 export default {
   components: {
@@ -535,15 +536,23 @@ export default {
           year = this.compareYear2;
           break;
       }
-
+      const params1 = {
+        type_id:20,
+        year,
+      }
+      const params2 = {
+        type_id:21,
+        year,
+        property_id:propertyId
+      }
       Promise.all([
-        getActiveDays(year, 20),
-        getActiveDays(year, 21, propertyId),
+        getActiveDays(params1),
+        getActiveDays(params2),
       ]).then((res) => {
         // 节假日
-
+        console.log(res)
         if (res[0].data.code == 200) {
-          let data = res[0].data.data;
+          let data = res[0].data.data.list;
           let listData = data.map((list) => {
             this.AllHolidayData.push(list);
             let obj = {};
@@ -554,7 +563,6 @@ export default {
           switch (type) {
             case 1:
               year = this.selectYear;
-              this.holidays = [];
               this.holidays = [
                 { key: "全部节假日活动", value: "" },
                 ...listData,
@@ -562,19 +570,17 @@ export default {
               break;
             case 2:
               year = this.compareYear1;
-              this.holidayActives1 = [];
               this.holidayActives1 = listData;
               break;
             case 3:
               year = this.compareYear2;
-              this.holidayActives2 = [];
               this.holidayActives2 = listData;
               break;
           }
         }
         // 活动
         if (res[1].data.code == 200) {
-          let data = res[1].data.data;
+          let data = res[1].data.data.list;
           let listData = data.map((list) => {
             this.AllHolidayData.push(list);
             let obj = {};
@@ -710,102 +716,86 @@ export default {
       if (!compare1 || !compare2) return;
       var date1 = { start_date: compare1.start_date, end_date: compare1.end_date };
       var date2 = { start_date: compare2.start_date, end_date: compare2.end_date };
-      var params = {
-        date1: {
-          start_date: date1.start_date,
-          end_date: date1.end_date,
-        },
-        date2: {
-          start_date: date2.start_date,
-          end_date: date2.end_date,
-        },
+
+      const params = {
         type: "enter",
         bzid: this.selectEntity,
-      };
+        time1:`${date1.start_date},${date1.end_date}`,
+        time2:`${date2.start_date},${date2.end_date}`,
+        range:date1.start_date === date1.end_date&&date2.start_date===date2.end_date?'Hour':'Date'
+      }
       that.columns2.push(
-        Moment(compare1.start_date).format("YYYY") +
+        Moment(compare1.end_date).format("YYYY") +
           compare1.name +
           " ( " +
           this.$t("人次") +
           " )"
       );
       that.columns2.push(
-        Moment(compare2.start_date).format("YYYY") +
+        Moment(compare2.end_date).format("YYYY") +
           compare2.name +
           " ( " +
           this.$t("人次") +
           " )"
       );
-      that.contrastExcel.data = params;
-      getDateCompare(params).then((res) => {
-        var data = res.data.data;
-        var xaxis = [];
-        data.forEach((m, index) => {
-          xaxis.push(this.$t("fn.第_天", [this.$t(index + 1)]));
-        });
-        var resData1 = [];
-        if (Moment(compare1.start_date).isAfter(Moment(new Date()))) {
-          resData1 = data.map(function(m, index) {
-            return "";
-          });
-        } else {
-          resData1 = data.map(function(m, index) {
-            // if (Moment(m.date1.belong).isBetween(compare1.start_date, compare1.end_date) ||
-            // Moment(m.date1.belong).isSame(compare1.start_date) || Moment(m.date1.belong).isSame(compare1.end_date)) {
-            //   if (!m.date1.enter) return 0
-            //   else return m.date1.enter
-            // }
-            if (!m.date1.enter) return 0;
-            else return m.date1.enter;
-          });
-        }
-        var resData2 = [];
-        if (Moment(compare2.start_date).isAfter(Moment(new Date()))) {
-          resData2 = data.map(function(m, index) {
-            return "";
-          });
-        } else {
-          resData2 = data.map(function(m) {
-            // if (Moment(m.date2.belong).isBetween(compare2.start_date, compare2.end_date) ||
-            // Moment(m.date2.belong).isSame(compare2.start_date) || Moment(m.date2.belong).isSame(compare2.end_date)) {
-            //   if (!m.date2.enter) return 0
-            //   else return m.date2.enter
-            // }
-            if (!m.date2.enter) return 0;
-            else return m.date2.enter;
-          });
-        }
-        var series2 = [{ name: "", data: [] }, { name: "", data: [] }];
-        series2[0].name = Moment(compare1.start_date).format("YYYY") + compare1.name;
-        series2[0].smooth = true;
-        series2[0].data = resData1;
-        series2[1].name = Moment(compare2.start_date).format("YYYY") + compare2.name;
-        series2[1].smooth = true;
-        series2[1].data = resData2;
-        that.series2 = series2;
+      entityFlow(params).then(res=>{
+        var xaxis = [],resData1 = [],resData2 = [];
+        res = res.data.data[0];
+        if(res.list && res.list.time1){
+          let index = 1;
+          for(let key in res.list.time1){
+            xaxis.push(this.$t("fn.第_天", [this.$t(index)]))
+            index++
+          }
+          if (Moment(compare1.start_date).isAfter(Moment(new Date()))) {
+            resData1 = xaxis.map(function(m, index) {
+              return "";
+            });
+          }else {
+            resData1 = Object.values(res.list.time1)
+          }
 
-        var options2 = _.cloneDeep(that.options0);
-        options2.xaxis.categories = xaxis;
-        var columnWidth = "30%";
-        if (xaxis.length) {
-          columnWidth = xaxis.length < 5 ? "20%" : "70%";
+          if (Moment(compare2.start_date).isAfter(Moment(new Date()))) {
+            resData2 = xaxis.map(function(m, index) {
+              return "";
+            });
+          }else {
+            resData2 = Object.values(res.list.time2)
+          }
+
+          var series2 = [{ name: "", data: [] }, { name: "", data: [] }];
+          series2[0].name = Moment(compare1.end_date).format("YYYY") + compare1.name;
+          series2[0].smooth = true;
+          series2[0].data = resData1;
+          series2[1].name = Moment(compare2.end_date).format("YYYY") + compare2.name;
+          series2[1].smooth = true;
+          series2[1].data = resData2;
+          that.series2 = series2;
+
+          var options2 = _.cloneDeep(that.options0);
+          options2.xaxis.categories = xaxis;
+          var columnWidth = "30%";
+          if (xaxis.length) {
+            columnWidth = xaxis.length < 5 ? "20%" : "70%";
+          }
+          options2.plotOptions.bar.columnWidth = columnWidth;
+          that.options2 = options2;
+          var tableList2 = [];
+          resData1.forEach(function(m, index) {
+            var obj = {};
+            obj.name = xaxis[index] ? xaxis[index] : " ";
+            if (m || m === 0) obj.begin = m.toLocaleString() || " ";
+            else obj.begin = " ";
+            obj.end =
+                    resData2[index] || resData2[index] === 0
+                            ? resData2[index].toLocaleString()
+                            : " ";
+            tableList2.push(obj);
+          });
+          that.tableList2 = tableList2;
         }
-        options2.plotOptions.bar.columnWidth = columnWidth;
-        that.options2 = options2;
-        var tableList2 = [];
-        resData1.forEach(function(m, index) {
-          var obj = {};
-          obj.name = xaxis[index] ? xaxis[index] : " ";
-          if (m || m === 0) obj.begin = m.toLocaleString() || " ";
-          else obj.begin = " ";
-          obj.end =
-            resData2[index] || resData2[index] === 0
-              ? resData2[index].toLocaleString()
-              : " ";
-          tableList2.push(obj);
-        });
-        that.tableList2 = tableList2;
-      });
+      })
+
     },
     // 趋势分析重置
     trendResetData() {

@@ -8,7 +8,7 @@
             <div class="table-list" style="  margin: 12px 0 20px 0;
                 padding: 0 80px;">
                 <title-name :listTitle='listTitle'></title-name>
-                <ul  style="border: 4px dashed #4edbda;
+                <ul  v-if="tableColumn.length" style="border: 4px dashed #4edbda;
                     margin: 12px 0 0 0;
                     border-radius: 8px;">
                   <li>
@@ -196,6 +196,7 @@ export default {
                   }
                 }
               }
+
           }
         }
 
