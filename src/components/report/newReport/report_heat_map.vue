@@ -80,6 +80,7 @@ export default {
   },
   methods: {
      initFlowDstrbtCharts (data = [], maxAvg = 100, workingtime = []) {
+       console.log(data)
        let dome = document.getElementById(`${'passengerFlowDistribution'+this.page}`)
        if(dome){
           flowDistributionCharts = echarts.init(dome)
@@ -90,7 +91,8 @@ export default {
           option.visualMap.max = maxAvg
           option.series[0].data = data
           option.xAxis.data = workingtime
-           console.log(option)
+         option.yAxis.data =  [ this.$t('周日'),  this.$t('周六'), this.$t( '周五'),
+           this.$t('周四'),  this.$t('周三'),  this.$t('周二'),  this.$t('周一')],
            flowDistributionCharts.setOption(option)
           flowDistributionCharts.resize()
        }
