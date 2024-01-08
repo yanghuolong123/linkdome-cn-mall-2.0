@@ -22,7 +22,7 @@
         </div>
         <div class="footer" style="  bottom: 86px;
             padding: 0 80px;">
-            <img style="width: 276px;" :src="logo" alt="">
+<!--            <img style="width: 276px;" :src="logo" alt="">-->
             <div class="footer-right" style=" border-bottom:12px solid #35e9df;
                 font-size: 36px;
                 color: #ffffff;

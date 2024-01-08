@@ -3,11 +3,11 @@
     <!--国际化按钮-->
      <LanguageBtn style="margin: 8px 16px 0 auto;" />
     <div class="login">
-      <img
-        src="@/assets/images/fixation_img/logo/logo.png"
-        width="150"
-        alt=""
-      />
+<!--      <img-->
+<!--        src="@/assets/images/fixation_img/logo/logo.png"-->
+<!--        width="150"-->
+<!--        alt=""-->
+<!--      />-->
       <!-- <div class="system-select" @click="selectBoxShow=true">{{systemSelectName}} <Icon type="md-arrow-dropdown" /> -->
       <div class="system-select">
         {{ systemSelectName }}
@@ -381,7 +381,7 @@ export default {
       no-repeat;
     background-size: 100% 100%;
     width: 500px;
-    height: 620px;
+    height: 520px;
     padding: 60px 60px;
     .system-select {
       color: #216199;
