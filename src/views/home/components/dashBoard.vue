@@ -369,7 +369,9 @@ export default {
       width: 55%;
       margin-right: 10px;
       background-color: #fff;
-      display: flex;
+      display: grid;
+      gap: 5px;
+      grid-template-columns: repeat(2, 1fr);
       &:hover{
         border:1px solid #23aeee!important;
         border-radius: 6px;
@@ -380,14 +382,18 @@ export default {
         color: #3f3b3b;
       }
       .value-size{
-        font-size: 30px;
-        color: #3e3c3c;
+
+        b{
+          word-break: keep-all;
+          white-space: nowrap;
+          font-size: 20px;
+          color: #3e3c3c;
+        }
       }
       .static-l{
         position: relative;
         border-radius:6px;
         padding: 40px 10px;
-        width:50%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;

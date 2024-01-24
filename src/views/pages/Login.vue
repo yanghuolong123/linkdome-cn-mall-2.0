@@ -157,7 +157,6 @@ export default {
     getPdfCenter() {
       initConfig().then((res) => {
         this.$store.commit("setPdfBaseUrl", res.data.data.pdf_center);
-        this.$store.commit("setSystemName", res.data.data.sys_title);
         this.copyright = res.data.data.Copyright
         // this.$i18n.locale = res.data.data.locale;
       });
@@ -256,6 +255,7 @@ export default {
                     names = { name: names.name };
                     that.$store.commit("shopUserName", names);
                     const orgData = await getGroupOrganization();
+                    this.$store.commit("setSystemName", orgData.data.data.infos.sys_title);
                     this.$store.commit(
                       "saveOrganizationData",
                       orgData.data.data
