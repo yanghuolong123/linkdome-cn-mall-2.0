@@ -1,4 +1,15 @@
-# modern
+# Development Environment
+```
+nodejs: v12.3.0
+npm: v6.9.0
+
+```
+# Branch 
+```
+git branch -r
+git checkout develop
+
+```
 
 ## Project setup
 ```
@@ -15,16 +26,7 @@ npm run serve
 npm run build
 ```
 
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
 ### webpack-bundle-analyzer
 ```
-npm run build --report
+npm run build
 ```
