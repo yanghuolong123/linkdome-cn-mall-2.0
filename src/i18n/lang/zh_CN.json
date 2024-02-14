@@ -1,5 +1,6 @@
 {
-  "changeLang": "English",
+  "english": "英语",
+  "chinese": "简体中文",
   "mainTitle": "智慧商城管理系统",
   "fn": {
     "_": "{0}{1}",

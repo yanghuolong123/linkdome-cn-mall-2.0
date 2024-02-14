@@ -1,5 +1,6 @@
 {
-  "changeLang": "简体中文",
+  "english": "English",
+  "chinese": "Chinese",
   "mainTitle": "Smart Management System",
   "fn": {
     "_": "{0} {1}",
