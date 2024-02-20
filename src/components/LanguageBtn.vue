@@ -1,5 +1,5 @@
 <template>
-	<div class="chang-lang" v-on:click="changeLang">{{$t('changeLang')}}</div>
+	<div class="chang-lang" v-on:click="changeLang">{{translatedText}}</div>
 </template>
 <script>
 	export default {
@@ -11,6 +11,15 @@
 				document.title = this.$t('mainTitle')
 			},
 		},
+		computed:{
+      translatedText(){
+				const map = {
+					'en-US': this.$t('english'),
+					'zh-CN': this.$t('chinese')
+				}
+        return map[this.$i18n.locale]
+      }
+    },
 	}
 </script>
 

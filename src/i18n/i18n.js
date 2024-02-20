@@ -12,8 +12,8 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 
-import zh from './lang/zh'
-import en from './lang/en'
+import zh from './lang/zh_CN.json'
+import en from './lang/en.json'
 import ivuZh from 'view-design/dist/locale/zh-CN';
 import ivuEn from 'view-design/dist/locale/en-US';
 import enLocale from 'element-ui/lib/locale/lang/en'
