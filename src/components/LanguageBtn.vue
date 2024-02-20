@@ -4,6 +4,15 @@
 <script>
 	export default {
 		name:'LanguageBtn',
+		computed:{
+			translatedText(){
+				const map = {
+					'en-US': this.$t('english'),
+					'zh-CN': this.$t('chinese')
+				}
+				return map[this.$i18n.locale]
+			}
+		},
 		methods:{
 			changeLang(){
 				this.$i18n.locale = (this.$i18n.locale == 'zh-CN') ? 'en-US' : 'zh-CN';
@@ -11,15 +20,6 @@
 				document.title = this.$t('mainTitle')
 			},
 		},
-		computed:{
-      translatedText(){
-				const map = {
-					'en-US': this.$t('english'),
-					'zh-CN': this.$t('chinese')
-				}
-        return map[this.$i18n.locale]
-      }
-    },
 	}
 </script>
 
