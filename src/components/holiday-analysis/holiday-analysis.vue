@@ -55,11 +55,11 @@ export default {
     },
     title1: {
       type: String,
-      default: '趋势分析'
+      default: 'trendAnaly'
     },
     title2: {
       type: String,
-      default: '详细数据'
+      default: 'detailDt'
     },
     type: {
       type: String,
@@ -120,10 +120,10 @@ export default {
       data.push(columns)
       data.push(this.tableList)
       if (this.tableList.length == 0) {
-        alert(this.$t('暂无数据可下载'))
+        alert(this.$t('noDataToDownload'))
         return false
       }
-      let name = this.ExcelData.type == 1 ? '节假日活动趋势分析' : '节假日活动对比分析'
+      let name = this.ExcelData.type == 1 ? 'holidayTrendAnaly' : 'holidayCompareAnaly'
       downloadEx(exportEx,this.$t(name),data)
     }
   }

@@ -4,24 +4,24 @@
 			<DatePicker
 				type="date"
 				v-model="drainageDate"
-				:placeholder="$t('holder.选择日期')"
+				:placeholder="$t('holder.Date')"
 				class="select-date"
 				:options="disabledDate"
 				format="yyyy-MM-dd"
 			></DatePicker>
-			
+
 			<Select v-model="floor" class="selectExample selectFloor" :placeholder="$t('holder.select')">
 				<Option v-for="item in floorList" :value="item.id" :key="item.id">{{ item.name }}</Option>
 			</Select>
-			<Button size="large" type="primary" class="m-l-20" @click="searchData">{{ $t('查询') }}</Button>
-		
+			<Button size="large" type="primary" class="m-l-20" @click="searchData">{{ $t('query') }}</Button>
+
 		</div>
 		<!-- 中间内容 -->
 		<div class="flexs">
 			<new-path ref="newPath" v-if="isNewPath"></new-path>
 			<div class="paths"  v-else >
 				<div class="header">
-					<p class="title">{{$t('路径动向图')}}</p>
+					<p class="title">{{$t('pathTrendChart')}}</p>
 					<p class="icons">
 						<icons :type="leftIcon"   :color="mainColor" :size=24  :title="titlePath" style="cursor:pointer;" @click.native="changePath"></icons>
 					</p>
@@ -38,7 +38,7 @@
 				<div class="canvas">
 					<canvas id="canvasCircle" :height="canvasHeight" :width="canvasWidth"></canvas>
 					<img  class="imgs" v-if="map" :src="map">
-					<div class="noData" v-else>{{ $t('holder.暂无数据') }}</div>
+					<div class="noData" v-else>{{ $t('holder.NoData') }}</div>
 					<div class="colorBar">
 						<p class="maxNumber">{{maxNumber}}</p>
 						<p class="minNumber">0</p>
@@ -47,12 +47,12 @@
 					<div  v-for="item in titleLists" class="titleList" :title="item.name" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}"></div>
 				</div>
 			</div>
-			
+
 			<div class="maps">
 				<pathTab title="游逛深度（个）" :numbers="number1"></pathTab>
 			</div>
 		</div>
-	
+
 	</div>
 </template>
 <script>
@@ -265,7 +265,7 @@
             obj.transform = 'rotateX(0deg)'
           }
           svgList.push(obj)
-          
+
           // if (obj.width > 1) {
           //
           // }
@@ -551,7 +551,7 @@
 				height: auto;
 			}
 		}
-		
+
 		.ball {
 			width: 20px;
 			height: 20px;
@@ -559,7 +559,7 @@
 			offset-distance: 0%;
 			animation: red-ball 3s linear  infinite;
 		}
-		
+
 		@keyframes red-ball {
 			from {
 				offset-distance: 0%;

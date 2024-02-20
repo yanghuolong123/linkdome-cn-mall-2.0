@@ -3,14 +3,14 @@
            :width="1300"
            @onOk="handleSubmit('formValidate')"
            @onCancel="handleClose"
-           title="编辑购物中心">
+           :title="$t('fn.edit',[$t('shopmall')])">
         <Form ref="formValidate"
               class="form-data flex-start"
               :model="formValidate"
               :rules="ruleValidate">
             <div class="left">
                 <FormItem
-                        :label="$t('名称')"
+                        :label="$t('name')"
                         prop="name"
                 >
                     <Input
@@ -21,14 +21,14 @@
                 </FormItem>
 
                 <FormItem
-                        :label="$t('楼层')"
+                        :label="$t('floor')"
                         prop="floor"
                         v-if="formValidate.spc == 2"
                 >
                     <Select
                             @on-change="changeFloor"
                             :disabled="userLvl == 'common_admin' ? true : false"
-                            :placeholder="$t('fn._', [$t('holder.请选择'), $t('楼层')])"
+                            :placeholder="$t('fn._', [$t('holder.Select'), $t('floor')])"
                             v-model="formValidate.floor"
                     >
                         <Option
@@ -42,7 +42,7 @@
                 </FormItem>
 
                 <FormItem
-                        :label="$t('营业时间')"
+                        :label="$t('bussHour')"
                         prop="timerange"
                 >
                     <div class="flex-center w-100">
@@ -52,18 +52,18 @@
                                 v-model="formValidate.timerange[0]"
                                 placement="bottom-end"
                                 :placeholder="
-                      $t('fn._', [$t('holder.请选择'), $t('营业时间')])
+                      $t('fn._', [$t('holder.Select'), $t('bussHour')])
                     "
                                 class="w-100"
                         ></TimePicker>
-                        <div class="mid-margin"> {{$t('至')}}</div>
+                        <div class="mid-margin"> {{$t('to')}}</div>
                         <TimePicker
                                 confirm
                                 type="time"
                                 v-model="formValidate.timerange[1]"
                                 placement="bottom-end"
                                 :placeholder="
-                      $t('fn._', [$t('holder.请选择'), $t('营业时间')])
+                      $t('fn._', [$t('holder.Select'), $t('bussHour')])
                     "
                                 class="w-100"
                         ></TimePicker>
@@ -71,14 +71,14 @@
 
                 </FormItem>
                 <FormItem
-                        :label="$t('区域关联')"
+                        :label="$t('areaAsso')"
                         prop="zones"
                         v-if="isSuperAdmin"
                 >
                     <Select
                             filterable
                             multiple
-                            :placeholder="$t('holder.请选择')"
+                            :placeholder="$t('holder.Select')"
                             v-model="formValidate.zones"
                     >
                         <Option
@@ -92,12 +92,12 @@
                 </FormItem>
 
                 <FormItem
-                        :label="$t('省份')"
+                        :label="$t('province')"
                         prop="province"
                 >
                     <Select
                             v-model="formValidate.province"
-                            :placeholder="$t('fn._', [$t('holder.请选择'), $t('省份')])"
+                            :placeholder="$t('fn._', [$t('holder.Select'), $t('province')])"
                             @on-change="changeProvince"
                             class="w-100"
                     >
@@ -112,12 +112,12 @@
                 </FormItem>
 
                 <FormItem
-                        :label="$t('城市')"
+                        :label="$t('city')"
                         prop="city"
                 >
                     <Select
                             v-model="formValidate.city"
-                            :placeholder="$t('fn._', [$t('holder.请选择'), $t('城市')])"
+                            :placeholder="$t('fn._', [$t('holder.Select'), $t('city')])"
                             class="w-100"
                     >
                         <Option
@@ -131,7 +131,7 @@
                 </FormItem>
 
                 <FormItem
-                        :label="$t('地址')"
+                        :label="$t('addr')"
                         prop="address"
                 >
                     <Input
@@ -142,13 +142,13 @@
                 </FormItem>
 
                 <FormItem
-                        :label="$t('面积')"
+                        :label="$t('squareMeasure')"
                         prop="area_size"
                 >
                     <Input type="text" v-model="formValidate.area_size"></Input>
                 </FormItem>
 
-                <FormItem :label="$t('描述')" prop="description">
+                <FormItem :label="$t('description')" prop="description">
                     <Input
                             maxlength="50"
                             type="text"
@@ -156,11 +156,11 @@
                     ></Input>
                 </FormItem>
                 <div class="flex-column">
-                    <span>{{$t('上传')}}LOGO</span>
+                    <span>{{$t('upload')}} LOGO</span>
                     <uploadImg
                             v-show="!formValidate.logo"
                             @changeImg="img=>{formValidate.logo = img}"
-                    >{{ $t('上传') }}
+                    >{{ $t('upload') }}
                     </uploadImg>
                     <img-preview class="m-t-20" @delete="formValidate.logo = ''" v-show="formValidate.logo"
                                  :url="formValidate.logo"></img-preview>
@@ -171,7 +171,7 @@
             <div class="right">
                 <div class="form-control addsub flex-center">
                     <FormItem
-                            :label="$t('选择年份')"
+                            :label="$t('fn.select',[$t('Year')])"
                             style="width: auto;word-break: keep-all"
                     ></FormItem>
                     <Select v-model="currentYear" @on-change="currentYearChange">
@@ -180,10 +180,10 @@
                         </Option>
                     </Select>
                 </div>
-                <FormItem class="title" :label="$t('客流目标')"></FormItem>
+                <FormItem class="title" :label="$t('enterTarget')"></FormItem>
                 <div class="form-control flex-center">
                     <div class="flex-center">
-                        <FormItem class="mb0" :label="$t('全年目标')"></FormItem>
+                        <FormItem class="mb0" :label="$t('annualTarget')"></FormItem>
                         <Radio
                                 v-model="flowYear"
                                 @on-change="setFlowYearGoal"
@@ -199,12 +199,12 @@
                         ></Input>
                     </div>
                     <div class="fs16">
-                        {{ $t('人') }},
+                        {{ $t('person') }},
                         {{
-                        $t('fn.平均每月', [
+                        $t('fn.avgEachMonth', [
                         $t('fn._', [
                         Math.floor(sumFlowYear / 12).toLocaleString(),
-                        $t('人'),
+                        $t('person'),
                         ]),
                         ])
                         }}
@@ -214,7 +214,7 @@
                 <div class="form-control addsub">
                     <row class="m-t-20">
                         <div class="flex-center">
-                            <FormItem :label="$t('每月目标')"></FormItem>
+                            <FormItem :label="$t('monthTarget')"></FormItem>
                             <Radio
                                     v-model="flowMonth"
                                     @on-change="setFlowMonthGoal"
@@ -236,21 +236,21 @@
                                             v-model="item.modal"
                                     ></Input>
                                 </i-col>
-                                <i-col span="4" offset="1">{{ $t('人') }}</i-col>
+                                <i-col span="4" offset="1">{{ $t('person') }}</i-col>
                             </row>
                             <row span="24" offset="0" class="fs16">
-                                {{ $t('全年总计') }}
+                                {{ $t('totalYear') }}
                                 {{ totalEnter.toLocaleString() }}
-                                {{ $t('人') }}
+                                {{ $t('person') }}
                             </row>
                         </div>
                     </row>
                 </div>
 
-                <FormItem class="title m-t-20" :label="$t('销售额目标')"></FormItem>
+                <FormItem class="title m-t-20" :label="$t('salesTarget')"></FormItem>
                 <div class="form-control flex-center">
                     <div class="flex-center">
-                        <FormItem class="mb0" :label="$t('全年目标')"></FormItem>
+                        <FormItem class="mb0" :label="$t('annualTarget')"></FormItem>
                         <Radio
                                 v-model="saleYear"
                                 @on-change="setSaleYearGoal"
@@ -268,7 +268,7 @@
                     <div class="fs16">
                         {{ $t('yuan') }},
                         {{
-                        $t('fn.平均每月', [
+                        $t('fn.avgEachMonth', [
                         Math.floor(sumSaleYear / 12).toLocaleString() +
                         $t('yuan'),
                         ])
@@ -279,7 +279,7 @@
                 <div class="form-control addsub">
                     <row class="m-t-20">
                         <div class="flex-center">
-                            <FormItem :label="$t('每月目标')"></FormItem>
+                            <FormItem :label="$t('monthTarget')"></FormItem>
                             <Radio
                                     v-model="saleMonth"
                                     @on-change="setSaleMonthGoal"
@@ -304,7 +304,7 @@
                                 <i-col span="2" offset="1">{{ $t('yuan') }}</i-col>
                             </row>
                             <row span="8" offset="1" class="fs16">
-                                {{ $t('全年总计') }}
+                                {{ $t('totalYear') }}
                                 {{ totalSales.toLocaleString() }}
                                 {{ $t('yuan') }}
                             </row>
@@ -343,14 +343,14 @@
     data () {
       const validSelectTime = (rule, value, callback) => {
         if (value[0] === '' && value[1] === '') {
-          callback(new Error(i18n.t('fn.请选择', [i18n.t('营业时间')])))
+          callback(new Error(i18n.t('fn.select', [i18n.t('bussHour')])))
         } else {
           callback()
         }
       }
       const validSelect = (rule, value, callback) => {
         if (value === '' || (rule.field == 'zones' && !value[0])) {
-          callback(new Error(i18n.t('fn.请选择', [i18n.t(rule.tips)])))
+          callback(new Error(i18n.t('fn.select', [i18n.t(rule.tips)])))
         } else {
           callback()
         }
@@ -359,10 +359,10 @@
         // 模拟异步验证效果
         setTimeout(() => {
           if (!Number.isFinite(Number(value))) {
-            callback(new Error(i18n.t('面积数要为数字')))
+            callback(new Error(i18n.t('areaMustNumber')))
           } else {
             if (value < 0) {
-              callback(new Error(i18n.t('面积数不能为负')))
+              callback(new Error(i18n.t('areaCtNeg')))
             } else {
               callback()
             }
@@ -387,20 +387,20 @@
           name: [
             {
               required: true,
-              message: this.$t('名称不能为空'),
+              message: this.$t('fn.cantBeEmpty',[this.$t('name')]),
               trigger: 'blur',
             },
           ],
           address: [
             {
               required: true,
-              message: this.$t('fn._不能为空', [this.$t('地址')]),
+              message: this.$t('fn.cantBeEmpty', [this.$t('addr')]),
               trigger: 'blur',
             },
             {
               type: 'string',
               min: 6,
-              message: this.$t('fn.cantLessThan', [this.$t('地址'), 6]),
+              message: this.$t('fn.cantLessThan', [this.$t('addr'), 6]),
               trigger: 'blur',
             },
           ],
@@ -410,7 +410,7 @@
           zones: [
             {
               required: true,
-              tips: '区域关联',
+              tips: 'areaAsso',
               validator: validSelect,
               trigger: 'change',
             },
@@ -426,7 +426,7 @@
           city: [
             {
               required: true,
-              tips: '城市',
+              tips: 'city',
               validator: validSelect,
               trigger: 'change',
             },
@@ -434,7 +434,7 @@
           area_size: [
             {
               required: false,
-              tips: '面积',
+              tips: 'squareMeasure',
               validator: validateNumber,
               trigger: 'change',
             },
@@ -686,7 +686,7 @@
             updateShopmall(this.propertyId, data).then(res => {
               this.$store.dispatch('updateOrganizationData').then(re => {
                 this.$message.success(
-                  this.$t('fn.successTo', [this.$t('编辑购物中心')])
+                  this.$t('fn.successTo', [this.$t('editMall')])
                 )
                 const data = {
                   name: this.formValidate.name,

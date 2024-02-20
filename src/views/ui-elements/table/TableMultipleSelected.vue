@@ -2,7 +2,7 @@
     <vx-card :title="titleName" :titleTip="titleTip" class="mul-table">
         <vs-table v-model="selected"
                   :multiple="isMultiple"
-                  :noDataText="$t('holder.暂无数据')"
+                  :noDataText="$t('holder.NoData')"
                   :data="tableList">
             <template slot="thead" #thead>
                 <vs-th :key="indexs" class="table-title" v-for="(item, indexs) in tableName">{{$t(item)}}</vs-th>
@@ -29,7 +29,7 @@
                         {{data[indextr].ratio+'%'}}
                     </vs-td>
                     <vs-td :data="data[indextr].type_id" v-if="hasProperty(data[indextr],'type_id')">
-                        {{data[indextr].type_id === 0?'分解任务':'整体任务'}}
+                        {{data[indextr].type_id === 0?$t('decomposeTask'):$t('overallTask')}}
                     </vs-td>
                     <vs-td :data="data[indextr].exec_date" v-if="hasProperty(data[indextr],'exec_date')">
                         {{data[indextr].exec_date.replace(',',' - ')}}
@@ -41,8 +41,8 @@
                            v-if="data[indextr].status_num||data[indextr].status_num===0">
                         <i-switch size="large" v-model="data[indextr].status_num" :true-value="1" :false-value="0"
                                   @on-change="val=>{statusChange(val,data[indextr])}">
-                            <span slot="open">启用</span>
-                            <span slot="close">禁用</span>
+                            <span slot="open">{{$t('enabled')}}</span>
+                            <span slot="close">{{$t('disabled')}}</span>
                         </i-switch>
                     </vs-td>
                     <vs-td :data="data[indextr].type_name" v-if="data[indextr].type_name">
@@ -130,16 +130,16 @@
                               type="md-create"
                               size="20"
                               color="#C7C6C6"
-                              :title="$t('编辑')"
+                              :title="$t('edit')"
                               @click="tableData(data[indextr])"/>
                         <Icon v-if="userLvl=='admin'&& !data[indextr].hideDelBtn"
                               class="m-l-10"
                               type="ios-trash"
                               size="20"
                               color="#C7C6C6"
-                              :title="$t('删除')"
+                              :title="$t('del')"
                               @click="removeData(data[indextr])"/>
-                        <Icon class="m-l-10" :title="icon.name"
+                        <Icon class="m-l-10" :title="$t(icon.name)"
                               v-for="icon in actionList"
                               size="20"
                               color="#C7C6C6"
@@ -233,13 +233,13 @@
       },
       actionClick (name) {
         switch (name) {
-          case '图片配置':
+          case 'imgConfig':
             this.imgConfig()
             break
-          case '热力图配置':
+          case 'heatmapConfig':
             this.heatmapConfig()
             break
-          case '连通图配置':
+          case 'connGraphConfig':
             this.connectedConfig()
             break
         }

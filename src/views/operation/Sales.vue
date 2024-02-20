@@ -1,7 +1,7 @@
 <template>
   <div class="sales">
     <flow-selector @paramsPrepare="paramsPrepare"></flow-selector>
-  
+
     <div class="px-3 -mx-3 overflow-hidden" style="padding-bottom:20px">
       <!-- 销售列表 -->
       <indicator-cards
@@ -58,16 +58,16 @@ import salesDict from '@/views/home/components/salesIndicatorDict.js'
     }
   },
   computed: {
- 
+
     propertyId () {
       return  this.$store.state.home.headerAction
     },
     indicators () {
       let enterIndicator = {
-        name: '客流量',
+        name:this.$t('fx.enter'),
         yaxis: {
           title: {
-            text:  `${this.$t('客流量')}(${this.$t('人')})`
+            text:  `${this.$t('fx.enter')}(${this.$t('person')})`
           },
           labels: {
             formatter (value) {

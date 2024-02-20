@@ -55,7 +55,7 @@
                         @on-change="compareTypeChange"
                         v-model="isHour"
                 >
-                    <span slot="open">{{ $t('小时') }}</span>
+                    <span slot="open">{{ $t('hour') }}</span>
                     <span slot="close">{{ $t('fx.day') }}</span>
                 </i-switch>
             </div>
@@ -91,7 +91,7 @@
                 :toolList="occuTool"
         ></chart-box>
         <div class="common-card m-t-20" ref="occuTable" v-show="showOccu">
-            <div class="detail-title">{{ $t('fn.detailData', [$t('集客量')]) }}</div>
+            <div class="detail-title">{{ $t('fn.detailData', [$t('occupancy')]) }}</div>
             <Table
                     stripe
                     height="400"
@@ -174,11 +174,8 @@
         }
       },
       occuTool () {
-        let tools = _.cloneDeep(config.toolList)
-        tools.forEach((o) => {
-          o.name = o.name.replace(/客流量/g, '集客量')
-        })
-        return tools
+       return _.cloneDeep(config.toolListOccu)
+
       },
       //显示集客量图表的条件为：选择了购物中心 并且 是单天的数据
       showOccu () {
@@ -434,14 +431,14 @@
           }
         }
 
-        const keyName = this.oParams.params.compareType === 'businessType' ? '业态' : '实体'
+        const keyName = this.oParams.params.compareType === 'businessType' ? 'bussinessType' : 'entity'
         let columns = [
           {
-            title: `${keyName}名称`,
+            title: this.$t('fn.name',[this.$t(keyName)]),
             key: 'entityName',
           },
           {
-            title: `${keyName}类别`,
+            title: `${keyName}Type`,
             slot: 'entityType',
           },
         ]
@@ -449,7 +446,7 @@
           const qutaName = findKey(config.dictionary, 'value', o, 'name')
           columns = columns.concat([
             {
-              title: `${qutaName}峰值`,
+              title: `${o}Peak`,
               key: 'highest-' + o,
             },
           ])
@@ -460,7 +457,7 @@
         }
         if (this.oParams.isDateCompare()) {
           columns.splice(2, 0, {
-            title: '时间点',
+            title: 'timing',
             key: 'time',
           })
         }
@@ -468,7 +465,7 @@
           quta.forEach((o, i) => {
             const qutaName = findKey(config.dictionary, 'value', o, 'name')
             columns.splice((i) - quta.length, 0, {
-              title: `累计${qutaName}`,
+              title: `${o}Total`,
               key: 'total-' + o,
             })
           })
@@ -510,10 +507,11 @@
         option.legend.data.forEach((d, dIndex) => {
           const data = option.series[dIndex].data
           if (!data.length) return
+          console.log(d.split('|'))
           const entityName = d.split('|')[0]
-          const qutaType = d.split('|')[1] === this.$t('入客流') ? 'enter' : 'exit'
+          const qutaType = d.split('|')[1] === this.$t('Incoming') ? 'enter' : 'exit'
           const highestIndex = getMaxIndex(data)
-          const total = _.sum(data).toLocaleString() + this.$t('人次')
+          const total = _.sum(data).toLocaleString() + this.$t('personTime')
           let time
           if (this.oParams.isDateCompare()) {
             time = d.split('|')[2]
@@ -541,7 +539,7 @@
               entityType: entityName,
               time,
             }
-            obj[`highest-occupancy`] = `${data[highestIndex].toLocaleString()} ${this.$t('人次')} ${highestTime}`
+            obj[`highest-occupancy`] = `${data[highestIndex].toLocaleString()} ${this.$t('personTime')} ${highestTime}`
             tableData.push(obj)
           } else {
             let obj = {
@@ -550,7 +548,7 @@
               time,
               id: `${entityName}-${time}`
             }
-            obj[`highest-${qutaType}`] = `${data[highestIndex].toLocaleString()} ${this.$t('人次')} ${highestTime}`
+            obj[`highest-${qutaType}`] = `${data[highestIndex].toLocaleString()} ${this.$t('personTime')} ${highestTime}`
             obj[`total-${qutaType}`] = total
             tableData.push(obj)
           }

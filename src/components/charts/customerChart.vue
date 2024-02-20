@@ -64,7 +64,7 @@ export default {
     },
     title1: {
       type: String,
-      default: '新老顾客占比'
+      default: 'newOldCusProportion'
     },
     title2: {
       type: String,
@@ -99,12 +99,12 @@ export default {
       const sumEnter = this.series.reduce((accumulator, currentValue) => accumulator + currentValue)
       let result = [
         {
-          type: '新顾客',
+          type: 'newCustomer',
           enter: newCustom,
           rate: sumEnter ? `${Math.round(newCustom / sumEnter)}%` : '0%'
         },
         {
-          type: '老顾客',
+          type: 'reCustomer',
           enter: oldCustom,
           rate: sumEnter ? `${Math.round(oldCustom / sumEnter)}%` : '0%'
         }

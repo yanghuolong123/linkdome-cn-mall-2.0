@@ -53,10 +53,10 @@ export class BasicData {
   dateCompare () {
     switch (this.Params.getInnerRange()) {
       case 'Date':
-        this.getConfig1('fn.第_天')
+        this.getConfig1('fn.dayTh')
         break
       case 'Month':
-        this.getConfig1('fn.第_月')
+        this.getConfig1('fn.monthTh')
         break
       default:
         this.getConfigByHour1()

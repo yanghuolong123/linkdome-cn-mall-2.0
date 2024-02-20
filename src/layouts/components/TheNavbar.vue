@@ -35,7 +35,7 @@
         <div class="flex-center">
           <div v-show="comprotModel!==0&&weathers.id" class="weather-box flex-center">
             <span
-            >{{$t('城市')}}:&nbsp;{{ weathers.city_name }}&nbsp; &nbsp;| &nbsp; &nbsp;
+            >{{$t('city')}}:&nbsp;{{ weathers.city_name }}&nbsp; &nbsp;| &nbsp; &nbsp;
               <img
               style="width:20px;height:20px;"
               :src="weathers.weather_icon"
@@ -69,7 +69,7 @@
                   @click="isAccount = true"
                 >
                   <Icon type="md-person" size="16" />
-                  <span class="ml-2">{{ $t("账户信息") }}</span>
+                  <span class="ml-2">{{ $t("accountInfo") }}</span>
                 </li>
                 <li
                   class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
@@ -79,7 +79,7 @@
                     icon="LogOutIcon"
                     svgClasses="w-4 h-4"
                   ></feather-icon>
-                  <span class="ml-2">{{ $t("退出") }}</span>
+                  <span class="ml-2">{{ $t("logout") }}</span>
                 </li>
               </ul>
             </vs-dropdown-menu>
@@ -112,20 +112,20 @@
       </div>
       <ul class="account-text">
         <li>
-          <span>{{ $t("角色") }}：</span>
+          <span>{{ $t("role") }}：</span>
           <span>{{ $t(roleName) }}</span>
         </li>
         <li>
-          <span>{{ $t("姓名") }}：</span>
+          <span>{{ $t("userName") }}：</span>
           <span>{{ user.realName }}</span>
         </li>
         <li>
-          <span>{{ $t("性别") }}：</span>
-          <span v-if="user.sex == 1">{{ $t("男性") }}</span>
-          <span v-if="user.sex == 0">{{ $t("女性") }}</span>
+          <span>{{ $t('gender') }}：</span>
+          <span v-if="user.sex == 1">{{ $t("male") }}</span>
+          <span v-if="user.sex == 0">{{ $t("female") }}</span>
         </li>
         <li>
-          <span>{{ $t("手机号") }}：</span>
+          <span>{{ $t("phoneNumber") }}：</span>
           <span>{{ user.mobile }}</span>
         </li>
         <li>

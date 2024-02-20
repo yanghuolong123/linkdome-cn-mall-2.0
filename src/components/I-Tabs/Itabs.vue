@@ -74,13 +74,13 @@ export default {
       titleList: [],
       currentIndex: 0,
       iconTitle: {
-        'zhexiantu': '折线图',
-        '62': '柱状图',
-        'biaoge-copy': '详细数据',
-        'xiangxia': '查看全部实体排行',
-        'ditu': '出入口客流',
-        'fenxi': '饼状图',
-        'chakan': '查看所有'
+        'zhexiantu': this.$t('lineChart'),
+        '62': this.$t('barChart'),
+        'biaoge-copy': this.$t('detailDt'),
+        'xiangxia': this.$t('viewAllEntityRanking'),
+        'ditu': this.$t('gateEnter'),
+        'fenxi': this.$t('pieChart'),
+        'chakan': this.$t('viewAll'),
       },
       date: '',
       time: ''

@@ -9,7 +9,7 @@
                 :value="item.value"
                 :key="index">{{ $t(item.label) }}</Option>
           </Select>
-          <Button size="large" type="primary" class="m-l-20"  @click="handleClick" >{{ $t('查询') }}</Button>
+          <Button size="large" type="primary" class="m-l-20"  @click="handleClick" >{{ $t('query') }}</Button>
         </div>
     </div>
     <!-- 销售 -->

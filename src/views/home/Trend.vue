@@ -12,7 +12,7 @@
       @tableChage="TableChageList"
       class="bg-white box-card"
       id="trendLine"
-      :title="$t('购物中心趋势分析')"
+      :title="$t('shopMallTrendAnaly')"
     >
       <export-menu slot="export" @onchange="enterExportBiztop"></export-menu>
       <template>
@@ -138,7 +138,7 @@ export default {
   computed: {
     totalData() {
       // 合计数据
-      let obj = { time: this.$t("合计"), temperature: "-" };
+      let obj = { time: this.$t('total'), temperature: "-" };
       _.forIn(this.chartData, (val, key) => {
         if (this.curretIndicator.includes(key)) {
           Object.assign(obj, val.total);
@@ -189,7 +189,7 @@ export default {
 
       if (this.curretIndicator.length === 0) {
         return {
-          name: "时间",
+          name: "time",
           data: [],
           key: "time",
         };
@@ -197,7 +197,7 @@ export default {
         if (this.chartData[this.curretIndicator[0]]) {
           // curretIndicator 是 数组
           return {
-            name: "时间",
+            name: "time",
             data: !this.isChangeCategories
               ? this.chartData[this.curretIndicator[0]].xAxis
               : this.time2
@@ -208,7 +208,7 @@ export default {
         } else if (this.chartData[this.curretIndicator]) {
           // curretIndicator 是 obj
           return {
-            name: "时间",
+            name: "time",
             data: !this.isChangeCategories
               ? this.chartData[this.curretIndicator].xAxis
               : this.time2
@@ -315,14 +315,14 @@ export default {
         switch (type) {
           case "enter":
           case "occupancy":
-            name = this.$t("人次");
+            name = this.$t('personTime');
             break;
           case "SquaerMetre":
-            name = this.$t("元/m²");
+            name = this.$t("effUnit");
             break;
           case "UnitPrice":
           case "SaleAmount":
-            name = this.$t("元");
+            name = this.$t("yuanUnit");
             break;
           case "CloseRate":
             name = "%";
@@ -478,7 +478,7 @@ export default {
       //     list.time = time[0] + '  ' + list.time
       //   })
       // }
-      downloadEx(exportEx, this.$t("购物中心趋势分析"), newTableData);
+      downloadEx(exportEx, this.$t("shopMallTrendAnaly"), newTableData);
     },
   },
 };

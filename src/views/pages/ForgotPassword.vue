@@ -12,19 +12,19 @@
         @keydown.enter.native="handleSubmit"
         @submit.native.prevent
       >
-        <FormItem prop="UserMailAddress" class="forgot-label" :label="$t('邮箱')">
+        <FormItem prop="UserMailAddress" class="forgot-label" :label="$t('mail')">
           <Input
             v-model="formData.UserMailAddress"
             size="large"
             autofocus
-            :placeholder="$t('fn.请输入', [$t('邮箱')])"
+            :placeholder="$t('fn.inputHolder', [$t('mail')])"
             type="email"
           />
         </FormItem>
         <FormItem>
           <Button type="primary" size='large' @click="handleSubmit" :loading="loading">
-            <span v-if="!loading">{{$t('提交')}}</span>
-            <span v-else>{{$t('发送中')}}</span>
+            <span v-if="!loading">{{$t('submit')}}</span>
+            <span v-else>{{$t('sending')}}</span>
           </Button>
         </FormItem>
       </Form>
@@ -50,8 +50,8 @@ export default {
       },
       ruleValidate: {
         UserMailAddress: [
-          { required: true, message: this.$t('fn._不能为空',[this.$t('邮箱')]), trigger: 'blur' },
-          { type: 'email', message: this.$t('不正确的邮箱地址'), trigger: 'blur' }
+          { required: true, message: this.$t('fn.cantBeEmpty',[this.$t('mail')]), trigger: 'blur' },
+          { type: 'email', message: this.$t('IncorrectEmail'), trigger: 'blur' }
         ]
       },
       loading: false
@@ -67,9 +67,9 @@ export default {
           userCheck({ email: this.formData.UserMailAddress }).then(res => {
             this.loading = false
             if (res.data.code === 304) {
-              this.$message.warning(this.$t('没有此用户'))
+              this.$message.warning(this.$t('noUser'))
             } else {
-              this.$message.success(this.$t('发送成功'))
+              this.$message.success(this.$t('fn.successTo',[this.$t('send')]))
             }
           }).catch(err => {
             if (err.response.status === 500) this.$message.error(this.$t('error.serverError'))

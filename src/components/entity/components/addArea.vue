@@ -1,19 +1,19 @@
 <template>
 	<modal ref="modal"
 				 :width="500"
-				 :title="isModify?$t('编辑区域'):$t('添加区域')"
+				 :title="isModify?$t('editArea'):$t('addArea')"
 				 @onOk="handleSubmit('formData')"
 				 @onCancel="closeEdit">
 		<Form :model="formData" label-position="right"
 					:label-width="85"
 					ref="formData" :rules="ruleInline">
-			<FormItem :label="$t('区域名称')" prop="name">
-				<Input type="text" v-model="formData.name" :placeholder="$t('fn.请输入', [$t('区域名称')])"></Input>
+			<FormItem :label="$t('fn.name',[$t('area')])" prop="name">
+				<Input type="text" v-model="formData.name" :placeholder="$t('fn.inputHolder', [$t('fn.name',[$t('area')])])"></Input>
 			</FormItem>
-			<FormItem :label="$t('父节点')" prop="parentNode" v-if="userLvl==='admin'">
+			<FormItem :label="$t('parentNode')" prop="parentNode" v-if="userLvl==='admin'">
 				<el-cascader
 					v-model="formData.parentNode"
-					:placeholder="$t('fn._', [$t('holder.请选择'), $t('父节点')])"
+					:placeholder="$t('fn._', [$t('holder.Select'), $t('parentNode')])"
 					class="w-select "
 					style="width: 100%"
 					:props="cascadeProps"
@@ -21,12 +21,12 @@
 				>
 				</el-cascader>
 			</FormItem>
-			<FormItem :label="$t('区域关联')" prop="zone" v-if="userLvl=='admin'">
+			<FormItem :label="$t('areaAsso')" prop="zone" v-if="userLvl=='admin'">
 				<Select v-model="formData.zone" multiple>
 					<Option v-for="item in zoneList" :value="item.id" :key="item.id">{{ item.name }}</Option>
 				</Select>
 			</FormItem>
-			<FormItem :label="$t('描述')" prop="description" :label-width="85">
+			<FormItem :label="$t('description')" prop="description" :label-width="85">
 				<Input type="textarea" v-model="formData.description" :rows="4"></Input>
 			</FormItem>
 		</Form>
@@ -70,7 +70,7 @@
     data () {
       const validSelect = (rule, value, callback) => {
         if (value === "" || (rule.field == "zoneIds" && !value[0])) {
-          callback(new Error(i18n.t("fn.请选择", [i18n.t(rule.tips)])));
+          callback(new Error(i18n.t("fn.select", [i18n.t(rule.tips)])));
         } else {
           callback();
         }
@@ -92,20 +92,20 @@
         ruleInline: {
           name: [{
             required: true,
-            message: this.$t('fn.请输入', [this.$t('区域名称')]),
+            message: this.$t('fn.inputHolder', [this.$t('fn.name',[this.$t('area')])]),
             trigger: 'blur'
           },],
           parentNode: [
             {
               required: true,
-              tips: "父节点",
+              tips: "parentNode",
               validator: validSelect,
               trigger: "change",
             },
           ],
           zone: [{
             required: true,
-            message: this.$t('请选择'),
+            message: this.$t('holder.Select'),
             trigger: 'change',
             type: 'array'
           }],
@@ -166,7 +166,7 @@
               data.id = res.data.data.id
               data.zoneIds = data.zone
               that.closeEdit()
-              this.$message.success(this.$t('fn.successTo', [this.$t('添加区域')]))
+              this.$message.success(this.$t('fn.successTo', [this.$t('addArea')]))
               that.$emit('addTypeData', data)
             }else {
               this.$message.error(res.data.msg)
@@ -177,7 +177,7 @@
             this.$refs.modal.resetOkButton()
 						if(res.data.code === 200){
               that.closeEdit()
-              this.$message.success(this.$t('fn.successTo', [this.$t('编辑区域')]))
+              this.$message.success(this.$t('fn.successTo', [this.$t('editArea')]))
               that.$emit('updateTypeData', data)
 						}else {
               this.$message.error(res.data.msg)
@@ -199,14 +199,14 @@
 			right: 0;
 			bottom: 0;
 			z-index: 66666;
-			
+
 			.dialogs-edit-bg {
 				width: 100%;
 				height: 100%;
 				background-color: #000;
 				opacity: 0.3;
 			}
-			
+
 			.dialogs-edit-text {
 				position: absolute;
 				left: 50%;
@@ -218,7 +218,7 @@
 				border: 1px solid rgba(215, 223, 227, 1);
 				box-shadow: 1px 2px 10px 0px rgba(193, 193, 193, 0.2);
 				border-radius: 8px;
-				
+
 				.edit-title {
 					width: 100%;
 					height: 53px;
@@ -230,36 +230,36 @@
 					font-weight: 500;
 					color: rgba(91, 89, 89, 1)
 				}
-				
+
 				.edit-text {
 					width: 80%;
 					margin-left: 10%;
 					padding-top: 20px;
 					position: relative;
-					
+
 					.control {
 						position: relative;
 						width: 52%;
 						left: 33%;
-						
+
 						.ivu-btn {
 							width: 90px;
 							color: #fff;
 							outline: none;
-							
+
 							&:nth-child(1) {
 								margin-right: 20px;
 								background-color: #00a0e9;
-								
+
 								&:hover {
 									border: px solid #00a0e9;
 								}
 							}
-							
+
 							&:nth-child(2) {
 								background-color: #fff;
 								color: #515a6e;
-								
+
 								&:hover {
 									color: #57a3f3;
 								}
@@ -269,7 +269,7 @@
 				}
 			}
 		}
-		
+
 		.edit-close {
 			position: absolute;
 			right: -5px;
@@ -283,17 +283,17 @@
 			line-height: 33px;
 			cursor: pointer;
 			transition: all .23s ease .1s;
-			
+
 			&:hover {
 				transform: translate(5px, -5px);
 				box-shadow: 0 0 0 0 rgba(0, 0, 0, .1)
 			}
-			
+
 			i {
 				font-size: 20px;
 			}
 		}
-		
+
 		.ivu-form-item {
 			margin-bottom: 24px;
 		}

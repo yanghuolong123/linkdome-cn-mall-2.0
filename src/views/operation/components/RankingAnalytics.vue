@@ -9,7 +9,7 @@ footFall:客流
   <div class="mt-6 p-6 bg-white box-card">
     <div class="ranking-selector-box flex items-center">
       <span class="mr-3">{{$t(selectTitle)}}</span>
-      <vs-select v-model="bussinessType" autocomplete :placeholder="$t(请选择)" :noDataText="$t(暂无数据)">
+      <vs-select v-model="bussinessType" autocomplete :placeholder="$t('holder.Select')" :noDataText="$t('holder.NoData')">
         <vs-select-item
           v-for="item in withAllOptions"
           :value="item.value"
@@ -124,7 +124,7 @@ export default {
     },
     selectTitle: {
       type: String,
-      default: '排行分析'
+      default: 'rankingAnaly'
     },
     defaultBizIndicator: {
       type: String,
@@ -249,7 +249,7 @@ export default {
       return Object.keys(sourceData).map(e => ({ text: sourceData[e], value: Number(e) }))
     },
     withAllOptions () {
-      const allType = { text: this.$t('所有业态'), value: 'all' }
+      const allType = { text: this.$t('allBussType'), value: 'all' }
       return [allType, ...this.bussinessTypes]
     },
     indicators () {

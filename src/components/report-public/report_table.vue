@@ -17,13 +17,13 @@
                   font-size: 16px;" :style="{width:width}" v-if="item.name">{{item.name}}</p>
                 <p style=" height: 45px;
                   line-height:45px;
-                  font-size: 16px;" :style="{width:width}" v-if="item.enter">{{item.enter}} {{$t('人次')}}</p>
+                  font-size: 16px;" :style="{width:width}" v-if="item.enter">{{item.enter}} {{$t('personTime')}}</p>
                 <p style=" height: 45px;
                   line-height:45px;
-                  font-size: 16px;" :style="{width:width}" v-if="item.peak">{{item.peak}} {{$t('人次')}} {{item.time}}</p>
+                  font-size: 16px;" :style="{width:width}" v-if="item.peak">{{item.peak}} {{$t('personTime')}} {{item.time}}</p>
                 <p style=" height: 45px;
                   line-height:45px;
-                  font-size: 16px;" :style="{width:width}" v-if="item.mean">{{item.mean}} {{$t('report.人次/天')}}</p>
+                  font-size: 16px;" :style="{width:width}" v-if="item.mean">{{item.mean}} {{$t('report.personTimesPerDay')}}</p>
                 <p style=" height: 45px;
                   line-height:45px;
                   font-size: 16px;" :style="{width:width}" v-if="item.source">{{item.source}}</p>

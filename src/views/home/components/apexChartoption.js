@@ -216,7 +216,7 @@ export default {
       },
     },
     noData: {
-      text: i18n.t("暂无数据"),
+      text: i18n.t("holder.NoData"),
       align: "center",
       verticalAlign: "middle",
       offsetX: 0,
@@ -299,7 +299,7 @@ export default {
       },
     },
     noData: {
-      text: i18n.t("暂无数据"),
+      text: i18n.t("holder.NoData"),
       align: "center",
       verticalAlign: "middle",
       offsetX: 0,
@@ -438,7 +438,7 @@ export default {
       enabled: false,
     },
     noData: {
-      text: i18n.t("暂无数据"),
+      text: i18n.t("holder.NoData"),
       align: "center",
       verticalAlign: "middle",
       offsetX: 0,

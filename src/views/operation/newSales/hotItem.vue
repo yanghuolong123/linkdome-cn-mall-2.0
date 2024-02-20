@@ -12,12 +12,12 @@
                 :value="item.value"
                 :key="index">{{ item.label }}</Option>
           </Select>
-          <Button style="margin-left:15px;" size="large" type="primary"  @click="handleClick" >{{ $t('查询') }}</Button>
+          <Button style="margin-left:15px;" size="large" type="primary"  @click="handleClick" >{{ $t('query') }}</Button>
         </div>
         <div class="box-card bg-white hotItem" style="margin-top: 20px">
             <div class="hotItem-chart" v-if="isChart">
-                <p class="name1">{{$t('销售额')}}</p>
-                <p class="name2">{{$t('订单数')}}</p>
+                <p class="name1">{{$t('salesVolume')}}</p>
+                <p class="name2">{{$t('orderNumber')}}</p>
                 <vChart   style="width:100%;height:600px"  ref="graphChart" :options="polar"/>
             </div>
         </div>
@@ -59,7 +59,7 @@ export default {
       polar: {
         tooltip: {
           formatter: (val) => {
-            return `${this.$t('商品名称')}：` + val.data[3] + `<br>${this.$t('销售额')}：` + val.data[0].toLocaleString() + this.$t('元') + `<br>${this.$t('订单数')}：` + val.data[1].toLocaleString()
+            return `${this.$t('商品名称')}：` + val.data[3] + `<br>${this.$t('salesVolume')}：` + val.data[0].toLocaleString() + this.$t('元') + `<br>${this.$t('orderNumber')}：` + val.data[1].toLocaleString()
           }
         },
         backgroundColor: new echarts.graphic.RadialGradient(0.3, 0.3, 0, [{
@@ -167,7 +167,7 @@ export default {
       setTimeout(() => {
          this.$refs.graphChart.resize()
       },200);
-     
+
     },
     handleClick () {
       // 商品分析
@@ -189,7 +189,7 @@ export default {
           hotParameter.floor_id = this.typeAction.join(',')
           break
       }
-      
+
       if( hotParameter.bzid === '' && hotParameter.floor_id === '' && hotParameter.industry_id === '' ){
         this.$alert({
           content:'请选择实体'
@@ -250,7 +250,7 @@ export default {
         height: auto;
         margin-top: 20px;
         padding: 20px;
-       
+
         p{
         font-size:18px;
         font-weight:400;

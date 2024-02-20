@@ -1,11 +1,11 @@
 import i18n from '@/i18n/i18n'
 export default {
   newNum: {
-    name: i18n.t('新顾客'),
+    name: i18n.t('newCustomer'),
     icon: 'kehulianxiren1'
   },
   oldNum: {
-    name:  i18n.t('老顾客'),
+    name:  i18n.t('reCustomer'),
     icon: 'kehulianxiren'
   },
   ordinaryNum: {
@@ -41,7 +41,7 @@ export default {
     icon: 'circle'
   },
   '5': {
-    name: i18n.t('5次及以上'),
+    name: i18n.t('over5times'),
     icon: 'circle'
   }
 }

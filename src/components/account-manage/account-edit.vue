@@ -11,28 +11,28 @@
 				<uploadImg @changeImg="changeImg"></uploadImg>
 			</div>
 			<div class="model-right">
-				<div class="edit-right-title">{{ $t('详细信息') }}</div>
+				<div class="edit-right-title">{{ $t('detailInfo') }}</div>
 				<Form ref="formInline" :model="userForm" :rules="ruleInline" inline>
 					<div class="flex-between">
-						<FormItem prop="username" :label="$t('用户名')">
-							<Input :disabled="modify" :maxlength="45" :placeholder="$t('holder.请输入用户名')"
+						<FormItem prop="username" :label="$t('accountName')">
+							<Input :disabled="modify" :maxlength="45" :placeholder="$t('fn.inputHolder',[$t('accountName')])"
 										 v-model="userForm.username"></Input>
 						</FormItem>
-						
-						<FormItem prop="realname" :label="$t('姓名')">
-							<Input v-model="userForm.realname" :maxlength="128" :placeholder="$t('holder.请输入用户姓名')"/>
+
+						<FormItem prop="realname" :label="$t('userName')">
+							<Input v-model="userForm.realname" :maxlength="128" :placeholder="$t('fn.inputHolder',[$t('userName')])"/>
 						</FormItem>
 						<input type="text" class="input-hidden">
 						<input type="password" class="input-hidden">
 					</div>
 					<div class="flex-between password">
-						<FormItem prop="password" :label="$t('密码')">
+						<FormItem prop="password" :label="$t('Psw')">
 							<Input v-model="userForm.password"
 										 @on-focus='passwordType'
 										 :type="psType"
 										 placeholder/>
 						</FormItem>
-						<FormItem prop="password2" :label="$t('确认密码')">
+						<FormItem prop="password2" :label="$t('confirmPsw')">
 							<Input v-model="userForm.password2"
 										 @on-focus='passwordType'
 										 :type="psType"
@@ -40,7 +40,7 @@
 						</FormItem>
 					</div>
 					<div class="flex-between">
-							<FormItem prop="role" :label="$t('角色')" v-if="showRolePermission">
+							<FormItem prop="role" :label="$t('role')" v-if="showRolePermission">
 								<Select v-model="userForm.role" :disabled="disabledRole" @on-change="changeRole">
 									<Option
 										v-for="item in roleList"
@@ -51,9 +51,9 @@
 								</Select>
 							</FormItem>
 						<div class="w-100"  v-if="showEntityPermission">
-							<FormItem prop="bzidList" v-if="!superAdmin" :label="$t('实体权限')" style="position:relative">
+							<FormItem prop="bzidList" v-if="!superAdmin" :label="$t('entityPerms')" style="position:relative">
 								<el-cascader
-									:placeholder="$t('holder.请选择')"
+									:placeholder="$t('holder.Select')"
 									class="account-edit-select"
 									@change="changeBzid"
 									v-model="userForm.bzidList"
@@ -64,15 +64,15 @@
 									clearable>
 								</el-cascader>
 							</FormItem>
-							<FormItem :label="$t('实体权限')" v-else :prop='editTitle=="编辑用户"?"superAdminList":""'>
-								<Select :value="$t('全部实体')" disabled>
-									<Option :value="$t('全部实体')">{{ $t('全部实体') }}</Option>
+							<FormItem :label="$t('entityPerms')" v-else :prop='editTitle=="editUser"?"superAdminList":""'>
+								<Select :value="$t('allEntity')" disabled>
+									<Option :value="$t('allEntity')">{{ $t('allEntity') }}</Option>
 								</Select>
 							</FormItem>
 						</div>
 					</div>
 					<div class="flex-between">
-						<FormItem prop="sex" class="w-100" :label="$t('性别')">
+						<FormItem prop="sex" class="w-100" :label="$t('gender')">
 							<Select v-model="userForm.sex">
 								<Option
 									v-for="item in sexList"
@@ -84,16 +84,16 @@
 						</FormItem>
 					</div>
 					<div class="flex-between">
-						<FormItem prop="mobile" :label="$t('手机号')">
+						<FormItem prop="mobile" :label="$t('phoneNumber')">
 							<Input v-model="userForm.mobile" placeholder/>
 						</FormItem>
 					</div>
 					<div class="flex-between">
-						<FormItem prop="email" :label="$t('邮箱')">
+						<FormItem prop="email" :label="$t('mail')">
 							<Input v-model="userForm.email" type="email" placeholder/>
 						</FormItem>
 					</div>
-				
+
 				</Form>
 			</div>
 		</div>
@@ -131,11 +131,11 @@
       const validatePass = (rule, value, callback) => {
         if (!this.modify) {
           if (value === undefined || value === '') {
-            callback(new Error(this.$t('密码不能为空')))
+            callback(new Error(this.$t('fn.cantBeEmpty',[this.$t('password')])))
           } else if (value.length < 6) {
-            callback(new Error(this.$t('密码长度不得小于6个字符')))
+            callback(new Error(this.$t('fn.strMinLength',[this.$t('6')])))
           } else if (value.length > 255) {
-            callback(new Error(this.$t('密码长度不得大于255个字符')))
+            callback(new Error(this.$t('fn.strMaxLength',[this.$t('255')])))
           } else {
             callback()
           }
@@ -146,11 +146,11 @@
       // 用户名验证
       const validUserName = (rule, value, callback) => {
         if (value === undefined || value === '') {
-          callback(new Error(this.$t('用户名不能为空')))
+          callback(new Error(this.$t("fn.cantBeEmpty",[this.$t('accountName')])))
         } else if (value.length < 2) {
-          callback(new Error(this.$t('长度不得小于2个字符')))
+          callback(new Error(this.$t('fn.strMinLength',[this.$t('2')])))
         } else if (value.length > 10) {
-          callback(new Error(this.$t('最多输入10个字符')))
+          callback(new Error(this.$t('fn.strMaxLength',[this.$t('10')])))
         } else {
           callback()
         }
@@ -160,9 +160,9 @@
         if (value === undefined || value === '' || value === null) {
           callback()
         } else if (value.length < 2) {
-          callback(new Error(this.$t('长度不得小于2个字符')))
+          callback(new Error(this.$t('fn.strMinLength',[this.$t('2')])))
         } else if (value.length > 10) {
-          callback(new Error(this.$t('最多输入10个字符')))
+          callback(new Error(this.$t('fn.strMaxLength',[this.$t('10')])))
         } else {
           callback()
         }
@@ -173,17 +173,17 @@
           if (value === undefined || value === '') {
             callback(new Error(this.$t('fn.require', [this.$t('password')])))
           } else if (value.length < 6) {
-            callback(new Error(this.$t('密码长度不得小于6个字符')))
+            callback(new Error(this.$t('fn.strMinLength',[this.$t('6')])))
           } else if (value.length > 255) {
-            callback(new Error(this.$t('密码长度不得大于255个字符')))
+            callback(new Error(this.$t('fn.strMaxLength',[this.$t('255')])))
           } else if (that.userForm.password2 !== that.userForm.password) {
-            callback(new Error(this.$t('两次密码不一致!')))
+            callback(new Error(this.$t('pswInconsistent')))
           } else {
             callback()
           }
         } else {
           if (that.userForm.password2 !== that.userForm.password) {
-            callback(new Error(this.$t('两次密码不一致!')))
+            callback(new Error(this.$t('pswInconsistent')))
           } else {
             callback()
           }
@@ -224,13 +224,13 @@
           checklist: [{ required: true, validator: validateSelectMore, trigger: 'change' }],
           bzidList: [{ required: true, validator: validateSelectMore, trigger: 'change' }],
           role: [{ required: true, validator: validateSelectMore, trigger: 'change' }],
-          email: [{ required: true, message: this.$t('邮箱不能为空'), trigger: 'blur' },
-            { type: 'email', message: this.$t('邮箱格式不正确'), trigger: 'blur' }],
+          email: [{ required: true, message: this.$t("fn.cantBeEmpty",[this.$t('mail')]), trigger: 'blur' },
+            { type: 'email', message: this.$t('emailFormatError'), trigger: 'blur' }],
           password: [{ required: true, validator: validatePass, trigger: 'blur' }],
           password2: [{ required: true, validator: validatePassCheck, trigger: 'blur' }],
           superAdminList: [{ required: true, validator: superAdminCheck }]
         },
-        sexList: [{ 'label': this.$t('男'), 'value': 1 }, { 'label': this.$t('女'), 'value': 0 }],
+        sexList: [{ 'label': this.$t('male'), 'value': 1 }, { 'label': this.$t('female'), 'value': 0 }],
         modify: false,
         copyBzid: []
       }
@@ -240,7 +240,7 @@
         handler (newValue, oldValue) {
           this.modify = newValue.type == 'edit'
           if (newValue.type == 'edit') {
-            this.editTitle = '编辑用户'
+            this.editTitle = 'editUser'
             this.userForm = newValue.data
             this.userForm.password = '*******'
             this.userForm.password2 = '*******'
@@ -259,7 +259,7 @@
             }
             if (this.userForm.mobile == ' ') this.userForm.mobile = ''
           } else {
-            this.editTitle = '添加用户'
+            this.editTitle = 'addUser'
           }
         },
         immediate: true
@@ -503,18 +503,18 @@
               this.$refs.modal.resetOkButton()
               switch (res.data.code) {
                 case 200:
-                  this.$message.success(this.$t('fn.successTo', [this.$t('添加用户')]))
+                  this.$message.success(this.$t('fn.successTo', [this.$t('addUser')]))
 									this.closeEdit()
                   this.$emit('success')
                   break
                 case 302:
-                  this.$message.warning(this.$t('用户名已存在'))
+                  this.$message.warning(this.$t('usernameExist'))
                   break
                 case 307:
-                  this.$message.warning(this.$t('邮箱已被占用'))
+                  this.$message.warning(this.$t('emailOccupy'))
                   break
                 default:
-                  this.$message.error(this.$t('fn.failedTo', [this.$t('添加用户')]))
+                  this.$message.error(this.$t('fn.failedTo', [this.$t('addUser')]))
                   break
               }
             })
@@ -524,11 +524,11 @@
             .then(res => {
               this.$refs.modal.resetOkButton()
               if (res.data.code === 200) {
-                this.$message.success(this.$t('fn.successTo', [this.$t('编辑用户')]))
+                this.$message.success(this.$t('fn.successTo', [this.$t('editUser')]))
                 this.$emit('success');
                 this.closeEdit()
               } else if (res.data.code === 307) {
-                this.$message.warning(this.$t('邮箱已被占用'))
+                this.$message.warning(this.$t('emailOccupy'))
               }
             })
         }
@@ -543,7 +543,7 @@
 			align-items: center;
 			width: 38%;
 			flex: none;
-			
+
 			.uploadImg {
 				width: 177px;
 				height: 177px;
@@ -551,7 +551,7 @@
 				margin-bottom: 30px;
 			}
 		}
-		
+
 		.model-right {
 			flex: 1;
 			.edit-right-title{
@@ -575,7 +575,7 @@
 				}
 				.half {
 					width: 50%;
-					
+
 
 				}
 			}

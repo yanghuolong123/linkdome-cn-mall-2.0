@@ -15,12 +15,12 @@
 
             <div class="icon-area flex-center">
 				<span
-                        :title="$t('添加')"
+                        :title="$t('add')"
                         @click="addClick"
                 >
 					<Icon type="md-add"/>
 				</span>
-                <span class="formats-add" :title="$t('删除')" @click="deleteClick">
+                <span class="formats-add" :title="$t('del')" @click="deleteClick">
           <Icon type="md-remove"/>
         </span>
             </div>
@@ -104,7 +104,7 @@
           confirm: () => {
             delRecordData({ id: value.data.id }).then(res => {
               if (res.data.code === 200) {
-                this.$message.success('删除成功')
+                this.$message.success(this.$t('fn.successTo',[this.$t('del')]))
                 this.caseDidChange()
               } else {
                 this.$message.error(res.data.msg)
@@ -160,7 +160,7 @@
               })
               delRecordData({ id: ids.toString() }).then(res => {
                 if (res.data.code === 200) {
-                  this.$message.success('删除成功')
+                  this.$message.success(this.$t('fn.successTo',[this.$t('del')]))
                   this.caseDidChange()
                 } else {
                   this.$message.error(res.data.msg)

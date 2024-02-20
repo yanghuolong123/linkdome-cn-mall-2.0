@@ -9,12 +9,14 @@
         <div class="left-chart-box" id="drainageChart">
           <chartTabs :xAxis="chartData.xAxis"
                      :extraOptions="occpuancyOptions"
-                     :title='$t("趋势图")'
+                     :title='$t("trendChart")'
                      :series="chartData.series"></chartTabs>
         </div>
         <div class="right-card-box">
           <div v-for="(item,index) in cardData" :key="index">
-            <span class="my-icon-box" :style="{backgroundColor:`${convertColor(item.color)}`}"><icons :type="item.icon" :color="item.color" :size="24"></icons></span>
+            <span class="my-icon-box"
+                  :style="{backgroundColor:`${convertColor(item.color)}`}">
+              <icons :type="item.icon" :color="item.color" :size="24"></icons></span>
             <div class="leading-loose">
               <p class="text-lg font-medium">{{ $t(item.name) }}</p>
               <p>{{item.number}}</p>
@@ -132,7 +134,7 @@ export default {
 
       let series = []
       let xAxis = {
-        name: '时间',
+        name: 'time',
         key: 'time',
         data: []
       }
@@ -145,7 +147,7 @@ export default {
           })
 
           let obj = {}
-          obj.name = this.$t(this.drainageType === 'to' ? '目的流量' : `${this.entityType[e]}${this.direction[this.drainageType]}`)
+          obj.name = this.$t(this.drainageType === 'to' ? 'targetFlow' : `${e}${this.drainageType}`)
           obj.key = ''
           obj.data = []
           resData.map(data => {
@@ -214,13 +216,13 @@ export default {
       let countOfIndirect = this[`${this.drainageType}StoreIds`].length
       let coutOfdiret = this[`${this.drainageType}GateIds`].length
       let footfallName = {
-        from: '导入',
-        to: '辐射'
+        from: 'import',
+        to: 'radiated'
       }
       let tml = [
         {
           number: sumFootFall,
-          name: `${footfallName[this.drainageType]}总客流`,
+          name: `${footfallName[this.drainageType]}TotalEnter`,
           icon: 'daoruzongkeliu',
           color: '#857AEF'
         }
@@ -230,14 +232,14 @@ export default {
         return [...tml, ...[
           {
             number: coutOfdiret,
-            name: '出入口个数',
+            name: 'gatesNumber',
             icon: 'danyilaiyuan',
             color: '#2BD9CF'
 
           },
           {
             number: countOfIndirect,
-            name: '店铺个数',
+            name: 'storeNumber',
             icon: 'jianjielaiyuan',
             color: '#33B3ED'
           }]
@@ -246,7 +248,7 @@ export default {
         return [...tml, ...[
           {
             number: countOfIndirect,
-            name: '辐射店铺个数',
+            name: 'shopsRadiatedNumber',
             icon: 'danyilaiyuan',
             color: '#857AEF'
           }
@@ -288,15 +290,13 @@ export default {
       tabsList: [
         {
           value: 'from',
-          label: '来源流量分析',
+          label: 'sourceFlowAnaly',
           tootipText: 'passages.tootipText5',
-          // tootipText: '1. 趋势图：分别展示了出入口和商铺转化客流趋势\n2. 导入总客流：来自出入口和商铺的客流之和\n3. 出入口个数： 出入口实体的总个数\n4. 店铺个数：店铺实体的总个数'
         },
         {
           value: 'to',
-          label: '目的流量分析',
+          label: 'targetFlowAnaly',
           tootipText: 'passages.tootipText6',
-          // tootipText: '1. 趋势图：展示了所选实体到其他商铺转化客流趋势\n2. 辐射总客流：所选商铺辐射到其他店铺的客流之和\n3. 辐射店铺个数：所选店铺辐射其他店铺的总个数'
         }
       ],
       trendRes: [],

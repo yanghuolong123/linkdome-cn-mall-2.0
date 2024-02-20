@@ -228,10 +228,10 @@ export default {
           // if (data.property) this.listClassify(data.property[0].current)
           this.listClassify(
 						[
-							this.$t('平均客流'),
-							this.$t('集客峰值'),
-							this.$t('集客量'),
-							this.$t('总客流量')
+							this.$t('avgEnter'),
+							this.$t('occuPeak'),
+							this.$t('occupancy'),
+							this.$t('totalEnter')
 						]
 					)
           break
@@ -239,15 +239,15 @@ export default {
           // if (data.property) this.listClassify(data.property[0].history)
           this.listClassify(
 						[
-							this.$t('平均客流'),
-							this.$t('客流峰值'),
-							this.$t('总客流量'),
-							this.$t('集客峰值'),
-							this.$t('有效客流'),
-							this.$t('成交率'),
-                            this.$t('坪效(元/平方米)'),
-                          this.$t('客单价(元)'),
-                          this.$t('销售额(元)') //this.$t('sales_yuan')
+							this.$t('avgEnter'),
+							this.$t('flowPeak'),
+							this.$t('totalEnter'),
+							this.$t('occuPeak'),
+							this.$t('effEnter'),
+							this.$t('turnoverRate'),
+                            this.$t('flatEffWithUnit'),
+                          this.$t('cusPriceWithUnit'),
+                          this.$t('salesWithUnit') //this.$t('sales_yuan')
 						]
 					)
           break
@@ -255,10 +255,10 @@ export default {
           // if (data.company) this.listClassify(data.company[0].current)
           this.listClassify(
 						[
-							this.$t('总客流量'),
-							this.$t('集客峰值'),
-							this.$t('集客量'),
-							this.$t('平均客流')
+							this.$t('totalEnter'),
+							this.$t('occuPeak'),
+							this.$t('occupancy'),
+							this.$t('avgEnter')
 						]
 					)
           break
@@ -266,15 +266,15 @@ export default {
           // if (data.company) this.listClassify(data.company[0].history)
           this.listClassify(
 						[
-							this.$t('平均客流'),
-							this.$t('客流峰值'),
-							this.$t('总客流量'),
-							this.$t('集客峰值'),
-							this.$t('有效客流'),
+							this.$t('avgEnter'),
+							this.$t('flowPeak'),
+							this.$t('totalEnter'),
+							this.$t('occuPeak'),
+							this.$t('effEnter'),
 							'成交率',
-							'坪效(元/平方米)',
-							'客单价(元)',
-                             '销售额(元)' //this.$t('sales_yuan')
+                            this.$t('flatEffWithUnit'),
+                            this.$t('cusPriceWithUnit'),
+                            this.$t('salesWithUnit') //this.$t('sales_yuan')
 						]
 					)
           break

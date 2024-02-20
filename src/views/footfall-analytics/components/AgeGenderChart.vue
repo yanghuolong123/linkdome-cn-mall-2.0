@@ -4,8 +4,8 @@
       <chart-tabs :labels="agechartData.labels"
                   :series="agechartData.series"
                   :type="agechartData.type"
-                  title="年龄分布"
-                  :tooltipUnit="$t('人')"
+                  title="ageDist"
+                  :tooltipUnit="$t('person')"
                   :extraOptions="agechartData.extraOptions"
                   @tableChage="ageTabChange">
         <export-menu slot="export"
@@ -16,8 +16,8 @@
       <chart-tabs :labels="genderChartData.labels"
                   :series="genderChartData.series"
                   :type="genderChartData.type"
-                  title="性别分布"
-                  :tooltipUnit="$t('人')"
+                  :title="$t('genderDist')"
+                  :tooltipUnit="$t('person')"
                   :extraOptions="genderChartData.extraOptions"
                   @tableChage="genderTabChange">
         <export-menu slot="export"
@@ -114,7 +114,7 @@ export default {
       this.uploadList(this.genderTabList)
     },
     uploadList (value) {
-       downloadEx(exportEx,this.$t('实体引流客流详细数据'),value)
+       downloadEx(exportEx,this.$t('entityDrainageDetail'),value)
     },
     async getAgeGenderData () {
       const { time1, bzid } = this
@@ -123,27 +123,27 @@ export default {
       const { age_distribution: ageData, gender_propotion: genderData } = sourceData
       const genderName = {
         '0': {
-          name:this.$t('女性'),
+          name:this.$t('female'),
           icon: 'female'
         },
         '1': {
-          name: this.$t('男性'),
+          name: this.$t('male'),
           icon: 'male'
         }
       }
       const genderDict = {
-        male: this.$t('男性'),
-        female:this.$t('女性')
+        male: this.$t('male'),
+        female:this.$t('female')
       }
       let ageChartData = null
       let genderChartData = null
       let ageLabels = {
-        name: '年龄',
+        name: 'age',
         key: 'age',
-        data: Object.keys(ageData).map(e => { return e.replace('_', '-').replace('less-',  this.$t('小于')).replace(/more-/,  this.$t('大于')) })
+        data: Object.keys(ageData).map(e => { return e.replace('_', '-').replace('less-',  this.$t('lessThan')).replace(/more-/,  this.$t('moreThan')) })
       }
       let genderLabels = {
-        name: '性别',
+        name: 'gender',
         key: 'gender',
         data: Object.keys(genderData).map(e => genderName[e].name),
         icons: Object.keys(genderData).map(e => genderName[e].icon)

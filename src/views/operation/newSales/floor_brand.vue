@@ -161,7 +161,7 @@ export default {
       switch (this.floorParameter.type) {
         case 'enter':
         case 'occupancy':
-          return this.$t('人次')
+          return this.$t('personTime')
         case 'SquaerMetre':
           return this.$t('元/m²')
         case 'UnitPrice':
@@ -188,7 +188,7 @@ export default {
   },
   mounted () {
     this.floorBrandData()
-    
+
   },
   methods: {
     floorBrandData () {
@@ -198,7 +198,7 @@ export default {
       this.floorOption.selectList = []
       this.floorOption.selectAction = ''
       this.floorOption.selectList.push({
-        name: '全部业态',
+        name: 'allBussType',
         value: 'all'
       })
       businessData.map(val => {
@@ -267,16 +267,16 @@ export default {
       }
       switch (this.brandParameter.type) {
         case 'SaleAmount':
-          dataObj.name = this.$t('销售额')
+          dataObj.name = this.$t('salesVolume')
           break
         case 'SquaerMetre':
-          dataObj.name = this.$t('坪效')
+          dataObj.name = this.$t('floorEffect')
           break
         case 'CloseRate':
-          dataObj.name = this.$t('成交率')
+          dataObj.name = this.$t('turnoverRate')
           break
         case 'UnitPrice':
-          dataObj.name = this.$t('客单价')
+          dataObj.name = this.$t('UnitPrice')
           break
       }
 
@@ -340,7 +340,7 @@ export default {
 }
 .chart-list{
     width: 100%;
-   
+
     margin-top: 20px;
     .floor-chart{
         width: 40%;

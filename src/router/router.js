@@ -45,10 +45,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'DashBoard', url: '/' },
-            { title: '客流分析', url: '/footfall' },
-            { title: '实体客流分析', active: true },
+            { title: 'Analytics', url: '/footfall' },
+            { title: 'Entity', active: true },
           ],
-          pageTitle: '实体客流分析'
+          pageTitle: 'Entity'
         }
       },
 
@@ -60,10 +60,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'DashBoard', url: '/dashboard' },
-            { title: '客流分析', url: '/footfall' },
-            { title: '年龄性别分析', active: true },
+            { title: 'Analytics', url: '/footfall' },
+            { title: 'AgeGender', active: true },
           ],
-          pageTitle: '年龄性别分析'
+          pageTitle: 'AgeGender'
         }
       },
       { // 排行占比分析
@@ -74,10 +74,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: '客流分析', url: '/' },
-            { title: '客流分析', url: '/footfall' },
-            { title: '排行占比分析', active: true },
+            { title: 'Analytics', url: '/footfall' },
+            { title: 'Ranking', active: true },
           ],
-          pageTitle: '排行占比分析'
+          pageTitle: 'Ranking'
         }
       },
       { // 进店率分析
@@ -88,10 +88,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: '客流分析', url: '/' },
-            { title: '客流分析', url: '/footfall' },
-            { title: '进店率分析', active: true },
+            { title: 'Analytics', url: '/footfall' },
+            { title: 'GoShop', active: true },
           ],
-          pageTitle: '进店率分析'
+          pageTitle: 'GoShop'
         }
       },
       { // 热力图分析
@@ -102,10 +102,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: '客流分析', url: '/' },
-            { title: '客流分析', url: '/footfall' },
-            { title: '热力图分析', active: true },
+            { title: 'Analytics', url: '/footfall' },
+            { title: 'HeatMap', active: true },
           ],
-          pageTitle: '热力图分析'
+          pageTitle: 'HeatMap'
         }
       },
       // { // 热力图分析
@@ -130,10 +130,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: '客流分析', url: '/' },
-            { title: '客流分析', url: '/footfall' },
-            { title: '有效客流分析', active: true },
+            { title: 'Analytics', url: '/footfall' },
+            { title: 'Effective', active: true },
           ],
-          pageTitle: '有效客流分析'
+          pageTitle: 'Effective'
         }
       },{ // 无效客流分析
         path: 'invalid',
@@ -143,10 +143,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: '客流分析', url: '/' },
-            { title: '客流分析', url: '/footfall' },
-            { title: '无效客流分析', active: true },
+            { title: 'Analytics', url: '/footfall' },
+            { title: 'InvalidFlow', active: true },
           ],
-          pageTitle: '无效客流分析'
+          pageTitle: 'InvalidFlow'
         }
       },
       // { // 排队货架分析
@@ -198,10 +198,10 @@ export default [
       meta: {
         breadcrumb: [
           { title: '客流分析', url: '/' },
-          { title: '顾客行为分析', url: '/generatrix' },
-          { title: '关联分析', active: true },
+          { title: 'Generatrix', url: '/generatrix' },
+          { title: 'Relevance', active: true },
         ],
-        pageTitle: '关联分析'
+        pageTitle: 'Relevance'
       }
     },
       { // 交叉客流分析
@@ -212,10 +212,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'DashBoard', url: '/dashboard' },
-            { title: '顾客行为分析', url: '/generatrix' },
-            { title: '交叉客流分析', active: true },
+            { title: 'Generatrix', url: '/generatrix' },
+            { title: 'Cross', active: true },
           ],
-          pageTitle: '交叉客流分析'
+          pageTitle: 'Cross'
         }
       },
       // { // 路径动向分析(新)
@@ -240,10 +240,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: '客流分析', url: '/' },
-            { title: '顾客行为分析', url: '/generatrix' },
-            { title: '路径动向分析', active: true },
+            { title: 'Generatrix', url: '/generatrix' },
+            { title: 'OldPath', active: true },
           ],
-          pageTitle: '路径动向分析'
+          pageTitle: 'OldPath'
         }
       },
       // { // 路径动向分析(0920)
@@ -268,10 +268,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: '客流分析', url: '/' },
-            { title: '顾客行为分析', url: '/generatrix' },
-            { title: '路径动向分析', active: true },
+            { title: 'Generatrix', url: '/generatrix' },
+            { title: '3DPath', active: true },
           ],
-          pageTitle: '路径动向分析'
+          pageTitle: '3DPath'
         }
       },
       { // 实体引流分析
@@ -282,10 +282,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: '客流分析', url: '/' },
-            { title: '顾客行为分析', url: '/generatrix' },
-            { title: '实体引流分析', active: true },
+            { title: 'Generatrix', url: '/generatrix' },
+            { title: 'Drainage', active: true },
           ],
-          pageTitle: '实体引流分析'
+          pageTitle: 'Drainage'
         }
       },
       { // 停留时间分析
@@ -296,10 +296,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'DashBoard', url: '/dashboard' },
-            { title: '顾客行为分析', url: '/generatrix' },
-            { title: '停留时间分析', active: true },
+            { title: 'Generatrix', url: '/generatrix' },
+            { title: 'DwellTime', active: true },
           ],
-          pageTitle: '停留时间分析'
+          pageTitle: 'DwellTime'
         }
       },
     ]
@@ -321,10 +321,10 @@ export default [
       meta: {
         breadcrumb: [
           { title: 'Analytics', url: '/dashboard/analytics' },
-          { title: '运营分析', url: '/operation' },
-          { title: '目标达成分析', active: true },
+          { title: 'Operation', url: '/operation' },
+          { title: 'goalAchi', active: true },
         ],
-        pageTitle: '目标达成分析',
+        pageTitle: 'goalAchi',
         notCache: true,
       }
     },
@@ -336,10 +336,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '运营分析', url: '/operation' },
-            { title: '节假日活动分析', active: true },
+            { title: 'Operation', url: '/operation' },
+            { title: 'holidayAnaly', active: true },
           ],
-          pageTitle: '节假日活动分析'
+          pageTitle: 'holidayAnaly'
         }
       },
 
@@ -351,10 +351,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '运营分析', url: '/operation' },
-            { title: '销售分析', active: true },
+            { title: 'Operation', url: '/operation' },
+            { title: 'SalesAnalytics', active: true },
           ],
-          pageTitle: '销售分析'
+          pageTitle: 'SalesAnalytics'
         }
       },
       { // 店铺画像
@@ -365,10 +365,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '运营分析', url: '/operation' },
-            { title: '店铺画像', active: true },
+            { title: 'Operation', url: '/operation' },
+            { title: 'ShopPortrait', active: true },
           ],
-          pageTitle: '店铺画像'
+          pageTitle: 'ShopPortrait'
         }
       },
       { // 销售分析
@@ -379,10 +379,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '运营分析', url: '/operation' },
-            { title: '销售分析', active: true },
+            { title: 'Operation', url: '/operation' },
+            { title: 'SalesDimensions', active: true },
           ],
-          pageTitle: '销售分析'
+          pageTitle: 'SalesDimensions'
         }
       },
       { // 调铺分析
@@ -393,10 +393,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '运营分析', url: '/operation' },
-            { title: '调铺效果分析', active: true },
+            { title: 'Operation', url: '/operation' },
+            { title: 'ChangeStore', active: true },
           ],
-          pageTitle: '调铺效果分析'
+          pageTitle: 'ChangeStore'
         }
       },
       { // 商品分析
@@ -407,10 +407,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '运营分析', url: '/operation' },
-            { title: '商品分析', active: true },
+            { title: 'Operation', url: '/operation' },
+            { title: 'comAnaly', active: true },
           ],
-          pageTitle: '商品分析'
+          pageTitle: 'comAnaly'
         }
       },
     ]
@@ -433,10 +433,10 @@ export default [
 				meta: {
 					breadcrumb: [
 						{ title: 'Analytics', url: '/dashboard/analytics' },
-						{ title: '报告详情', url: '/report'},
-						{ title: '门店日报', active: true },
+						{ title: 'Report', url: '/report'},
+						{ title: 'storeReport', active: true },
 					],
-					pageTitle: '门店日报',
+					pageTitle: 'storeReport',
 				}
 			},
 			{ // 日报
@@ -447,10 +447,10 @@ export default [
 				meta: {
 					breadcrumb: [
 						{ title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '报告详情', url: '/report'},
-						{ title: '日报', active: true },
+            { title: 'Report', url: '/report'},
+						{ title: 'dailyReport', active: true },
 					],
-					pageTitle: '日报',
+					pageTitle: 'dailyReport',
 				}
 			},
       { // 周报
@@ -461,10 +461,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '报告详情', url: '/report'},
-            { title: '周报', active: true },
+            { title: 'Report', url: '/report'},
+            { title: 'weekReport', active: true },
           ],
-          pageTitle: '周报',
+          pageTitle: 'weekReport',
         }
       },
       { // 月报
@@ -475,10 +475,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '报告详情', url: '/report'},
-            { title: '月报', active: true },
+            { title: 'Report', url: '/report'},
+            { title: 'monthReport', active: true },
           ],
-          pageTitle: '月报',
+          pageTitle: 'monthReport',
         }
       },
       { // 自定义报告
@@ -489,10 +489,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '报告详情', url: '/report'},
-            { title: '自定义报告', active: true },
+            { title: 'Report', url: '/report'},
+            { title: 'customReport', active: true },
           ],
-          pageTitle: '自定义报告',
+          pageTitle: 'customReport',
         }
       },
       { // 报告设置
@@ -503,10 +503,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '报告详情', url: '/report'},
-            { title: '报告设置', active: true },
+            { title: 'Report', url: '/report'},
+            { title: 'reportSetting', active: true },
           ],
-          pageTitle: '报告设置',
+          pageTitle: 'reportSetting',
         }
       }
     ]
@@ -529,10 +529,10 @@ export default [
 				meta: {
 					breadcrumb: [
 						{ title: 'Analytics', url: '/dashboard/analytics' },
-						{ title: '后台管理', url: '/admin' },
-						{ title: '实体管理', active: true },
+						{ title: 'Admin', url: '/admin' },
+						{ title: 'entityManage', active: true },
 					],
-					pageTitle: '实体管理',
+					pageTitle: 'entityManage',
 					notCache: true,
 					access: ['admin', 'common_admin']
 				}
@@ -545,10 +545,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '后台管理', url: '/admin' },
-            { title: '节假日活动管理', active: true },
+            { title: 'Admin', url: '/admin' },
+            { title: 'holidayMange', active: true },
           ],
-          pageTitle: '节假日活动管理'
+          pageTitle: 'holidayMange'
         }
       },
       { // 账户管理
@@ -559,10 +559,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '后台管理', url: '/admin' },
-            { title: '账户管理', active: true },
+            { title: 'Admin', url: '/admin' },
+            { title: 'accountMange', active: true },
           ],
-          pageTitle: '账户管理',
+          pageTitle: 'accountMange',
           access: ['admin', 'common_admin']
         }
       },
@@ -574,10 +574,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '后台管理', url: '/admin' },
-            { title: '权限管理', active: true },
+            { title: 'Admin', url: '/admin' },
+            { title: 'Role', active: true },
           ],
-          pageTitle: '权限管理',
+          pageTitle: 'Role',
           access: []
         }
       },      { // 更新缓存
@@ -588,10 +588,10 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '后台管理', url: '/admin' },
-            { title: '其他', active: true },
+            { title: 'Admin', url: '/admin' },
+            { title: 'Other', active: true },
           ],
-          pageTitle: '其他',
+          pageTitle: 'Other',
           access: []
         }
       },{ // 数据补录
@@ -602,7 +602,7 @@ export default [
         meta: {
           breadcrumb: [
             { title: 'Analytics', url: '/dashboard/analytics' },
-            { title: '后台管理', url: '/admin' },
+            { title: 'Admin', url: '/admin' },
             { title: '数据补录', active: true },
           ],
           pageTitle: '数据补录',

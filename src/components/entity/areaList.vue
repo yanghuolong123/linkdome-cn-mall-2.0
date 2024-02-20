@@ -6,7 +6,7 @@
                 <table-multiple-selected
                         :tableName='tableNameCommon'
                         :tableList='floorTable'
-                        titleName='基本信息'
+                        titleName='basicInfo'
                         :userLvl="userLvl"
                         @imgConfig="imgConfig"
                         @heatmapConfig="heatmapConfig"
@@ -19,7 +19,7 @@
                 <!-- 区域 -->
                 <div class="areas">
                     <div class="stall-header-right">
-              <span class="stall-add" v-if="userLvl=='admin'" :title="$t('添加')" @click="addArea">
+              <span class="stall-add" v-if="userLvl=='admin'" :title="$t('add')" @click="addArea">
                 <Icon type="md-add"/>
               </span>
                     </div>
@@ -27,7 +27,7 @@
                         <table-multiple-selected
                                 :tableName='tableNameCommon'
                                 :tableList="subTable('area')"
-                                titleName='区域信息'
+                                titleName='areaInfo'
                                 :userLvl="userLvl"
                                 @tableData='editArea'
                                 @removeData='delEntity'
@@ -40,7 +40,7 @@
 
         <div class="area-list-right">
             <div class="stall-header-right">
-            <span class="stall-add" v-if="userLvl=='admin'" :title="$t('添加')" @click="adDoorway">
+            <span class="stall-add" v-if="userLvl=='admin'" :title="$t('add')" @click="adDoorway">
               <Icon type="md-add"/>
             </span>
             </div>
@@ -48,7 +48,7 @@
             <table-multiple-selected
                     :tableName='tableNameCommon'
                     :tableList="subTable('gate')"
-                    titleName='出入口信息'
+                    titleName='gateInfo'
                     :userLvl="userLvl"
                     @tableData='editDoorWay'
                     @removeData='delEntity'
@@ -105,7 +105,7 @@
         zoneList: [],
         storeList: [],
         configInfo:{},
-        tableNameCommon: ['名称', '实体类型', '描述', '操作']
+        tableNameCommon: ['name', 'entityType', 'description', 'operate']
 
       }
     },
@@ -155,10 +155,10 @@
         if (this.userLvl === 'admin'&&this.entityInfo.type_name === 'floor') {
           arr = [
             {
-              name: '图片配置',
+              name: 'imgConfig',
               icon: 'md-image'
             }, {
-              name: '热力图配置',
+              name: 'heatmapConfig',
               icon: 'md-pin'
             },
             // {
@@ -258,7 +258,7 @@
       },
       delEntity (value) {
         this.$alert({
-          content: this.$t('确认删除此实体信息'),
+          content: this.$t('entityDelConfirm'),
           cancel () {
           },
           confirm: () => {
@@ -272,7 +272,7 @@
                 })
                 floor.children.splice(index, 1)
 
-                this.$message.success(this.$t('删除成功'))
+                this.$message.success(this.$t('fn.successTo',[this.$t('del')]))
               } else {
                 this.$message.error(res.data.msg)
               }

@@ -115,7 +115,7 @@
         if (isEmpty(option)) return []
         let column = [
           {
-            title: this.$t('时间'),
+            title: this.$t('time'),
             key: 'type',
 						width:220
           }
@@ -167,10 +167,10 @@
 				}else {
           this.tableColumn = [
             {
-              title: this.$t('类型'),
+              title: this.$t('type'),
               key: 'type',
             },{
-              title: this.$t("fn.EnterUnit", [this.$t("人")]),
+              title: this.$t("fn.EnterUnit", [this.$t('person')]),
               key: 'column0',
             }
           ]

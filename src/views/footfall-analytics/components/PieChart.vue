@@ -85,7 +85,7 @@
         if (isEmpty(option)) return []
         let column = [
           {
-            title: option.compareType === 'businessType' ? this.$t('业态') : this.$t('实体'),
+            title: option.compareType === 'businessType' ? this.$t('bussinessType') : this.$t("entity"),
             key: 'entity',
           }
         ]
@@ -93,7 +93,7 @@
           option.category.map((o, i) => {
             return {
               key: 'category' + i,
-              title: (o + `(${this.$t('人次')})`)
+              title: (o + `(${this.$t('personTime')})`)
             }
           })
         )

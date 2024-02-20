@@ -2,10 +2,10 @@
   <div class="formats-center">
     <div class="formats-table">
       <div class="formats-header">
-        <span class="formats-add" :title="$t('添加')" @click="addFormats">
+        <span class="formats-add" :title="$t('add')" @click="addFormats">
           <Icon type="md-add"/>
         </span>
-            <span class="formats-add" :title="$t('删除')" @click="deleteMultiple">
+            <span class="formats-add" :title="$t('del')" @click="deleteMultiple">
           <Icon type="md-remove"/>
         </span>
       </div>
@@ -24,10 +24,10 @@
     <Modal ref="modal" :width="700" :loading="true" :title="$t(formTitle)" @onOk="handleSubmit" @onCancel="closeAddAndEdit">
       <Form ref="formInline" :model="form" :rules="ruleInline"
             :label-width="80">
-        <FormItem prop="formatsName" :label="$t('名称')">
+        <FormItem prop="formatsName" :label="$t('name')">
           <Input v-model="form.formatsName" maxlength="10"></Input>
         </FormItem>
-        <FormItem :label="$t('关联商铺')+$t('punctuation.colon') ">
+        <FormItem :label="$t('associatedShops')+$t('punctuation.colon') ">
           <Transfer
             class="transfer"
             :data="transferData"
@@ -64,9 +64,9 @@ export default {
   },
   data () {
     return {
-      titleName: '业态列表',
-      formTitle: '添加业态',
-      tableName: ['名称', '操作'],
+      titleName: 'bussList',
+      formTitle: this.$t('fn.add',[this.$t('bussinessType')]),
+      tableName: ['name', 'operate'],
       tableData: [],
       selected: [],
       originFormatsName: '', // 编辑时原始业态名称
@@ -75,14 +75,14 @@ export default {
       tipContent: "",
       targetKeys: [], // 穿梭框右边的key数组
       transferData: [], // 穿梭框数据
-      transferTitle: [this.$t('othersBussinessParttern'), this.$t('当前业态')],
+      transferTitle: [this.$t('othersBussinessParttern'), this.$t('currentBuss')],
       form:{
         formatsName:''
       },
       ruleInline:{
-        formatsName: [{ required: true, message: this.$t('fn._不能为空',[this.$t('业态名称')]), trigger: 'blur' },{
+        formatsName: [{ required: true, message: this.$t('fn.cantBeEmpty',[this.$t('bussName')]), trigger: 'blur' },{
           required: true,
-          message: this.$t('fn.cantLessThan',[this.$t('业态名称'),2]),
+          message: this.$t('fn.cantLessThan',[this.$t('bussName'),2]),
           trigger: 'blur',
           max: 10,
           min: 2
@@ -152,10 +152,10 @@ export default {
               if (res.data.code === 200) {
                 rightData.business_type_id = res.data.data
                 Promise.all([saveFormateRelatedStore(leftData), saveFormateRelatedStore(rightData)]).then(() => {
-                  this.handleSubmitSuc('添加')
+                  this.handleSubmitSuc('add')
                 })
               } else if (res.data.code === 308) {
-                this.$message.warning(this.$t('业态名称重复'))
+                this.$message.warning(this.$t('dupBussName'))
                 this.form.formatsName = ''
               }
             })
@@ -164,17 +164,17 @@ export default {
             if (this.originFormatsName === this.form.formatsName) {
               Promise.all([saveFormateRelatedStore(leftData), saveFormateRelatedStore(rightData)]).then(() => {
                 this.$refs.modal.resetOkButton()
-                this.handleSubmitSuc('编辑')
+                this.handleSubmitSuc('edit')
               })
             } else {
               updateFormateData({ id: this.currentData.id, name: this.form.formatsName }).then(res => {
                 this.$refs.modal.resetOkButton()
                 if (res.data.code === 200) {
                   Promise.all([saveFormateRelatedStore(leftData), saveFormateRelatedStore(rightData)]).then(() => {
-                    this.handleSubmitSuc('编辑')
+                    this.handleSubmitSuc('edit')
                   })
                 } else if (res.data.code === 308) {
-                  this.$message.warning(this.$t('业态名称重复'))
+                  this.$message.warning(this.$t('dupBussName'))
                   this.form.formatsName = ''
                 }
               })
@@ -187,21 +187,21 @@ export default {
 
     },
     handleSubmitSuc (status) {
-      this.$message.success(this.$t('fn.successTo', [this.$t(`${status}业态`)]))
+      this.$message.success(this.$t('fn.successTo', [this.$t(`fn.${status}`,[this.$t('bussinessType')])]))
       this.dataList()
       this.$store.commit('isGetDict', true)
       this.form.formatsName = '';
       this.closeAddAndEdit()
     },
     addFormats () {
-      this.formTitle = this.$t('添加业态')
+      this.formTitle = this.$t('fn.add',[this.$t('bussinessType')])
       this.$refs.modal.showModal()
       this.form.formatsName = ''
       this.editAndAddType = 'add'
       this.getTransferData()
     },
     editData (value) {
-      this.formTitle = this.$t('编辑业态')
+      this.formTitle = this.$t('fn.edit',[this.$t('bussinessType')])
       if (value.data.name === this.$t('其他')) {
         this.$message.warning(this.$t('notices.editOtherBusinessPattern'))
         return
@@ -218,13 +218,13 @@ export default {
         this.$message.warning(this.$t('notices.deleteOtherBusinessPattern'))
       } else {
         this.$alert({
-          content: this.$t('fn.askConfirm', [this.$t('删除', [value.data.name])]),
+          content: this.$t('fn.askConfirm', [this.$t('del', [value.data.name])]),
           cancel () {
           },
           confirm: () => {
             deleteFormateData(value.data.id, this.propertyId).then(res => {
               if (res.data.code == 200) {
-                this.$message.success(this.$t('删除成功'))
+                this.$message.success(this.$t('fn.successTo',[this.$t('del')]))
                 this.dataList()
                 this.$store.commit('isGetDict', true)
               }
@@ -261,7 +261,7 @@ export default {
                     this.selected.splice(0, this.selected.length)
                     curLe--;
                     if (!curLe) {
-                      this.$message.success(this.$t('删除成功'))
+                      this.$message.success(this.$t('fn.successTo',[this.$t('del')]))
                       this.dataList()
                       this.$store.commit('isGetDict', true)
                     }

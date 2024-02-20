@@ -49,7 +49,7 @@ export default {
       type: Object,
       default: {
         icon: 'daofang',
-        title: '平均到访次数',
+        title: 'avgVisit',
         number: '266.333',
         bg: '#EAE8FD',
         color: '',

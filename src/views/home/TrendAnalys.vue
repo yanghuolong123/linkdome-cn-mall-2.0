@@ -12,6 +12,7 @@
 				<el-select
 					v-model="curretIndicator"
 					multiple
+					collapse-tags
 					:multiple-limit="2"
 					@change="indicatorChange"
 				>
@@ -77,21 +78,21 @@
         propertyId: (state) => state.home.headerAction,
       }),
       toolList () {
-        const nameArr = ['购物中心趋势分析', '购物中心趋势分析', '详细数据', '购物中心趋势分析']
+        const nameArr = ['shopMallTrendAnaly', 'shopMallTrendAnaly', 'detailDt', 'shopMallTrendAnaly']
         let tools = _.cloneDeep(config.toolList)
         tools.forEach((o, i) => {
-          o.name = nameArr[i]
+          o.name = this.$t(nameArr[i])
         })
         return tools
       },
       indicatorSource () {
         return {
           enter: {
-            name: this.$t('客流量'),
-            unit:this.$t('人次'),
+            name: this.$t('fx.enter'),
+            unit:this.$t('personTime'),
             yaxis: {
               title: {
-                text: `${this.$t('客流量')}(${this.$t('人次')})`,
+                text: `${this.$t('fx.enter')}(${this.$t('personTime')})`,
               },
               labels: {
                 formatter (value) {

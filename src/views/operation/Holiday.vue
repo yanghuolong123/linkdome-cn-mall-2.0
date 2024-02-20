@@ -28,10 +28,10 @@
           class="m-l-20"
           type="primary"
           @click="handleSearch"
-          >{{ $t("查询") }}</Button
+          >{{ $t('query') }}</Button
         >
         <Button size="large" class="m-l-20" @click="trendResetData">{{
-          $t("重置")
+          $t('reset')
         }}</Button>
       </div>
     </div>
@@ -105,10 +105,10 @@
           class="m-l-20"
           type="primary"
           @click="handleSearchCompare"
-          >{{ $t("查询") }}</Button
+          >{{ $t('query') }}</Button
         >
         <Button size="large" class="m-l-20" @click="HolidaysResetData">{{
-          $t("重置")
+          $t('reset')
         }}</Button>
       </div>
     </div>
@@ -122,7 +122,7 @@
       :pdfName="contrastPdf"
       :domId="idTwo"
       :ExcelData="contrastExcel"
-      :title1="'节假日活动对比分析'"
+      :title1="$t('holidayCompareAnaly')"
     ></HolidayAnalysis>
   </div>
 </template>
@@ -175,8 +175,8 @@ export default {
       current: 0,
       year: "",
       bzids: [],
-      columns: ["节日", "客流量"],
-      columns2: ["时间"],
+      columns: ["festival", "enterFlow"],
+      columns2: ["time"],
       tableList: [],
       tableList2: [],
       series: [
@@ -222,7 +222,7 @@ export default {
           },
         },
         noData: {
-          text: "暂无数据",
+          text: this.$t("holder.NoData"),
           align: "center",
           verticalAlign: "middle",
           offsetX: 0,
@@ -253,10 +253,10 @@ export default {
               if (val === null) return "";
               else {
                 return (
-                  this.$t("客流量") +
+                  this.$t("fx.enter") +
                   ":" +
                   val.toLocaleString() +
-                  this.$t("人次")
+                  this.$t('personTime')
                 );
               }
             },
@@ -299,7 +299,7 @@ export default {
           },
         },
         noData: {
-          text: "暂无数据",
+          text: this.$t("holder.NoData"),
           align: "center",
           verticalAlign: "middle",
           offsetX: 0,
@@ -328,14 +328,14 @@ export default {
           y: {
             formatter: (val) => {
               if (val === 0)
-                return this.$t("客流量") + ":" + 0 + this.$t("人次");
+                return this.$t("fx.enter") + ":" + 0 + this.$t('personTime');
               if (val === null) return "";
               else
                 return (
-                  this.$t("客流量") +
+                  this.$t("fx.enter") +
                   ":" +
                   val.toLocaleString() +
-                  this.$t("人次")
+                  this.$t('personTime')
                 );
             },
           },
@@ -379,7 +379,7 @@ export default {
           },
         },
         noData: {
-          text: "暂无数据",
+          text: this.$t("holder.NoData"),
           align: "center",
           verticalAlign: "middle",
           offsetX: 0,
@@ -402,14 +402,14 @@ export default {
           y: {
             formatter: (val) => {
               if (val === 0)
-                return this.$t("客流量") + ":" + 0 + this.$t("人次");
+                return this.$t("fx.enter") + ":" + 0 + this.$t('personTime');
               if (val === null) return "";
               else
                 return (
-                  this.$t("客流量") +
+                  this.$t("fx.enter") +
                   ":" +
                   val.toLocaleString() +
-                  this.$t("人次")
+                  this.$t('personTime')
                 );
             },
           },
@@ -480,10 +480,9 @@ export default {
         this.holidayActives1 = [];
         this.holidayActives2 = [];
         this.AllHolidayData = [];
-        console.log(res[0].data)
         if (res[0].data.code == 200) {
           let data = res[0].data.data.list;
-          this.holidays.push({ key: "全部节假日活动", value: "" });
+          this.holidays.push({ key: "allHoliday", value: "" });
           data.map((list) => {
             this.AllHolidayData.push(list);
             let obj = {};
@@ -564,7 +563,7 @@ export default {
             case 1:
               year = this.selectYear;
               this.holidays = [
-                { key: "全部节假日活动", value: "" },
+                { key: "allHoliday", value: "" },
                 ...listData,
               ];
               break;
@@ -649,7 +648,7 @@ export default {
             m.enter = m.enter == 0 ? " " : m.enter.toLocaleString();
           });
           that.tableList = tableList;
-          that.columns = ["节日", that.$t("fn.EnterUnit", [that.$t("人次")])];
+          that.columns = [that.$t("festival"), that.$t("fn.EnterUnit", [that.$t('personTime')])];
         });
       } else {
         let holiday = _.find(this.AllHolidayData, { id: this.selectHoliday });
@@ -701,7 +700,7 @@ export default {
             obj.enter = m.enter == 0 ? " " : m.enter.toLocaleString();
             tableData.push(obj);
           });
-          that.columns = ["日期", that.$t("fn.EnterUnit", [that.$t("人")])];
+          that.columns = [that.$t("Date"), that.$t("fn.EnterUnit", [that.$t('person')])];
           that.tableList = tableData;
         });
       }
@@ -710,7 +709,7 @@ export default {
     handleSearchCompare() {
       var that = this;
 
-      that.columns2 = ["时间"];
+      that.columns2 = ["time"];
       var compare1 = _.find(this.AllHolidayData, { id: this.compareHoliday1 });
       var compare2 = _.find(this.AllHolidayData, { id: this.compareHoliday2 });
       if (!compare1 || !compare2) return;
@@ -728,14 +727,14 @@ export default {
         Moment(compare1.end_date).format("YYYY") +
           compare1.name +
           " ( " +
-          this.$t("人次") +
+          this.$t('personTime') +
           " )"
       );
       that.columns2.push(
         Moment(compare2.end_date).format("YYYY") +
           compare2.name +
           " ( " +
-          this.$t("人次") +
+          this.$t('personTime') +
           " )"
       );
       entityFlow(params).then(res=>{
@@ -744,7 +743,7 @@ export default {
         if(res.list && res.list.time1){
           let index = 1;
           for(let key in res.list.time1){
-            xaxis.push(this.$t("fn.第_天", [this.$t(index)]))
+            xaxis.push(this.$t("fn.dayTh", [this.$t(index)]))
             index++
           }
           if (Moment(compare1.start_date).isAfter(Moment(new Date()))) {

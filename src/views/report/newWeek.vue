@@ -7,18 +7,18 @@
           v-model="selectDateTime"
           @change="selectTimeDate"
           type="week"
-          format="yyyy 第 WW 周"
+          :format="dateFormat"
           :picker-options="{ firstDayOfWeek: 1, disabledDate: disabledDate }"
           placeholder="选择周"
         >
         </el-date-picker>
         <div class="report-query" v-on:click="reportQuery">
-          {{ $t("查询") }}
+          {{ $t('query') }}
         </div>
         <div
           class="icon-download"
           v-on:click="downloadReport('week', callData)"
-          :title="$t('report.下载报告')"
+          :title="$t('report.reportDwonload')"
         >
           <icons type="daoru" color="#2a7dc1" :size="20"></icons>
         </div>
@@ -37,12 +37,12 @@
         <!-- 封面 -->
         <report-cover
           :pageTotal="`${getTotalPage()}`"
-          :titleName="$t('report.凌图智慧周报')"
+          :titleName="$t('report.linkdomeWeekReport')"
           :suggestText="suggestText"
         ></report-cover>
         <!-- 总览 -->
         <report-one
-          :title="$t('report.客流总览')"
+          :title="$t('report.enterOverview')"
           :page="`${getPage(1)}`"
           v-if="enabledModules.includes(1)"
           :enterData="enterData"
@@ -52,7 +52,7 @@
         <report-chart
           :chartHeight="600"
           :clickData="clickData"
-          :title="$t('report.客流趋势')"
+          :title="$t('report.enterTrend')"
           v-if="enabledModules.includes(2)"
           :page="`${getPage(2)}`"
           :listTitle="trendTitle"
@@ -60,7 +60,7 @@
         ></report-chart>
         <!-- 客流趋势表格 -->
         <report-ratio-table
-          :title="$t('report.客流趋势')"
+          :title="$t('report.enterTrend')"
           v-if="enabledModules.includes(2)"
           :page="`${getPage(2)+1}`"
           :listTitle="trendTitle"
@@ -71,7 +71,7 @@
         <report-chart
           :chartHeight="600"
           :clickData="clickData"
-          :title="$t('report.出入口客流')"
+          :title="$t('report.gateEnter')"
           v-if="enabledModules.includes(3)"
           :page="`${getPage(3)}`"
           :listTitle="gateTitle"
@@ -79,7 +79,7 @@
         ></report-chart>
         <!-- 出入口表格 -->
         <report-week-five
-          :title="$t('report.出入口客流')"
+          :title="$t('report.gateEnter')"
           v-if="enabledModules.includes(3)"
           :page="`${getPage(3)+1}`"
           :listTitle="gateTableTitle"
@@ -88,7 +88,7 @@
         ></report-week-five>
 
         <report-gate-table
-          :title="$t('report.出入口客流')"
+          :title="$t('report.gateEnter')"
           v-if="enabledModules.includes(3)"
           :page="`${getPage(3)+2}`"
           :listTitle="gateTitle"
@@ -101,7 +101,7 @@
         <report-chart
           :chartHeight="600"
           :clickData="clickData"
-          :title="$t('report.店铺客流')"
+          :title="$t('report.storeEnter')"
           v-if="enabledModules.includes(4)"
           :page="`${getPage(4)}`"
           :listTitle="shopTitle"
@@ -110,7 +110,7 @@
 
         <!-- 楼层下的商铺 -->
         <report-chart-multi
-          :title="$t('report.店铺客流')"
+          :title="$t('report.storeEnter')"
           v-for="(item, index) in allFloorStore"
           :key="index"
           v-if="enabledModules.includes(5)"
@@ -120,7 +120,7 @@
         ></report-chart-multi>
         <!-- 业态下的商铺 -->
         <report-chart-multi
-          :title="$t('report.店铺客流')"
+          :title="$t('report.storeEnter')"
           v-if="enabledModules.includes(6)"
           :page="`${getPage(6)}`"
           :listTitle="formatStoreTitle"
@@ -130,7 +130,7 @@
         <report-heat-map
           :key="'heatMap' + index"
           v-for="(item, index) in allHeatMap"
-          :title="$t('report.热力图')"
+          :title="$t('report.heatmap')"
           :page="`${getPage(7) + index }`"
           :listTitle="item.title"
           :dataList="item.data"
@@ -139,7 +139,7 @@
         ></report-heat-map>
         <!-- 店铺关联 有序-->
         <report-table
-          :title="$t('report.店铺关联')"
+          :title="$t('report.storeAsso')"
           :listTitle="orderlyTitle"
           :tableData="orderlyData"
           v-if="enabledModules.includes(8)"
@@ -147,7 +147,7 @@
         ></report-table>
         <!-- 店铺关联 无序-->
         <report-table
-          :title="$t('report.店铺关联')"
+          :title="$t('report.storeAsso')"
           :listTitle="disorderTitle"
           :tableData="disorderData"
           v-if="enabledModules.includes(9)"
@@ -158,7 +158,7 @@
           :chartHeight="600"
           :clickData="clickData"
           :isRemark="false"
-          :title="$t('report.停留时间')"
+          :title="$t('report.dwellTime')"
           v-if="enabledModules.includes(10)"
           :page="`${getPage(10)}`"
           :listTitle="dwellTitle"
@@ -168,7 +168,7 @@
         <!-- 停留时间 业态下的商铺-->
         <report-chart-multi
           chartType="dwell"
-          :title="$t('report.停留时间')"
+          :title="$t('report.dwellTime')"
           v-if="enabledModules.includes(11)"
           :page="`${getPage(11)}`"
           :listTitle="formatDwellStoreTitle"
@@ -273,10 +273,13 @@ export default {
     };
   },
   computed: {
+    dateFormat() {
+      return this.$i18n.locale === "zh-CN" ? "yyyy 第 WW 周" : "yyyy WW week";
+    },
     oneListData() {
       return [
         {
-          name: this.$t('report.本周客流总览'),
+          name: this.$t('report.theWeekOverview'),
           text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):( "客流周期:" +
                   this.saveHeaderData.year +
                   "年第" +
@@ -285,14 +288,14 @@ export default {
            ,
         },
         {
-          name: this.$t('report.上周客流总览'),
-          text: this.$t('report.客流周期')+':' + this.saveHeaderData.yester,
+          name: this.$t('report.lastWeekEnterOverview'),
+          text: this.$t('report.enterCyc')+':' + this.saveHeaderData.yester,
         },
       ];
     },
     trendTitle() {
       return {
-        name:this.$t('report.本周客流趋势'),
+        name:this.$t('report.thisWeekEnterTrend'),
         text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):("客流周期:" +
                 this.saveHeaderData.year +
                 "年第" +
@@ -302,7 +305,7 @@ export default {
     },
     gateTitle() {
       return {
-        name: this.$t('report.本周出入口客流TOP10对比分析'),
+        name: this.$t('report.thisWeekGateTop10Compare'),
         text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):("客流周期:" +
                 this.saveHeaderData.year +
                 "年第" +
@@ -313,7 +316,7 @@ export default {
     },
     gateTableTitle() {
       return {
-        name: this.$t('report.本周出入口客流TOP10'),
+        name: this.$t('report.thisWeekGateTop10'),
         text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):("客流周期:" +
                 this.saveHeaderData.year +
                 "年第" +
@@ -323,7 +326,7 @@ export default {
     },
     shopTitle() {
       return {
-        name: this.$t('report.本周店铺客流TOP10对比分析'),
+        name: this.$t('report.thisWeekStoreTop10'),
         text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
           ("客流周期:" +
           this.saveHeaderData.year +
@@ -334,7 +337,7 @@ export default {
     },
     floorStoreTitle() {
       return {
-        name: this.$t('report.本周各楼层TOP10店铺客流分析'),
+        name: this.$t('report.thisWeekFloorStoreTop10'),
         text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
           ("客流周期:" +
           this.saveHeaderData.year +
@@ -345,7 +348,7 @@ export default {
     },
     formatStoreTitle() {
       return {
-        name: this.$t('report.本周各业态TOP10店铺客流分析'),
+        name: this.$t('report.thisWeekBussStoreTop10'),
         text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
           ("客流周期:" +
           this.saveHeaderData.year +
@@ -357,7 +360,7 @@ export default {
     orderlyTitle() {
       return {
         relevancy: {
-          name: this.$t('report.本周无序关联度TOP10'),
+          name: this.$t('report.thisWeekUnorderTop10'),
           text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
             ("客流周期:" +
             this.saveHeaderData.year +
@@ -366,7 +369,7 @@ export default {
             "周"),
         },
         inversion: {
-          name: this.$t('report.本周无序转换量TOP10'),
+          name: this.$t('report.thisWeekUnorderConversionTop10'),
           text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
             ("客流周期:" +
             this.saveHeaderData.year +
@@ -379,7 +382,7 @@ export default {
     disorderTitle() {
       return {
         relevancy: {
-          name: this.$t('report.本周有序关联度TOP10'),
+          name: this.$t('report.thisWeekOrderTop10'),
           text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
            ("客流周期:" +
             this.saveHeaderData.year +
@@ -388,7 +391,7 @@ export default {
             "周"),
         },
         inversion: {
-          name:this.$t('report.本周有序转换量TOP10'),
+          name:this.$t('report.thisWeekOrderConversionTop10'),
           text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
             ("客流周期:" +
             this.saveHeaderData.year +
@@ -400,7 +403,7 @@ export default {
     },
     dwellTitle() {
       return {
-        name: this.$t('report.本周业态停留时间TOP10'),
+        name: this.$t('report.thisWeekDwellTimeTop10'),
         text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
           ("客流周期:" +
           this.saveHeaderData.year +
@@ -411,7 +414,7 @@ export default {
     },
     formatDwellStoreTitle() {
       return {
-        name: this.$t('report.本周业态中商铺停留时间TOP10'),
+        name: this.$t('report.thisWeekDwellTimeStoreTop10'),
         text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
           ("客流周期:" +
           this.saveHeaderData.year +
@@ -423,15 +426,15 @@ export default {
     ratioTableColumn(){
       if(this.showLastYearData){
         return  {
-          name1: [this.$t("时间"), this.$t("入客流")],
-          name2: [this.$t("report.同比分析"), this.$t("report.环比分析")],
-          name3: [this.$t("时间"), this.$t("入客流"), this.$t("report.增长率"), this.$t("时间"), this.$t("入客流"), this.$t("report.增长率")],
+          name1: [this.$t("time"), this.$t("Incoming")],
+          name2: [this.$t("report.yoyAnaly"), this.$t("report.qoqAnaly")],
+          name3: [this.$t("time"), this.$t("Incoming"), this.$t("report.growthRate"), this.$t("time"), this.$t("Incoming"), this.$t("report.growthRate")],
         }
       }else {
         return  {
-          name1: [this.$t("时间"),this.$t("入客流")],
-          name2: [ this.$t("report.环比分析")],
-          name3: [this.$t("时间"), this.$t("入客流"),this.$t("report.增长率")],
+          name1: [this.$t("time"),this.$t("Incoming")],
+          name2: [ this.$t("report.qoqAnaly")],
+          name3: [this.$t("time"), this.$t("Incoming"),this.$t("report.growthRate")],
         }
       }
     },
@@ -440,11 +443,11 @@ export default {
         {
           id:1,
           count:1,
-          name:this.$t("report.客流总览"),
+          name:this.$t("report.enterOverview"),
         },{
           id:2,
           count:2,
-          name:this.$t("report.客流趋势"),
+          name:this.$t("report.enterTrend"),
         },{
           id:3,
           count:3,
@@ -452,46 +455,46 @@ export default {
         },{
           id:4,
           count:1,
-          name:this.$t("report.店铺客流"),
+          name:this.$t("report.storeEnter"),
         },{
           id:5,
           count:this.allFloorStore.length,
-          name:`${this.$t("report.店铺客流")}-${this.$t('楼层')}`,
+          name:`${this.$t("report.storeEnter")}-${this.$t('floor')}`,
         },{
           id:6,
           count:1,
-          name:`${this.$t("report.店铺客流")}-${this.$t('业态')}`,
+          name:`${this.$t("report.storeEnter")}-${this.$t('bussinessType')}`,
         },{
           id:7,
           count:this.allHeatMap.length,
-          name:this.$t("report.热力图"),
+          name:this.$t("report.heatmap"),
         },{
           id:8,
           count:1,
-          name:`${this.$t("report.店铺客流")}-${this.$t('无序')}`,
+          name:`${this.$t("report.storeEnter")}-${this.$t('report.unordered')}`,
         },{
           id:9,
           count:1,
-          name:`${this.$t("report.店铺客流")}-${this.$t('有序')}`,
+          name:`${this.$t("report.storeEnter")}-${this.$t('report.orderly')}`,
         },{
           id:10,
           count:1,
-          name:`${this.$t("report.停留时间")}-${this.$t('业态')}`,
+          name:`${this.$t("report.dwellTime")}-${this.$t('bussinessType')}`,
         },{
           id:11,
           count:1,
-          name:`${this.$t("report.停留时间")}-${this.$t('店铺')}`,
+          name:`${this.$t("report.dwellTime")}-${this.$t('store')}`,
         }
       ]
     },
     orderlyData(){
       return {
         relevancy: {
-          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
+          column: [this.$t('report.entityName'), this.$t('report.entityName'), this.$t('Relevancy')],
           table: [],
         },
         inversion: {
-          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
+          column: [this.$t('report.entityName'), this.$t('report.entityName'), this.$t('report.Conversion')],
           table: [],
         },
       }
@@ -499,17 +502,17 @@ export default {
     disorderData(){
       return {
         relevancy: {
-          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.关联度')],
+          column: [this.$t('report.entityName'), this.$t('report.entityName'), this.$t('Relevancy')],
           table: [],
         },
         inversion: {
-          column: [this.$t('report.实体名称'), this.$t('report.实体名称'), this.$t('report.转换量')],
+          column: [this.$t('report.entityName'), this.$t('report.entityName'), this.$t('report.Conversion')],
           table: [],
         },
       }
     },
     tableColumn(){
-      return [this.$t('report.出入口名称'), this.$t('report.客流量'),  this.$t('report.客流峰值'), this.$t('report.平均客流量/天')]
+      return [this.$t('report.gateName'), this.$t('report.enterFlow'),  this.$t('report.enterPeak'), this.$t('report.avgEnterPerDay')]
     }
   },
 
@@ -522,6 +525,7 @@ export default {
     this.reportQuery();
   },
   methods: {
+
     disabledDate(date) {
       var week = moment()
         .locale("zh")
@@ -533,12 +537,12 @@ export default {
     async reportQuery() {
       if (this.callData === "") {
 
-        this.$alert({ content:   this.$t('fn.请选择',[this.$t('时间')]) });
+        this.$alert({ content:   this.$t('fn.select',[this.$t('time')]) });
         return false;
       }
       await this.getReportSetting()
       if(!this.enabledModules.length){
-        this.$alert({ content: this.$t('report.未配置相关模块')});
+        this.$alert({ content: this.$t('report.noConfig')});
         return
       }
       this.headerDate(moment(this.selectDateTime).format("YYYY-MM-DD"));
@@ -661,7 +665,7 @@ export default {
         // 业态下的商铺
         this.enabledModules.includes(6)&&this.formatDataList(res[8].data.data);
         // 热力图
-        this.enabledModules.includes(7)&&this.heatMapData(res[9].data.data, "本周"),
+        this.enabledModules.includes(7)&&this.heatMapData(res[9].data.data, "thisWeek"),
           // 关联度 无序
         this.enabledModules.includes(8)&&this.relevanceTableData(
             res[10].data.data.matrixList,
@@ -751,13 +755,13 @@ export default {
       };
       let [oneObj, twoObj] = [
         {
-          name: this.$t('report.本周客流'),
+          name: this.$t('report.theWeekEnter'),
           color: "#2081D4",
           type: "column",
           data: [],
         },
         {
-          name: this.$t('report.上周客流'),
+          name: this.$t('report.lastWeekEnter'),
           type: "column",
           color: "#2BD9CF",
           data: [],
@@ -796,17 +800,17 @@ export default {
         if(this.showLastYearData){
           onYearData = [
             moment(yearEnter[index].begin).format("YYYY-MM-DD"),
-            yearEnter[index].enter.toLocaleString() + this.$t("人次"),
+            yearEnter[index].enter.toLocaleString() + this.$t('personTime'),
             yearNumber + "%",
           ]
         }
         this.ratioTableData.push({
           data: [
             moment(list.begin).format("YYYY-MM-DD") + " " + weekType,
-            list.enter.toLocaleString() + this.$t("人次"),
+            list.enter.toLocaleString() + this.$t('personTime'),
             ...onYearData,
             moment(lastEnter[index].begin).format("YYYY-MM-DD"),
-            lastEnter[index].enter.toLocaleString() + this.$t("人次"),
+            lastEnter[index].enter.toLocaleString() + this.$t('personTime'),
             lastWeekNumber + "%",
           ],
         });
@@ -825,23 +829,23 @@ export default {
       if(this.showLastYearData){
         onYearTotal = [
           "-",
-          yeT.toLocaleString() + this.$t("人次"),
+          yeT.toLocaleString() + this.$t('personTime'),
           this.sequential(cuT, yeT) + "%",
         ]
       }
       this.ratioTableData.push({
         data: [
-          this.$t("合计"),
-          cuT.toLocaleString() + this.$t("人次"),
+          this.$t('total'),
+          cuT.toLocaleString() + this.$t('personTime'),
           ...onYearTotal,
           "-",
-          laT.toLocaleString() + this.$t("人次"),
+          laT.toLocaleString() + this.$t('personTime'),
           this.sequential(cuT, laT) + "%",
         ],
       });
       this.trendChartData.remarkData = [];
-      let type = smooth.ratio > 0 ? this.$t("report.增长") : this.$t("report.减少");
-      let type2 = maxHighest.ratio > 0 ? this.$t("report.增长") : this.$t("report.减少");
+      let type = smooth.ratio > 0 ? this.$t("report.growth") : this.$t("report.decrease");
+      let type2 = maxHighest.ratio > 0 ? this.$t("report.growth") : this.$t("report.decrease");
 
       let text1 =this.language==='en-US'?(
               `On ${smooth.date}, the passenger flow ${type} steadily, reaching ${smooth.enter} people, an ${type} of ${Math.abs(smooth.ratio)}% compared to the previous week`
@@ -877,19 +881,19 @@ export default {
       this.tableData = [];
       let [currentObj, yesterObj, lastObj] = [
         {
-          name: this.$t("report.本周客流"),
+          name: this.$t("report.theWeekEnter"),
           color: "#2081D4",
           type: "column",
           data: [],
         },
         {
-          name: this.$t("report.上周客流"),
+          name: this.$t("report.lastWeekEnter"),
           type: "column",
           color: "#2BD9CF",
           data: [],
         },
         {
-          name: this.$t("report.同期客流"),
+          name: this.$t("report.thePeriodEnter"),
           type: "column",
           color: "#874bd9",
           data: [],
@@ -927,13 +931,13 @@ export default {
       this.shopChartData.option = _.cloneDeep(this.enterOption);
       let [currentObj, yesterObj] = [
         {
-          name:this.$t("report.本周客流"),
+          name:this.$t("report.theWeekEnter"),
           color: "#2081D4",
           type: "column",
           data: [],
         },
         {
-          name: this.$t("report.上周客流"),
+          name: this.$t("report.lastWeekEnter"),
           type: "column",
           color: "#2BD9CF",
           data: [],
@@ -982,29 +986,29 @@ export default {
         for (let i = 0; i < 7; i++) {
           let obj = {};
           obj.name = "";
-          obj.time1 = this.$t("report.本期") + Object.keys(data[0].current[i])[0];
-          obj.time2 = this.$t("report.同期") + Object.keys(data[0].contrast[i])[0];
+          obj.time1 = this.$t("report.thePeriod") + Object.keys(data[0].current[i])[0];
+          obj.time2 = this.$t("report.synchronism") + Object.keys(data[0].contrast[i])[0];
           switch (i) {
             case 0:
-              obj.name = this.$t('周一');
+              obj.name = this.$t('Mon');
               break;
             case 1:
-              obj.name = this.$t('周二');
+              obj.name = this.$t('Tue');
               break;
             case 2:
-              obj.name = this.$t('周三');
+              obj.name = this.$t('Wed');
               break;
             case 3:
-              obj.name = this.$t('周四');
+              obj.name = this.$t('Thr');
               break;
             case 4:
-              obj.name = this.$t('周五');
+              obj.name = this.$t('Fri');
               break;
             case 5:
-              obj.name = this.$t('周六');
+              obj.name = this.$t('Sat');
               break;
             case 6:
-              obj.name = this.$t('周日');
+              obj.name = this.$t('Sun');
               break;
           }
           that.gateTableColumn.push(obj);
@@ -1046,7 +1050,7 @@ export default {
         total.current = [];
         total.period = [];
         total.ratio = [];
-        total.name = this.$t("合计");
+        total.name = this.$t('total');
         to10[0].current.forEach((list, index) => {
           let arr = [],
                   arr2 = [];

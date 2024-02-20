@@ -27,13 +27,13 @@
                     v-show="compareType === 'businessType'">
                 <Option v-for="item in bussinessTypeOptions"
                         :value="item.id"
-                        :key="item.id">{{ item.name }}
+                        :key="item.id">{{ $t(item.name) }}
                 </Option>
             </Select>
             <el-cascader
                     v-show="compareType === 'entity'&& entityType === 'store'"
                     class="w-select"
-                    :placeholder=" $t('holder.请选择') "
+                    :placeholder=" $t('holder.Select') "
                     v-model="storeCascadeData"
                     filterable
                     collapse-tags
@@ -43,7 +43,7 @@
             </el-cascader>
             <el-cascader
                     v-show="compareType === 'entity'&& entityType === 'gate'"
-                    :placeholder=" $t('holder.请选择') "
+                    :placeholder=" $t('holder.Select') "
                     class="w-select"
                     v-model="gateCascadeData"
                     collapse-tags
@@ -53,7 +53,7 @@
             </el-cascader>
             <el-cascader
                     v-show="compareType === 'entity'&& entityType === 'bussiness'"
-                    :placeholder=" $t('holder.请选择') "
+                    :placeholder=" $t('holder.Select') "
                     class="w-select"
                     v-model="busiCascadeData"
                     collapse-tags
@@ -63,7 +63,7 @@
             </el-cascader>
             <el-cascader
                     v-show="compareType !== 'entity'&&compareType !== 'businessType'"
-                    :placeholder=" $t('holder.请选择') "
+                    :placeholder=" $t('holder.Select') "
                     v-model="entityCascaderData"
                     collapse-tags
                     class="w-select "
@@ -78,7 +78,7 @@
                         :key="item.id">{{ item.name }}
                 </Option>
             </Select>
-            <Select v-model="queryParams.range" :placeholder="$t('查询粒度')"
+            <Select v-model="queryParams.range" :placeholder="$t('queryGranularity')"
                     class="w-select m-l-20"
                     :disabled="!(isSingleDay && !(multiQuta&&multiEntity) &&headerData.show_counting_demension)">
                 <Option v-for="item in rangeList"
@@ -86,8 +86,8 @@
                         :key="item.value">{{ item.label }}
                 </Option>
             </Select>
-            <Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('查询') }}</Button>
-            <Button size="large" @click="resetClick" class="m-l-20">{{ $t('重置') }}</Button>
+            <Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('query') }}</Button>
+            <Button size="large" @click="resetClick" class="m-l-20">{{ $t('reset') }}</Button>
         </div>
     </div>
 </template>
@@ -107,19 +107,19 @@
         bussinessTypeOptions: [],//业态
         rangeList: [
           {
-            label: '5 ' + this.$t('分钟'),
+            label: '5 ' + this.$t('minute'),
             value: '5m'
           }, {
-            label: '10 ' + this.$t('分钟'),
+            label: '10 ' + this.$t('minute'),
             value: '10m'
           }, {
-            label: '15 ' + this.$t('分钟'),
+            label: '15 ' + this.$t('minute'),
             value: '15m'
           }, {
-            label: '30 ' + this.$t('分钟'),
+            label: '30 ' + this.$t('minute'),
             value: '30m'
           }, {
-            label: '1 ' + this.$t('小时'),
+            label: '1 ' + this.$t('hour'),
             value: 'Hour'
           }
         ]
@@ -132,7 +132,7 @@
       typeOptionsCom () {
         this.typeOptions.splice(2, 0, {
           value: 'businessType',
-          label: this.$t('业态对比')
+          label: this.$t('bussComp')
         })
         return this.typeOptions
       },
@@ -172,7 +172,7 @@
           res = res.data.data
           this.bussinessTypeOptions = [{
             id: -1,
-            name: '全部业态'
+            name: 'allBussType'
           }]
           if (res) {
             for (let key in res) {

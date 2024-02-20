@@ -17,13 +17,13 @@ export default {
   //   }
   // },
   SaleAmount: {
-    name: i18n.t('销售额'),
+    name: i18n.t('salesVolume'),
     icon: 'dangrixiaoshoue',
     color: '#F64F61',
-    unit: i18n.t('(元)'),
+    unit: i18n.t('rmbUnit'),
     yaxis: {
       title: {
-        text: i18n.t('销售额（元）')
+        text: i18n.t('salesWithUnit')
       },
       labels: {
         formatter (value) {
@@ -33,13 +33,13 @@ export default {
     }
   },
   SquaerMetre: {
-    name: i18n.t('坪效'),
+    name: i18n.t('floorEffect'),
     icon: 'xingxiaoxiaoguo',
     color: '#1DD9D1',
-    unit: i18n.t('(元/平方米)'),
+    unit: i18n.t('flatEffUnit'),
     yaxis: {
       title: {
-        text: i18n.t('坪效（元/平方米）')
+        text: i18n.t('flatEffWithUnit')
       },
       labels: {
         formatter (value) {
@@ -49,13 +49,13 @@ export default {
     }
   },
   CloseRate: {
-    name: i18n.t('成交率'),
+    name: i18n.t('turnoverRate'),
     icon: 'chengjiaohuafen',
     color: '#857AEF',
     unit: '(%)',
     yaxis: {
       title: {
-        text:  i18n.t('成交率')+'（%）'
+        text:  i18n.t('turnoverRate')+'（%）'
       },
       labels: {
         formatter (value) {
@@ -66,13 +66,13 @@ export default {
     }
   },
   UnitPrice: {
-    name: i18n.t('客单价'),
+    name: i18n.t('UnitPrice'),
     icon: 'jiage',
     color: '#33B3ED',
-    unit:  i18n.t('(元)'),
+    unit:  i18n.t('rmbUnit'),
     yaxis: {
       title: {
-        text: i18n.t('客单价（元）')
+        text: i18n.t('cusPriceWithUnit')
       },
       labels: {
         formatter (value) {

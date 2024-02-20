@@ -50,7 +50,7 @@
 			</el-cascader>
 			<el-cascader
 				v-show="compareType === 'entity'&& entityType === 'bussiness'"
-				:placeholder=" $t('holder.请选择') "
+				:placeholder=" $t('holder.Select') "
 				class="w-select"
 				v-model="busiCascadeData"
 				collapse-tags
@@ -80,8 +80,8 @@
 								:key="item.value">{{ item.label }}
 				</Option>
 			</Select>
-			<Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('查询') }}</Button>
-			<Button size="large" @click="resetClick" class="m-l-20">{{ $t('重置') }}</Button>
+			<Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('query') }}</Button>
+			<Button size="large" @click="resetClick" class="m-l-20">{{ $t('reset') }}</Button>
 		</div>
 	</div>
 </template>
@@ -101,7 +101,7 @@
       typeOptionsCom () {
         this.typeOptions.splice(2, 0, {
           value: 'businessType',
-          label: this.$t('业态对比')
+          label: this.$t('bussComp')
         })
         return this.typeOptions
       },

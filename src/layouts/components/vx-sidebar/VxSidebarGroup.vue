@@ -63,24 +63,24 @@
         </vx-sidebar-item>
       </li>
     </ul>
-    
+
     <div class="selectShopping" v-if="isSelect">
       <div class="select-bg"></div>
       <div class="select-text">
         <div class="select-close"  v-on:click="selectClose">
            <Icon type="md-close" />
         </div>
-        <h2 class="select-title">{{$t('购物中心选择')}}</h2>
+        <h2 class="select-title">{{$t('chooseShoppingMall')}}</h2>
         <div>
-          <p>{{$t('请选择一个购物中心')}}</p>
+          <p>{{$t('fn.select',[$t('shopmall')])}}</p>
           <ul>
             <li :key="index" v-for="(item,index) in shopingList">
                <vs-radio v-model="shopingModel" vs-name="shopingModel" :vs-value="item.value">{{item.text}}</vs-radio>
             </li>
           </ul>
           <div class="select-foort flex-center">
-            <div class="button" @click='selectSubmint'>{{$t('保存')}}</div>
-            <div class="button" @click="selectClose">{{$t('取消')}}</div>
+            <div class="button" @click='selectSubmint'>{{$t('save')}}</div>
+            <div class="button" @click="selectClose">{{$t('cancel')}}</div>
           </div>
         </div>
       </div>
@@ -310,7 +310,7 @@ export default {
       margin-left: -174px;
       z-index: 10;
       top: 160px;
-      width: 348px;
+      width: 360px;
       height: auto;
       border-radius: 6px;
       box-shadow:1px 1px 10px 0px rgba(166,168,169,0.44);

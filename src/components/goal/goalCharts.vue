@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white box-card box-cardss">
-    
+
     <i-tabs  class="chartsTable" v-model="current">
       <slot slot="export" name="export"></slot>
       <tab-item :icon="icon1" class="chart-div" >
@@ -73,15 +73,15 @@ export default {
     },
     title1: {
       type: String,
-      default: () => '客流量趋势'
+      default: () => 'enterTrend'
     },
     title2: {
       type: String,
-      default: () => '详细数据'
+      default: () => 'detailDt'
     },
     columns: {
       type: Array,
-      default: () => ['日期',i18n.t('fn.EnterUnit',[i18n.t('人次')]), i18n.t('fn.TargetEnterUnit',[i18n.t('人次')])]
+      default: () => [i18n.t('Date'),i18n.t('fn.EnterUnit',[i18n.t('personTime')]), i18n.t('fn.TargetEnterUnit',[i18n.t('personTime')])]
     },
     tableList: {
       type: Array,

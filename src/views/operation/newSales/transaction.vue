@@ -1,6 +1,6 @@
 <template>
     <div class="box-card bg-white transaction"  v-if="isHtml">
-        <p>{{$t('异动分析')}}</p>
+        <p>{{$t('changeAnaly')}}</p>
         <div class="transaction-left" >
           <header>{{$t(topTen.title)}}</header>
             <ul v-if="!topTable">
@@ -33,7 +33,7 @@
                      <template>
                         <div class="flex justify-between items-center mr-10">
                           <span class="whitespace-no-wrap mx-4 text-sm">
-                            <vs-radio style="margin-right:10px;" v-model="topTen.topRadio" vs-value="topFloor">{{$t('楼层')}}</vs-radio>
+                            <vs-radio style="margin-right:10px;" v-model="topTen.topRadio" vs-value="topFloor">{{$t('floor')}}</vs-radio>
                             <vs-radio v-model="topTen.topRadio" vs-value="topBusiness">{{$t('业态')}}</vs-radio>
                           </span>
                           <vs-select autocomplete
@@ -84,7 +84,7 @@
                   <template>
                     <div class="flex justify-between items-center mr-10">
                       <span class="whitespace-no-wrap mx-4 text-sm">
-                        <vs-radio style="margin-right:10px;" v-model="afterTen.AfterRadio" vs-value="AfterFloor">{{$t('楼层')}}</vs-radio>
+                        <vs-radio style="margin-right:10px;" v-model="afterTen.AfterRadio" vs-value="AfterFloor">{{$t('floor')}}</vs-radio>
                         <vs-radio v-model="afterTen.AfterRadio" vs-value="AfterBusiness">{{$t('业态')}}</vs-radio>
                       </span>
                       <vs-select autocomplete
@@ -197,8 +197,8 @@ export default {
       brandType: ['bar'],
       topHeight: '20%',
       topTen: {
-        title: '前10名排行',
-        name: ['上期排名', '异动', '店铺名称'],
+        title: 'top10Ranking',
+        name: ['prePeriodRanking', 'change', 'storeName'],
         topRadio: 'topFloor',
         selectAction: 'all',
         selectList: [],
@@ -220,8 +220,8 @@ export default {
       },
       afterHeight: '20%',
       afterTen: {
-        title: '后10名排行',
-        name: ['上期排名', '异动', '店铺名称'],
+        title: 'bottom10Ranking',
+        name: ['prePeriodRanking', 'change', 'storeName'],
         AfterRadio: 'AfterFloor',
         selectAction: 'all',
         selectList: [],
@@ -283,7 +283,7 @@ export default {
       switch (this.afterParameter.type) {
         case 'enter':
         case 'occupancy':
-          return this.$t('人次')
+          return this.$t('personTime')
         case 'SquaerMetre':
           return this.$t('元/m²')
         case 'UnitPrice':
@@ -314,7 +314,7 @@ export default {
     businessData () {
       let newData = [
         {
-          name: '全部业态',
+          name: 'allBussType',
           value: 'all'
         }
       ]
@@ -371,16 +371,16 @@ export default {
       }
       switch (this.topParameter.type) {
         case 'SaleAmount':
-          seriesObj.name = this.$t('销售额')
+          seriesObj.name = this.$t('salesVolume')
           break;
         case 'SquaerMetre':
-           seriesObj.name = this.$t('坪效')
+           seriesObj.name = this.$t('floorEffect')
           break;
           case 'CloseRate':
-          seriesObj.name = this.$t('成交率')
+          seriesObj.name = this.$t('turnoverRate')
           break;
           case 'UnitPrice':
-           seriesObj.name = this.$t('客单价')
+           seriesObj.name = this.$t('UnitPrice')
           break;
       }
       data.forEach(list => {
@@ -501,7 +501,7 @@ export default {
   overflow: hidden;
   margin-top: 20px;
   padding: 35px;
-  
+
   p{
     font-size:18px;
     font-weight:400;
@@ -543,7 +543,7 @@ export default {
       left: 10px;
       top:119px;
       width: 90px;
-     
+
       p{
         width: 100%;
         padding-left: 15px;

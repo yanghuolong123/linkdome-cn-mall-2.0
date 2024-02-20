@@ -91,8 +91,8 @@ export default {
           option.visualMap.max = maxAvg
           option.series[0].data = data
           option.xAxis.data = workingtime
-         option.yAxis.data =  [ this.$t('周日'),  this.$t('周六'), this.$t( '周五'),
-           this.$t('周四'),  this.$t('周三'),  this.$t('周二'),  this.$t('周一')],
+         option.yAxis.data =  [ this.$t('Sun'),  this.$t('Sat'), this.$t( 'Fri'),
+           this.$t('Thr'),  this.$t('Wed'),  this.$t('Tue'),  this.$t('Mon')],
            flowDistributionCharts.setOption(option)
           flowDistributionCharts.resize()
        }

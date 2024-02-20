@@ -65,7 +65,7 @@
               class="text-xl text-black font-medium hidden sm:block"
               style="padding-left:18px;"
             >
-              {{ $t("历史数据查询") }}
+              {{ $t("historyDataQuery") }}
               <Tooltip
                 :content="tootipText"
                 placement="right"
@@ -201,7 +201,7 @@ export default {
         {
           data: 0,
           id: "enteravg",
-          name: this.$t("平均客流"),
+          name: this.$t("avgEnter"),
           type: {
             icon: "avg",
             color: "#1dd9d1",
@@ -214,7 +214,7 @@ export default {
             timeRange: "00:00-00:59",
           },
           id: "enterhighest",
-          name: this.$t("总客流量"),
+          name: this.$t('totalEnter'),
           type: {
             icon: "highest",
             color: "#e8585a",
@@ -227,7 +227,7 @@ export default {
             timeRange: "00:00-00:59",
           },
           id: "occupancyhighest",
-          name: this.$t("fn.peak", [this.$t("集客量")]),
+          name: this.$t("fn.peak", [this.$t('occupancy')]),
           type: {
             icon: "occu_highest",
             color: "#e8585a",
@@ -236,7 +236,7 @@ export default {
         {
           data: 0,
           id: "occupancytotal",
-          name: this.$t("集客量"),
+          name: this.$t('occupancy'),
           type: {
             icon: "liuliang",
             color: "#857aef",
@@ -293,10 +293,7 @@ export default {
     },
     rankingIndicators() {
       return {
-        ...{
-          enter: { name: "入客流" },
-          dwell: { name: "停留时间" },
-        },
+        ...{ enter: { name: "Incoming" }, dwell: { name: "dwellTime" } },
         ...salesDict,
       };
     },
@@ -322,7 +319,7 @@ export default {
         return _.dropRight([...tmlEnterKPI, ...tmlOccuKPI]);
       let validObj = {
         id: "entervalid",
-        name: this.$t("有效客流"),
+        name: this.$t("effEnter"),
         data: Number(enter.unique) < 0 ? 0 : enter.unique,
         type: {
           icon: "youxiaokeliu",
@@ -335,10 +332,10 @@ export default {
     trendIndicators() {
       let footfallYaxis = {
         enter: {
-          name: "客流量",
+          name: "fx.enter",
           yaxis: {
             title: {
-              text: `${this.$t("客流量")}(${this.$t("人次")})`,
+              text: `${this.$t("enter")}(${this.$t('personTime')})`,
             },
             labels: {
               formatter(value) {
@@ -348,10 +345,10 @@ export default {
           },
         },
         occupancy: {
-          name: this.$t("集客量"),
+          name: this.$t('occupancy'),
           yaxis: {
             title: {
-              text: `${this.$t("集客量")}(${this.$t("人次")})`,
+              text: `${this.$t('occupancy')}(${this.$t('personTime')})`,
             },
             labels: {
               formatter(value) {
@@ -567,7 +564,7 @@ export default {
       let companyKpi = [
         {
           id: "enteravg",
-          name: this.$t("平均客流"),
+          name: this.$t("avgEnter"),
           data: currentCompany ? currentCompany.avg : 0,
           type: {
             icon: "avg",
@@ -576,7 +573,7 @@ export default {
         },
         {
           id: "enterhighest",
-          name: this.$t("总客流量"),
+          name: this.$t('totalEnter'),
           data: {
             number: currentCompany
               ? Number(currentCompany.highest.number) < 0
@@ -593,7 +590,7 @@ export default {
         },
         {
           id: "occupancyhighest",
-          name: this.$t("fn.peak", [this.$t("集客量")]),
+          name: this.$t("fn.peak", [this.$t('occupancy')]),
           data: {
             number: currentCompany
               ? Number(currentCompany.occupancy_highest.number) < 0
@@ -614,7 +611,7 @@ export default {
         },
         {
           id: "occupancytotal",
-          name: this.$t("集客量"),
+          name: this.$t('occupancy'),
           data: currentCompany
             ? Number(currentCompany.occupancy_total) < 0
               ? 0
@@ -643,13 +640,13 @@ export default {
       // data.isexist ? pic = '今日' : pic = ''
       let checkNameObj = {
         enter: {
-          avg: pic + this.$t("平均客流"),
-          highest: pic + this.$t("客流峰值"),
-          total: pic + this.$t("总客流量"),
+          avg: pic + this.$t("avgEnter"),
+          highest: pic + this.$t("flowPeak"),
+          total: pic + this.$t('totalEnter'),
         },
         occupancy: {
-          highest: pic + this.$t("集客峰值"),
-          total: pic + this.$t("集客量"),
+          highest: pic + this.$t("occuPeak"),
+          total: pic + this.$t('occupancy'),
         },
       };
       let icontypes = {

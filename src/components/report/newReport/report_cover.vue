@@ -84,19 +84,19 @@
         switch (this.reportType) {
           case 'day':
             headerDate = this.$store.state.report.dayReportHeader
-            const month = Number(headerDate.time.split('.')[0]) + '月'
+            const month = Number(headerDate.time.split('.')[0]) + 'mon'
             const date = headerDate.time.split('.')[1]
-            return this.language === 'en-US' ? `Data statistics on\n${this.$t(month)} ${date},${headerDate.year}` : headerDate.year + '.' + headerDate.time + this.$t('report.数据统计')
+            return this.language === 'en-US' ? `Data statistics on\n${this.$t(month)} ${date},${headerDate.year}` : headerDate.year + '.' + headerDate.time + this.$t('report.dataAnaly')
           case 'week':
             headerDate = this.$store.state.report.weekReportHeader
             this.weekTime = headerDate.time
             return this.language === 'en-US' ? `Data statistics for\n${headerDate.period}th week of ${headerDate.year}` : (headerDate.year + '年第' + headerDate.period + '周数据统计')
           case 'month':
             headerDate = this.$store.state.report.monthReportHeader
-            return this.language === 'en-US' ? `Data statistics for\n${this.$t(headerDate.time + '月')} ${headerDate.year}` : headerDate.year + '年' + headerDate.time + '月数据统计'
+            return this.language === 'en-US' ? `Data statistics for\n${this.$t(headerDate.time + 'mon')} ${headerDate.year}` : headerDate.year + '年' + headerDate.time + '月数据统计'
           case 'customize':
             headerDate = this.$store.state.report.customizeReportHeader
-            return this.language === 'en-US' ? `Data statistics for\n${headerDate.time}` : headerDate.time + this.$t('report.数据统计')
+            return this.language === 'en-US' ? `Data statistics for\n${headerDate.time}` : headerDate.time + this.$t('report.dataAnaly')
         }
       }
     },

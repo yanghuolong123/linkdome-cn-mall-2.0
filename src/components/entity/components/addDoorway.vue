@@ -1,17 +1,17 @@
 <template>
 	<modal ref="modal"
 				 :width="500"
-				 :title="isModify?$t('编辑出入口'):$t('添加出入口')"
+				 :title="isModify?$t('editGate'):$t('addGate')"
 				 @onOk="handleSubmit('formData')"
 				 @onCancel="closeEdit">
 		<Form :model="formData" label-position="right" :label-width="100" ref="formData" :rules="ruleInline">
-			<FormItem :label="$t('出入口名称')" prop="name">
-				<Input type="text" v-model="formData.name"  :placeholder="$t('fn.请输入', [$t('出入口名称')])"></Input>
+			<FormItem :label="$t('gateName')" prop="name">
+				<Input type="text" v-model="formData.name"  :placeholder="$t('fn.inputHolder', [$t('gateName')])"></Input>
 			</FormItem>
-			<FormItem :label="$t('父节点')" prop="parentNode" v-if="userLvl==='admin'">
+			<FormItem :label="$t('parentNode')" prop="parentNode" v-if="userLvl==='admin'">
 				<el-cascader
 					v-model="formData.parentNode"
-					:placeholder="$t('fn._', [$t('holder.请选择'), $t('父节点')])"
+					:placeholder="$t('fn._', [$t('holder.Select'), $t('parentNode')])"
 					class="w-select "
 					style="width: 100%"
 					:props="cascadeProps"
@@ -19,17 +19,17 @@
 				>
 				</el-cascader>
 			</FormItem>
-			<FormItem :label="$t('出入口关联')" prop="gate_id" v-if="userLvl==='admin'">
+			<FormItem :label="$t('gateAsso')" prop="gate_id" v-if="userLvl==='admin'">
 				<Select v-model="formData.gate_id">
 					<Option v-for="item in gateList" :value="item.id" :key="item.id">{{item.name}}</Option>
 				</Select>
 			</FormItem>
-			<FormItem :label="$t('出入口类型')" prop="gate_type">
+			<FormItem :label="$t('gateType')" prop="gate_type">
 				<Select v-model="formData.gate_type">
 					<Option v-for="item in gateTypeList" :value="item.id" :key="item.id">{{item.name}}</Option>
 				</Select>
 			</FormItem>
-			<FormItem :label="$t('描述')" prop="description" :label-width="100">
+			<FormItem :label="$t('description')" prop="description" :label-width="100">
 				<Input type="textarea" v-model="formData.description" :rows="4"></Input>
 			</FormItem>
 		</Form>
@@ -70,7 +70,7 @@
     data () {
       const validSelect = (rule, value, callback) => {
         if (value === "" || (rule.field == "zoneIds" && !value[0])) {
-          callback(new Error(i18n.t("fn.请选择", [i18n.t(rule.tips)])));
+          callback(new Error(i18n.t("fn.select", [i18n.t(rule.tips)])));
         } else {
           callback();
         }
@@ -93,26 +93,26 @@
         ruleInline: {
           name: [{
             required: true,
-            message:this.$t('fn.请输入',[this.$t('出入口名称')]),
+            message:this.$t('fn.inputHolder',[this.$t('gateName')]),
             trigger: 'blur'
           },],
           parentNode: [
             {
               required: true,
-              tips: "父节点",
+              tips: "parentNode",
               validator: validSelect,
               trigger: "change",
             },
           ],
           // gate_id: [{
           //   required: true,
-          //   message: this.$t('请选择'),
+          //   message: this.$t('holder.Select'),
           //   trigger: 'change',
           //   type: 'number'
           // }],
           gate_type: [{
             required: true,
-            message: this.$t('请选择'),
+            message: this.$t('holder.Select'),
             trigger: 'change',
             type: 'number'
           }],
@@ -173,7 +173,7 @@
             if (res.data.code === 200) {
               data.id = res.data.data.id
               that.closeEdit()
-              this.$message.success(this.$t('fn.successTo', [this.$t('添加出入口')]))
+              this.$message.success(this.$t('fn.successTo', [this.$t('addGate')]))
               that.$emit('addTypeData', data)
             }else {
               this.$message.error(res.data.msg)
@@ -186,7 +186,7 @@
             this.$refs.modal.resetOkButton()
             if (res.data.code === 200) {
               that.closeEdit()
-              this.$message.success(this.$t('fn.successTo', [this.$t('编辑出入口')]))
+              this.$message.success(this.$t('fn.successTo', [this.$t('editGate')]))
               that.$emit('updateTypeData', data)
             }else {
               this.$message.error(res.data.msg)

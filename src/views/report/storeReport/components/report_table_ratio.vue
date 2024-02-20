@@ -86,7 +86,7 @@
 			if (typeof val === 'string') {
 				return val
 			} else {
-				return val.toLocaleString() + this.$t('人')
+				return val.toLocaleString() + this.$t('person')
 			}
 		}
 	}

@@ -21,7 +21,7 @@ export default {
   data () {
     return {
       homeName: 'ranking',
-      orderName: '客流',
+      orderName: 'PassengerFlow',
       chartType: 'pie',
     }
   },

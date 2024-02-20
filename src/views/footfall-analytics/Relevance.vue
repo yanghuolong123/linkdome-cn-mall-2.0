@@ -7,7 +7,7 @@
           v-model="relevanceDate"
           class="w-select"
           placement="bottom-end"
-          :placeholder="$t('holder.请选择')"
+          :placeholder="$t('holder.Select')"
           :options="disabledDate"
         ></DatePicker>
       </div>
@@ -22,8 +22,8 @@
           :options="relevanceList"
         ></el-cascader>
         <div class="cascade" v-else></div>
-        <Button size="large" class="m-l-20" type="primary" @click="relevanceDataClick">{{ $t('查询') }}</Button>
-        <Button size="large" class="m-l-20" @click="resetData">{{ $t('重置') }}</Button>
+        <Button size="large" class="m-l-20" type="primary" @click="relevanceDataClick">{{ $t('query') }}</Button>
+        <Button size="large" class="m-l-20" @click="resetData">{{ $t('reset') }}</Button>
       </div>
     </div>
     <div class="relevance-container">
@@ -31,9 +31,9 @@
       <vs-row style="margin:20px 0;padding:0 10px">
         <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="8">
           <div class="relevance-graph">
-            <h3 v-show="isData == true">{{ $t('holder.暂无数据') }}</h3>
+            <h3 v-show="isData == true">{{ $t('holder.NoData') }}</h3>
             <h3 v-show="isTotalData == true">
-              {{ $t('实体客流无关联') }}
+              {{ $t('PhysEnterNotAsso') }}
             </h3>
             <div class="relevance-svg">
               <div class="relevance-left">
@@ -56,14 +56,14 @@
                   <span :style="{backgroundColor:item.color}"></span>
                   <p>{{item.name}}</p>
                 </li>
-               
+
               </ul>
               <ul class='d3NameList' v-else>
                 <li :key="index"  v-for="(item,index) in d3NameLists">
                   <span :style="{backgroundColor:item.color}"></span>
                   <p>{{item.name}}</p>
                 </li>
-               
+
               </ul>
             </div>
           </div>
@@ -96,12 +96,12 @@
             </ul>
           </div>
           <div v-else class="relevanceTOP3">
-            <h3>{{ $t('关联度TOP3：') }}</h3>
+            <h3>{{ $t('relevanceTop3') }}</h3>
             <h4 v-if="isData == true">
               <ul>
-                <li>{{ $t('holder.暂无数据') }}</li>
-                <li>{{ $t('holder.暂无数据') }}</li>
-                <li>{{ $t('holder.暂无数据') }}</li>
+                <li>{{ $t('holder.NoData') }}</li>
+                <li>{{ $t('holder.NoData') }}</li>
+                <li>{{ $t('holder.NoData') }}</li>
               </ul>
             </h4>
             <ul v-else>
@@ -169,12 +169,12 @@ export default {
       tabsList: [
         {
           value: 0,
-          label: '关联关系无序图',
+          label: 'asscUnorderGraph',
           tootipText: '无序图：两个实体的客流关联程度，不具有方向性'
         },
         {
           value: 1,
-          label: '关联关系有序图',
+          label: 'asscOrderGraph',
           tootipText: '有序图：从一个实体到另外一个实体的客流关联程度，具有方向性'
         }],
       // tootipText: '有序图： 从一个实体到另外一个实体的客流关联程度，具有方向性\n无序图：两个实体的客流关联程度，不具有方向性',
@@ -189,13 +189,13 @@ export default {
       svgOpacity: 0,
       relevanceValue: [],
       relevanceList: [],
-      relevanceTitle: '关联度排行',
-      changeTitle: '转化量排行',
+      relevanceTitle: 'relevanceRanking',
+      changeTitle: 'conversionRanking',
       sourceTitle: '来源排行',
-      tableName: ['来源实体', '目的实体', '关联度'],
+      tableName: ['sourceEntity', 'destEntity', 'Relevancy'],
       chartTwoData:[],
       // 转换量
-      changeTableName: ['来源实体', '目的实体', '转换量'],
+      changeTableName: ['sourceEntity', 'destEntity', 'Conversion'],
       changeTableList: [],
       disorderChangeTable: [],
       orderlyChangeTable: [],
@@ -230,15 +230,15 @@ export default {
         this.changeTableList = this.disorderChangeTable
         // 关联度
         this.relevanceSeniority = this.disorderRelevancyRanking
-        this.tableName = ['实体名称', '实体名称', '关联度']
-        this.changeTableName = ['实体名称', '实体名称', '转换量']
+        this.tableName = ['entityName', 'entityName', 'Relevancy']
+        this.changeTableName = ['entityName', 'entityName', 'Conversion']
       } else {
         // 转化量
         this.changeTableList = this.orderlyChangeTable
         // 关联度
         this.relevanceSeniority = this.orderlyRelevancyRanking
-        this.tableName = ['来源实体', '目的实体', '关联度']
-        this.changeTableName = ['来源实体', '目的实体', '转换量']
+        this.tableName = ['sourceEntity', 'destEntity', 'Relevancy']
+        this.changeTableName = ['sourceEntity', 'destEntity', 'Conversion']
       }
       // 来源前3排行
       this.relevanceTOP3List = _.take(this.relevanceSeniority, 3).map(list => {

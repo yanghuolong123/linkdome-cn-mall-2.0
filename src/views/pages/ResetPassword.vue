@@ -13,21 +13,21 @@
         v-if="!isresetSuccess"
         class="reserForm"
       >
-        <FormItem prop="newPassword" :label="$t('密码')">
+        <FormItem prop="newPassword" :label="$t('Psw')">
           <Input
             v-model="formData.newPassword"
             size="large"
             autofocus
-            :placeholder="$t('请输入修改的密码')"
+            :placeholder="$t('enterEidtPsw')"
             type="password"
           />
         </FormItem>
-        <FormItem prop="aginPassword" :label="$t('请确认修改后的密码')" style="margin-top:20px;">
+        <FormItem prop="aginPassword" :label="$t('confirmEditPsw')" style="margin-top:20px;">
           <Input
             v-model="formData.aginPassword"
             size="large"
             autofocus
-            :placeholder="$t('请再次输入修改的密码')"
+            :placeholder="$t('enterConfirmPsw')"
             type="password"
           />
         </FormItem>
@@ -35,11 +35,11 @@
           <Row type="flex" justify="space-between" class="footButton">
             <i-col :sm="8" :xs="24">
               <Button type="primary" size="large" class="commitButton" @click="handleSubmit" :loading="loading">
-                <span v-if="!loading">{{$t('提交')}}</span>
-                <span v-else>{{$t('发送中')}}</span>
+                <span v-if="!loading">{{$t('submit')}}</span>
+                <span v-else>{{$t('sending')}}</span>
               </Button>
             </i-col>
-            <Button size="large" class="resetButtom" @click="resetForm">{{ $t('重置') }}</Button>
+            <Button size="large" class="resetButtom" @click="resetForm">{{ $t('reset') }}</Button>
           </Row>
         </FormItem>
       </Form>
@@ -48,9 +48,9 @@
           <p>
             <Icon type="md-checkmark-circle" :size="50" color="#40ddd4"/>
           </p>
-          <p>{{$t('密码修改成功')}}</p>
-          <p>{{$t('密码已找回')}}</p>
-          <Button type="primary" size="large" @click="backLogin">{{$t('返回登录页')}}</Button>
+          <p>{{$t('pswEditSucc')}}</p>
+          <p>{{$t('pswFound')}}</p>
+          <Button type="primary" size="large" @click="backLogin">{{$t('backLogin')}}</Button>
         </div>
       </template>
     </Content>
@@ -73,9 +73,9 @@ export default {
   data () {
     const validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error(this.$t('密码不能为空')))
+        callback(new Error(this.$t('fn.cantBeEmpty',[this.$t('password')])))
       } else if (value.length < 6) {
-        callback(new Error(this.$t('密码长度不得小于6个字符')))
+        callback(new Error(this.$t('fn.strMinLength',[this.$t('6')])))
       } else {
         if (this.formData.newPassword !== '') {
           // 对第二个密码框单独验证
@@ -86,9 +86,9 @@ export default {
     }
     const validatePassCheck = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error(this.$t('请再次输入修改的密码')))
+        callback(new Error(this.$t('enterConfirmPsw')))
       } else if (value !== this.formData.newPassword) {
-        callback(new Error(this.$t('两次密码不一致!')))
+        callback(new Error(this.$t('pswInconsistent')))
       } else {
         callback()
       }
@@ -134,9 +134,9 @@ export default {
               this.current = 3
               this.isresetSuccess = true
             } else if (res.data.code === 304 || res.data.code === 307) {
-              this.$message.warning(this.$t('没有此用户'))
+              this.$message.warning(this.$t('noUser'))
             } else {
-              this.$message.error(this.$t('修改失败'))
+              this.$message.error(this.$t('fn.failedTo',[this.$t('edit')]))
             }
           }).catch(err => {
             this.loading = false

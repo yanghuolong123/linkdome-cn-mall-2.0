@@ -10,7 +10,7 @@
 				:options="options3"
 				placeholder="选择日期">
 			</DatePicker>
-			<Button type="primary" class="m-l-20" @click="reportQuery" size="large">{{ $t('查询') }}</Button>
+			<Button type="primary" class="m-l-20" @click="reportQuery" size="large">{{ $t('query') }}</Button>
 			<div class="icon-download" @click="downloadReport('customize',callData)" title="下载报告">
 				<icons type="daoru" color="#2a7dc1" :size=20></icons>
 			</div>
@@ -26,11 +26,11 @@
 			<!-- 封面 -->
 			<report-cover
 				:pageTotal="`${getTotalPage()}`"
-				:titleName="$t('report.凌图智慧报告')"
+				:titleName="$t('report.linkdomeReport')"
 				:suggestText='suggestText'
 			></report-cover>
 			<!-- 总览 -->
-			<report-one   :title="$t('report.客流总览')"
+			<report-one   :title="$t('report.enterOverview')"
 									v-if="enabledModules.includes(1)"
 									:page="`${getPage(1)}`"
 									:enterData='enterData'
@@ -38,13 +38,13 @@
 			<!-- 客流趋势 -->
 			<report-chart :chartHeight='600'
 										:clickData='clickData'
-						  :title="$t('report.客流趋势')"
+						  :title="$t('report.enterTrend')"
 										v-if="enabledModules.includes(2)"
 										:page="`${getPage(2)}`"
 										:listTitle='trendTitle'
 										:dataList=trendChartData></report-chart>
 			<!-- 客流趋势表格 -->
-			<report-ratio-table   :title="$t('report.客流趋势')"
+			<report-ratio-table   :title="$t('report.enterTrend')"
 													v-if="enabledModules.includes(2)"
 													:page="`${getPage(2)+1}`"
 													:listTitle='trendTitle'
@@ -53,14 +53,14 @@
 			></report-ratio-table>
 			<!-- 出入口 -->
 			<report-chart :chartHeight='600'
-										:clickData='clickData' :title="$t('report.出入口客流')"
+										:clickData='clickData' :title="$t('report.gateEnter')"
 										v-if="enabledModules.includes(3)"
 										:page="`${getPage(3)}`"
 										:listTitle='gateTitle'
 										:dataList=gateChartData></report-chart>
 			<!-- 出入口表格 -->
 			<report-week-five
-					:title="$t('report.出入口客流')"
+					:title="$t('report.gateEnter')"
 				:tableColumn='tableColumn'
 				v-if="enabledModules.includes(3)"
 				:page="`${getPage(3)+1}`"
@@ -71,20 +71,20 @@
 
 			<!-- 店铺 -->
 			<report-chart :chartHeight='600'
-										:clickData='clickData'   :title="$t('report.店铺客流')"
+										:clickData='clickData'   :title="$t('report.storeEnter')"
 										v-if="enabledModules.includes(4)"
 										:page="`${getPage(4)}`"
 										:listTitle='shopTitle'
 										:dataList=shopChartData></report-chart>
 
 			<!-- 楼层下的商铺 -->
-			<report-chart-multi   :title="$t('report.店铺客流')"
+			<report-chart-multi   :title="$t('report.storeEnter')"
 													v-if="enabledModules.includes(5)"
 													:page="`${getPage(5)}`"
 													:listTitle='floorStoreTitle'
 													:dataList='allFloorStore'></report-chart-multi>
 			<!-- 业态下的商铺 -->
-			<report-chart-multi   :title="$t('report.店铺客流')"
+			<report-chart-multi   :title="$t('report.storeEnter')"
 													v-if="enabledModules.includes(6)"
 													:page="`${getPage(6)}`" :listTitle='formatStoreTitle'
 													:dataList='allFormatStore'></report-chart-multi>
@@ -109,13 +109,13 @@
 			<!-- 停留时间 业态-->
 			<report-chart :chartHeight='600'
 						  :clickData='clickData'
-						  :isRemark='false'    :title="$t('report.停留时间')"
+						  :isRemark='false'    :title="$t('report.dwellTime')"
 										v-if="enabledModules.includes(10)"
 										:page="`${getPage(10)}`"
 										:listTitle='dwellTitle' :dataList='dwellChartData'
 										chartType='dwell'></report-chart>
 			<!-- 停留时间 业态下的商铺-->
-			<report-chart-multi chartType='dwell'    :title="$t('report.停留时间')"
+			<report-chart-multi chartType='dwell'    :title="$t('report.dwellTime')"
 													v-if="enabledModules.includes(11)"
 													:page="`${getPage(11)}`"
 													:listTitle='formatDwellStoreTitle'
@@ -170,35 +170,35 @@
           {
             id:1,
             count:1,
-            name:'客流总览',
+            name:'enterOverview',
           },{
             id:2,
             count:2,
-            name:'客流趋势',
+            name:'enterTrend',
           },{
             id:3,
             count:2,
-            name:'出入口客流',
+            name:'gateEnter',
           },{
             id:4,
             count:1,
-            name:'店铺客流',
+            name:'storeEnter',
           },{
             id:5,
             count:1,
-            name:'店铺客流-楼层',
+            name:'storeEnter-floor',
           },{
             id:6,
             count:1,
-            name:'店铺客流-业态',
+            name:'storeEnter-buss',
           },{
             id:10,
             count:1,
-            name:'停留时间-业态',
+            name:'dwellTime-buss',
           },{
             id:11,
             count:1,
-            name:'停留时间-店铺',
+            name:'dwellTime-store',
           }
         ]
       }

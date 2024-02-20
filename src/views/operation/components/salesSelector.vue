@@ -38,7 +38,7 @@
         </vs-select>
       </vs-col>
       <vs-col :vs-lg="3" :vs-xs="12" class="mt-4">
-        <vs-button color="primary" @click="handleClick" class="btn">{{ $t('查询') }}</vs-button>
+        <vs-button color="primary" @click="handleClick" class="btn">{{ $t('query') }}</vs-button>
       </vs-col>
     </vs-row>
   </div>

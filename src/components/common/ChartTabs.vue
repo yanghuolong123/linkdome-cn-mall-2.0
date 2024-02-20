@@ -93,7 +93,7 @@ export default {
     },
     title: {
       type: Array, // tab 名称
-      default: () => ["客流量趋势", "客流量趋势"],
+      default: () => ["enterTrend", "enterTrend"],
     },
     horizonta: {
       // 柱状图是否水平，默认false
@@ -115,7 +115,7 @@ export default {
       showChakan: false,
       isAllData: false,
       current: 0,
-      nodata: "暂无数据",
+      nodata: "holder.NoData",
       chartWidth: "99%",
       chartHeight: 385,
       canshow: false,
@@ -161,7 +161,7 @@ export default {
           enabled: false,
         },
         noData: {
-          text: "暂无数据",
+          text: this.$t("holder.NoData"),
           align: "center",
           verticalAlign: "middle",
           offsetX: 0,
@@ -207,7 +207,7 @@ export default {
       this.mergeData.forEach((e, dindex) => {
         let { name: title, key } = e;
         if (dindex > 0) {
-          title = this.$t(title) + " ( " + this.$t("人次") + " ) ";
+          title = this.$t(title) + " ( " + this.$t('personTime') + " ) ";
           column.push({ title, key });
         } else {
           column.push({ title, key });
@@ -270,11 +270,11 @@ export default {
           tooltip: {
             y: {
               formatter: (val) => {
-                if (val === 0) return 0 + this.$t("人次");
+                if (val === 0) return 0 + this.$t('personTime');
                 if (val == undefined || val == null || val == "") return "";
                 if (typeof val === "number")
-                  return val.toLocaleString() + this.$t("人次");
-                else return val + this.$t("人次");
+                  return val.toLocaleString() + this.$t('personTime');
+                else return val + this.$t('personTime');
               },
             },
           },

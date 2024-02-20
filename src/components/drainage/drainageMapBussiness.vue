@@ -1,6 +1,6 @@
 <template>
 	<div class="drainage-map">
-		<h1>{{ $t('引流图') }}
+		<h1>{{ $t('drainageMap') }}
 			<Tooltip :content="$t('passages.tootipText4')" placement="right" theme="light" transfer max-width="500">
 				<icons type="wenhao"/>
 			</Tooltip>
@@ -14,7 +14,7 @@
 <!--					<span v-if="headerData.show_actual_val">{{dataList.shop&&dataList.shop.total_from.toLocaleString()}}人次</span>-->
 
 					<div class="flex-center">
-						<span class="thin">{{$t('环比')}}</span>
+						<span class="thin">{{$t('QOQ')}}</span>
 						<Icon type="md-arrow-dropdown" v-if="dataList.shop.from_action"/>
 						<Icon type="md-arrow-dropup" v-else/>
 						<span v-bind:class="{ clolorAction: dataList.shop.from_action }">{{dataList.shop.from_rate}}%</span>
@@ -24,7 +24,7 @@
 <!--					<span v-if="headerData.show_actual_val">{{dataList.shop&&dataList.shop.total_to.toLocaleString()}}人次</span>-->
 
 					<div class="flex-center">
-						<span class="thin">{{$t('环比')}}</span>
+						<span class="thin">{{$t('QOQ')}}</span>
 						<Icon type="md-arrow-dropdown" v-if="dataList.shop.to_action"/>
 						<Icon type="md-arrow-dropup" v-else/>
 						<span v-bind:class="{ clolorAction: dataList.shop.to_action }">{{dataList.shop.to_rate}}%</span>
@@ -35,7 +35,7 @@
 				<img class="arrow" :src="centerImg" alt="">
 				<div class="p-a shop-name flex-column">
 					<b>{{dataList.shop&&dataList.shop.name}}</b>
-					<span class="m-t-10" v-if="headerData.show_actual_val">{{dataList.shop&&dataList.shop.enter.toLocaleString()}}{{$t('人次')}}</span>
+					<span class="m-t-10" v-if="headerData.show_actual_val">{{dataList.shop&&dataList.shop.enter.toLocaleString()}}{{$t('personTime')}}</span>
 				</div>
 			</div>
 			<div class="drainage-map-item">

@@ -2,32 +2,32 @@
 	<modal ref="modal" :width="600"  :title="$t(msgTitle)" @onOk="handleSubmit" @onCancel="closeEdit">
 		<Form class="edit-form" ref="formInline" :model="datas" :rules="ruleInline"
 					:label-width="80">
-			<FormItem prop="name" :label="$t('名称')">
+			<FormItem prop="name" :label="$t('name')">
 				<Input v-model="datas.name"></Input>
 			</FormItem>
-			<FormItem prop="date" :label="$t('活动日期')">
+			<FormItem prop="date" :label="$t('actDate')">
 				<DatePicker  style="width: 100%" :value="datas.date" format="yyyy-MM-dd" :editable="false" type="daterange"
-										:placeholder="$t('holder.选择日期')" @on-change="dateDidChange"></DatePicker>
+										:placeholder="$t('holder.Date')" @on-change="dateDidChange"></DatePicker>
 			</FormItem>
 <!--			<FormItem prop="end" :label="$t('结束日期')">-->
 <!--				<DatePicker v-model="datas.end" format="yyyy-MM-dd" type="date" :editable="false"-->
-<!--										:placeholder="$t('holder.选择日期')" @on-change="endDateDidChange"></DatePicker>-->
+<!--										:placeholder="$t('holder.Date')" @on-change="endDateDidChange"></DatePicker>-->
 <!--			</FormItem>-->
-			<FormItem prop="property_id" :label="$t('活动归属')" class="belongs" :disabled="isUpdate" v-show="showBelong">
+			<FormItem prop="property_id" :label="$t('actBelong')" class="belongs" :disabled="isUpdate" v-show="showBelong">
 				<Select v-model="datas.property_id">
 					<Option v-for="item in propertyList" :value="item.value" :key="item.value">{{item.label}}</Option>
 				</Select>
 			</FormItem>
-			<FormItem :label="$t('目标客流')">
+			<FormItem :label="$t('targetEnter')">
 				<RadioGroup v-model="targetType" @on-change="targetTypeChange">
-					<Radio :label="$t('总目标')"  :disabled="!datas.date.length"></Radio>
-					<Radio :label="$t('每日目标')"  :disabled="!datas.date.length"></Radio>
+					<Radio :label="$t('totalTarget')"  :disabled="!datas.date.length"></Radio>
+					<Radio :label="$t('dailyTarget')"  :disabled="!datas.date.length"></Radio>
 				</RadioGroup>
 			</FormItem>
-			<FormItem prop="target_total" style="margin-top: -20px" :label-width="80" v-show="targetType==='总目标'">
+			<FormItem prop="target_total" style="margin-top: -20px" :label-width="80" v-show="targetType===$t('totalTarget')">
 				<Input v-model="datas.target_total" type="number"></Input>
 			</FormItem>
-			<FormItem prop="target_day" style="margin-top: -30px" :label-width="80" v-show="targetType==='每日目标'">
+			<FormItem prop="target_day" style="margin-top: -30px" :label-width="80" v-show="targetType===$t('dailyTarget')">
 				<div class="flex-wrap box">
 					<FormItem :prop="`target_daily_${i}`" :label-width="0" class="inner-input" v-for="(date,i) in dateList">
 						<Input type="number" v-model="datas[`target_daily_${i}`]">
@@ -36,7 +36,7 @@
 					</FormItem>
 				</div>
 			</FormItem>
-			<FormItem prop="description" :label="$t('描述')">
+			<FormItem prop="description" :label="$t('description')">
 				<Input type="textarea" :maxlength="50" v-model="datas.description"></Input>
 			</FormItem>
 		</Form>
@@ -62,11 +62,11 @@
       ruleInline () {
         let rules = {
           name: [{ required: true, validator: validName, trigger: 'blur' }],
-          date: [{ required: true, message:this.$t('fn.请选择', [this.$t('活动日期')]),trigger: 'change',type:'array' }],
-          property_id: [{ required: this.showBelong, message:this.$t('fn.请选择', [this.$t('活动归属')]), trigger: 'change',type:'number' }],
-          target_total: [{ required: true, trigger: 'blur',message:this.$t("fn.require", [this.$t("目标客流")]),}],
+          date: [{ required: true, message:this.$t('fn.select', [this.$t('actDate')]),trigger: 'change',type:'array' }],
+          property_id: [{ required: this.showBelong, message:this.$t('fn.select', [this.$t('actBelong')]), trigger: 'change',type:'number' }],
+          target_total: [{ required: true, trigger: 'blur',message:this.$t("fn.require", [this.$t("targetEnter")]),}],
         }
-        if (this.targetType === '总目标') {
+        if (this.targetType === this.$t('totalTarget')) {
           return rules
         } else {
           let ruleCopy = _.cloneDeep(rules);
@@ -113,9 +113,9 @@
       return {
         propertyList: [],
         isUpdate: false,
-        msgTitle: '添加活动',
+        msgTitle:this.$t("fn.add",[this.$t('activity')]),
         showBelong: false,
-        targetType: '总目标',
+        targetType: this.$t('totalTarget'),
         value1: 1,
         dateList: [],
         datas: {
@@ -129,7 +129,7 @@
     },
     methods: {
       targetTypeChange(value){
-				if(value === '每日目标'){
+				if(value === this.$t('dailyTarget')){
 				  const startDate = this.datas.date[0]
           const days = moment(this.datas.date[1]).diff(startDate, 'day')
 					this.dateList = [];
@@ -151,13 +151,13 @@
       },
       dateDidChange(date){
         this.datas.date = date
-				if(this.targetType === '每日目标'){
+				if(this.targetType === this.$t('dailyTarget')){
           this.targetTypeChange(this.targetType)
 				}
 
 			},
       closeEdit () {
-        this.targetType = '总目标'
+        this.targetType = this.$t('totalTarget')
 				this.$nextTick(()=>{
           this.$refs.formInline.resetFields()
           this.$refs.modal.closeModal()
@@ -170,10 +170,10 @@
           type_id:21,
           start_date:row.date[0],
           end_date:row.date[1],
-          target_type:this.targetType === '总目标'?1:2,
+          target_type:this.targetType === this.$t('totalTarget')?1:2,
 			property_id:row.property_id?row.property_id:row.property
         }
-        if(this.targetType === '总目标'){
+        if(this.targetType === this.$t('totalTarget')){
           data.target_enter = row.target_total
           data.target_type = 1
 				}else {
@@ -190,7 +190,7 @@
           updateActiveDays(data,data.id).then(res=>{
             this.closeEdit()
             this.$emit('refresh')
-            this.$message.success(this.$t('fn.successTo', [this.$t('编辑活动')]))
+            this.$message.success(this.$t('fn.successTo', [this.$t("fn.edit",[this.$t('activity')])]))
             this.$refs.modal.resetOkButton()
           }).catch(err=>{
             this.$refs.modal.resetOkButton()
@@ -198,7 +198,7 @@
 				}else {
           addActiveDays(data).then(res=>{
             this.closeEdit()
-            this.$message.success(this.$t('fn.successTo', [this.$t('添加活动')]))
+            this.$message.success(this.$t('fn.successTo', [this.$t("fn.add",[this.$t('activity')])]))
             this.$emit('refresh')
             this.$refs.modal.resetOkButton()
           }).catch(err=>{

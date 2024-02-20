@@ -13,7 +13,7 @@
                       :type="['bar']" horizonta></chart-tabs>
         </template>
         <template v-else>
-          <div class= "pieTitle">{{$t('客流占比')}}</div>
+          <div class= "pieTitle">{{$t('enterProportion')}}</div>
           <div class="pieNoData" v-if="isNodata"></div>
           <vue-apex-charts
             ref='pieCharts'
@@ -153,8 +153,8 @@ export default {
       return ['业态排行']
     },
     mallTitle () {
-      if (this.ismallMore) return [`${this.$t(this.orderName)} ${this.$t('排行')} T O P 10`, `${this.$t(this.orderName)} ${this.$t('排行')} `]
-      else return [ `${this.$t(this.orderName)} ${this.$t('排行')}` ]
+      if (this.ismallMore) return [`${this.$t(this.orderName)} ${this.$t('ranking')} T O P 10`, `${this.$t(this.orderName)} ${this.$t('ranking')} `]
+      else return [ `${this.$t(this.orderName)} ${this.$t('ranking')}` ]
     },
     leftFormatedData () {
       return formatTableData(this.leftTableData, ['enter'])
@@ -306,14 +306,14 @@ export default {
         })
       })
       series = [{
-        name: this.$t('客流量'),
+        name: this.$t('fx.enter'),
         data: seriesData,
         key:'enter',
         showInLegend: false
       }]
       this.leftXaxis = [
         {
-          name: '名称',
+          name: 'name',
           key: 'time',
           data: xAxis
         }

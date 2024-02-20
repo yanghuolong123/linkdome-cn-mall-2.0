@@ -1065,8 +1065,8 @@ export default {
     },
     yAxis: {
       type: 'category',
-      data:  [ i18n.t('周日'),  i18n.t('周六'), i18n.t( '周五'),
-        i18n.t('周四'),  i18n.t('周三'),  i18n.t('周二'),  i18n.t('周一')],
+      data:  [ i18n.t('Sun'),  i18n.t('Sat'), i18n.t( 'Fri'),
+        i18n.t('Thr'),  i18n.t('Wed'),  i18n.t('Tue'),  i18n.t('Mon')],
       splitArea: {
         show: true
       }
@@ -1083,7 +1083,7 @@ export default {
       }
     },
     series: [{
-      name: i18n.t('平均热力值'),
+      name: i18n.t('avgHeatValue'),
       type: 'heatmap',
       data: [],
       label: {
@@ -1166,7 +1166,7 @@ export default {
       }
     },
     series: [{
-      name: i18n.t('平均热力值'),
+      name: i18n.t('avgHeatValue'),
       type: 'heatmap',
       data:[],
       label: {

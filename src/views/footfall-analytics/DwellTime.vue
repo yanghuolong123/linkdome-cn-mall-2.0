@@ -13,7 +13,7 @@
         @on-change="compareTypeChange"
         v-model="isHour"
       >
-        <span slot="open">{{ $t("小时") }}</span>
+        <span slot="open">{{ $t("hour") }}</span>
         <span slot="close">{{ $t("fx.day") }}</span>
       </i-switch>
     </chart-box>
@@ -60,20 +60,20 @@ export default {
         {
           icon: 'zhexiantu',
           value: 'line',
-          name: '停留时间分布'
+          name: 'residenceTimeDistribution'
         },
         {
           icon: '62',
           value: 'bar',
-          name: '停留时间分布'
+          name: 'residenceTimeDistribution'
         }, {
           icon: 'biaoge-copy',
           value: 'table',
-          name: '停留时间分布'
+          name: 'residenceTimeDistribution'
         }, {
           icon: 'daoru',
           value: 'download',
-          name: '停留时间分布'
+          name: 'residenceTimeDistribution'
         }
       ]
       if((this.oParams && !this.oParams.isSingleDay())|| this.isHour){
@@ -87,7 +87,7 @@ export default {
   },
   data() {
     return {
-      tableTitle: "详细数据信息",
+      tableTitle: "detailData",
       isTableDate: false,
       iconIndex: 1,
       iconColor: "rgb(34, 128, 215)",
@@ -108,9 +108,9 @@ export default {
           value: 3,
         },
       ],
-      chartTableName: ["实体名称", "停留时间"],
+      chartTableName: ["entityName", "停留时间"],
       chartTableListL: [],
-      tableName: ["实体名称", "实体类别", "平均停留时间"],
+      tableName: ["entityName", "entityCategory", "avgDwellTime"],
       tableList: [],
 
 
@@ -217,7 +217,7 @@ export default {
               if(!xAxis.length){
                 const days = Math.max(res[0].time1.length,res[0].time2.length)
                 for(let i=1;i<=days;i++){
-                  xAxis.push( this.$t("fn.第_天", [i]))
+                  xAxis.push( this.$t("fn.dayTh", [i]))
                 }
               }
 
@@ -276,9 +276,9 @@ export default {
           tooltip:{
             trigger: 'axis',
             formatter:(params)=>{
-              let html =`${this.$t('平均停留时间')}<br>`
+              let html =`${this.$t('avgDwellTime')}<br>`
               if(this.oParams.isSingleDay()){
-                html = `${this.$t('平均停留时间')}<br>`
+                html = `${this.$t('avgDwellTime')}<br>`
               }else {
                 html =  params[0].axisValue+'<br>'
               }
@@ -425,10 +425,13 @@ export default {
         .then((res) => {
           // 表格数据
           that.tableList = [];
+          console.log(res.data.data.zones)
           res.data.data.zones.map((d) => {
             var obj = {};
             obj.name = d.name;
-            obj.type = this.$t(d.type == null ? "出入口" : d.type);
+            // todo
+            //接口数据 类型为中文  d.type
+            obj.type = this.$t(d.type == null ? "gate" : d.type);
             if (!this.oParams.isDateCompare()) obj.time = "";
             else {
               let date;
@@ -472,9 +475,9 @@ export default {
     },
     tableType(value) {
       if (value === "") {
-        this.tableName = ["实体名称", "实体类别", "平均停留时间"];
+        this.tableName = ["entityName", "entityCategory", "avgDwellTime"];
       } else {
-        this.tableName = ["实体名称", "实体类别", "时间点", "平均停留时间"];
+        this.tableName = ["entityName", "entityCategory", "timing", "avgDwellTime"];
       }
     },
 

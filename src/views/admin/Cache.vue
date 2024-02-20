@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<Button type="primary" @click="updateCache">{{$t('更新后台数据缓存')}}</Button>
-		<Button v-if="headerData.show_add_count" type="primary" class="m-l-20" @click="dataRecord">{{$t('补录实体配置')}}</Button>
+		<Button type="primary" @click="updateCache">{{$t('updateBackCache')}}</Button>
+		<Button v-if="headerData.show_add_count" type="primary" class="m-l-20" @click="dataRecord">{{$t('suplyEntityCofig')}}</Button>
 	</div>
 </template>
 <script>
@@ -22,7 +22,7 @@
       updateCache(){
         updateCache().then(res=>{
 					if(res.data.code === 200){
-					  this.$message.success(this.$t('fn.successTo',[this.$t('更新')]))
+					  this.$message.success(this.$t('fn.successTo',[this.$t('update')]))
 					}else {
 					  this.$message.error(res.data.message)
 					}

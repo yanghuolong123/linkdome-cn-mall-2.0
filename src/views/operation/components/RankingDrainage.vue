@@ -9,7 +9,7 @@ footFall:客流
   <div class="mt-6 p-6 bg-white box-card">
     <div class="ranking-selector-box flex items-center">
       <span class="mr-3">{{$t(selectTitle)}}</span>
-      <vs-select v-model="bussinessType" autocomplete :placeholder="$t('请选择')" :noDataText="$t('暂无数据')">
+      <vs-select v-model="bussinessType" autocomplete :placeholder="$t('holder.Select')" :noDataText="$t('holder.NoData')">
         <vs-select-item
           v-for="item in withAllOptions"
           :value="item.value"
@@ -27,8 +27,8 @@ footFall:客流
           :type="chartTypes"
           :extraOptions="bizExtraOptions"
           :istotal='istotal'
-          title="业态排行"
-          :tooltipUnit="$t('人次')"
+          :title="$t('bussRanking')"
+          :tooltipUnit="$t('personTime')"
           @getShopTableCoumn="leftTableCoumn"
           @getShopTableData="letfTableData"
           key="bizTop"
@@ -56,10 +56,10 @@ footFall:客流
           :series="topShopData.series"
           :type="chartTypes"
           :extraOptions="extraOptions"
-          title="商铺排行"
+          :title="$t('storeRanking')"
           :isHome='true'
           :istotal='istotal'
-          :tooltipUnit="$t('人次')"
+          :tooltipUnit="$t('personTime')"
           @getShopTableCoumn="rightTableCoumn"
           @getShopTableData="rightTableData"
           key="shopTop"
@@ -128,7 +128,7 @@ export default {
     },
     selectTitle: {
       type: String,
-      default: '排行分析'
+      default: 'rankingAnaly'
     },
     defaultBizIndicator: {
       type: String,
@@ -265,7 +265,7 @@ export default {
       return Object.keys(this.bussinessList).map(e => ({ text: this.bussinessList[e], value: Number(e) }))
     },
     withAllOptions () {
-      const allType = { text: '所有业态', value: 'all' }
+      const allType = { text: 'allBussType', value: 'all' }
       return [allType, ...this.bussinessTypes]
     },
     indicators () {
@@ -281,7 +281,7 @@ export default {
       if (this.bzid.length == 0) {
         return {
           xAxis: {
-            name: '名称',
+            name: 'name',
             key: 'bussiness',
             data: []
           },
@@ -303,7 +303,7 @@ export default {
       let that = this
       return {
         xAxis: {
-          name: '名称',
+          name: 'name',
           key: 'bussiness',
           data: Object.values(Object.values(tml)[0]).map(e => this.$t(e.name))
         },
@@ -327,7 +327,7 @@ export default {
       if (this.bzid.length == 0) {
         return {
           xAxis: {
-            name: '名称',
+            name: 'name',
             key: 'shop',
             data: []
           },
@@ -354,7 +354,7 @@ export default {
       })
       return {
         xAxis: {
-          name: '名称',
+          name: 'name',
           key: 'shop',
           data: Object.values(sortedObj)[0].map(e => {
             if (_.isArray(e.name)) return e.name[0]
@@ -457,7 +457,7 @@ export default {
     },
     leftTableCoumn(value){
      value.map(list=>{
-        if(list.title!==this.$t('名称')){
+        if(list.title!==this.$t('name')){
           let newTime =  list.title.split(',')
           if(newTime[0]===newTime[1]){
             list.title = newTime[0]
@@ -473,7 +473,7 @@ export default {
     },
     rightTableCoumn(value){
       value.map(list=>{
-        if(list.title!==this.$t('名称')){
+        if(list.title!==this.$t('name')){
           let newTime =  list.title.split(',')
           if(newTime[0]===newTime[1]){
             list.title = newTime[0]
@@ -500,7 +500,7 @@ export default {
         //   titleName = '销售分析'
         // }
         // this.exportEx == 1 ? name = titleName+'业态排行' : name =titleName+ '商铺排行'
-        downloadEx(exportEx,this.$t('实体引流分析业态排行'),[this.tableList.coumnOne,this.tableList.dataOne])
+        downloadEx(exportEx,this.$t('entityDrainageRanking'),[this.tableList.coumnOne,this.tableList.dataOne])
       }
     },
     exportShoptop (type) {
@@ -516,7 +516,7 @@ export default {
         //   titleName = '销售分析'
         // }
         // this.exportEx == 1 ? name = titleName+'业态排行' : name =titleName+ '商铺排行'
-        downloadEx(exportEx,this.$t('实体引流分析商铺排行'),[this.tableList.coumnTwo,this.tableList.dataTwo])
+        downloadEx(exportEx,this.$t('entityDraAnaly'),[this.tableList.coumnTwo,this.tableList.dataTwo])
       }
     },
     // 请求业态数据传

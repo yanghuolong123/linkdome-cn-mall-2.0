@@ -130,7 +130,7 @@ export default {
   computed: {
     totalData() {
       // 合计数据
-      let obj = { time: "合计" };
+      let obj = { time: this.$t("total") };
       if (["enter", "SaleAmount"].includes(this.curretIndicator)) {
         this.chartData[this.curretIndicator] &&
           this.chartData[this.curretIndicator].series.forEach((o) => {
@@ -180,7 +180,7 @@ export default {
       let len = this.currentData.length;
       if (len == 0) {
         return {
-          name: "时间",
+          name: "time",
           data: [],
           key: "time",
         };
@@ -190,7 +190,7 @@ export default {
           let time = this.time1.split(",");
           let dataValues = Object.values(data.data);
           let obj = {
-            name: "时间",
+            name: "time",
             data: [],
             key: "time",
           };
@@ -222,7 +222,7 @@ export default {
         let data = this.currentData[0].data;
         if (data.code == 200) {
           let obj = {
-            name: "时间",
+            name: "time",
             data: [],
             key: "time",
           };
@@ -416,15 +416,15 @@ export default {
       // 业态排行tooltip显示的单位
       switch (type) {
         case "enter":
-          return this.$t("人次");
+          return this.$t('personTime');
         case "SquaerMetre":
-          return this.$t("元/m²");
+          return this.$t("effUnit");
         case "SaleAmount":
-          return this.$t("元");
+          return this.$t("yuanUnit");
         case "CloseRate":
           return "%";
         case "UnitPrice":
-          return this.$t("元");
+          return this.$t("yuanUnit");
       }
     },
     getTrendData: _.debounce(function(params) {
@@ -566,7 +566,7 @@ export default {
       //     list.time = time[0] + '  ' + list.time
       //   })
       // }
-      downloadEx(exportEx, this.$t("集团趋势分析"), newTableData);
+      downloadEx(exportEx, this.$t("companyTrendAnaly"), newTableData);
     },
     enterTableChage(value) {
       this.tableListData = value.data;

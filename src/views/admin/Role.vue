@@ -4,12 +4,12 @@
       <Menu :accordion="accordion" @on-open-change="changeOpenChange" style="z-index:1;">
         <Submenu name="1" v-if="showSuperAdmin" v-bind:class="{'ivu-menu-opened':theRoleId==1}">
           <template slot="title">
-            <p>{{ $t('超级管理员') }}</p>
+            <p>{{ $t('superAdmin') }}</p>
           </template>
         </Submenu>
         <Submenu name="2" v-if="showCompanyAdmin||showSuperAdmin" v-bind:class="{'ivu-menu-opened':theRoleId==2}">
           <template slot="title">
-            {{ $t('集团管理员') }}
+            {{ $t('groupAdmin') }}
           </template>
         </Submenu>
         <!-- <Submenu name="3" v-if="showShoppingAdmin" v-bind:class="{'ivu-menu-opened':theRoleId==3}">
@@ -25,20 +25,20 @@
           </template>
         </Submenu>
       </Menu>
-      <Button type="primary" ghost v-if="showSuperAdmin" @click="openAddRole">{{ $t('新建角色') }}+</Button>
+      <Button type="primary" ghost v-if="showSuperAdmin" @click="openAddRole">{{ $t('fn.add',[$t('role')]) }}+</Button>
     </div>
     <div class="right">
       <Tabs :value="tabValue" :animated="false">
-        <TabPane :label="$t('菜单权限')" name="menu">
+        <TabPane :label="$t('menuAuth')" name="menu">
           <CheckboxGroups v-for ="item in menuListDatas" :disabled="disabled" :checkData="item" @changeCheckData = "changeCheckData"></CheckboxGroups>
         </TabPane>
-        <TabPane :label="$t('管理权限')" name="manage">
+        <TabPane :label="$t('manageAuth')" name="manage">
           <CheckboxGroups v-for ="item in manageListDatas" :disabled="disabled" :checkData="item"></CheckboxGroups>
         </TabPane>
       </Tabs>
       <div class="controls" v-if="theRoleId>=3">
-        <Button type="primary" @click="savePageConfig" v-if="showSuperAdmin">{{ $t('保存') }}</Button>
-        <Button @click="defaltSelect" v-if="showSuperAdmin">{{ $t('默认选择') }}</Button>
+        <Button type="primary" @click="savePageConfig" v-if="showSuperAdmin">{{ $t('save') }}</Button>
+        <Button @click="defaltSelect" v-if="showSuperAdmin">{{ $t('defaultSelect') }}</Button>
       </div>
     </div>
     <addRole  ref="addRole"
@@ -84,7 +84,7 @@ export default {
   },
   created () {
     var that = this
-    
+
     getMenuList().then(res => {
       if (res.data.code == 200) {
         let menuListData = res.data.data.main
@@ -152,9 +152,9 @@ export default {
           if (role_id == data.id) {
             that.$store.commit('setAccess', data.pages_privilege)
           }
-          this.$message.success(this.$t('fn.successTo',[this.$t('编辑')]))
+          this.$message.success(this.$t('fn.successTo',[this.$t('edit')]))
         }else {
-          this.$message.error(this.$t('fn.failedTo',[this.$t('编辑')]))
+          this.$message.error(this.$t('fn.failedTo',[this.$t('edit')]))
         }
       })
     },
@@ -267,7 +267,7 @@ export default {
       var that = this
       this.showAddRole = true
       this.$nextTick(() => {
-        that.$refs.addRole.editRoleTitle = '添加角色'
+        that.$refs.addRole.editRoleTitle = that.$t('fn.add',[that.t('role')])
         that.$refs.addRole.isModify = false
       })
     },
@@ -276,7 +276,7 @@ export default {
       let data = _.find(this.roleList, ['id', id])
       this.showAddRole = true
       this.$nextTick(() => {
-        that.$refs.addRole.editRoleTitle = '编辑角色'
+        that.$refs.addRole.editRoleTitle = that.$t('fn.edit',[that.$t('role')])
         that.$refs.addRole.id = id
         that.$refs.addRole.isModify = true
         that.$refs.addRole.formData.name = data.name
@@ -287,7 +287,7 @@ export default {
     delRoleClick (id,i) {
       this.theRoleId = id
       this.$alert({
-        content:this.$t('确认删除选中的角色'),
+        content:this.$t('delRoleConfirm'),
         cancel(){},
         confirm:()=>{
           this.delRole(id,i)
@@ -297,12 +297,12 @@ export default {
     delRole(id,i){
       delRole(id).then(res => {
         if (res.data.code === 200) {
-          this.$message.success(this.$t('删除成功'))
+          this.$message.success(this.$t('fn.successTo',[this.$t('del')]))
           this.roleList.splice(i,1);
           this.changeOpenChange([this.$store.state.user.role_id])
-         
+
         } else {
-          this.$message.error(this.$t('删除失败'))
+          this.$message.error(this.$t('fn.failedTo',[this.$t('del')]))
         }
       })
     },

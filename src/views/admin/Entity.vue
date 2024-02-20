@@ -15,7 +15,7 @@
                     <div class="icon-area flex-center">
                         <span
                                 v-if="isSuperAdmin"
-                                :title="$t('添加')"
+                                :title="$t('add')"
                                 @click="addEntity"
                         >
                           <Icon type="md-add"/>
@@ -89,7 +89,7 @@
                               :visible="heatmapVisibile"></heatmap-config-modal>
         <imgconfig-modal
                 ref="imgcofig"
-                :title="$t('图片配置')"
+                :title="$t('imgConfig')"
                 :footerHide="true"
                 :width="1350"
         >
@@ -138,11 +138,11 @@
                                 v-show="addStatus"
                         />
                     </div>
-                    <p>{{ $t('图片建议尺寸') }}:1000×800</p>
+                    <p>{{ $t('sugPicSize') }}:1000×800</p>
                 </div>
                 <div class="part">
-                    <span>{{ $t('操作') }}</span>
-                    <span v-if="currentEntityType === 'mall'">{{ $t('首页实体展示图配置') }}</span>
+                    <span>{{ $t('operate') }}</span>
+                    <span v-if="currentEntityType === 'mall'">{{ $t('homepageImgConfig') }}</span>
                     <div class="flex-center">
                         <Select
                                 v-if="currentEntityType === 'mall'"
@@ -163,13 +163,13 @@
                                 :disabled="property === '' && currentEntityType === 'mall'"
                                 v-if="currentWay.type_name && currentWay.type_name !== 'mall'"
                                 :style="{ marginLeft: currentEntityType === 'mall' ? '20px' : '' }"
-                        >{{ $t('上传') }}
+                        >{{ $t('upload') }}
                         </uploadImg>
                     </div>
-                    <span v-if="currentEntityType === 'mall'">{{ $t('首页展示图出入口坐标配置') }}</span>
+                    <span v-if="currentEntityType === 'mall'">{{ $t('homepageGatePointConfig') }}</span>
                     <span v-else
                     >{{ floorInfo && floorInfo.name
-            }}{{ $t('下属出入口店铺坐标配置') }}</span
+            }}{{ $t('subGateStorePointConfig') }}</span
                     >
                     <div class="flex-center">
                         <Select
@@ -189,25 +189,25 @@
                                 :loading="uploadLoading"
                                 @click="setClick"
                         >
-                            {{ hasSymbol ? $t('删除坐标') : $t('放置坐标') }}
+                            {{ hasSymbol ? $t('delCoord') : $t('setCoord') }}
                         </Button>
                         <Button
                                 v-if="currentEntityType === 'store'"
                                 :disabled="!way"
                                 style="margin-left: 20px"
                                 @click="previewClick"
-                        >{{ $t('预览') }}
+                        >{{ $t('Preview') }}
                         </Button>
                     </div>
                     <div class="part" v-if="['gate', 'store'].includes(currentWay.type_name)">
-                        <span>{{ $t('是否为热力图') }}</span>
+                        <span>{{ $t('isHeatmap') }}</span>
                         <i-switch
                                 :disabled="!way"
                                 :true-value="1"
                                 :false-value="0"
                                 v-model="configData.is_heatmap"
                         ></i-switch>
-                        <span>{{ $t('是否为路径动线点') }}</span>
+                        <span>{{ $t('isPathTrendPot') }}</span>
                         <i-switch
                                 :disabled="!way"
                                 :true-value="1"
@@ -221,7 +221,7 @@
                                 type="primary"
                                 :disabled="!Object.keys(currentWay).length"
                                 @click="handleReset"
-                        >{{ $t('重置') }}
+                        >{{ $t('reset') }}
                         </Button>
                         <Button
                                 :disabled="isConfigDataSame"
@@ -229,7 +229,7 @@
                                 @click="handleSave"
                                 :loading="saveLoading"
                         >
-                            {{ $t('保存') }}
+                            {{ $t('save') }}
                         </Button>
                     </div>
                 </div>
@@ -237,7 +237,7 @@
         </imgconfig-modal>
         <imgconfig-modal
                 ref="preview"
-                :title="$t('预览')"
+                :title="$t('Preview')"
                 :footerHide="true"
                 :width="650"
         >
@@ -334,7 +334,6 @@
         theStore: '',
         delType: '',
         addType: 0,
-        editTitle: '添加购物中心',
         entity: '',
         floor_entity: '',
         entitydata: '',
@@ -510,13 +509,13 @@
       deleteEntity (data) {
         const that = this;
         this.$alert({
-          content: that.$t('确认删除此实体信息'),
+          content: that.$t('entityDelConfirm'),
           cancel () {
           },
           confirm: () => {
             delEntity(data.id).then((res) => {
               if (res.data.code === 200) {
-                that.$message.success(that.$t('删除成功'))
+                that.$message.error(that.$t('fn.successTo',[that.$t('del')]))
                 that.defaultValue = [that.defaultValue[0]]
                 that.getData()
               } else {
@@ -693,7 +692,7 @@
         data = _.merge(data, configData)
         configEntity(data)
           .then(async (res) => {
-            this.$message.success(this.$t('fn.successTo', [this.$t('保存')]))
+            this.$message.success(this.$t('fn.successTo', [this.$t('save')]))
             if (this.currentWay.type_name === 'mall') {
               const orgData = await getGroupOrganization()
               this.$store.commit('saveOrganizationData', orgData.data.data)
@@ -1194,15 +1193,15 @@
         this.$refs.shopmall.showModal()
 
       },
-      delStore (value, alertText, obj) {
+      delStore ( obj) {
         this.$alert({
-          content: this.$t('确认删除此商铺？'),
+          content: this.$t('delStoreConfirm'),
           cancel () {
           },
           confirm: () => {
             delEntity(obj.id).then((res) => {
               if (res.data.code === 200) {
-                this.$message.success(this.$t('删除成功'))
+                this.$message.success(this.$t('fn.successTo',[this.$t('del')]))
                 this.defaultValue = findParentNodes(obj.id, this.treeData)
                 this.getData()
               } else {

@@ -25,13 +25,13 @@ export default {
   homeName: 'home',
   dictionary:[
     {
-      name:'入客流',
+      name:'Incoming',
       value:'enter'
     },{
-      name:'出客流',
+      name:'Outbound',
       value:'exit'
     },{
-      name:'集客量',
+      name:'occupancy',
       value:'occupancy'
     },{
       name:'楼层',
@@ -51,44 +51,63 @@ export default {
     {
       icon: 'zhexiantu',
       value:'line',
-      name: '客流量趋势'
+      name: 'enterTrend'
     }, {
       icon: '62',
       value:'bar',
-      name: '客流量趋势'
+      name: 'enterTrend'
     }, {
       icon: 'biaoge-copy',
       value:'table',
-      name: '详细数据'
+      name: 'detailDt'
     }, {
       icon: 'daoru',
       value:'download',
-      name: '实体客流分析客流量趋势'
+      name: 'entityFlowTrend'
+    }
+  ],
+  toolListOccu: [
+    {
+      icon: 'zhexiantu',
+      value:'line',
+      name: 'occupancyTrend'
+    }, {
+      icon: '62',
+      value:'bar',
+      name: 'occupancyTrend'
+    }, {
+      icon: 'biaoge-copy',
+      value:'table',
+      name: 'detailDt'
+    }, {
+      icon: 'daoru',
+      value:'download',
+      name: 'occupancyFlowTrend'
     }
   ],
   noPropertyPages:['Dashboard','Cache'],//不需要选择购物中心的路由名称
   entityType:[
     {
       value:'area',
-      name:i18n.t('区域')
+      name:'area'
     },{
       value:'floor',
-      name:i18n.t('楼层')
+      name:'floor'
     },{
       value:'mall',
-      name:i18n.t('购物中心')
+      name:'shopmall'
     },{
       value:'gate',
-      name:'出入口'
+      name:'gate'
     },{
       value:'other',
-      name:i18n.t('其他')
+      name:'Other'
     },{
       value:'store',
-      name:i18n.t('商铺')
+      name:'store'
     },{
       value:'company',
-      name:i18n.t('集团')
+      name:'company'
     },
   ]
 }

@@ -60,7 +60,7 @@
 
   const validSelect = (rule, value, callback) => {
     if (value === '' || (rule.field == 'node' && !value[0])) {
-      callback(new Error(i18n.t('fn.请选择', [i18n.t(rule.tips)])))
+      callback(new Error(i18n.t('fn.select', [i18n.t(rule.tips)])))
     } else {
       callback()
     }
@@ -220,7 +220,7 @@
           const parent_id = levelNode[levelNode.length - 1].parent_id
           levelNode.unshift({
             id: 'all' + parent_id,
-            name: i18n.t('全部')
+            name: i18n.t('all')
           })
         }
       },
@@ -256,7 +256,7 @@
               this.$refs.modal.resetOkButton()
             }
           }).catch(err=>{
-            this.$message.error('修改失败')
+            this.$message.error(this.$t('fn.failedTo',[this.$t('edit')]))
             this.$refs.modal.resetOkButton()
           })
         } else {

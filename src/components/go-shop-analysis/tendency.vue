@@ -8,7 +8,7 @@
           v-model="crossDate"
           placement="bottom-end"
           :options="disabledDate"
-          :placeholder="$t('holder.选择日期')"
+          :placeholder="$t('holder.Date')"
           class="w-select"
         ></DatePicker>
         <vs-select
@@ -27,7 +27,7 @@
           v-model="crossDateTwo"
           placement="bottom-end"
           :options="disabledDate"
-          :placeholder="$t('holder.选择日期')"
+          :placeholder="$t('holder.Date')"
           class="w-select m-l-20"
           v-if="selectType == 1"
         ></DatePicker>
@@ -40,13 +40,13 @@
           :props="{ multiple: true,expandTrigger:'hover' }"
           :options="activitiesType">
         </el-cascader>
-        <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('查询') }}</Button>
-        <Button size="large" class="m-l-20" @click="resetData">{{ $t('重置') }}</Button>
+        <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('query') }}</Button>
+        <Button size="large" class="m-l-20" @click="resetData">{{ $t('reset') }}</Button>
       </div>
     </div>
     <chart-box ref="trendChart" v-show="!nodata" chartId="trendChart" class="common-card chart m-t-20" @toolClick="toolClick"
                :chart="trendChart" :toolList="toolList"></chart-box>
-    <div v-show="nodata" class="chart no-data common-card m-t-20">{{$t('暂无数据')}}</div>
+    <div v-show="nodata" class="chart no-data common-card m-t-20">{{$t('holder.NoData')}}</div>
   </div>
 </template>
 <script>
@@ -88,19 +88,19 @@ export default {
         {
           icon: '62',
           value: 'bar',
-          name: '进店率趋势分析'
+          name: 'entryRateTrendAnaly'
         },{
           icon: 'zhexiantu',
           value: 'line',
-          name: '进店率趋势分析'
+          name: 'entryRateTrendAnaly'
         }, {
           icon: 'biaoge-copy',
           value: 'table',
-          name: '进店率趋势分析'
+          name: 'entryRateTrendAnaly'
         }, {
           icon: 'daoru',
           value: 'download',
-          name: '进店率趋势分析'
+          name: 'entryRateTrendAnaly'
         }
       ]
     }
@@ -112,11 +112,11 @@ export default {
     typeListCom() {
       this.typeList = [
         {
-          text: this.$t('无对比'),
+          text: this.$t('noComp'),
           value: 0
         },
         {
-          text: this.$t('时间对比'),
+          text: this.$t('timeComp'),
           value: 1
         }
       ]
@@ -124,14 +124,14 @@ export default {
     },
     iconTitleCom() {
       this.iconTitle = {
-        'zhexiantu': this.$t('折线图'),
-        '62': this.$t('柱状图'),
-        'biaoge-copy': this.$t('详细数据'),
-        'xiangxia': this.$t('查看全部实体排行'),
-        'ditu': this.$t('出入口客流'),
-        'fenxi': this.$t('饼状图'),
-        'chakan': this.$t('查看所有'),
-        'daoru': this.$t('下载')
+        'zhexiantu': this.$t('lineChart'),
+        '62': this.$t('barChart'),
+        'biaoge-copy': this.$t('detailDt'),
+        'xiangxia': this.$t('viewAllEntityRanking'),
+        'ditu': this.$t('gateEnter'),
+        'fenxi': this.$t('pieChart'),
+        'chakan': this.$t('viewAll'),
+        'daoru': this.$t('download')
       }
       return this.iconTitle
     }
@@ -245,7 +245,7 @@ export default {
       // 提示
       if (that.activities.length === 0) {
         this.$alert({
-          content:this.$t('fn.请选择',[this.$t('商铺')])
+          content:this.$t('fn.select',[this.$t('store')])
         })
         return false
       }
@@ -330,7 +330,7 @@ export default {
         obj = obj_compare
       }
       obj.forEach((o,i)=>{
-        const day = range === 'Month' ?this.$t('fn.第_月',[ i+1 ]):this.$t('fn.第_天',[ i+1 ]);
+        const day = range === 'Month' ?this.$t('fn.monthTh',[ i+1 ]):this.$t('fn.dayTh',[ i+1 ]);
         options.xAxis.push(day)
       })
 

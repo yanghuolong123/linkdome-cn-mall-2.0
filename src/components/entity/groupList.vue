@@ -33,7 +33,7 @@ export default {
       zonelist: [],
       tem: {},
       dataIndex: 0,
-      titleName: '基本信息'
+      titleName: 'basicInfo'
     }
   },
   props: {
@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     tableName(){
-      return [ '名称','实体类型', '描述', '操作']
+      return [ 'name','entityType', 'description', 'operate']
     },
     tableList () {
       var arr = []
@@ -71,12 +71,7 @@ export default {
       this.$emit('editStore', value.data)
     },
     delStore (value) {
-      let alertText = {}
-      alertText.title = '删除商铺'
-      alertText.text = '确认删除此商铺信息？'
-      alertText.bg = '#00A0E9'
-      alertText.confirm = true
-      this.$emit('delStore', true, alertText, value.data)
+      this.$emit('delStore', value.data)
     }
   }
 }

@@ -10,22 +10,22 @@
           <Icon type="md-close" />
         </div>
       <div class="edit-text">
-        <Form :model="formData" label-position="right" :label-width="110" ref="formData" :rules="ruleInline">
-          <FormItem :label="$t('角色名称')" prop="name">
-            <Input type ="text" v-model="formData.name" :placeholder="$t('holder.请输入角色')"></Input>
+        <Form :model="formData" label-position="right" :label-width="120" ref="formData" :rules="ruleInline">
+          <FormItem :label="$t('fn.name',[$t('role')])" prop="name">
+            <Input type ="text" v-model="formData.name" ></Input>
           </FormItem>
-          <FormItem :label="$t('角色归属于')" prop="property" >
-            <Select v-model="formData.property" @on-change="getItemValue" :placeholder="$t('holder.请选择')">
+          <FormItem :label="$t('roleBelong')" prop="property" >
+            <Select v-model="formData.property" @on-change="getItemValue" :placeholder="$t('holder.Select')">
               <Option v-for="item in propertyLists" :value="item.value" :key="item.value">{{item.label}}</Option>
             </Select>
           </FormItem>
-          <FormItem :label="$t('角色描述')" prop="description" :label-width="110">
+          <FormItem :label="$t('roleDesc')" prop="description" :label-width="110">
             <Input  type="textarea" v-model="formData.description" :rows="4"></Input>
           </FormItem>
         </Form>
         <div class="control">
-          <Button  @click="handleSubmit('formData')">{{$t('提交')}}</Button>
-          <Button class="buttonCel" @click.native="closeEdit">{{$t('取消')}}</Button>
+          <Button  @click="handleSubmit('formData')">{{$t('submit')}}</Button>
+          <Button class="buttonCel" @click.native="closeEdit">{{$t('cancel')}}</Button>
         </div>
       </div>
     </div>
@@ -51,7 +51,7 @@ export default {
   },
   data () {
     return {
-      editRoleTitle: '添加角色',
+      editRoleTitle: this.$t('fn.add',[this.$t('role')]),
       propertyList: [],
       height: '360px',
       marginTop: '-180px',
@@ -66,7 +66,7 @@ export default {
       ruleInline: {
         name: [{
           required: true,
-          message: this.$t('请输入长度为2-8的角色名称'),
+          message: this.$t('roleNameLengthLimit'),
           trigger: 'blur',
           max: 8,
           min: 2
@@ -159,7 +159,7 @@ export default {
         data.pages_privilege = ''
         addRoles(data).then( (res)=> {
           if (res.data.code == 200) {
-            this.$message.success(this.$t('fn.successTo',[this.$t('添加')]))
+            this.$message.success(this.$t('fn.successTo',[this.$t('add')]))
             this.$emit('success')
             this.closeEdit()
           }
@@ -185,7 +185,7 @@ export default {
         data.id = that.id
         updateRoles(data).then((res)=> {
           if (res.data.code == 200) {
-            this.$message.success(this.$t('fn.successTo',[this.$t('编辑')]))
+            this.$message.success(this.$t('fn.successTo',[this.$t('edit')]))
             this.closeEdit()
           }
         })

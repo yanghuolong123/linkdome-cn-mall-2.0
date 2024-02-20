@@ -84,15 +84,15 @@
             {
               icon: '62',
               value: 'bar',
-              name: '到店次数'
+              name: 'arrivalTimes'
             }, {
               icon: 'biaoge-copy',
               value: 'table',
-              name: '详细数据'
+              name: 'detailDt'
             }, {
               icon: 'daoru',
               value: 'download',
-              name: '到店次数'
+              name: 'arrivalTimes'
             }
           ]
         }
@@ -100,15 +100,15 @@
           {
             icon: 'fenxi',
             value: 'pie',
-            name: '到店次数'
+            name: 'arrivalTimes'
           }, {
             icon: 'biaoge-copy',
             value: 'table',
-            name: '详细数据'
+            name: 'detailDt'
           }, {
             icon: 'daoru',
             value: 'download',
-            name: '到店次数'
+            name: 'arrivalTimes'
           }
         ]
       },
@@ -120,19 +120,19 @@
             {
               icon: 'zhexiantu',
               value: 'line',
-              name: '有效客流趋势'
+              name: 'effEnterTrend'
             }, {
               icon: '62',
               value: 'bar',
-              name: '有效客流趋势'
+              name: 'effEnterTrend'
             }, {
               icon: 'biaoge-copy',
               value: 'table',
-              name: '详细数据'
+              name: 'detailDt'
             }, {
               icon: 'daoru',
               value: 'download',
-              name: '有效客流趋势'
+              name: 'effEnterTrend'
             }
           ]
 				if(this.oParams && this.oParams.params.entitys.length>1){
@@ -174,39 +174,39 @@
           {
             icon: 'zhexiantu',
             value: 'line',
-            name: '平均到访频次趋势'
+            name: 'avgVisitTrend'
           }, {
             icon: '62',
             value: 'bar',
-            name: '平均到访频次趋势'
+            name: 'avgVisitTrend'
           }, {
             icon: 'biaoge-copy',
             value: 'table',
-            name: '详细数据'
+            name: 'detailDt'
           }, {
             icon: 'daoru',
             value: 'download',
-            name: '平均到访频次趋势'
+            name: 'avgVisitTrend'
           }
         ],
         statisticList: [
           {
             icon: 'youxiaokeliu1',
-            title: '有效客流',
+            title: 'effEnter',
             bg: '#EAE8FD',
             color: '#776AED',
             total1: '',
             total2: '',
           }, {
             icon: 'zhongfu',
-            title: '重复客流',
+            title: 'repEnter',
             bg: '#D7F7F5',
             color: '#2BD9CF',
             total1: '',
             total2: '',
           }, {
             icon: 'daofang',
-            title: '平均到访次数',
+            title: 'avgVisit',
             bg: '#D8F1FB',
             color: '#03A1E9',
             total1: '',
@@ -223,7 +223,7 @@
             width:100
           },{
             key:'repeat',
-            title:'重复客流',
+            title:'repEnter',
             width:100
           },
 				],
@@ -357,8 +357,8 @@
       trendByMultiEntity(data){
         let options = {
           legend: {
-            data: [this.$t('全部客流'), this.$t('有效客流')],
-            unit:[this.$t('人'),this.$t('人')]
+            data: [this.$t('allEnter'), this.$t('effEnter')],
+            unit:[this.$t('person'),this.$t('person')]
           },
           xAxis: data.map(o=>{
             return o.name
@@ -392,8 +392,8 @@
       trendByNone(data){
         let options = {
           legend: {
-            data: [this.$t('全部客流'), this.$t('有效客流')],
-            unit:[this.$t('人'),this.$t('人')]
+            data: [this.$t('allEnter'), this.$t('effEnter')],
+            unit:[this.$t('person'),this.$t('person')]
           },
           xAxis: [],
           series: [],
@@ -505,7 +505,7 @@
           if (Number(key) < 5) {
             option.legend.push(this.$t('fn.times', [this.$t(key)]))
           } else {
-            option.legend.push(this.$t(key + '次及以上'))
+            option.legend.push(this.$t('over5times'))
           }
         }
 				data = [data[0].time1.list,data[0].time2.list]
@@ -548,7 +548,7 @@
             if(Number(key) < 5){
               name = this.$t('fn.times', [this.$t(key)])
             } else {
-              name = this.$t(key + '次及以上')
+              name = this.$t('over5times')
             }
             let series = serierData.find(o=>{
               return o.name === name
@@ -586,7 +586,7 @@
         }
         pieConfigCopy.series[0].radius = ['0%', '70%']
         pieConfigCopy.series[0].center = ['30%', '50%']
-        pieConfigCopy.series[0].name = this.$t('到店次数')
+        pieConfigCopy.series[0].name = this.$t('arrivalTimes')
         pieConfigCopy.series[0].data = serierData
         this.arrivalOption.pieOptions = pieConfigCopy
         this.arrivalToolClick(this.$refs.arrival.currentChart)
@@ -643,7 +643,7 @@
               }
             }
             for (let i = 1; i < diff; i++) {
-              options.xAxis.push(params.range === 'Month' ? this.$t('fn.第_月', [i]) : this.$t('fn.第_天', [i]))
+              options.xAxis.push(params.range === 'Month' ? this.$t('fn.monthTh', [i]) : this.$t('fn.dayTh', [i]))
             }
      				this.trendByDate(res[0],options)
             this.freequencyByDate(res[0], options)

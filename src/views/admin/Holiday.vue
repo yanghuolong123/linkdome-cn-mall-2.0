@@ -25,12 +25,12 @@
     </div>
     <div class="common-card m-t-20">
       <div class="flex-between">
-        <div class="title">{{$t('活动管理')}}</div>
+        <div class="title">{{$t('actManage')}}</div>
         <div class="account-add-remove flex-center">
-        <span class="account-add" @click="addData" :title="$t('添加')">
+        <span class="account-add" @click="addData" :title="$t('add')">
           <Icon type="md-add" />
         </span>
-          <span class="account-add" :title="$t('删除')" @click="deleteMultiple">
+          <span class="account-add" :title="$t('del')" @click="deleteMultiple">
           <Icon type="md-remove" />
         </span>
         </div>
@@ -46,11 +46,11 @@
       >
         <template slot-scope="{ row }" slot="operate">
           <div class="flex-center">
-              <span v-if="userLvl=='common_admin'||userLvl=='admin'" class="icons" :title="$t('编辑')"
+              <span v-if="userLvl=='common_admin'||userLvl=='admin'" class="icons" :title="$t('edit')"
                     @click="editClick(row)">
             <vs-icon icon="ivu-icon-md-create" icon-pack='ivu-icon'></vs-icon>
           </span>
-            <span v-if="userLvl=='admin' " class="icons" :title="$t('删除')"
+            <span v-if="userLvl=='admin' " class="icons" :title="$t('del')"
                   @click="removeClick(row)">
             <Icon type="ios-trash"/>
           </span>
@@ -103,16 +103,16 @@ export default {
       holidayColumn:[
         {
           key:'name',
-          title:this.$t('节假日名称'),
+          title:this.$t('holidayName'),
         },{
           key:'start_date',
-          title:this.$t('开始时间'),
+          title:this.$t('startTime'),
         },{
           key:'end_date',
-          title:this.$t('结束时间'),
+          title:this.$t('endTime'),
         },{
           key:'duration',
-          title:this.$t('持续时间'),
+          title:this.$t('duringTime'),
         },
       ],
       holidayData:[],
@@ -131,25 +131,25 @@ export default {
         },
         {
           key:'name',
-          title:this.$t('活动名称'),
+          title:this.$t('actName'),
         },{
           key:'property_name',
-          title:this.$t('活动归属'),
+          title:this.$t('actBelong'),
         },{
           key:'target_enter',
-          title:this.$t('目标客流'),
+          title:this.$t('targetEnter'),
         },{
           key:'start_date',
-          title:this.$t('开始时间'),
+          title:this.$t('startTime'),
         },{
           key:'end_date',
-          title:this.$t('结束时间'),
+          title:this.$t('endTime'),
         },{
           key:'duration',
-          title:this.$t('持续时间'),
+          title:this.$t('duringTime'),
         },{
           slot:'operate',
-          title:this.$t('操作'),
+          title:this.$t('operate'),
         },
       ],
 
@@ -195,7 +195,7 @@ export default {
       var checklist = that.$store.state.user.checklist;
       this.$nextTick(() => {
         that.$refs.editActive.isUpdate = false;
-        that.$refs.editActive.msgTitle = this.$t("添加活动");
+        that.$refs.editActive.msgTitle = this.$t("fn.add",[this.$t('activity')]);
 
         if (that.$store.state.user.role_id < 3) {
           that.$refs.editActive.showBelong = true;
@@ -215,11 +215,11 @@ export default {
     deleteMultiple() {
       if (!this.selected.length) {
         this.$alert({
-          content: this.$t("删除活动管理请选择最少一个！"),
+          content: this.$t("chooseActivityTip"),
         });
       } else {
         this.$alert({
-          content: this.$t("确定要删除所选中的活动管理？"),
+          content: this.$t("activityDelConfirm"),
           cancel() {},
           confirm: () => {
             const ids = this.selected.map(o=>{
@@ -290,12 +290,12 @@ export default {
     },
     removeClick(data){
       this.$alert({
-        content: this.$t("确认删除此活动信息？"),
+        content: this.$t("activityDelConfirm"),
         cancel() {},
         confirm: () => {
           deleteActiveDays(data.id).then((res) => {
             if (res.data.code === 200) {
-              this.$message.success(this.$t("删除成功"));
+              this.$message.success(this.$t('fn.successTo',[this.$t('del')]))
               this.getActives(1)
             } else {
               this.$alert({ content: res.data.message });
@@ -313,19 +313,19 @@ export default {
         row.date = [row.start_date,row.end_date]
         that.$refs.editActive.datas = row
         if(row.target_type === 2 ){
-          this.$set(this.$refs.editActive,'targetType','每日目标')
-          this.$refs.editActive.targetTypeChange('每日目标')
+          this.$set(this.$refs.editActive,'targetType',this.$t('dailyTarget'))
+          this.$refs.editActive.targetTypeChange(this.$t('dailyTarget'))
           row.target_enter = row.target_enter.split(',')
           row.target_enter.forEach((o,i)=>{
             this.$set(row,`target_daily_${i}`,o)
           })
         }else {
-          this.$refs.editActive.targetType = '总目标'
+          this.$refs.editActive.targetType =this.$t('totalTarget')
           row.target_total = (row.target_enter)
         }
         that.$refs.editActive.datas = row
         that.$refs.editActive.isUpdate = true;
-        that.$refs.editActive.msgTitle = this.$t("编辑活动");
+        that.$refs.editActive.msgTitle = this.$t("fn.edit",[this.$t('activity')])
 
         if (that.$store.state.user.role_id < 3) {
           that.$refs.editActive.showBelong = true;

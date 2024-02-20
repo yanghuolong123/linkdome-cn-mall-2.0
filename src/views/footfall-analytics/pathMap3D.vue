@@ -5,7 +5,7 @@
 				<DatePicker
 					type="date"
 					v-model="drainageDate"
-					:placeholder="$t('holder.选择日期')"
+					:placeholder="$t('holder.Date')"
 					:options="disabledDate"
 					format="yyyy-MM-dd"
 					class="w-select"
@@ -13,8 +13,8 @@
 				<Select v-model="mapIndex" class="m-l-20 w-select">
 					<Option v-for="(item,index) in mapInfo" :value="index" :key="item.id">{{ $t(item.type) }}</Option>
 				</Select>
-				<Button size="large" class="m-l-20" type="primary" @click="searchData">{{ $t('查询') }}</Button>
-				<Button size="large" class="m-l-20" @click="reset">{{ $t('重置') }}</Button>
+				<Button size="large" class="m-l-20" type="primary" @click="searchData">{{ $t('query') }}</Button>
+				<Button size="large" class="m-l-20" @click="reset">{{ $t('reset') }}</Button>
 			</div>
 
 		</div>
@@ -23,10 +23,10 @@
 			<div class="shield"></div>
 		</div>
 		<div class="new-path-center flex-column m-t-20 no-data" v-show="!mapInfo.length">
-			暂无数据
+			{{$t('holder.NoData')}}
 		</div>
 		<div class="maps">
-			<pathTab :title="title1" :numbers="number1"></pathTab>
+			<pathTab :title="$t(title1)" :numbers="number1"></pathTab>
 			<img v-if="$store.state.language==='en-US'" :src="pathColorEn" alt="">
 			<img v-else :src="pathColor" alt="">
 		</div>
@@ -55,7 +55,7 @@
         mapIndex: -1,
         floorId: 1,
         floorNumber: [],
-        title1: '游逛深度（个）',
+        title1: 'wanderDepthWithUnit',
         number1: 0,
         allLine: [],
         mapInfo: []
@@ -108,7 +108,7 @@
               this.mapIndex = 0
             } else {
               this.$store.commit('UPDATE_LOADING_STATUS', false)
-              this.$message.warning('未配置地图信息！')
+              this.$message.warning(this.$t('error.noMapConfig'))
               reject()
             }
             resolve()

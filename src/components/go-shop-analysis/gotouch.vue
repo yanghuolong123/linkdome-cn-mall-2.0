@@ -8,7 +8,7 @@
           v-model="crossDate"
           placement="bottom-end"
           :options="disabledDate"
-          :placeholder="$t('holder.选择日期')"
+          :placeholder="$t('holder.Date')"
           class="w-select"
         ></DatePicker>
       </div>
@@ -17,7 +17,7 @@
           class="w-select"
           autocomplete
           v-model="activities"
-          :placeholder="$t('fn.请选择',[$t('货架')])"
+          :placeholder="$t('fn.select',[$t('shelf')])"
           style="width:14.375rem;"
           multiple>
           <vs-select-item
@@ -27,13 +27,13 @@
             :key="index"
           />
         </vs-select>
-        <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('查询') }}</Button>
-        <Button size="large" class="m-l-20" @click="resetData">{{ $t('重置') }}</Button>
+        <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('query') }}</Button>
+        <Button size="large" class="m-l-20" @click="resetData">{{ $t('reset') }}</Button>
       </div>
     </div>
     <div class="go-shop-chart-list"  >
       <div class="go-shop-time-icon">
-        <span>{{ $t('货架触摸分析') }}</span>
+        <span>{{ $t('shelfTouchAnaly') }}</span>
         <p class="flex-center">
           <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(icon.value)">
             <icons
@@ -45,7 +45,7 @@
           </span>
         </p>
       </div>
-      <div v-if="isData" class="noData">{{ $t('holder.暂无数据') }}</div>
+      <div v-if="isData" class="noData">{{ $t('holder.NoData') }}</div>
       <vue-apex-charts
         v-bind:class="{ lineAction: iconIndex == 0 }"
         class=" tendencyBar"
@@ -161,7 +161,7 @@ export default {
           },
           yaxis: {
             title: {
-              text: this.$t("次数")
+              text: this.$t("frequency")
             },
             labels: {
               show: true,
@@ -208,7 +208,7 @@ export default {
           colors: ['#33B3ED', '#2BD9CF', '#94E2FF', '#FBAB40', '#8D82F0', '#E8585A'],
           yaxis: {
             title: {
-              text:this.$t("次数")
+              text:this.$t("frequency")
             },
             tickAmount: 5,
             min: 0,
@@ -277,8 +277,8 @@ export default {
       let propertyId = this.$store.state.home.headerAction
       //加载 货架数据
       getHuojiaList({ property_id: propertyId }).then(res => {
-  
-   
+
+
         if (res.data.code == 200) {
           let data = res.data.data
           //加载 货架数据
@@ -303,7 +303,7 @@ export default {
       // 提示
       if (that.activities.length === 0) {
         this.$alert({
-          content:this.$t('fn.请选择',[this.$t('货架')])
+          content:this.$t('fn.select',[this.$t('shelf')])
         })
         return false
       }
@@ -342,7 +342,7 @@ export default {
             that.comparison(data, range)
           }
         });
-      
+
       })
     },
     // 无时间对比 数据处理
@@ -377,9 +377,9 @@ export default {
       that.lineData.series = xDataArray
       that.$refs.graphLine.updateOptions({
         xaxis: { categories: that.lineData.chartOptions.xaxis.categories },
-        yaxis: {title:{text:this.$t("次数")}}
+        yaxis: {title:{text:this.$t("frequency")}}
       })
-     
+
       _.forEach(data,(ele)=>{
         that.goName.push(ele.name)
       })
@@ -396,10 +396,10 @@ export default {
         }
         resultArray.push(obj)
       }
- 
+
       that.goTableList = resultArray
       return
-      
+
       // let maxLenght = _.maxBy(that.lineData.series,(val=>{
       //   return val.data.length
       // })).data
@@ -416,7 +416,7 @@ export default {
       if (that.$refs.graphLine) {
         that.$refs.graphLine.updateOptions({
           xaxis: { categories: that.lineData.chartOptions.xaxis.categories },
-          yaxis: {title:{text:this.$t("次数")}}
+          yaxis: {title:{text:this.$t("frequency")}}
         })
       }
 
@@ -427,7 +427,7 @@ export default {
         var width
         if (div) width = div.offsetWidth
         var number = (width / 2).toFixed(2) - 50
-        // 更新 chart x 轴数据 以及控制柱状图大小
+        // update chart x 轴数据 以及控制柱状图大小
         if (time1 == time2) that.upDateLineX(number, false)
         else that.upDateLineX(0, true)
         if (that.$refs.graphBar) this.upDateBarX()
@@ -496,14 +496,14 @@ export default {
       var time2 = moment(that.crossDate[1]).format('YYYY-MM-DD')
       var time3 = moment(that.crossDateTwo[0]).format('YYYY-MM-DD')
       var time4 = moment(that.crossDateTwo[1]).format('YYYY-MM-DD')
-     
+
         var width = document.getElementById('tendencyLine').offsetWidth
         var number = (width / 2).toFixed(2) - 50
-        // 更新 chart x 轴数据 以及控制柱状图大小
+        // update chart x 轴数据 以及控制柱状图大小
         if (time1 == time2 && time3 == time4) that.upDateLineX(number, false)
         else that.upDateLineX(0, true)
         if (that.$refs.graphBar) this.upDateBarX()
-      
+
       // 表格数据
       _.forIn(data, function (value, key) {
         _.forIn(value, function (listValue, listKey) {
@@ -602,7 +602,7 @@ export default {
           that.graphData.chartOptions.plotOptions.bar.columnWidth = '65%'
       }else {
         that.graphData.chartOptions.plotOptions.bar.columnWidth = '70%'
-        
+
       }
         that.$refs.graphBar.updateOptions({ plotOptions: that.graphData.chartOptions.plotOptions })
     },
@@ -630,7 +630,7 @@ export default {
               })
               data.push(obj)
           })
-          downloadEx(exportEx,'货架触摸分析',[columns,data])
+          downloadEx(exportEx,this.$t('shelfTouchAnaly'),[columns,data])
       } else {
         // 切换
         this.iconIndex = index

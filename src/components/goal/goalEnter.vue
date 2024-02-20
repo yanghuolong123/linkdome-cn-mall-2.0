@@ -76,7 +76,7 @@ export default {
     },
     columns: {
       type: Array,
-      default: () => ['日期', i18n.t('fn.EnterUnit',[i18n.t('人次')]), i18n.t('fn.TargetEnterUnit',[i18n.t('人次')])]
+      default: () => [i18n.t('Date'), i18n.t('fn.EnterUnit',[i18n.t('personTime')]), i18n.t('fn.TargetEnterUnit',[i18n.t('personTime')])]
     },
     tableList: {
       type: Array,
@@ -102,7 +102,7 @@ export default {
     return {
       istab: true,
       current: 0,
-      enterTypeList: ['年度趋势', '月度趋势'],
+      enterTypeList: ['annualTrend', 'monthTrend'],
       typeAction: 0,
       iconIndex: 0,
       iconColor: 'rgb(34, 128, 215)',
@@ -118,9 +118,9 @@ export default {
         }
       ],
       iconTitle: {
-        'zhexiantu': '折线图',
-        '62': '柱状图',
-        'biaoge-copy': '详细数据'
+        'zhexiantu': this.$t('lineChart'),
+        '62': this.$t('barChart'),
+        'biaoge-copy': this.$t('detailDt')
       }
     }
   },
@@ -145,9 +145,9 @@ export default {
       this.iconIndex = index
       this.current = index
       let title
-      if (this.isEnter == true) title = '客流量趋势'
-      else title = '销售额总览'
-      index == 1 ? this.titleText = '详细数据' : this.titleText = title
+      if (this.isEnter == true) title = 'enterTrend'
+      else title = 'salesOverview'
+      index == 1 ? this.titleText = 'detailDt' : this.titleText = title
     }
   }
 }

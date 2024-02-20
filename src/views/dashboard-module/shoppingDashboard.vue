@@ -79,7 +79,7 @@
                 class="text-xl text-black font-medium hidden sm:block"
                 style="padding-left:18px"
               >
-                {{ $t("历史数据查询") }}
+                {{ $t("historyDataQuery") }}
                 <Tooltip
                   :content="tootipText"
                   placement="right"
@@ -136,7 +136,7 @@
             :series="item.series"
             :type="item.type"
             :title="item.title"
-            :tooltipUnit="$t('人')"
+            :tooltipUnit="$t('person')"
             :height="item.height"
             @tableChage="shopTabChange"
           >
@@ -243,7 +243,7 @@ export default {
       currentPropertyId: this.$store.state.home.headerAction,
       customChecklist: {
         new_old_proportion: {
-          name: "新老顾客占比",
+          name: "newOldCusProportion",
           chartType: ["donut"],
         },
         vip_proportion: {
@@ -251,15 +251,15 @@ export default {
           chartType: ["radialBar"],
         },
         arrival_distribution: {
-          name: "到店次数",
+          name: "arrivalTimes",
           chartType: ["pie"],
         },
         age_distribution: {
-          name: "年龄分布",
+          name: "ageDist",
           chartType: ["bar"],
         },
         gender_propotion: {
-          name: "性别分布",
+          name: "genderDist",
           chartType: ["radialBar"],
         },
       },
@@ -302,16 +302,16 @@ export default {
         if (e === "gender_propotion") {
           let genderName = {
             "0": {
-              name: this.$t("女性"),
+              name: this.$t("female"),
               icon: "female",
             },
             "1": {
-              name: this.$t("男性"),
+              name: this.$t("male"),
               icon: "male",
             },
           };
           chartObj.labels = {
-            name: this.$t("性别"),
+            name: this.$t('gender'),
             key: "gender",
             data: Object.keys(data[e]).map((e) => genderName[e].name),
             icons: Object.keys(data[e]).map((e) => genderName[e].icon),
@@ -319,18 +319,18 @@ export default {
           chartObj.series = Object.values(data[e]);
         } else if (e === "age_distribution") {
           let genderName = {
-            female: this.$t("女性"),
-            male: this.$t("男性"),
+            female: this.$t("female"),
+            male: this.$t("male"),
           };
           if (Object.keys(data[e]).length <= 4) {
             chartObj.labels = {
-              name: this.$t("年龄"),
+              name: this.$t("age"),
               key: "age",
-              data: [this.$t("少年"), this.$t("青年"), this.$t("中年"), this.$t("老年")],
+              data: [this.$t("Juvenile"), this.$t("Youth"), this.$t("midLife"), this.$t("oldAge")],
             };
           } else {
             chartObj.labels = {
-              name: this.$t("年龄"),
+              name: this.$t("age"),
               key: "age",
               data: Object.keys(data[e]).map((e) => {
                 return this.ageNameformat(e);
@@ -344,7 +344,7 @@ export default {
           }));
         } else {
           chartObj.labels = {
-            name: this.$t("类型"),
+            name: this.$t("type"),
             key: e,
             data: Object.keys(data[e]).map((e) => customerNameDict[e].name),
             icons: Object.keys(data[e]).map((e) => customerNameDict[e].icon),
@@ -364,7 +364,7 @@ export default {
     },
     rankingIndicators() {
       return {
-        ...{ enter: { name: "入客流" }, dwell: { name: "停留时间" } },
+        ...{ enter: { name: "Incoming" }, dwell: { name: "dwellTime" } },
         ...salesDict,
       };
     },
@@ -386,7 +386,7 @@ export default {
         return _.dropRight([...tmlEnterKPI, ...tmlOccuKPI]);
       let validObj = {
         id: "entervalid",
-        name: this.$t("有效客流"),
+        name: this.$t("effEnter"),
         data: Number(valid) < 0 ? 0 : valid,
         type: {
           icon: "youxiaokeliu",
@@ -399,7 +399,7 @@ export default {
       let selectDateTwo = this.outRange.split(",")[1];
       if (newDate == selectDate && newDate == selectDateTwo) {
         tmlEnterKPI.forEach((val) => {
-          if (val.name == this.$t("Average Enter"))
+          if (val.name == this.$t("avgEnter"))
             val.data = this.currentDayData.enter.avg;
           if (val.name == this.$t("fn.total", [this.$t("enter")]))
             val.data = val.data.number;
@@ -413,10 +413,10 @@ export default {
     // trendIndicators() {
     //   let footfallYaxis = {
     //     enter: {
-    //       name: this.$t("客流量"),
+    //       name: this.$t("enter"),
     //       yaxis: {
     //         title: {
-    //           text: `${this.$t("客流量")}(${this.$t("人次")})`,
+    //           text: `${this.$t("enter")}(${this.$t('personTime')})`,
     //         },
     //         labels: {
     //           formatter(value) {
@@ -426,10 +426,10 @@ export default {
     //       },
     //     },
     //     occupancy: {
-    //       name: this.$t("集客量"),
+    //       name: this.$t('occupancy'),
     //       yaxis: {
     //         title: {
-    //           text: `${this.$t("集客量")}(${this.$t("人次")})`,
+    //           text: `${this.$t('occupancy')}(${this.$t('personTime')})`,
     //         },
     //         labels: {
     //           formatter(value) {
@@ -479,8 +479,8 @@ export default {
     ageNameformat(str) {
       return str
         .replace("_", "-")
-        .replace("less-", this.$t("小于"))
-        .replace(/more-/, this.$t("大于"));
+        .replace("less-", this.$t('lessThan'))
+        .replace(/more-/, this.$t('moreThan'));
     },
     updateMapZoneByName(name) {
       this.currentMenuName = Number(name);
@@ -635,13 +635,13 @@ export default {
     processKPIData(data, type) {
       let checkNameObj = {
         enter: {
-          avg: this.$t("Average Enter"),
-          highest: this.$t("客流峰值"),
-          total: this.$t("总客流量"),
+          avg: this.$t("avgEnter"),
+          highest: this.$t("flowPeak"),
+          total: this.$t("totalEnter"),
         },
         occupancy: {
-          highest: this.$t("集客峰值"),
-          total: this.$t("集客量"),
+          highest: this.$t("occuPeak"),
+          total: this.$t('occupancy'),
         },
       };
       let icontypes = {
@@ -874,33 +874,33 @@ export default {
     },
     shopTabChange(value) {
       switch (value.type) {
-        case "年龄分布":
+        case "ageDist":
           this.obj1 = value.data;
           break;
-        case "性别分布":
+        case "genderDist":
           this.obj2 = value.data;
           break;
-        case "新老顾客占比":
+        case "newOldCusProportion":
           this.obj3 = value.data;
           break;
-        case "到店次数":
+        case "arrivalTimes":
           this.obj4 = value.data;
           break;
       }
     },
     genderExportBiztop(title) {
       switch (title) {
-        case "年龄分布":
-          downloadEx(exportEx, this.$t("购物中心年龄分布客流数据"), this.obj1);
+        case "genderDist":
+          downloadEx(exportEx, this.$t("shopmallAgeDistData"), this.obj1);
           break;
-        case "性别分布":
-          downloadEx(exportEx, this.$t("购物中心性别分布客流数据"), this.obj2);
+        case "genderDist":
+          downloadEx(exportEx, this.$t("shopmallGenderDistData"), this.obj2);
           break;
-        case "新老顾客占比":
-          downloadEx(exportEx, this.$t("购物中心新老顾客占比客流数据"), this.obj3);
+        case "newOldCusProportion":
+          downloadEx(exportEx, this.$t("shopmallCustomerProData"), this.obj3);
           break;
-        case "到店次数":
-          downloadEx(exportEx, this.$t("购物中心顾客到店次数客流数据"), this.obj4);
+        case "arrivalTimes":
+          downloadEx(exportEx, this.$t("shopmallCustomerVisitData"), this.obj4);
           break;
       }
     },

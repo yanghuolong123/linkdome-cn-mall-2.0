@@ -12,8 +12,8 @@
                         :value="item.value"
                         :key="index">{{ item.text }}</Option>
                 </Select>
-                <Button size="large" type="primary" class="m-l-20"  @click="getTableList" >{{ $t('查询') }}</Button>
-                <Button size="large" class="m-l-20 goal-reset"  @click="handleCompare" >{{ $t('查看详情') }}</Button>
+                <Button size="large" type="primary" class="m-l-20"  @click="getTableList" >{{ $t('query') }}</Button>
+                <Button size="large" class="m-l-20 goal-reset"  @click="handleCompare" >{{ $t('viewDetail') }}</Button>
             </div>
         </div>
         <div class="box-card bg-white detail" v-show="compareChartShow">
@@ -28,11 +28,11 @@
                     <div class="left">
                         <div class="card" v-for="(item,index) in shopIndexList" :key="index">
                             <span>{{index+1}}. <span class="color" :style="{backgroundColor:colorList[index]}"></span> {{item.shop_name}} </span>
-                            <span>{{$t('运营指数')}}: {{item.index}}</span>
-                            <span>{{$t('全场排名')}}: {{item.overall_ranking}}</span>
-                            <span>{{$t('同业态排名')}}: {{item.format_rank}}</span>
-                            <span>{{$t('同楼层排名')}}: {{item.floor_rank}}</span>
-                            <span>{{$t('健康度')}}: {{item.health}}</span>
+                            <span>{{$t('operatingExponent')}}: {{item.index}}</span>
+                            <span>{{$t('fullRank')}}: {{item.overall_ranking}}</span>
+                            <span>{{$t('sameBussTypeRanking')}}: {{item.format_rank}}</span>
+                            <span>{{$t('sameFloorRanking')}}: {{item.floor_rank}}</span>
+                            <span>{{$t('healthLevel')}}: {{item.health}}</span>
                         </div>
                     </div>
                 </VuePerfectScrollbar>
@@ -44,11 +44,11 @@
                         :series="series"
                 />
             </div>
-    
+
         </div>
         <div class="selected-table">
-            <vx-card :title="$t('店铺指数列表')">
-                <vs-table stripe v-model="tableSelected" max-items="5" pagination  :noDataText="$t('holder.暂无数据')" multiple :data="tableList">
+            <vx-card :title="$t('storeExpList')">
+                <vs-table stripe v-model="tableSelected" max-items="5" pagination  :noDataText="$t('holder.NoData')" multiple :data="tableList">
                     <template slot="thead" >
                         <vs-th :key="indexs" class="table-title" v-for="(item, indexs) in tableName">{{$t(item)}}</vs-th>
                     </template>
@@ -76,11 +76,11 @@
                             </vs-td>
                             <!--租金坪效-->
                             <vs-td :data="data[indextr].rent">
-                                {{data[indextr].rent}} &nbsp;{{$t('元/m²')}}
+                                {{data[indextr].rent}} &nbsp;{{$t('effUnit')}}
                             </vs-td>
                             <!--销售坪效-->
                             <vs-td :data="data[indextr].sale_ratio">
-                                {{data[indextr].sale_ratio}} &nbsp;{{$t('元/m²')}}
+                                {{data[indextr].sale_ratio}} &nbsp;{{$t('effUnit')}}
                             </vs-td>
                             <!--租售比-->
                             <vs-td :data="data[indextr].rent_sale_per">
@@ -88,7 +88,7 @@
                             </vs-td>
                             <!--客流量-->
                             <vs-td :data="data[indextr].enter">
-                                {{data[indextr].enter && data[indextr].enter.toLocaleString()}} &nbsp;{{$t('人次')}}
+                                {{data[indextr].enter && data[indextr].enter.toLocaleString()}} &nbsp;{{$t('personTime')}}
                             </vs-td>
                             <!--租约开始-->
                             <vs-td :data="data[indextr].lease_start">
@@ -103,7 +103,7 @@
                 </vs-table>
             </vx-card>
         </div>
-    
+
     </div>
 </template>
 <script>
@@ -165,7 +165,7 @@
             return {
                 colorList,
                 config,
-                tableName:['店铺名称','查看指数','楼层','营业面积','所属分类','租金坪效','销售坪效','租售比','客流量','租约开始','租约结束'],
+                tableName:['storeName','viewExp','楼层','营业面积','category','rentalEff','saleFloorEffect','priceToRent','客流量','租约开始','租约结束'],
                 tableSelected: [],
                 tableList: [],
                 tableParams: {
@@ -180,7 +180,7 @@
                 },
                 shopIndexList: [],
                 compareChartShow:false,
-                chartTitle:'详情',
+                chartTitle:'detail',
                 series: [{
                     name: '',
                     data: [0,0,0,0,0],
@@ -222,7 +222,7 @@
                         }
                     },
                     xaxis: {
-                        categories: [this.$t('销售额'), this.$t('销售坪效'),this.$t('停留时间'), this.$t('成交率'), this.$t('客流量')],
+                        categories: [this.$t('salesVolume'), this.$t('saleFloorEffect'),this.$t('dwellTime'), this.$t('turnoverRate'), this.$t('fx.enter')],
                     }
                 },
                 businessType: 0,
@@ -233,7 +233,7 @@
             // 获取业态
             getBusinessType () {
                 this.businessTypeOptions = [{
-                    text: this.$t('所有业态'),
+                    text: this.$t('allBussType'),
                     value: 0
                 }]
                 activitiesList({ entity: 52, property_id: this.$store.state.home.headerAction }).then(res => {
@@ -248,7 +248,7 @@
             handleCompare(){
                 if (!this.tableSelected.length) {
                     this.$alert({
-                        content:this.$t('fn.请选择',[this.$t('店铺')])
+                        content:this.$t('fn.select',[this.$t('店铺')])
                     })
                     return
                 }
@@ -267,13 +267,13 @@
                 this.getDetailData(params)
             },
             getDetailData(params) {
-                this.chartTitle = this.tableSelected.length>1? '对比':'详情'
+                this.chartTitle = this.tableSelected.length>1? 'compare':'detail'
                 Promise.all([this.getOperateIndex(params), this.getIndexMap(params)]).then(res => {
                     this.shopIndexList = res[0]||[];
                     this.series = [];
                     Array.isArray(res[1]) && res[1].forEach(o=>{
                         const obj = {
-                            name:o.shop_name+this.$t('指数'),
+                            name:o.shop_name+this.$t('exponent'),
                             data:[o.sale?o.sale.toFixed(2):o.sale,o.sales_ratio?o.sales_ratio.toFixed(2):o.sales_ratio,o.dwellTime?o.dwellTime.toFixed(2):o.dwellTime,o.closeRate?o.closeRate.toFixed(2):o.closeRate,o.enter?o.enter.toFixed(2):o.enter]
                         };
                         this.series.push(obj)
@@ -335,7 +335,7 @@
             .m-r-10{
                 margin-right: 10px;
             }
-       
+
         }
         .flex-center{
             .goal-reset {
@@ -365,7 +365,7 @@
                 display: flex;
                 align-items: start;
                 margin-top: 30px;
-               
+
                 .left {
                     height: 600px;
                     display: flex;

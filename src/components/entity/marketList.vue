@@ -3,7 +3,7 @@
         <table-multiple-selected
                 :tableName='tableName'
                 :tableList='tableList'
-                titleName='基本信息'
+                titleName='basicInfo'
                 :userLvl="userLvl"
                 :actionList="floorActions"
                 @imgConfig="imgConfig"
@@ -35,7 +35,7 @@
     },
     computed: {
       tableName () {
-        return ['名称', '实体类别', '本年客流目标', '本年销售目标', '详情地址', '描述', '操作']
+        return ['name', 'entityCategory', 'thisYearEnterTarget', 'thisYearSaleTarget', 'detailAddr', 'description', 'operate']
 
       },
       floorActions () {
@@ -43,7 +43,7 @@
         if (this.userLvl === 'admin') {
           arr = [
             {
-              name: '图片配置',
+              name: 'imgConfig',
               icon: 'md-image'
             }
           ]
@@ -69,10 +69,10 @@
         })
         if (goalFlow) {
           const flowType = goalFlow.is_year
-          if (!flowType) obj.enterGoal = '0' + this.$t('人')
+          if (!flowType) obj.enterGoal = '0' + this.$t('person')
           switch (flowType) {
             case 'year':
-              obj.enterGoal = goalFlow.flow_year ? goalFlow.flow_year.toLocaleString() + this.$t('人') : '0' + this.$t('人')
+              obj.enterGoal = goalFlow.flow_year ? goalFlow.flow_year.toLocaleString() + this.$t('person') : '0' + this.$t('person')
               break
             case 'month':
               const month = goalFlow.detail.months
@@ -80,7 +80,7 @@
                 return formatNumber(Object.values(m)[0])
               })
               const sumMonthFlow = thousandSeparator(_.sum(number))
-              obj.enterGoal = sumMonthFlow + this.$t('人')
+              obj.enterGoal = sumMonthFlow + this.$t('person')
               break
           }
         } else {
@@ -93,10 +93,10 @@
         })
         if (goalSale) {
           const saleType = goalSale.is_year
-          if (!saleType) obj.saleGoal = '0' + this.$t('元')
+          if (!saleType) obj.saleGoal = '0' + this.$t('yuanUnit')
           switch (saleType) {
             case 'year':
-              obj.saleGoal = goalSale.sale_year ? goalSale.sale_year.toLocaleString() + this.$t('元') : '0' + this.$t('元')
+              obj.saleGoal = goalSale.sale_year ? goalSale.sale_year.toLocaleString() + this.$t('yuanUnit') : '0' + this.$t('yuanUnit')
               break
             case 'month':
               const monthSale = goalSale.detail.months
@@ -104,7 +104,7 @@
                 return formatNumber(Object.values(m)[0])
               })
               const sumMonthSale = thousandSeparator(_.sum(numberSale))
-              obj.saleGoal = sumMonthSale + this.$t('元')
+              obj.saleGoal = sumMonthSale + this.$t('yuanUnit')
           }
         } else {
           this.$message.warning(this.$t('notices.saleTargetConfig'))

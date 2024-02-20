@@ -32,7 +32,7 @@
 			<el-cascader
 				v-show="compareType === 'entity'&& entityType === 'store'"
 				class="w-select"
-				:placeholder=" $t('holder.请选择') "
+				:placeholder=" $t('holder.Select') "
 				v-model="storeCascadeData"
 				filterable
 				collapse-tags
@@ -42,7 +42,7 @@
 			</el-cascader>
 			<el-cascader
 				v-show="compareType === 'entity'&& entityType === 'gate'"
-				:placeholder=" $t('holder.请选择') "
+				:placeholder=" $t('holder.Select') "
 				class="w-select"
 				v-model="gateCascadeData"
 				collapse-tags
@@ -52,7 +52,7 @@
 			</el-cascader>
 			<el-cascader
 				v-show="compareType === 'entity'&& entityType === 'bussiness'"
-				:placeholder=" $t('holder.请选择') "
+				:placeholder=" $t('holder.Select') "
 				class="w-select"
 				v-model="busiCascadeData"
 				collapse-tags
@@ -62,7 +62,7 @@
 			</el-cascader>
 			<el-cascader
 				v-show="compareType !== 'entity'&&compareType !== 'businessType'"
-				:placeholder=" $t('holder.请选择') "
+				:placeholder=" $t('holder.Select') "
 				v-model="entityCascaderData"
 				collapse-tags
 				class="w-select "
@@ -83,8 +83,8 @@
 								:key="item.value">{{ item.label }}
 				</Option>
 			</Select>
-			<Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('查询') }}</Button>
-			<Button size="large" @click="resetClick" class="m-l-20">{{ $t('重置') }}</Button>
+			<Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('query') }}</Button>
+			<Button size="large" @click="resetClick" class="m-l-20">{{ $t('reset') }}</Button>
 		</div>
 	</div>
 </template>
@@ -113,13 +113,13 @@
         this.typeOptions = [
           {
             value: 'not',
-            label: this.$t('无对比')
+            label: this.$t('noComp')
           }, {
             value: 'entity',
-            label: this.$t('实体对比')
+            label: this.$t('entityComp')
           }, {
             value: 'businessType',
-            label: this.$t('业态对比')
+            label: this.$t('bussComp')
           },
         ]
         return this.typeOptions
@@ -175,7 +175,7 @@
           res = res.data.data
           this.bussinessTypeOptions = [{
             id: -1,
-            name: '全部业态'
+            name: 'allBussType'
           }]
           if (res) {
             for (let key in res) {

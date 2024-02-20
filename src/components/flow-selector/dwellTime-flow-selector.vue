@@ -44,7 +44,7 @@
 			></el-cascader>
 			<el-cascader
 				v-show="compareType === 'entity'&& entityType === 'bussiness'"
-				:placeholder=" $t('holder.请选择') "
+				:placeholder=" $t('holder.Select') "
 				class="w-select"
 				v-model="busiCascadeData"
 				collapse-tags
@@ -67,8 +67,8 @@
 					{{ $t(item.label) }}
 				</Option>
 			</Select>
-			<Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('查询') }}</Button>
-			<Button size="large" @click="resetClick" class="m-l-20">{{ $t('重置') }}</Button>
+			<Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('query') }}</Button>
+			<Button size="large" @click="resetClick" class="m-l-20">{{ $t('reset') }}</Button>
 		</div>
 	</div>
 </template>
@@ -102,19 +102,19 @@
 	 		entityOptions(){
 	 		  return [
           {
-            label:'购物中心',
+            label:'shopmall',
             value:'mall'
           },{
-            label:'楼层',
+            label:'floor',
             value:'floor'
           }, {
-            label:'商铺',
+            label:'store',
             value:'store'
           }, {
-            label:'区域',
+            label:'area',
             value:'area'
           },{
-            label: this.$t('业态'),
+            label: this.$t('bussinessType'),
             value: 'bussiness',
             cascadeOption:this.bussinessCascadeOpiton,
             cascadeData:this.busiCascadeData

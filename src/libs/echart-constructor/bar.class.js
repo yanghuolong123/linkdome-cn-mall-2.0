@@ -14,7 +14,7 @@ export class BarChartConstructor extends BasicData {
           o.seriesName +
           "：" +
           o.value.toLocaleString() +
-          i18n.t("人次") +
+          i18n.t("personTime") +
           "<br>";
       });
       return title + result;

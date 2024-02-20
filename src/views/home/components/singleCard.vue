@@ -23,26 +23,26 @@
             >
           <span v-if="isLiveData" :title="item.data.timeRange.replace(/.{2}$/,'59')" class="text-sm">{{item.data.timeRange.replace(/.{2}$/,'59')}} </span>
           <span v-else class="text-sm" :title="item.data.timeRange | dateformat(innerRange)">{{item.data.timeRange | dateformat(innerRange)}} </span>
-         
+
         </span>
           </div>
-         
+
           <p  class="number-name">{{item.data.property}}</p>
         </div>
-        
+
       </template>
     </p>
     <p class="text-base type-name" v-if="!item.data.hasOwnProperty('name1')">{{ $t(item.name) }}</p>
     <p v-if="item.data.hasOwnProperty('ringRatio')" class="numberrate text-grey-lighter">
       <span class="mr-2">
-        {{$t('同比')}}
+        {{$t('YOY')}}
         <span :class="{iconRotate:item.data.lastRatio >= 0}">
           <icons type="xiala" color="#F64F61"></icons>
         </span>
         <span class="font-number font-bold text-base">{{item.data.lastRatio*100 | numberFormat}}%</span>
       </span>
       <span>
-        {{$t('环比')}}
+        {{$t('QOQ')}}
         <span :class="{iconRotate:item.data.ringRatio >= 0}">
           <icons type="xiala" color="#F64F61"></icons>
         </span>

@@ -8,13 +8,13 @@
           v-model="crossDate"
           placement="bottom-end"
           :options="disabledDate"
-          :placeholder="$t('选择日期')"
+          :placeholder="$t('holder.Date')"
 				></DatePicker>
 				<vs-select
           class="w-select m-l-20"
           autocomplete
           v-model="activities"
-          :placeholder="$t('选择业态')"
+          :placeholder="$t('holder.BussinessType')"
           style="width:14.375rem;">
 					<vs-select-item
             :value="item.value"
@@ -23,8 +23,8 @@
             v-for="(item,index) in activitiesType"
 					/>
 				</vs-select>
-				<Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('查询') }}</Button>
-				<Button size="large" class="m-l-20" @click="resetData">{{ $t('重置') }}</Button>
+				<Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('query') }}</Button>
+				<Button size="large" class="m-l-20" @click="resetData">{{ $t('reset') }}</Button>
 			</div>
 		</div>
 		<chart-box ref="top10" chartId="top10Chart" class="common-card chart m-t-20" @toolClick="top10ToolClick"
@@ -61,15 +61,15 @@
 					{
             icon: '62',
             value: 'bar',
-            name: '进店率TOP10排行分析'
+            name: 'entryRateTop10RankingAnaly'
 					},{
             icon: 'biaoge-copy',
             value: 'table',
-            name: '进店率TOP10排行分析'
+            name: 'entryRateTop10RankingAnaly'
           }, {
             icon: 'daoru',
             value: 'download',
-            name: '进店率TOP10排行分析'
+            name: 'entryRateTop10RankingAnaly'
           }
 				],
         top10Chart:{
@@ -107,7 +107,7 @@
         var that = this
         that.activitiesType = []
         var objD = {
-          text: this.$t('所有业态'),
+          text: this.$t('allBussType'),
           value: 0
         }
         that.activitiesType.push(objD)
@@ -150,7 +150,7 @@
 					})
           options.series = [
 						{
-						  name:this.$t('进店率'),
+						  name:this.$t('enterRate'),
 							data:this.headerData.show_actual_val?data:data.map(o=>{return o.value})
 						}
 					]
@@ -194,9 +194,9 @@
               if(params.data.to > params.data.from){//进店人数大于过点人数时，让他们相当 并等于更大的值
                 params.data.from = params.data.to
               }
-              return `${params.marker}${params.data.name}<br><span>${this.$t('进店率')}:${params.data.value}%</span><br><span style="line-height: 18px">进店人次: ${params.data.to}</span><br><span style="line-height: 18px">过店人次: ${params.data.from}</span>`
+              return `${params.marker}${params.data.name}<br><span>${this.$t('enterRate')}:${params.data.value}%</span><br><span style="line-height: 18px">进店人次: ${params.data.to}</span><br><span style="line-height: 18px">过店人次: ${params.data.from}</span>`
 						}else {
-              return `${params.name}<br>${params.marker}${this.$t('进店率')}:${params.data}%`
+              return `${params.name}<br>${params.marker}${this.$t('enterRate')}:${params.data}%`
 						}
           }
 

@@ -25,13 +25,13 @@ export default {
     return {
       list: [
         {
-          title: '填写邮箱'
+          title: 'email'
         },
         {
-          title: '重置密码'
+          title: 'resetPsw'
         },
         {
-          title: '完成'
+          title: 'complete'
         }
       ]
     }

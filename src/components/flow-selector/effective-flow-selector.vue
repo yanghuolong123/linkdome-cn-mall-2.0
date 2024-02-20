@@ -29,8 +29,8 @@
 					:options="entityCascaderOption"
 			>
 			</el-cascader>
-			<Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('查询') }}</Button>
-			<Button size="large" @click="resetClick" class="m-l-20">{{ $t('重置') }}</Button>
+			<Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('query') }}</Button>
+			<Button size="large" @click="resetClick" class="m-l-20">{{ $t('reset') }}</Button>
 		</div>
 	</div>
 </template>
@@ -61,21 +61,21 @@ export default {
       this.typeOptions = [
         {
           value: 'not',
-          label: this.$t('无对比')
+          label: this.$t('noComp')
         }, {
           value: 'businessType',
-          label: this.$t('业态')
+          label: this.$t('bussinessType')
         },{
           value: 'time',
-          label: this.$t('自定义时间对比')
+          label: this.$t('cusTimeCompare')
         },
         {
           value: 'onYear',
-          label: this.$t('同比')
+          label: this.$t('YOY')
         },
         {
           value: 'onChain',
-          label: this.$t('环比')
+          label: this.$t('QOQ')
         }
       ]
       return this.typeOptions

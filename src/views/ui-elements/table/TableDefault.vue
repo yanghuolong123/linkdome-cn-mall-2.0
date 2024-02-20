@@ -12,7 +12,7 @@
 
     <vs-table
       :data="tableList"
-      :noDataText="$t('holder.暂无数据')">
+      :noDataText="$t('holder.NoData')">
       <!-- table title -->
       <template slot="thead" #thead>
         <vs-th v-for="(item,index) in tableName" class="table-title" :key="index">
@@ -72,7 +72,7 @@ export default {
   },
   data () {
     return {
-    
+
     }
   }
 }

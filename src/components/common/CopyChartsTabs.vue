@@ -35,7 +35,7 @@
       ></div>
     </tab-item>
     <tab-item icon="biaoge-copy" :titles="tableTitle" id="table-item">
-      <i-table :columns="columns" :data="tableData"></i-table>
+      <i-table :columns="columns" :data="tableData" :noData="$t('holder.NoData')"></i-table>
     </tab-item>
   </i-tabs>
 </template>
@@ -95,7 +95,7 @@ export default {
     },
     title: {
       type: String, // tab 名称
-      default: "客流量趋势",
+      default: "enterTrend",
     },
     extraOptions: {
       type: Object,
@@ -122,11 +122,11 @@ export default {
     },
     unit: {
       type: String,
-      default: "人",
+      default: "person",
     },
     tableTitle: {
       type: String,
-      default: "详细数据",
+      default: "detailDt",
     },
     typeParameter: {
       type: String,
@@ -181,7 +181,7 @@ export default {
         } else {
           return [
             this.xaxisOrlabels,
-            ...[{ name: "客流量", key: "enter", data: this.series }],
+            ...[{ name: 'enter', key: "enter", data: this.series }],
           ];
         }
       }

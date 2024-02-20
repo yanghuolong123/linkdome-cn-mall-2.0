@@ -1,8 +1,8 @@
 <template>
 	<div class="heatMaps">
-	
+
 		<div class="path-picker">
-		
+
 			<DatePicker
 				type="daterange"
 				v-model="dayTime"
@@ -12,7 +12,7 @@
             hourTime = '-1';
           }
         "
-				:placeholder="$t('holder.选择日期')"
+				:placeholder="$t('holder.Date')"
 				:options="disabledDate"
 				format="yyyy-MM-dd"
 				style="width:230px"
@@ -38,10 +38,10 @@
           searchData();
           initHeatMapGrid();
         "
-			>{{ $t("查询") }}</Button
+			>{{ $t('query') }}</Button
 			>
 			<Button size="large" @click="reset" class="m-l-20">{{
-				$t("重置")
+				$t('reset')
 				}}</Button>
 		</div>
 		<div class="content">
@@ -62,7 +62,7 @@
 						:data="heatMapDataList"
 					></heatmapjs-vue>
 					<img @load="imgLoad" :src="map.url" v-if="map.url" id="mapImg" />
-					<div class="noData" v-else>{{ $t("holder.暂无数据") }}</div>
+					<div class="noData" v-else>{{ $t("holder.NoData") }}</div>
 				</div>
 				<div class="time-frame" v-if="hourTime === '0'">
 					<Slider
@@ -139,17 +139,17 @@
         disabledDate: "",
         tabsList: [],
         hourTime: "-1",
-        hourList: [{ label: "全天", value: "-1" }, { label: "小时", value: "0" }],
+        hourList: [{ label: "allDay", value: "-1" }, { label: "hour", value: "0" }],
         floor: "",
         floorList: [],
         dateType: "week",
         dateOptions: [
           {
-            label: this.$t("周"),
+            label: this.$t("Week"),
             value: "week",
           },
           {
-            label: this.$t("月"),
+            label: this.$t("Month"),
             value: "month",
           },
           {
@@ -176,11 +176,11 @@
       dateOptionsCom() {
         this.dateOptions = [
           {
-            label: this.$t("周"),
+            label: this.$t("Week"),
             value: "week",
           },
           {
-            label: this.$t("月"),
+            label: this.$t("Month"),
             value: "month",
           },
           {
@@ -210,16 +210,16 @@
       datePlaceholder() {
         switch (this.dateType) {
           case "week":
-            return this.$t("fn.请选择", [this.$t("周")]);
+            return this.$t("fn.select", [this.$t("Week")]);
           case "year":
-            return this.$t("fn.请选择", [this.$t("年")]);
+            return this.$t("fn.select", [this.$t("Year")]);
           case "month":
-            return this.$t("fn.请选择", [this.$t("月")]);
+            return this.$t("fn.select", [this.$t("Month")]);
           default:
-            return this.$t("fn.请选择", [this.$t("日期")]);
+            return this.$t("fn.select", [this.$t("Date")]);
         }
       },
-			
+
     },
     created() {
       this.disabledDate = disabledDate;
@@ -452,14 +452,14 @@
 			.con-select {
 				clear: none;
 			}
-			
+
 			.ivu-input {
 				height: 40px;
 				font-size: 14px;
 				border: 1px solid rgba(0, 0, 0, 0.2);
 				font-family: "source_han_sans_cn", "Roboto", sans-serif;
 			}
-			
+
 			.selectExample {
 				float: left;
 				width: 100px;
@@ -473,7 +473,7 @@
 			.selectFloor {
 				width: 150px;
 			}
-			
+
 			.ivu-input-suffix {
 				i {
 					height: 40px;
@@ -481,7 +481,7 @@
 					line-height: 40px;
 				}
 			}
-			
+
 			.ivu-date-picker .ivu-select-dropdown {
 				z-index: 90000;
 			}
@@ -489,7 +489,7 @@
 		.flex-box {
 			display: flex;
 			align-items: center;
-			
+
 			.reset {
 				float: left;
 				height: 41px;
@@ -502,12 +502,12 @@
 		.ivu-select-single .ivu-select-selection {
 			height: 40px;
 			border: 1px solid rgba(0, 0, 0, 0.2);
-			
+
 			span {
 				font-size: 1rem;
 			}
 		}
-		
+
 		.ivu-select-single .ivu-select-selection .ivu-select-placeholder,
 		.ivu-select-single .ivu-select-selection .ivu-select-selected-value {
 			line-height: 40px;
@@ -516,7 +516,7 @@
 		.content {
 			background-color: white;
 			padding: 20px;
-			
+
 			.heatMap {
 				position: relative;
 				z-index: 1;
@@ -560,7 +560,7 @@
 					height: 100%;
 					background-color: rgba(65, 62, 223, 0.4);
 				}
-				
+
 				.noData {
 					position: relative;
 					left: 0;
@@ -573,22 +573,22 @@
 					z-index: 1;
 					text-align: center;
 				}
-				
+
 				#mapImg {
 					width: 100%;
 					height: 670px;
 				}
-				
+
 				.gateDataList {
 					position: absolute;
 					z-index: 1;
-					
+
 					img {
 						width: 30px;
 						height: 30px;
 						cursor: pointer;
 					}
-					
+
 					.gateDataText {
 						position: absolute;
 						background-color: #fff;
@@ -597,7 +597,7 @@
 						padding-bottom: 10px;
 						width: 160px;
 						left: -65px;
-						
+
 						p {
 							font-size: 14px;
 							color: #333;
@@ -610,7 +610,7 @@
 							overflow: hidden;
 							text-overflow: ellipsis;
 						}
-						
+
 						span {
 							display: inline-block;
 							width: 100%;

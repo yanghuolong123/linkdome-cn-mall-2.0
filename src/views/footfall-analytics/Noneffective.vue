@@ -69,49 +69,49 @@
           {
             icon: 'fenxi',
             value: 'pie',
-            name: this.$t('无效客流占比')
+            name: this.$t('invalidEnterProporiton')
           }, {
             icon: 'biaoge-copy',
             value: 'table',
-            name: this.$t('详细数据')
+            name: this.$t('detailDt')
           }, {
             icon: 'daoru',
             value: 'download',
-            name: this.$t('无效客流占比')
+            name: this.$t('invalidEnterProporiton')
           }
         ],
         ranktoolList: [
           {
             icon: '62',
             value: 'bar',
-            name: this.$t('无效客流排行')
+            name: this.$t('InvalidEnterRanking')
           }, {
             icon: 'biaoge-copy',
             value: 'table',
-            name: this.$t('详细数据')
+            name: this.$t('detailDt')
           }, {
             icon: 'daoru',
             value: 'download',
-            name: this.$t('无效客流排行')
+            name: this.$t('InvalidEnterRanking')
           }
         ],
         toolList: [
           {
             icon: 'zhexiantu',
             value: 'line',
-            name: this.$t('无效客流趋势')
+            name: this.$t('InvalidEnterTrend')
           }, {
             icon: '62',
             value: 'bar',
-            name: this.$t('无效客流趋势')
+            name: this.$t('InvalidEnterTrend')
           }, {
             icon: 'biaoge-copy',
             value: 'table',
-            name: this.$t('详细数据')
+            name: this.$t('detailDt')
           },{
             icon: 'daoru',
             value: 'download',
-            name: this.$t('无效客流趋势')
+            name: this.$t('InvalidEnterTrend')
           }
         ],
         rankBarOption: null,
@@ -167,14 +167,14 @@
           })
         }
         barConfigCopy.series = []
-        barConfigCopy.legend.data = [this.$t('店员'), this.$t('外卖人员')];
-        [this.$t('店员'), this.$t('外卖人员')].forEach(o => {
+        barConfigCopy.legend.data = [this.$t('clerk'), this.$t('delivery')];
+        [this.$t('clerk'), this.$t('delivery')].forEach(o => {
           let data = []
           res.forEach(e => {
             let sum = 0
             if (e.list) {
               Object.values(e.list).forEach(l => {
-                if (o === this.$t('店员')) {
+                if (o === this.$t('clerk')) {
                   sum += l.typeList['1'].enter
                 } else {
                   sum += l.typeList['2'].enter
@@ -217,9 +217,9 @@
         let pieConfigCopy = _.cloneDeep(pieConfig)
         pieConfigCopy.series[0].data = pieData
         pieConfigCopy.compareType = compareType
-        pieConfigCopy.category = [this.$t('店员'), this.$t('外卖人员')]
+        pieConfigCopy.category = [this.$t('clerk'), this.$t('delivery')]
         pieConfigCopy.tooltip.formatter =  (params)=> {
-          return `<span style="font-size: 18px">${params.data.name}:${params.data.value}</span><br><span style="line-height: 18px">${this.$t('店员')}: ${params.data.staff}</span><br><span style="line-height: 18px">${this.$t('外卖人员')}: ${params.data.takeout}</span>`
+          return `<span style="font-size: 18px">${params.data.name}:${params.data.value}</span><br><span style="line-height: 18px">${this.$t('clerk')}: ${params.data.staff}</span><br><span style="line-height: 18px">${this.$t('delivery')}: ${params.data.takeout}</span>`
 
         }
         this.pieOption = pieConfigCopy
@@ -286,7 +286,7 @@
         barConfigCopy.tooltip.formatter = lineConfigCopy.tooltip.formatter = (params)=> {
           let result = `${params[0].axisValue}<br>`
           params.forEach(o => {
-            result += `${o.marker}${o.seriesName}:${o.data.value} ${this.$t('店员')}:${o.data.staff} ${this.$t('外卖人员')}:${o.data.takeout}<br>`
+            result += `${o.marker}${o.seriesName}:${o.data.value} ${this.$t('clerk')}:${o.data.staff} ${this.$t('delivery')}:${o.data.takeout}<br>`
           })
           return result
         }
@@ -334,7 +334,7 @@
               let tableOption = _.cloneDeep(this.lineOption)
               tableOption.series.forEach(o => {
                 o.data = o.data.map(d => {
-                  return `${d.value.toLocaleString()}(${this.$t('店员')}:${d.staff.toLocaleString()} ${this.$t('外卖人员')}:${d.takeout.toLocaleString()})`
+                  return `${d.value.toLocaleString()}(${this.$t('clerk')}:${d.staff.toLocaleString()} ${this.$t('delivery')}:${d.takeout.toLocaleString()})`
                 })
               })
               this.$refs.invalidEnter.initTable(tableOption)

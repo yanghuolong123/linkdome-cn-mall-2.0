@@ -113,7 +113,7 @@
         let axle = this.horizontal ? 'yAxis' : 'xAxis'
         let data = []
         if (this.showSummary) {
-          optionCopy[axle].data.push(this.$t('合计'))
+          optionCopy[axle].data.push(this.$t('total'))
         }
         let sum = []
         optionCopy[axle].data.forEach((o, i) => {
@@ -206,7 +206,7 @@
       getTableColumn (option) {
         if (isEmpty(option)) return []
         let flag = false
-        const target = [this.$t('出客流'), this.$t('入客流'), this.$t('店员'), this.$t('外卖人员')]
+        const target = [this.$t('Outbound'), this.$t('Incoming'), this.$t('clerk'), this.$t('delivery')]
         for (let i = 0; i < target.length; i++) {
           if (option.legend.data.includes(target[i])) {
             flag = true
@@ -215,7 +215,7 @@
         }
         let column = [
           {
-            title: (flag || option.legend.type === 'entity') ? this.$t('实体') : this.$t('时间'),
+            title: (flag || option.legend.type === 'entity') ? this.$t("entity") : this.$t('time'),
             key: 'time',
             fixed: option.legend.data.length > 10 ? 'left' : '',
             width: option.legend.data.length > 10 ? 120 : '',
@@ -226,7 +226,7 @@
             return {
               key: 'entity' + i,
               width: option.legend.data.length > 10 ? this.isDateCompare ? o.length * 15 : 150 : '',
-              title: o + (option.legend.unit ? (option.legend.unit[i] ? `(${option.legend.unit[i]})` : `(${this.$t('人次')})`) : ''),
+              title: o + (option.legend.unit ? (option.legend.unit[i] ? `(${option.legend.unit[i]})` : `(${this.$t('personTime')})`) : ''),
             }
           })
         )
@@ -256,8 +256,6 @@
         this.$emit('download')//无效客流中要对table数据进行特殊处理，故作延迟处理
         setTimeout(() => {
           this.initTable(this.chartOption)
-          console.log(this.toolList)
-          console.log(this.$t(this.toolList[index].name))
           downloadEx(exportEx, this.$t(this.toolList[index].name), [
             this.tableColumn,
             this.tableData,

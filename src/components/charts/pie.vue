@@ -59,7 +59,7 @@ export default {
           text: this.subtitle
         },
         lang: {
-          noData: '暂无数据'
+          noData: this.$t("holder.NoData")
         },
         noData: {
           style: {

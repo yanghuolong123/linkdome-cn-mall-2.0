@@ -1,5 +1,5 @@
 <template>
-  <li :title='$t("下载")'>
+  <li :title='$t("download")'>
     <span class="navitemIcon"
           @click="handleClik('current')">
       <icons type="daoru"
@@ -14,7 +14,7 @@ export default {
   name: 'exportMenu',
   data () {
     return {
- 
+
     }
   },
   methods: {

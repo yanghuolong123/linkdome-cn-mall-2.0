@@ -12,8 +12,8 @@ footFall:客流
       <vs-select
         v-model="bussinessType"
         autocomplete
-        :placeholder="$t('请选择')"
-        :noDataText="$t('暂无数据')"
+        :placeholder="$t('holder.Select')"
+        :noDataText="$t('holder.NoData')"
       >
         <vs-select-item
           v-for="item in withAllOptions"
@@ -135,7 +135,7 @@ export default {
     },
     selectTitle: {
       type: String,
-      default: "排行分析",
+      default: "rankingAnaly",
     },
     defaultBizIndicator: {
       type: String,
@@ -287,11 +287,11 @@ export default {
       };
 
       if (this.$store.state.home.headerAction == 0) {
-        obj.left = "集团业态排行";
-        obj.right = "购物中心业态排行";
+        obj.left = "groupBussRanking";
+        obj.right = "shopmallBussRanking";
       } else {
-        obj.left = "业态排行";
-        obj.right = "商铺排行";
+        obj.left = "bussRanking";
+        obj.right = "storeRanking";
       }
       return obj;
     },
@@ -302,10 +302,11 @@ export default {
       }));
     },
     withAllOptions() {
-      const allType = { text: this.$t("所有业态"), value: "all" };
+      const allType = { text: this.$t("allBussType"), value: "all" };
       return [allType, ...this.bussinessTypes];
     },
     indicators() {
+      console.log(this.indicatorData)
       return Object.keys(this.indicatorData).map((e) => ({
         value: e,
         name: this.indicatorData[e].name,
@@ -337,7 +338,7 @@ export default {
       }
       return {
         xAxis: {
-          name: this.$t("名称"),
+          name: this.$t('name'),
           key: "bussiness",
           data: Object.values(Object.values(tml)[0]).map((e) => e.name),
         },
@@ -394,7 +395,7 @@ export default {
       });
       return {
         xAxis: {
-          name: this.$t("名称"),
+          name: this.$t('name'),
           key: "shop",
           data: Object.values(sortedObj)[0].map((e) => {
             if (_.isArray(e.name)) return e.name[0];
@@ -444,17 +445,17 @@ export default {
       // 业态排行tooltip显示的单位
       switch (type) {
         case "enter":
-          return this.$t("人次");
+          return this.$t('personTime');
         case "dwell":
-          return this.$t("时间");
+          return this.$t("time");
         case "SquaerMetre":
-          return this.$t("元/m²");
+          return this.$t("effUnit");
         case "SaleAmount":
-          return this.$t("元");
+          return this.$t("yuanUnit");
         case "CloseRate":
           return "%";
         case "UnitPrice":
-          return this.$t("元");
+          return this.$t("yuanUnit");
       }
     },
     // 业态数据
@@ -483,7 +484,7 @@ export default {
     },
     leftTableCoumn(value) {
       value.map((list) => {
-        if (list.title !== this.$t("名称")) {
+        if (list.title !== this.$t("name")) {
           let newTime = list.title.split(" - ");
           if (newTime[0] === newTime[1]) {
             list.title = newTime[0];
@@ -497,7 +498,7 @@ export default {
     },
     rightTableCoumn(value) {
       value.map((list) => {
-        if (list.title !== this.$t("名称")) {
+        if (list.title !== this.$t("name")) {
           let newTime = list.title.split(" - ");
           if (newTime[0] === newTime[1]) {
             list.title = newTime[0];
@@ -612,13 +613,13 @@ export default {
       }).name
       let name;
       if (this.$store.state.home.headerAction === 0)
-        name = this.$t("集团业态排行") + "(" + this.$t(bizIndicatorName) + ")";
+        name = this.$t("groupBussRanking") + "(" + this.$t(bizIndicatorName) + ")";
       else {
         if (this.$router.currentRoute.name === "SalesAnalytics") {
           name =
-            this.$t("销售业态排行") + "(" + this.$t(bizIndicatorName) + ")";
+            this.$t("saleBussRanking") + "(" + this.$t(bizIndicatorName) + ")";
         } else {
-          name = this.$t("业态排行") + "(" + this.$t(bizIndicatorName) + ")";
+          name = this.$t("bussRanking") + "(" + this.$t(bizIndicatorName) + ")";
         }
       }
       downloadEx(exportEx, name, [
@@ -632,11 +633,11 @@ export default {
       ).name;
       let name;
       if (this.$store.state.home.headerAction === 0)
-        name = this.$t("购物中心业态排行") + "(" + this.$t(shopIndicatorName) + ")";
+        name = this.$t("shopmallBussRanking") + "(" + this.$t(shopIndicatorName) + ")";
       else if (this.$router.currentRoute.name === "SalesAnalytics") {
-        name = this.$t("销售商铺排行") + "(" + this.$t(shopIndicatorName) + ")";
+        name = this.$t("saleStoreRanking") + "(" + this.$t(shopIndicatorName) + ")";
       } else {
-        name = this.$t("商铺排行") + "(" + this.$t(shopIndicatorName) + ")";
+        name = this.$t("storeRanking") + "(" + this.$t(shopIndicatorName) + ")";
       }
       downloadEx(exportEx, name, [
         this.tableList.coumnTwo,

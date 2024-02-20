@@ -50,8 +50,8 @@
 						:key="item.id">{{ item.label }}
 				</Option>
 			</Select> -->
-			<Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('查询') }}</Button>
-			<Button size="large" @click="resetClick" class="m-l-20">{{ $t('重置') }}</Button>
+			<Button size="large" type="primary" class="m-l-20" @click="handleClick">{{ $t('query') }}</Button>
+			<Button size="large" @click="resetClick" class="m-l-20">{{ $t('reset') }}</Button>
 		</div>
 	</div>
 </template>
@@ -66,7 +66,7 @@
       return {
         entityOptions: [
           {
-            label: '购物中心',
+            label: 'shopmall',
             value: 'mall'
           }
         ],

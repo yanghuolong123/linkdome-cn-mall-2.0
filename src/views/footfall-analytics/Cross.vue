@@ -8,7 +8,7 @@
           v-model="crossDate"
           placement="bottom-start"
           :options="disabledDate"
-          :placeholder="$t('holder.选择日期')"
+          :placeholder="$t('holder.Date')"
           class="w-select"
         ></DatePicker>
         <vs-select
@@ -28,7 +28,7 @@
           type="daterange"
           v-model="crossDateTwo"
           placement="bottom-end"
-          :placeholder="$t('holder.选择日期')"
+          :placeholder="$t('holder.Date')"
           :options="disabledDate"
           :disabled="[2, 3].includes(selectType)"
           class="w-select m-l-20"
@@ -38,7 +38,7 @@
       <div class="flex-center">
         <el-cascader
           v-model="startValue"
-          :placeholder="$t('holder.选择起点')"
+          :placeholder="$t('holder.start')"
           popper-class="cascade-dom"
           class="w-select"
           collapse-tags
@@ -56,7 +56,7 @@
         <el-cascader
           v-model="endValue"
           popper-class="cascade-dom"
-          :placeholder="$t('holder.选择终点')"
+          :placeholder="$t('holder.end')"
           @change="selectEnd('endValue')"
           class="w-select m-l-20"
           collapse-tags
@@ -75,10 +75,10 @@
           class="m-l-20"
           type="primary"
           @click="paramsPrepare"
-          >{{ $t("查询") }}</Button
+          >{{ $t('query') }}</Button
         >
         <Button size="large" class="m-l-20" @click="resetData">{{
-          $t("重置")
+          $t('reset')
         }}</Button>
       </div>
     </div>
@@ -115,13 +115,13 @@
       </div>
     </div>
     <div v-if="selectTyepConfirm == 0" class="cross_analysis">
-      <p v-if="noData" class="noData">{{ $t("holder.暂无数据") }}</p>
+      <p v-if="noData" class="noData">{{ $t("holder.NoData") }}</p>
       <div class="cross_analysis_title">
-        <p>{{ $t("交叉客流路径") }}</p>
+        <p>{{ $t("crossEnterPath") }}</p>
       </div>
       <!-- 最大客流 -->
       <div class="cross_analysis_title" style="margin-top:30px;">
-        <p>{{ $t("最大客流路径") }}</p>
+        <p>{{ $t("maxEnterPath") }}</p>
       </div>
       <div class="progress-title">
         <div
@@ -132,13 +132,13 @@
           <p>{{ $t(item.name) }}</p>
           <span>{{
             index == 0
-              ? $t("fn.累计客流", [item.data])
-              : $t("fn.转化客流", [item.data])
+              ? $t("fn.cumEnter", [item.data])
+              : $t("fn.transEnter", [item.data])
           }}</span>
         </div>
         <div style="clear:both;"></div>
         <div class="progress-center" :style="{ left: marginLeft + '%' }">
-          {{ $t("fn.转化率", [percentData]) }}
+          {{ $t("fn.conversionRate", [percentData]) }}
         </div>
         <div class="arrows"></div>
       </div>
@@ -157,7 +157,7 @@
     </div>
     <div class="cross_analysis">
       <div class="cross_analysis_title">
-        <p>{{ $t("数据指标趋势") }}</p>
+        <p>{{ $t("dataIndexTrend") }}</p>
       </div>
       <div class="dwell-time-icon">
         <vs-select
@@ -179,7 +179,7 @@
           v-on:click="iconClick(index)"
         >
           <icons
-            :title="iconTitle[icon.type]"
+            :title="$t(iconTitle[icon.type])"
             :type="icon.type"
             :size="20"
             :color="iconIndex === index ? iconColor : '#9D9D9DFF'"
@@ -191,7 +191,7 @@
           class="line-show"
           v-bind:class="{ crossLineActive: iconIndex == 0 }"
         >
-          <p v-if="lineNoData" class="noData">{{ $t("holder.暂无数据") }}</p>
+          <p v-if="lineNoData" class="noData">{{ $t("holder.NoData") }}</p>
           <vue-apex-charts
             v-bind:class="{ crossLineChart: lineType == 0 }"
             class="chartLine"
@@ -264,7 +264,7 @@ export default {
       lineType: 0,
       lineTypeList: [
         {
-          text: "客流转化深度",
+          text: "enterTransDepth",
           value: 0,
         },
         // {
@@ -273,7 +273,7 @@ export default {
         // }
       ],
       tableList: [],
-      tableName: ["时间", "客流量"],
+      tableName: ["time", "enterFlow"],
       iconList: [
         {
           type: "zhexiantu",
@@ -285,8 +285,8 @@ export default {
         },
       ],
       iconTitle: {
-        zhexiantu: "折线图",
-        "biaoge-copy": "详细数据",
+        zhexiantu: "lineChart",
+        "biaoge-copy": "detailDt",
       },
       iconIndex: 0,
       iconColor: "rgb(34, 128, 215)",
@@ -303,27 +303,27 @@ export default {
       timeList: [
         {
           icon: require("@/assets/images/fixation_img/rest/total.png"),
-          name: "起点累计客流",
+          name: "startCumEnter",
           data: "",
           contrast: "",
           isActive: true,
-          tootipText: "为起点所有实体的客流之和",
+          tootipText: "isAllEntitySumEnter",
         },
         {
           icon: require("@/assets/images/fixation_img/rest/cross-enter.png"),
-          name: "客流转化深度",
+          name: "enterTransDepth",
           data: "",
           contrast: "",
           isActive: true,
-          tootipText: "进入起点的人去目的实体的平均游逛深度",
+          tootipText: "avgOfEnter",
         },
         {
           icon: require("@/assets/images/fixation_img/rest/cross-enter1.png"),
-          name: "转化客流量",
+          name: "transEnter",
           data: "",
           contrast: "",
           isActive: true,
-          tootipText: "所有从起点实体到终点实体的客流总和",
+          tootipText: "sumOfEnter",
         },
         // {
         //   icon: require('@/assets/images/fixation_img/rest/cross-enter3.webp'),
@@ -404,7 +404,7 @@ export default {
       siteTraffic: {
         series: [
           {
-            name: "客流转化深度",
+            name: "enterTransDepth",
             data: [],
           },
         ],
@@ -589,11 +589,11 @@ export default {
     typeListCom() {
       this.typeList = [
         {
-          text: this.$t("无对比"),
+          text: this.$t("noComp"),
           value: 0,
         },
         {
-          text: this.$t("自定义时间对比"),
+          text: this.$t("cusTimeCompare"),
           value: 1,
         },
         {
@@ -668,11 +668,11 @@ export default {
       // 点击查询
       var time1, time2;
       if (this.startValue.length === 0) {
-        this.$message.warning(this.$t("请选择起点"));
+        this.$message.warning(this.$t("fn.select",[this.$t('startPoint')]));
         return false;
       }
       if (this.endValue.length === 0) {
-        this.$message.warning(this.$t("请选择终点"));
+        this.$message.warning(this.$t("fn.select",[this.$t('endPoint')]));
         return false;
       }
       this.iconIndex = 0;
@@ -895,7 +895,7 @@ export default {
       var dataList = this.allData;
       if (value === 0) {
         that.tableList = [];
-        that.tableName = ["时间", that.$t("客流转化深度") + " ( % )"];
+        that.tableName = [that.$t("time"), that.$t("enterTransDepth") + " ( % )"];
         dataList.everyDateConvrRate.map(function(m) {
           m.data.map(function(d) {
             var table = {};
@@ -923,7 +923,7 @@ export default {
       that.siteTraffic.series = [];
       that.siteTraffic.chartOptions.xaxis.categories = [];
       that.tableList = [];
-      that.tableName = ["时间", that.$t("客流转化深度") + " ( % )"];
+      that.tableName = ["time", that.$t("enterTransDepth") + " ( % )"];
       data.everyDateConvrRate.map(function(m, kIndexs) {
         var obj = {};
         obj.name = m.name;
@@ -996,8 +996,8 @@ export default {
           dateList;
         dateList =
           range == "Month"
-            ? this.$t("fn.第_月", [size])
-            : this.$t("fn.第_天", [size]);
+            ? this.$t("fn.monthTh", [size])
+            : this.$t("fn.dayTh", [size]);
         type === 0 ? (num = n.date) : (num = dateList);
         that.siteTraffic.chartOptions.xaxis.categories.push(num);
       });
@@ -1116,7 +1116,7 @@ export default {
     iconClick(index) {
       this.iconIndex = index;
     },
-    //  更新 线的  x 轴 位置
+    //  update 线的  x 轴 位置
     avgLineXaxisType(size, type) {
       var that = this;
       that.siteTrafficAvg.chartOptions.xaxis.labels.offsetX = size;

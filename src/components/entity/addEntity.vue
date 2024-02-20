@@ -6,7 +6,7 @@
          :title="title">
 
 			<el-form ref="formValidate" :model="formValidate" class="form-data" :rules="ruleValidate" label-position="top">
-					<el-form-item :label="$t('类型')" prop="type_name">
+					<el-form-item :label="$t('type')" prop="type_name">
 						<el-select v-model="formValidate.type_name" :disabled="isModify" class="w-100" @change="entityTypeChange">
 							<el-option v-for="item in typeList"
 												 :value="item.value"
@@ -14,10 +14,10 @@
 												 :key="item.value"></el-option>
 						</el-select>
 					</el-form-item>
-				<el-form-item :label="$t('父节点')" prop="parentNode" v-if="userLvl === 'admin'">
+				<el-form-item :label="$t('parentNode')" prop="parentNode" v-if="userLvl === 'admin'">
 					<el-cascader
 						v-model="formValidate.parentNode"
-						:placeholder="$t('fn._', [$t('holder.请选择'), $t('父节点')])"
+						:placeholder="$t('fn._', [$t('holder.Select'), $t('parentNode')])"
 						class="w-select "
 						style="width: 100%"
 						:props="cascadeProps"
@@ -25,11 +25,11 @@
 					>
 					</el-cascader>
 				</el-form-item>
-				<el-form-item :label="$t('楼层')" prop="zone_index" v-show="formValidate.type_name === 'floor'">
+				<el-form-item :label="$t('floor')" prop="zone_index" v-show="formValidate.type_name === 'floor'">
 					<el-select v-model="formValidate.zone_index"
 										 class="w-100"
 										 @change="floorChange"
-										 :placeholder="$t('fn._', [$t('holder.请选择'), $t('楼层')])"
+										 :placeholder="$t('fn._', [$t('holder.Select'), $t('floor')])"
 										 :disabled="userLvl === 'common_admin'">
 						<el-option v-for="item in floors"
 											 :value="item.value"
@@ -37,15 +37,15 @@
 											 :key="item.id"></el-option>
 					</el-select>
 				</el-form-item>
-					<el-form-item :label="$t('名称')" prop="name" v-show="['store','other'].includes(formValidate.type_name)||(formValidate.type_name==='floor'&&formValidate.zone_index)">
+					<el-form-item :label="$t('name')" prop="name" v-show="['store','other'].includes(formValidate.type_name)||(formValidate.type_name==='floor'&&formValidate.zone_index)">
 						<el-input  maxlength="20" type="text" v-model="formValidate.name" ></el-input>
 					</el-form-item>
-					<el-form-item :label="$t('区域关联')" prop="zoneIds" v-if="isSuperAdmin">
+					<el-form-item :label="$t('areaAsso')" prop="zoneIds" v-if="isSuperAdmin">
 						<el-select v-model="formValidate.zoneIds"
 											 multiple
 											 class="w-100"
 											 @change="changeZones"
-											 :placeholder="$t('holder.请选择')"
+											 :placeholder="$t('holder.Select')"
 											 :disabled="disabledZones">
 							<el-option v-for="item in zonelist"
 												 :value="item.value"
@@ -56,10 +56,10 @@
 
 
 
-					<el-form-item :label="$t('业态')" prop="business_type_id" v-show="formValidate.type_name === 'store'">
+					<el-form-item :label="$t('bussinessType')" prop="business_type_id" v-show="formValidate.type_name === 'store'">
 						<el-select v-model="formValidate.business_type_id"
 											 class="w-100"
-											 :placeholder="$t('fn._', [$t('holder.请选择'), $t('业态')])"
+											 :placeholder="$t('fn._', [$t('holder.Select'), $t('bussinessType')])"
 											 :disabled="disabledModal5">
 							<el-option v-for="item in formats"
 												 :value="item.value"
@@ -68,10 +68,10 @@
 						</el-select>
 					</el-form-item>
 
-					<el-form-item :label="$t('面积')" prop="area_size"  v-show="formValidate.type_name === 'store'">
+					<el-form-item :label="$t('squareMeasure')" prop="area_size"  v-show="formValidate.type_name === 'store'">
 						<el-input  v-model.number="formValidate.area_size" ></el-input>
 					</el-form-item>
-					<el-form-item :label="$t('描述')" prop="description">
+					<el-form-item :label="$t('description')" prop="description">
 						<el-input maxlength="50" type="text" v-model="formValidate.description" ></el-input>
 					</el-form-item>
 				</el-form>
@@ -108,7 +108,7 @@ export default {
   data() {
     const validSelect = (rule, value, callback) => {
       if (value === "" || (rule.field == "zoneIds" && !value[0])) {
-        callback(new Error(i18n.t("fn.请选择", [i18n.t(rule.tips)])));
+        callback(new Error(i18n.t("fn.select", [i18n.t(rule.tips)])));
       } else {
         callback();
       }
@@ -117,10 +117,10 @@ export default {
       // 模拟异步验证效果
       setTimeout(() => {
         if (!Number.isFinite(Number(value))) {
-          callback(new Error(i18n.t("面积数要为数字")));
+          callback(new Error(i18n.t("areaMustNumber")));
         } else {
           if (value < 0) {
-            callback(new Error(i18n.t("面积数不能为负")));
+            callback(new Error(i18n.t("areaCtNeg")));
           } else {
             callback();
           }
@@ -142,7 +142,7 @@ export default {
         name: [
           {
             required: true,
-            message: this.$t("名称不能为空"),
+            message: this.$t('fn.cantBeEmpty',[this.$t('name')]),
             trigger: "blur",
           },
         ],
@@ -166,7 +166,7 @@ export default {
         parentNode: [
           {
             required: true,
-            tips: "父节点",
+            tips: "parentNode",
             validator: validSelect,
             trigger: "change",
           },
@@ -237,12 +237,12 @@ export default {
       currentYear: new Date().getFullYear(),
       typeList:[
         {
-          value: 'floor', label: "楼层",id:51
+          value: 'floor', label: "floor",id:51
 
         },{
-          value: 'store', label: "商铺",id:50
+          value: 'store', label: "store",id:50
         },{
-          value: 'other', label: "其他",id:2
+          value: 'other', label: "Other",id:2
         }
       ],
 			parentNodeTree:[]
@@ -291,9 +291,9 @@ export default {
 		},
     title(){
       if(this.isModify){
-        return this.$t("fn.编辑", [this.$t("实体")])
+        return this.$t("fn.edit", [this.$t("entity")])
 			}else {
-        return this.$t("fn.添加", [this.$t("实体")])
+        return this.$t("fn.add", [this.$t("entity")])
 			}
 		},
     parentNodeCascade(){
@@ -329,7 +329,7 @@ export default {
     validSelect(rule, value, callback){
       if(this.formValidate.type_name === 'store'){
         if (value === "" || (rule.field == "zoneIds" && !value[0])) {
-          callback(new Error(this.$t("fn.请选择", [this.$t(rule.tips)])));
+          callback(new Error(this.$t("fn.select", [this.$t(rule.tips)])));
         } else {
           callback();
         }
@@ -462,7 +462,7 @@ export default {
     updateEntity(data){
       updateEntity(data.id,data).then(()=>{
         this.$message.success(
-          this.$t("fn.successTo", [this.$t("编辑")])
+          this.$t("fn.successTo", [this.$t("edit")])
         );
         this.$refs.modal.resetOkButton()
         this.closeModal()
@@ -478,7 +478,7 @@ export default {
         if(res.data.code === 200){
           data.id = res.data.data.id
           this.$message.success(
-            this.$t("fn.successTo", [this.$t("添加")])
+            this.$t("fn.successTo", [this.$t("add")])
           );
           this.$refs.modal.resetOkButton()
           this.closeModal()

@@ -1,5 +1,5 @@
 <template>
-    <h-modal ref="modal" :title="$t('热力图辅助点位配置')" :footerHide="true" :width="1350">
+    <h-modal ref="modal" :title="$t('heatmapPointConfig')" :footerHide="true" :width="1350">
         <div class="modal-ctn flex-start">
             <div class="left" ref="heatmap" @click="setPosition" :class="{cross:status}"
                  :style="{backgroundImage:`url(${imgSrc?imgSrc:placeholder})`}">
@@ -13,19 +13,19 @@
             <div class="right m-l-20 flex-column">
                 <div class="flex-start info" v-if="currentPosition">
                     <div class="flex-column">
-                        <span>{{$t('当前点位')}}：</span>
-                        <span>x{{$t('坐标')}}:{{currentPosition.x}}</span>
-                        <span>y{{$t('坐标')}}:{{currentPosition.y}}</span>
+                        <span>{{$t('currentPoint')}}：</span>
+                        <span>x{{$t('coordinate')}}:{{currentPosition.x}}</span>
+                        <span>y{{$t('coordinate')}}:{{currentPosition.y}}</span>
                     </div>
-                    <Button class="m-l-20" type="error" @click="delClick">{{$t('删除')}}</Button>
+                    <Button class="m-l-20" type="error" @click="delClick">{{$t('del')}}</Button>
                 </div>
                 <div v-if="!status">
-                    <Button @click="beginClick" >{{$t('开始打点')}}</Button>
+                    <Button @click="beginClick" >{{$t('startManaging')}}</Button>
                     <Button @click="removeAll" class="m-l-20"
-                            :disabled="!positionList.length" type="error">{{$t('全部清除')}}</Button>
+                            :disabled="!positionList.length" type="error">{{$t('cleanAll')}}</Button>
 
                 </div>
-                <Button @click="handleSave" v-else>{{$t('保存')}}</Button>
+                <Button @click="handleSave" v-else>{{$t('save')}}</Button>
             </div>
 
         </div>

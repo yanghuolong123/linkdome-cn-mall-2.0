@@ -3,7 +3,7 @@
         margin: 0 60px;">
 		<div class="flex-center title" style=" font-size: 36px;">
 			<img style=" width: 28px;" :src="img" alt="">
-			<span>{{$t('report.凌图智慧点评')}}</span>
+			<span>{{$t('report.linkdomeReview')}}</span>
 		</div>
 		<ul style="  margin-top: 15px;
             padding-left: 35px;">

@@ -6,11 +6,11 @@
         :value="checkAll"
         :disabled="disabled"
         @click.prevent.native="handleCheckAll">
-        {{ $t(checkDatas.cname) }}
+        {{ $t(checkDatas.name) }}
       </Checkbox>
     </div>
     <CheckboxGroup v-model="checkValues" class="checkList" @on-change="onchange">
-      <Checkbox class="margin-t-b ellipsis-1" :title="$t(item.cname)" :label="$t(item.cname)" :disabled="disabled" v-for=" item in checkDatas.subpagesList"></Checkbox>
+      <Checkbox class="margin-t-b ellipsis-1" :title="$t(item.name)" :label="$t(item.name)" :disabled="disabled" v-for=" item in checkDatas.subpagesList"></Checkbox>
     </CheckboxGroup>
   </div>
 </template>

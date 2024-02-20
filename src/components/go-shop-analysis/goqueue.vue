@@ -15,7 +15,7 @@
           class="w-select m-l-20"
           autocomplete
           v-model="activities"
-					:placeholder="$t('fn.请选择',[$t('排队名')])"
+					:placeholder="$t('fn.select',[$t('queueName')])"
           style="width:14.375rem;"
           multiple>
 					<vs-select-item
@@ -33,21 +33,21 @@
 					style="width:14.375rem;">
 					<vs-select-item
 						value="0"
-						:text="$t('排队长度')"
+						:text="$t('queueLength')"
 					/>
 					<vs-select-item
 						value="1"
-						:text="$t('平均等待时间')"
+						:text="$t('avgWaitingTime')"
 					/>
 				</vs-select>
-				<Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('查询') }}</Button>
-				<Button size="large" class="m-l-20" @click="resetData">{{ $t('重置') }}</Button>
-			
+				<Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('query') }}</Button>
+				<Button size="large" class="m-l-20" @click="resetData">{{ $t('reset') }}</Button>
+
 			</div>
 		</div>
 		<div class="go-shop-chart-list">
 			<div class="go-shop-time-icon">
-				<span>{{ $t('结账排队分析') }}</span>
+				<span>{{ $t('checkoutQueueAnaly') }}</span>
 				<p class="flex-center">
           <span :key="index" v-for="(icon,index) in iconList" v-on:click="iconClick(icon.value)">
             <icons
@@ -59,7 +59,7 @@
           </span>
 				</p>
 			</div>
-			<div v-show="isData" class="noData">{{ $t('holder.暂无数据') }}</div>
+			<div v-show="isData" class="noData">{{ $t('holder.NoData') }}</div>
 			<vue-apex-charts
         v-bind:class="{ lineAction: iconIndex == 0 }"
         class="shop-line"
@@ -159,7 +159,7 @@ export default {
           colors: ['#33B3ED', '#2BD9CF', '#94E2FF', '#FBAB40', '#8D82F0', '#E8585A'],
           stroke: {
             width: 2,
-          
+
           },
           xaxis: {
             categories: []
@@ -187,7 +187,7 @@ export default {
           tooltip: {
             y: {
               formatter: function (val) {
-                
+
                 return  val
               }
             }
@@ -292,7 +292,7 @@ export default {
             }else{
               txDataArray.push(value.avg_waittime)
             }
-            
+
             return key
           } )
           xArray = txArray;
@@ -304,7 +304,7 @@ export default {
         that.graphData.chartOptions.xaxis.categories = xArray
         that.graphData.chartOptions.legend.data = legend
         that.graphData.series = xDataArray
-        let yTitle = dataTypeEle == 0 ? this.$t('population'):this.$t('平均等待时间')+"("+this.$t('second')+")"
+        let yTitle = dataTypeEle == 0 ? this.$t('population'):this.$t('avgWaitingTime')+"("+this.$t('second')+")"
         let labelsObj = {}
         if(dataTypeEle == 0) {
           labelsObj = {
@@ -331,7 +331,7 @@ export default {
             }
           })
         }
-  
+
 
         _.forEach(data,(ele)=>{
           that.goName.push(ele.name)
@@ -350,13 +350,13 @@ export default {
             }else{
               obj.percentList.push(item[timeArray[j]].avg_waittime)
             }
-            
+
           }
           resultArray.push(obj)
         }
 
         that.goTableList = resultArray
-        
+
       })
     },
     // 重置数据
@@ -367,7 +367,7 @@ export default {
       this.crossDate = dateTime
       this.dataType = 0
       this.activities = []
-      
+
     },
     // 点击图标
     iconClick (index) {
@@ -406,7 +406,7 @@ export default {
 .go-shop {
   width: 100%;
   height: auto;
-  
+
   .go-shop-chart-list {
     background-color: #fff;
     box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .05);
@@ -425,7 +425,7 @@ export default {
       align-items: center;
       justify-content: center;
     }
-    
+
     .go-shop-time-icon {
       position: absolute;
       left: 0;
@@ -438,46 +438,46 @@ export default {
       justify-content: space-between;
       padding: 0 20px;
       font-size: 18px;
-      
+
       .flex-center {
         margin-top: 20px;
         float: right;
         margin-right: 50px;
-        
+
         span {
-          
+
           cursor: pointer;
         }
-        
+
         span + span {
           margin-left: 10px;
         }
       }
-      
+
       span:nth-child(1) {
         font-size: 18px;
       }
     }
-    
+
     .shop-line {
       margin-top: 50px;
     }
-    
+
     .shop-line, .shop-table {
       transition: none !important;
       transform: translateY(100%);
     }
-    
+
     .shop-table {
       height: 100%;
       box-shadow: none;
       overflow: auto;
     }
-    
+
     .lineAction {
       transform: translateY(0%) !important;
     }
-    
+
     .tableAction {
       transform: translateY(-100%) !important;
     }

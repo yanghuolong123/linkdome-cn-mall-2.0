@@ -3,7 +3,7 @@
     <div class="group-client">
       <div class="box-card left">
         <div class="title">
-          <p>{{ $t("年龄分布") }}</p>
+          <p>{{ $t("ageDist") }}</p>
           <ul>
             <li
               :title="iconTitle[icon.type]"
@@ -38,7 +38,7 @@
 
       <div class=" box-card center">
         <div class="title">
-          <p>{{ $t("性别分布") }}</p>
+          <p>{{ $t("genderDist") }}</p>
           <ul>
             <li
               :title="iconTitle[icon.type]"
@@ -77,7 +77,7 @@
       <div class=" box-card left">
         <div class="title">
           <p>
-            {{ $t("新老顾客占比") }}
+            {{ $t("newOldCusProportion") }}
             <Tooltip
               :content="$t('notices.customer')"
               placement="bottom"
@@ -123,7 +123,7 @@
       </div>
       <div class=" box-card right">
         <div class="title">
-          <p>{{ $t("到店次数占比") }}</p>
+          <p>{{ $t("storeVisitProportion") }}</p>
           <ul>
             <li
               :key="index"
@@ -205,20 +205,20 @@ export default {
         },
       ],
       iconTitle: {
-        "62": "柱状图",
-        "biaoge-copy": "详细数据",
-        daoru: "下载",
+        "62": this.$t('barChart'),
+        "biaoge-copy":this.$t('detailDt'),
+        daoru: this.$t('download'),
       },
       // table
-      ageName: ["购物中心"],
+      ageName: ["shopmall"],
       ageTableList: [],
-      frequencyName: ["购物中心"],
+      frequencyName: ["shopmall"],
       frequencyTableList: [],
-      clientName: ["购物中心"],
+      clientName: ["shopmall"],
       clientTableList: [],
-      genderName: ["购物中心"],
+      genderName: ["shopmall"],
       genderTableList: [],
-      vipName: ["购物中心"],
+      vipName: ["shopmall"],
       vipTableList: [],
       // chart type
       // 年龄分布
@@ -265,8 +265,8 @@ export default {
         },
         tooltip: {
           y: {
-            formatter: function(val) {
-              return val.toLocaleString() + "人";
+            formatter: (val)=> {
+              return val.toLocaleString() + this.$t("person");
             },
           },
         },
@@ -322,8 +322,8 @@ export default {
         },
         tooltip: {
           y: {
-            formatter: function(val) {
-              return val.toLocaleString() + "人";
+            formatter: (val) =>{
+              return val.toLocaleString() + this.$t("person");
             },
           },
         },
@@ -379,8 +379,8 @@ export default {
         },
         tooltip: {
           y: {
-            formatter: function(val) {
-              return val.toLocaleString() + "人";
+            formatter: (val)=> {
+              return val.toLocaleString() + this.$t("person");
             },
           },
         },
@@ -436,8 +436,8 @@ export default {
         },
         tooltip: {
           y: {
-            formatter: function(val) {
-              return val.toLocaleString() + "人";
+            formatter: (val) =>{
+              return val.toLocaleString() + this.$t("person");
             },
           },
         },
@@ -568,7 +568,7 @@ export default {
           if (genderValues.length != 0) {
             Object.keys(genderValues[0]).map((name, index) => {
               let obj = {};
-              obj.name = this.$t(index == 0 ? "女性" : "男性");
+              obj.name = this.$t(index == 0 ? "female" : "male");
               obj.data = [];
               genderValues.map((lise) => {
                 obj.data.push(lise[index]);
@@ -583,7 +583,7 @@ export default {
               xaxis: { categories: that.genderChartOptions.xaxis.categories },
             });
           that.genderSeries.map((name) => {
-            that.genderName.push(name.name + `(${this.$t("人")})`);
+            that.genderName.push(name.name + `(${this.$t('person')})`);
           });
           genderKeys.map(function(list, index) {
             let obj = {};
@@ -643,13 +643,13 @@ export default {
       };
       let ageValue = Object.values(data);
       let nameList = Object.keys(ageValue[0]);
-      let names = ["少年", "青年", "中年", "老年"];
+      let names = ["Juvenile", "Youth", "midLife", "oldAge"];
       nameList.map((list, index) => {
         let obj = {};
         if (type == "number") {
           let xName;
           Number(list) == nameList.length
-            ? (xName = this.$t(list + "次及以上"))
+            ? (xName = this.$t('over5times'))
             : (xName = this.$t("fn.times", [this.$t(list)]));
           obj.name = xName;
         } else if (type === "age") {
@@ -658,11 +658,11 @@ export default {
           } else {
             obj.name = list
               .replace("_", "-")
-              .replace("less-", this.$t("小于"))
-              .replace(/more-/, this.$t("大于"));
+              .replace("less-", this.$t('lessThan'))
+              .replace(/more-/, this.$t('moreThan'));
           }
         } else {
-          obj.name = list + `(${this.$t("人")})`;
+          obj.name = list + `(${this.$t('person')})`;
         }
         obj.data = [];
         ageValue.map(function(val, vIndex) {
@@ -679,7 +679,7 @@ export default {
         dataNumber.series.push(obj);
       });
       dataNumber.series.map((name) => {
-        let tableName = name.name + `(${this.$t("人")})`;
+        let tableName = name.name + `(${this.$t('person')})`;
         type == "age"
           ? that.ageName.push(tableName)
           : that.frequencyName.push(tableName);
@@ -709,7 +709,7 @@ export default {
       nameList.map((name) => {
         let obj = {};
         if (type == "client")
-          obj.name = this.$t(name == "newNum" ? "新顾客" : "老顾客");
+          obj.name = this.$t(name == "newNum" ? "newCustomer" : "reCustomer");
         else obj.name = name == "vipNum" ? "VIP顾客" : "普通顾客";
         obj.data = [];
         clinetValue.map((list) => {
@@ -721,7 +721,7 @@ export default {
       });
 
       dataNumber.series.map((name) => {
-        let tableName = name.name + `(${this.$t("人")})`;
+        let tableName = name.name + `(${this.$t('person')})`;
         type == "client"
           ? that.clientName.push(tableName)
           : that.vipName.push(tableName);
@@ -783,15 +783,15 @@ export default {
       this.clientIconIndex = 0;
       this.genderIconIndex = 0;
 
-      this.ageName = ["购物中心"];
+      this.ageName = ["shopmall"];
       this.ageTableList = [];
-      this.frequencyName = ["购物中心"];
+      this.frequencyName = ["shopmall"];
       this.frequencyTableList = [];
-      this.clientName = ["购物中心"];
+      this.clientName = ["shopmall"];
       this.clientTableList = [];
-      this.genderName = ["购物中心"];
+      this.genderName = ["shopmall"];
       this.genderTableList = [];
-      this.vipName = ["购物中心"];
+      this.vipName = ["shopmall"];
       this.vipTableList = [];
     },
     downloadData(val1, val2) {
@@ -820,22 +820,22 @@ export default {
     },
     downloadAgeData() {
       let tableData = this.downloadData(this.ageName, this.ageTableList);
-      downloadEx(exportEx, "年龄分布客流数据", tableData);
+      downloadEx(exportEx, this.$t("ageDistFlowData"), tableData);
     },
     downloadGenData() {
       let tableData = this.downloadData(this.genderName, this.genderTableList);
-      downloadEx(exportEx, "性别分布客流数据", tableData);
+      downloadEx(exportEx, this.$t("genderDistFlowData"), tableData);
     },
     downloadCusData() {
       let tableData = this.downloadData(this.clientName, this.clientTableList);
-      downloadEx(exportEx, "新老顾客占比数据", tableData);
+      downloadEx(exportEx, this.$t("customerProData"), tableData);
     },
     downloadNumData() {
       let tableData = this.downloadData(
         this.frequencyName,
         this.frequencyTableList
       );
-      downloadEx(exportEx, "顾客到店次数占比数据", tableData);
+      downloadEx(exportEx, this.$t("customerVisitProData"), tableData);
     },
     downloadVipData() {},
   },

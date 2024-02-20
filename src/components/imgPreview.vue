@@ -3,8 +3,8 @@
         <img  :src="url" alt="">
         <div class="mask " v-show="maskShow">
             <div class="flex-center">
-                <Icon type="md-eye" title="预览" @click="preview"/>
-                <Icon type="md-trash" title="删除" @click="delClick" class="m-l-20" />
+                <Icon type="md-eye" :title="$t('Preview')" @click="preview"/>
+                <Icon type="md-trash" :title="$t('del')" @click="delClick" class="m-l-20" />
             </div>
 
         </div>
@@ -12,7 +12,7 @@
                 footer-hide
                 v-model="modal"
                 width="500"
-                :title="$t('预览')"
+                :title="$t('Preview')"
                >
             <img class="pre-img" :src="url" alt="">
         </Modal>

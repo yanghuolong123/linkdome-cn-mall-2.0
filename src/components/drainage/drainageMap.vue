@@ -1,6 +1,6 @@
 <template>
 	<div class="drainage-map">
-		<h1>{{ $t('引流图') }}
+		<h1>{{ $t('drainageMap') }}
 			<Tooltip :content="$t('passages.tootipText4')" placement="right" theme="light" transfer max-width="500">
 				<icons type="wenhao"/>
 			</Tooltip>
@@ -24,10 +24,10 @@
 					</div>
 				</div>
 				<div class="text-location" v-for="item in centerData">
-<!--					<p v-if="headerData.show_actual_val">{{item.enter}}{{$t('人次')}}</p>-->
+<!--					<p v-if="headerData.show_actual_val">{{item.enter}}{{$t('personTime')}}</p>-->
 					<p>{{ $t(item.text) }}：{{ item.value }}%</p>
 					<p>
-						{{ $t('环比') }}
+						{{ $t('QOQ') }}
 						<Icon type="md-arrow-dropdown" v-if="item.action"/>
 						<Icon type="md-arrow-dropup" v-else/>
 						<span v-bind:class="{ clolorAction: item.action }">{{item.link}}%</span>
@@ -107,24 +107,24 @@
 		border-radius: .5rem;
 		background-color: #fff;
 
-		
+
 		h1 {
 			font-size: 24px;
 			color: #3e3c3c;
 			padding: 27px 19px 0;
 			font-weight: 400;
 		}
-		
+
 		.drainage-map-text {
 			width: 95%;
 			height: 800px;
 			padding-bottom: 50px;
-			
+
 			.drainage-map-left, .drainage-map-center, .drainage-map-right {
 				float: left;
 				height: 100%;
 				position: relative;
-				
+
 				.drainage-map-left-bottom, .drainage-map-left-top {
 					position: absolute;
 					left: 0;
@@ -135,24 +135,24 @@
 					box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .05);
 					overflow-y: scroll;
 				}
-				
+
 				.drainage-map-left-top {
 					top: 0;
 				}
-				
+
 				.drainage-map-left-bottom {
 					bottom: 0;
 				}
 			}
-			
+
 			.drainage-map-left, .drainage-map-right {
 				width: 30%;
 			}
-			
+
 			.drainage-map-center {
 				width: 40%;
 				position: relative;
-				
+
 				.drainage-map-center-bg {
 					display: block;
 					width: 100%;
@@ -160,71 +160,71 @@
 					position: absolute;
 					top: 160px;
 				}
-				
+
 				.text-location {
 					position: absolute;
-					
+
 					&:nth-child(3) {
 						left: 3%;
 						top: 80px;
 					}
-					
+
 					&:nth-child(4) {
 						right: 3%;
 						top: 80px;
-						
+
 						p {
 							text-align: right;
 						}
 					}
-					
+
 					&:nth-child(5) {
 						left: 3%;
 						bottom: 60px;
-						
+
 					}
-					
+
 					&:nth-child(6) {
 						right: 3%;
 						bottom: 60px;
-						
+
 						p {
 							text-align: right;
 						}
 					}
-					
+
 					p {
 						font-size: 16px;
 						color: #3b3a3a;
-						
+
 						&:nth-child(2) {
 							font-size: 14px;
 							color: #8e9696;
 							margin: 10px 0;
-							
+
 						}
-						
+
 						span {
 							color: #26b465;
 						}
-						
+
 						.clolorAction {
 							color: #f64f61;
 						}
-						
+
 						.ivu-icon-md-arrow-dropup {
 							font-size: 18px;
 							color: #26b465;
 						}
-						
+
 						.ivu-icon-md-arrow-dropdown {
 							font-size: 18px;
 							color: #f64f61;
 						}
 					}
-					
+
 				}
-				
+
 				.drainage-map-center-text {
 					position: absolute;
 					left: 0;
@@ -243,7 +243,7 @@
 						margin: -50px;
 						width: 100px;
 						height: 100px;
-						
+
 						img {
 							display: block;
 							height: 100px;
@@ -251,7 +251,7 @@
 							border-radius: 50%;
 						}
 					}
-					
+
 					.drainage-shop-name {
 						margin-top: 10px;
 						font-size: 18px;

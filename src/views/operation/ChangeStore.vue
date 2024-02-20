@@ -3,7 +3,7 @@
 	<div class="shop-portrait">
     <div class="selector-container common-card" style="margin-bottom:20px">
        <div class="flex-center">
-         {{	$t('维度')}}:&nbsp;&nbsp;
+         {{	$t('dimension')}}:&nbsp;&nbsp;
           <Select v-model="type" @on-change="typeChange"  style="width:100px;" >
             <Option v-for="(item,index) in typeOptions"
                 :value="item.value"
@@ -14,7 +14,7 @@
                 :value="item.id"
                 :key="index">{{ type==='store'?item.shop_name:item.location_name }}</Option>
           </Select>
-          {{$t('调铺时间')}}:&nbsp;&nbsp;
+          {{$t('adjustTime')}}:&nbsp;&nbsp;
           <Select v-model="currentDate" @on-change="dateChange"  style="width:200px;" >
             <Option v-for="(item,index) in dateOptions"
                 :value="item.location_change_time"
@@ -24,12 +24,12 @@
     </div>
 		<div class="box-card bg-white flex-box">
 			<div class="card" >
-				<span class="flex-box"><span class="color" style="background-color: #009FE9"></span> {{$t('fn.调铺前_',[$t(displayName)])}}</span>
+				<span class="flex-box"><span class="color" style="background-color: #009FE9"></span> {{$t('fn.beforeStoreChange',[$t(displayName)])}}</span>
 				<div class="flex-box entity-info" v-if="cardList[1]" >
 					<span>{{cardList[1]&&cardList[1].name}}</span>
 					<span v-if="type!=='store'">{{$t('开业时间点')}}:{{cardList[1].openDate}}</span>
 				</div>
-				<span>{{$t('调铺前数据指标时间段')}}</span>
+				<span>{{$t('dataBeforeAdjust')}}</span>
 				<DatePicker v-if="cardList[1]"
 						:options="dateRangeBefore"
 						:value="cardList[1]&&cardList[1].timeRange"
@@ -39,12 +39,12 @@
 
 			</div>
 			<div class="card">
-				<span class="flex-box"><span class="color" style="background-color: #2BD9CF"></span> {{$t('fn.调铺后_',[$t(displayName)])}}</span>
+				<span class="flex-box"><span class="color" style="background-color: #2BD9CF"></span> {{$t('fn.afterStoreChange',[$t(displayName)])}}</span>
 				<div class="flex-box entity-info" v-if="cardList[0]">
 					<span>{{cardList[0]&&cardList[0].name}}</span>
 					<span v-if="type!=='store'">{{$t('开业时间点')}}:{{cardList[0].openDate}}</span>
 				</div>
-				<span>{{$t('调铺后数据指标时间段')}}</span>
+				<span>{{$t('dataAfterAdjust')}}</span>
 				<DatePicker v-if="cardList[0]" :value="cardList[0]&&cardList[0].timeRange"
 							:options="dateRangeAfter"
 							@on-change="(val)=>{timeRangeChange(0,val)}"
@@ -55,7 +55,7 @@
 						:value="item.value"
 						:key="index">{{ $t(item.name) }}</Option>
 			</Select>
-      <Button size="large" type="primary" class="m-l-20"  @click="handleSearch" >{{ $t('查询') }}</Button>
+      <Button size="large" type="primary" class="m-l-20"  @click="handleSearch" >{{ $t('query') }}</Button>
 		</div>
 		<div class="box-card bg-white detail" v-if="showCharts">
 			<div class="chart-box">
@@ -123,10 +123,10 @@ export default {
       type: 'store',
       typeOptions: [
         {
-          name: '店铺',
+          name: 'store',
           value: 'store'
         }, {
-          name: '位置',
+          name: 'location',
           value: 'positon'
         }
       ],
@@ -150,7 +150,7 @@ export default {
             }
           },
           tooltip: {
-            
+
             y: {
               formatter: function (val, params) {
                 return val
@@ -175,7 +175,7 @@ export default {
           data: [0, 0, 0, 0, 0]
         }]
       },
-      displayName: '位置',
+      displayName: 'location',
       dateRangeBefore: {
         disabledDate (date) {
 
@@ -210,7 +210,7 @@ export default {
           }
         },
         noData: {
-          text: '暂无数据',
+          text: this.$t("holder.NoData"),
           align: 'center',
           verticalAlign: 'middle',
           offsetX: 0,
@@ -244,25 +244,25 @@ export default {
       saleMultipleSelected: [],
       radarOptions: [
         {
-          name: this.$t('租金坪效'),
+          name: this.$t('rentalEff'),
           value: 'SquaerMetre',
-          unit: this.$t('元/m²')
+          unit: this.$t('effUnit')
         }, {
-          name: this.$t('销售额'),
+          name: this.$t('salesVolume'),
           value: 'SaleAmount',
-          unit: this.$t('元')
+          unit: this.$t('yuanUnit')
         }, {
-          name: this.$t('停留时间'),
+          name: this.$t('dwellTime'),
           value: 'Dwell',
           unit: 'min'
         }, {
-          name: this.$t('成交率'),
+          name: this.$t('turnoverRate'),
           value: 'CloseRate',
           unit: '%'
         }, {
-          name: this.$t('客流量'),
+          name: this.$t('fx.enter'),
           value: 'Enter',
-          unit: this.$t('人次')
+          unit: this.$t('personTime')
         }
       ]
     }
@@ -406,7 +406,7 @@ export default {
       }
       this.lineSeries = [seriesData1, seriesData2]
       targetData.forEach((o, i) => {
-        this.lineOptions.xaxis.categories.push(this.$t('fn.第_天',[i+1]))
+        this.lineOptions.xaxis.categories.push(this.$t('fn.dayTh',[i+1]))
         _.forIn(o, (val, key) => {
             this.lineSeries.find(l => {
               return l.key === key
@@ -452,7 +452,7 @@ export default {
       this.radarOriginData = data || []
       this.cardList = []
       this.series = []
-      this.displayName = this.type === 'store' ? '位置' : '店铺'
+      this.displayName = this.type === 'store' ? 'location' : '店铺'
       if (data) {
         data.forEach((o, i) => {
           const timeRange = [i ? Moment(this.currentDate).add(-7, 'day').format('YYYY-MM-DD') : this.currentDate, i ? this.currentDate : Moment(this.currentDate).add(7, 'day').format('YYYY-MM-DD')]

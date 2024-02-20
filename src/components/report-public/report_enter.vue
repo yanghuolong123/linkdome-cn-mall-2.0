@@ -33,7 +33,7 @@
             style="font-size: 28px;
 						margin-top: 14px;"
           >
-            {{$t('report.累计客流')}}
+            {{$t('report.accumEnter')}}
           </h4>
           <p style="	font-size: 26px;" class="ellipsis-1">{{ data.enter }}</p>
           <!-- <div class="left-gender">
@@ -66,7 +66,7 @@
               />
             </div>
             <div class="right-top-number" style="	margin-left: 18px;">
-              <h4 style="	font-size: 28px;">{{$t('客流峰值')}}</h4>
+              <h4 style="	font-size: 28px;">{{$t('flowPeak')}}</h4>
               <p style="font-size: 26px;" class="ellipsis-1">{{ data.enterPeak }}</p>
               <span style="font-size: 16px;">{{ data.enterTime }}</span>
             </div>
@@ -87,7 +87,7 @@
               />
             </div>
             <div class="right-top-number" style="	margin-left: 18px;">
-              <h4 style="	font-size: 28px;">{{$t('report.集客量峰值')}}</h4>
+              <h4 style="	font-size: 28px;">{{$t('report.occuPeak')}}</h4>
               <p style="font-size: 26px;" class="ellipsis-1">{{ data.occupancyPeak }}</p>
               <span style="font-size: 16px;" class="ellipsis-1">{{ data.occupancyTime }}</span>
             </div>
@@ -115,7 +115,7 @@
               />
             </div>
             <div class="right-bottom-number" style="	margin-left: 18px;">
-              <h4 style="font-size: 28px;" class="ellipsis-1">{{$t('report.平均客流量')}}</h4>
+              <h4 style="font-size: 28px;" class="ellipsis-1">{{$t('report.avgEnter')}}</h4>
               <p style="font-size: 26px;" class="ellipsis-1">{{ data.average }}</p>
             </div>
           </div>
@@ -135,7 +135,7 @@
               />
             </div>
             <div class="right-bottom-number" style="	margin-left: 18px;">
-              <h4 style="font-size: 28px;">{{$t('report.有效客流量')}}</h4>
+              <h4 style="font-size: 28px;">{{$t('report.effectEnter')}}</h4>
               <p style="	font-size: 26px;" class="ellipsis-1">{{ data.valid }}</p>
             </div>
           </div>

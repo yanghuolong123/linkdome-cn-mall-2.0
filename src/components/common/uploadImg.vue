@@ -12,7 +12,7 @@
         name="file">
           <Button v-show ="showUpload" type="primary" :disabled="disabled" class="buttons">
             <Icon type="md-cloud-upload"  />
-            <slot>{{$t('上传')}}</slot>
+            <slot>{{$t('upload')}}</slot>
           </Button>
       </Upload>
       <!-- <div style="text-align:center;">
@@ -53,7 +53,7 @@ export default {
       if (res.code == 200) {
         if(!img){
           this.$vs.loading.close();
-          this.$message.error(this.$t('fn.failedTo',[this.$t('上传')]))
+          this.$message.error(this.$t('fn.failedTo',[this.$t('upload')]))
           return
         }
         if ( res.data.url.error != undefined && res.data.url.error.length > 0) {
@@ -61,9 +61,9 @@ export default {
           // alert(res.data.url.error)
           this.$vs.dialog({
             color: this.colorAlert,
-            title:this.$t('上传图片'),
+            title:this.$t('uploadImg'),
             text: res.data.url.error,
-            acceptText: this.$t('确定')
+            acceptText: this.$t('Confrim')
           })
         } else {
           this.$emit('changeImg', img)
@@ -73,9 +73,9 @@ export default {
         this.$vs.loading.close()
         this.$vs.dialog({
           color: this.colorAlert,
-          title:this.$t('上传图片'),
+          title:this.$t('uploadImg'),
           text: res.message,
-          acceptText:  this.$t('确定')
+          acceptText:  this.$t('Confrim')
         })
       }
     },
@@ -89,9 +89,9 @@ export default {
       // alert('请上传jpg、jpeg、png格式的头像')
       this.$vs.dialog({
         color: this.colorAlert,
-        title: this.$t('上传图片'),
+        title: this.$t('uploadImg'),
         text: this.$t('notices.imgFormat'),
-        acceptText: this.$t('确定')
+        acceptText: this.$t('Confrim')
       })
     }
   }

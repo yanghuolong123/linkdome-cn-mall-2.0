@@ -10,8 +10,8 @@
           :series="agechartData.series"
           :type="agechartData.type"
           :chartWidth="ageChartWidth"
-          title="年龄分布"
-          :tooltipUnit="$t('人')"
+          title="ageDist"
+          :tooltipUnit="$t('person')"
           @tableChage="ageTableChange"
         >
           <export-menu slot="export" @onchange="ageExportBiztop"></export-menu>
@@ -24,8 +24,8 @@
           :series="genderChartData.series"
           :type="genderChartData.type"
           :chartWidth="ageChartWidth"
-          title="性别分布"
-          :tooltipUnit="$t('人')"
+          title="genderDist"
+          :tooltipUnit="$t('person')"
           @tableChage="genderTableChange"
         >
           <export-menu
@@ -59,17 +59,17 @@ export default {
       canshow: false,
       genderName: {
         "1": {
-          name: this.$t("男性"),
+          name: this.$t("male"),
           icon: "male",
         },
         "0": {
-          name: this.$t("女性"),
+          name: this.$t("female"),
           icon: "female",
         },
       },
       genderDict: {
-        female: this.$t("女性"),
-        male: this.$t("男性"),
+        female: this.$t("female"),
+        male: this.$t("male"),
       },
       chartData: { age: {}, gender: {} },
       extraOptions: {
@@ -168,15 +168,15 @@ export default {
       if (ageCollection[0].data) {
         let flag = Object.values(ageCollection[0].data).length <= 4;
         ageLabels = {
-          name: this.$t("年龄"),
+          name: this.$t("age"),
           key: "age",
           data: flag
-            ? [this.$t("少年"), this.$t("青年"), this.$t("中年"), this.$t("老年")]
+            ? [this.$t("Juvenile"), this.$t("Youth"), this.$t("midLife"), this.$t("oldAge")]
             : Object.keys(ageCollection[0].data).map((e) => {
                 return e
                   .replace("_", "-")
-                  .replace("less-", this.$t("小于"))
-                  .replace(/more-/, this.$t("大于"));
+                  .replace("less-", this.$t('lessThan'))
+                  .replace(/more-/, this.$t('moreThan'));
               }),
         };
       }
@@ -188,14 +188,14 @@ export default {
         ]);
         genderChartData = {
           xAxis: {
-            name: this.$t("实体"),
+            name: this.$t("entity"),
             key: "id",
             data: labels,
           },
           ...rest,
         };
         ageXaxis = {
-          name: this.$t("实体"),
+          name: this.$t("entity"),
           key: "id",
           data: this.getAgeXaxis(ageCollection, ["id"]), // `${this.entitys.find(o => Number(o.id) === Number(e.id)).label}`
         };
@@ -208,14 +208,14 @@ export default {
         ]);
         genderChartData = {
           xAxis: {
-            name: this.$t("名称"),
+            name: this.$t('name'),
             key: "name",
             data: labels,
           },
           ...rest,
         };
         ageXaxis = {
-          name: this.$t("类别"),
+          name: this.$t("type"),
           key: "id_key",
           data: this.getAgeXaxis(ageCollection, ["id", "time"]),
         };
@@ -226,7 +226,7 @@ export default {
           // 单个实体单个时间，饼图，labels,series,年龄为radiabar
           genderChartData = {
             labels: {
-              name: this.$t("性别"),
+              name: this.$t("gender"),
               key: "gender",
               data: Object.keys(genderCollection[0].data).map(
                 (e) => this.genderName[e].name
@@ -251,14 +251,14 @@ export default {
           );
           genderChartData = {
             xAxis: {
-              name: this.$t("时间"),
+              name: this.$t("time"),
               key: "time",
               data: labels,
             },
             ...rest,
           };
           ageXaxis = {
-            name: this.$t("时间"),
+            name: this.$t("time"),
             key: "time",
             data: this.getAgeXaxis(ageCollection, ["time"]),
           };
@@ -273,14 +273,14 @@ export default {
           );
           genderChartData = {
             xAxis: {
-              name: this.$t("实体"),
+              name: this.$t("entity"),
               key: "id",
               data: labels,
             },
             ...rest,
           };
           ageXaxis = {
-            name: this.$t("实体"),
+            name: this.$t("entity"),
             key: "id",
             data: this.getAgeXaxis(ageCollection, ["id"]), // `${this.entitys.find(o => Number(o.id) === Number(e.id)).label}`
           };
@@ -293,14 +293,14 @@ export default {
           );
           genderChartData = {
             xAxis: {
-              name: this.$t("名称"),
+              name: this.$t('name'),
               key: "name",
               data: labels,
             },
             ...rest,
           };
           ageXaxis = {
-            name: this.$t("类别"),
+            name: this.$t("type"),
             key: "id_key",
             data: this.getAgeXaxis(ageCollection, ["id", "time"]),
           };
@@ -384,8 +384,8 @@ export default {
       res.map((list) => {
         list.name = list.name
           .replace("_", "-")
-          .replace("less-", this.$t("小于"))
-          .replace(/more-/, this.$t("大于"));
+          .replace("less-", this.$t('lessThan'))
+          .replace(/more-/, this.$t('moreThan'));
       });
       return res;
     },
@@ -453,7 +453,7 @@ export default {
       this.uploadList(this.genderTableList);
     },
     uploadList(value) {
-      downloadEx(exportEx, this.$t("年龄性别客流数据"), value);
+      downloadEx(exportEx, this.$t("ageGenderEnterData"), value);
     },
   },
 

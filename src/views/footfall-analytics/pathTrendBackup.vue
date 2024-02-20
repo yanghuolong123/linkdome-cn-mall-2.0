@@ -4,7 +4,7 @@
       <DatePicker
         type="date"
         v-model="drainageDate"
-        :placeholder="$t('holder.选择日期')"
+        :placeholder="$t('holder.Date')"
         class="select-date"
         :options="disabledDate"
         format="yyyy-MM-dd"
@@ -13,7 +13,7 @@
       <Select v-model="floor" class="selectExample selectFloor" :placeholder="$t('holder.select')">
         <Option v-for="item in allMoveData" :value="item.floor_index" :key="item.floor_index">{{ item.name }}</Option>
       </Select>
-      <Button size="large" type="primary" class="m-l-20" @click="searchData">{{ $t('查询') }}</Button>
+      <Button size="large" type="primary" class="m-l-20" @click="searchData">{{ $t('query') }}</Button>
 
     </div>
     <!-- 中间内容 -->
@@ -21,9 +21,9 @@
       <new-path ref="newPath" v-if="isNewPath"></new-path>
       <div class="paths"  v-else >
         <div class="header">
-          <p class="title">{{$t('路径动向图')}}</p>
+          <p class="title">{{$t('pathTrendChart')}}</p>
           <p class="icons">
-            <icons :type="leftIcon"   :color="mainColor" :size=24  :title="titlePath" style="cursor:pointer;" @click.native="changePath"></icons>
+            <icons :type="leftIcon"   :color="mainColor" :size=24  :title="$t(titlePath)" style="cursor:pointer;" @click.native="changePath"></icons>
           </p>
         </div>
         <div class="svgs" :width="canvasWidth" :height="canvasHeight" v-for="item in svgLists" v-if="showPath">
@@ -38,14 +38,14 @@
         <div class="canvas">
           <canvas id="canvasCircle" :height="canvasHeight" :width="canvasWidth"></canvas>
           <img  class="imgs" v-if="map" :src="map">
-          <div class="noData" v-else>{{ $t('holder.暂无数据') }}</div>
+          <div class="noData" v-else>{{ $t('holder.NoData') }}</div>
           <div class="colorBar">
             <p class="maxNumber">{{maxNumber}}</p>
             <p class="minNumber">{{minNumber}}</p>
             <img :src="colorBar" width="20">
           </div>
-          <div v-if="showText" class="text-list" v-for="item in svgLists" :style="{left:(item.text.x)+'px',top:(item.text.y)+'px'}">{{item.text.enter}}{{$t('人次')}}</div>
-          <div  v-for="item in titleLists" class="titleList" :title="`${item.name} ${item.from}(${$t('人次')})`" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}"></div>
+          <div v-if="showText" class="text-list" v-for="item in svgLists" :style="{left:(item.text.x)+'px',top:(item.text.y)+'px'}">{{item.text.enter}}{{$t('personTime')}}</div>
+          <div  v-for="item in titleLists" class="titleList" :title="`${item.name} ${item.from}(${$t('personTime')})`" :style="{left:(item.x-10)+'px',top:(item.y-10)+'px'}"></div>
         </div>
       </div>
 
@@ -91,12 +91,11 @@ export default {
       outRange: '',
       showList: false,
       drainageDate: [],
-      selectTitle: '业态选择',
       leftIcon: 'xianlu',
       rightIcon: 'zhuanchu',
       mainColor: '#A6A7A7',
-      title1: '游逛深度（个）',
-      title2: '平均停留时间',
+      title1: 'wanderDepthWithUnit',
+      // title2: '平均停留时间',
       number1: 0,
       number2: '  ',
       isParking: true,
@@ -106,7 +105,7 @@ export default {
       allMoveData: [],
       canvasWidth: '',
       canvasHeight: '',
-      titlePath: '切换主路径',
+      titlePath: 'mainPath',
       titleList: [],
       positions: [],
       topRange: '', // 业态排行查询时间
@@ -181,7 +180,7 @@ export default {
       clearInterval(this.timer)
       this.mainPath = !this.mainPath
       this.mainColor = this.mainPath ? '#E8585A' : '#A6A7A7'
-      this.titlePath = this.mainPath ? '切换全路径' : '切换主路径'
+      this.titlePath = this.mainPath ? 'fullPath' : 'mainPath'
       this.svgList = []
       var canvas = document.getElementById('canvasCircle')
       var ctx = canvas.getContext('2d')

@@ -150,14 +150,14 @@ export const validateTel = (rule, value, callback) => {
      */
 export const validateSelectMore = (rule, value, callback) => {
   if (value === undefined || value === '' || value.length < 1) {
-    callback(new Error(i18n.t('holder.请选择')))
+    callback(new Error(i18n.t('holder.Select')))
   } else {
     callback()
   }
 }
 export const validName = (rule, value, callback) => {
   if (value === undefined || value === '') {
-    callback(new Error(i18n.t('名称不能为空')))
+    callback(new Error(i18n.t('fn.cantBeEmpty',[i18n.t('name')])))
   } else if (value.length > 10) {
     callback(new Error('最多输入10个字符'))
   } else {
@@ -292,11 +292,11 @@ export const barOptions = {
   },
   tooltip: {
     y: {
-      formatter: function (val) {
+      formatter:  (val)=> {
         if (val == undefined || val == null || val == '') {
           return ''
         } else {
-          return val.toLocaleString() + '人'
+          return val.toLocaleString() + this.$t('person')
         }
       }
     }
@@ -447,7 +447,7 @@ export const initMonthsData = (...arg) => {
   let monthArr = []
   for (let i = 1; i < 13; i++) {
     let obj = {}
-    obj[arg[0]] = `${i}月`
+    obj[arg[0]] = `${i}mon`
     for (let j = 1, m; m = arg[j++];) {
       obj[m] = null
     }

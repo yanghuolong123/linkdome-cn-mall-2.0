@@ -7,7 +7,7 @@
                     v-model="drainageDate"
                     placement="bottom-end"
                     :options="disabledDate"
-                    placeholder="选择日期"
+                    :placeholder="$t('holder.Date')"
                     class="w-select"
             ></DatePicker>
             <el-cascader
@@ -23,8 +23,8 @@
                        :label="$t(item.label)"
                        :key="item.value"></el-option>
           </el-select>
-            <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('查询') }}</Button>
-            <Button size="large" class="m-l-20" @click="resetData">{{ $t('重置') }}</Button>
+            <Button size="large" class="m-l-20" type="primary" @click="paramsPrepare">{{ $t('query') }}</Button>
+            <Button size="large" class="m-l-20" @click="resetData">{{ $t('reset') }}</Button>
         </div>
     </div>
     <!-- 引流图片 -->
@@ -90,10 +90,10 @@ export default {
       typeList:[
         {
           value:'store',
-          label:'店铺引流'
+          label:'storeDrainage'
         },{
           value:'bussiness',
-          label:'业态引流'
+          label:'bussDrainage'
         }
       ]
     }
@@ -273,7 +273,7 @@ export default {
       var size = Number(data.inGate.rate.crCompare)
       if (size > 0 || size == 0) direct.action = false
       else direct.action = true
-      direct.text = '出入口引入占比'
+      direct.text = this.$t('inletAndOutlet')
       direct.link = NP.times(data.inGate.rate.crCompare, 100)
       arr.push(direct)
       // 辐射店铺占比
@@ -283,7 +283,7 @@ export default {
       var sizeI = Number(data.outStore.rate.crCompare)
       if (sizeI > 0 || sizeI == 0) indirect.action = false
       else indirect.action = true
-      indirect.text = '辐射店铺占比'
+      indirect.text = this.$t('radiationStore')
       indirect.link = NP.times(data.outStore.rate.crCompare, 100)
       arr.push(indirect)
 
@@ -294,7 +294,7 @@ export default {
       var sizeR = Number(data.inStore.rate.crCompare)
       if (sizeR > 0 || sizeR == 0) radiation.action = false
       else radiation.action = true
-      radiation.text = '店铺引入占比'
+      radiation.text = this.$t('storeIntroduction')
       radiation.link = NP.times(data.inStore.rate.crCompare, 100)
       arr.push(radiation)
 
@@ -305,7 +305,7 @@ export default {
       var sizeD = Number(data.outGate.rate.crCompare)
       if (sizeD > 0 || sizeD == 0) departure.action = false
       else departure.action = true
-      departure.text = '离场客流占比'
+      departure.text = this.$t('departureEnter')
       departure.enter= data.outGate.rate.number
       departure.link = NP.times(data.outGate.rate.crCompare, 100)
       arr.push(departure)

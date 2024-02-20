@@ -4,7 +4,7 @@
       <el-select
         style="width: 200px"
         v-model="drainageType"
-        :placeholder="$t('holder.请选择')"
+        :placeholder="$t('holder.Select')"
       >
         <el-option
           v-for="item in tabsListCom"
@@ -18,7 +18,7 @@
       <el-cascader
         collapse-tags
         v-model="entityCascaderData"
-        :placeholder="$t('fn.请选择', [$t('实体')])"
+        :placeholder="$t('fn.select', [$t('entity')])"
         style="width: 200px"
         class="m-l-10"
         :props="cascadeProps"
@@ -30,7 +30,7 @@
         class="m-l-10"
         style="width: 160px"
         v-model="dateType"
-        :placeholder="$t('holder.请选择')"
+        :placeholder="$t('holder.Select')"
       >
         <el-option
           v-for="item in dateOptions"
@@ -63,10 +63,10 @@
       >
       </el-date-picker>
       <Button size="large" class="m-l-20" type="primary" @click="handleClick">{{
-        $t("查询")
+        $t('query')
       }}</Button>
       <Button size="large" @click="resetClick" class="m-l-20">{{
-        $t("重置")
+        $t('reset')
       }}</Button>
     </div>
     <div v-show="drainageType === 1" class="path-picker">
@@ -89,7 +89,7 @@
             hourTime = '-1';
           }
         "
-        :placeholder="$t('holder.选择日期')"
+        :placeholder="$t('holder.Date')"
         :options="disabledDate"
         format="yyyy-MM-dd"
         style="width:230px"
@@ -115,10 +115,10 @@
           searchData();
           initHeatMapGrid();
         "
-        >{{ $t("查询") }}</Button
+        >{{ $t('query') }}</Button
       >
       <Button size="large" @click="reset" class="m-l-20">{{
-        $t("重置")
+        $t('reset')
       }}</Button>
     </div>
     <div class="content">
@@ -148,7 +148,7 @@
             :data="heatMapDataList"
           ></heatmapjs-vue>
           <img @load="imgLoad" :src="map.url" v-if="map.url" id="mapImg" />
-          <div class="noData" v-else>{{ $t("holder.暂无数据") }}</div>
+          <div class="noData" v-else>{{ $t("holder.NoData") }}</div>
         </div>
         <div class="time-frame" v-if="hourTime === '0'">
           <Slider
@@ -226,25 +226,25 @@ export default {
       drainageType: 0,
       tabsList: [],
       hourTime: "-1",
-      hourList: [{ label: "全天", value: "-1" }, { label: "小时", value: "0" }],
+      hourList: [{ label: "allDay", value: "-1" }, { label: "hour", value: "0" }],
       floor: "",
       floorList: [],
       dateType: "week",
       dateOptions: [
         {
-          label: this.$t("周"),
+          label: this.$t("Week"),
           value: "week",
         },
         {
-          label: this.$t("月"),
+          label: this.$t("Month"),
           value: "month",
         },
         {
-          label: this.$t("年"),
+          label: this.$t("Year"),
           value: "year",
         },
         {
-          label: this.$t("自定义"),
+          label: this.$t("custom"),
           value: "daterange",
         },
       ],
@@ -263,19 +263,19 @@ export default {
     dateOptionsCom() {
       this.dateOptions = [
         {
-          label: this.$t("周"),
+          label: this.$t("Week"),
           value: "week",
         },
         {
-          label: this.$t("月"),
+          label: this.$t("Month"),
           value: "month",
         },
         {
-          label: this.$t("年"),
+          label: this.$t("Year"),
           value: "year",
         },
         {
-          label: this.$t("自定义"),
+          label: this.$t("custom"),
           value: "daterange",
         },
       ];
@@ -297,24 +297,24 @@ export default {
     datePlaceholder() {
       switch (this.dateType) {
         case "week":
-          return this.$t("fn.请选择", [this.$t("周")]);
+          return this.$t("fn.select", [this.$t("Week")]);
         case "year":
-          return this.$t("fn.请选择", [this.$t("年")]);
+          return this.$t("fn.select", [this.$t("Year")]);
         case "month":
-          return this.$t("fn.请选择", [this.$t("月")]);
+          return this.$t("fn.select", [this.$t("Month")]);
         default:
-          return this.$t("fn.请选择", [this.$t("日期")]);
+          return this.$t("fn.select", [this.$t("Date")]);
       }
     },
 
     tabsListCom() {
       this.tabsList = [
         {
-          label: this.$t("时段客流分布"),
+          label: this.$t("timeEnterDist"),
           value: 0,
         },
         {
-          label: this.$t("客流热力图"),
+          label: this.$t("enterHeatMap"),
           value: 1,
         },
       ];
@@ -509,7 +509,7 @@ export default {
     // 分时段客流分布热力查询
     handleClick() {
       if (!this.entityCascaderData.length) {
-        this.$alert({ content: this.$t("fn.请选择", [$t("实体")]) });
+        this.$alert({ content: this.$t("fn.select", [$t("entity")]) });
         return;
       }
       const selectList = _.compact(

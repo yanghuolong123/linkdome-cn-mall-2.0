@@ -441,7 +441,7 @@ export const getBzoneList = params => {
     params
   })
 }
-//更新后台数据缓存
+//updateBackCache
 export const updateCache = params => {
   return naxios.request({
     url: '/test/clearCache',

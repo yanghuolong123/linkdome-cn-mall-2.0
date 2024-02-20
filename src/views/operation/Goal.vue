@@ -11,8 +11,8 @@
                 v-for="(item,index) in activityList"
               />
             </vs-select>
-            <Button size="large" class="m-l-20" type="primary" @click="handleSearch">{{ $t('查询') }}</Button>
-            <Button size="large" class="m-l-20" @click="reset">{{ $t('重置') }}</Button>
+            <Button size="large" class="m-l-20" type="primary" @click="handleSearch">{{ $t('query') }}</Button>
+            <Button size="large" class="m-l-20" @click="reset">{{ $t('reset') }}</Button>
         </div>
         <!-- 客流量趋势 -->
         <goalCharts
@@ -83,8 +83,8 @@ export default {
       isMarket: false,
       chartHeight: '660px',
       enterListData: '',
-      enterTitle: '客流量趋势',
-      marketTitle: '销售额总览',
+      enterTitle: 'enterTrend',
+      marketTitle: 'salesOverview',
       flow_year_data: '',
       xAxis: [],
       selectType: [
@@ -112,7 +112,7 @@ export default {
       options1: {},
       options2: {},
       // 销售 类型
-      marketTableTitle: ['日期',this.$t('fn.SaleUnit',[this.$t('元')]),this.$t('fn.TargetSaleUnit',[this.$t('元')])],
+      marketTableTitle: [this.$t('Date'),this.$t('fn.SaleUnit',[this.$t('yuanUnit')]),this.$t('fn.TargetSaleUnit',[this.$t('yuanUnit')])],
       marketTableData: [],
       marketOptions1: {},
       marketOptions2: {},
@@ -196,7 +196,7 @@ export default {
         that.activityList = []
         var obj = {}
         obj.value = '1'
-        obj.key = this.$t('客流量趋势')
+        obj.key = this.$t('enterTrend')
         obj.time = `${this.goalDate}-01-01,${this.goalDate}-12-31`
         obj.action = true
         that.activityList.push(obj)
@@ -236,7 +236,7 @@ export default {
       }
       var that = this
       if (!year) {
-        this.$alert({ content:this.$t('选择年份') })
+        this.$alert({ content:this.$t('fn.select',[this.$t('Year')]) })
         return
       }
       if (this.flow_year_data.goal_flow) {
@@ -250,7 +250,7 @@ export default {
           this.getData(range, this.entities[0].value, innerRange)
           this.marketData(year, this.entities[0].property_id)
         } else {
-          this.$alert({ content:this.$t('无目标数据') })
+          this.$alert({ content:this.$t('noTargetData') })
         }
       }
     },
@@ -334,8 +334,8 @@ export default {
       }
       // 线
       this.series1 = [
-        { name: this.$t('客流量'), data: addUpArr },
-        { name: this.$t('目标客流量'), data: goal }
+        { name: this.$t('fx.enter'), data: addUpArr },
+        { name: this.$t('targetEnter'), data: goal }
       ]
 
       this.options1 = _.cloneDeep(options0)
@@ -386,8 +386,8 @@ export default {
 
       // 柱状图
       this.series2 = [
-        { name: this.$t('客流量'), data: barData1 },
-        { name: this.$t('目标客流量'), data: barData2 }
+        { name: this.$t('fx.enter'), data: barData1 },
+        { name: this.$t('targetEnter'), data: barData2 }
       ]
       let optionsBar = _.cloneDeep(options2)
       optionsBar.xaxis.categories = xAxis
@@ -405,7 +405,7 @@ export default {
         }
       this.options2 = optionsBar
       tableData.push({
-				name:this.$t('合计'),
+				name:this.$t('total'),
         enterReal:_.sum(tableData.map(o=>{
           return o.enterReal
         })),
@@ -496,8 +496,8 @@ export default {
         }
         // 线
         this.marketSeries1 = [
-          { name: this.$t('销售额'), data: addUpArr },
-          { name: this.$t('目标销售额'), data: goal }
+          { name: this.$t('fx.sales'), data: addUpArr },
+          { name: this.$t('targetSale'), data: goal }
         ]
         this.marketOptions1 = _.cloneDeep(options0)
         this.marketOptions1.xaxis.categories = xAxis
@@ -506,7 +506,7 @@ export default {
             if (val == undefined || val == null || val == '') {
               return ''
             } else {
-              return val.toLocaleString() +this.$t('元')
+              return val.toLocaleString() +this.$t('yuanUnit')
             }
           }
         }
@@ -533,8 +533,8 @@ export default {
         })
         // 柱状图
         this.marketSeries2 = [
-          { name: this.$t('销售额'), data: barData1 },
-          { name: this.$t('目标销售额'), data: barData2 }
+          { name: this.$t('salesVolume'), data: barData1 },
+          { name: this.$t('targetSale'), data: barData2 }
         ]
         this.marketOptions2 = _.cloneDeep(options2)
         this.marketOptions2.xaxis.categories = xAxis
@@ -543,7 +543,7 @@ export default {
             if (val == undefined || val == null || val == '') {
               return ''
             } else {
-              return val.toLocaleString() +this.$t('元')
+              return val.toLocaleString() +this.$t('yuanUnit')
             }
           }
         }

@@ -1,5 +1,5 @@
 <template>
-	<co-modal  ref="modal" title="连通图配置"
+	<co-modal  ref="modal" :title="$t('connGraphConfig')"
 						 @onOk="handleSave"
 						 @onCancel="handleClose"
 						 :width="width">
@@ -19,8 +19,8 @@
 				</div>
 			</div>
 		</div>
-		
-		
+
+
 	</co-modal>
 </template>
 <script>
@@ -74,7 +74,7 @@
 					height:'30px'
 				}
 			},
-	 
+
 		},
 		methods:{
       handleClose(){
@@ -99,7 +99,7 @@
           this.$refs.modal.resetOkButton()
           console.log(err)
         })
-       
+
       },
       gridClick(val,grid){
 				grid.checked = val
@@ -115,7 +115,7 @@
         if(this.configInfo.mat_row){
           matArr = JSON.parse(this.configInfo.mat_row)
 				}
-       
+
         this.gridList = []
         if(this.storeList && this.storeList.length){
           const len = this.storeList.length
@@ -133,7 +133,7 @@
           }
         }
       },
-     
+
 		}
 	}
 </script>

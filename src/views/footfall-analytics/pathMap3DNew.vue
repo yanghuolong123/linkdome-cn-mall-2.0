@@ -4,19 +4,19 @@
       <DatePicker
         type="date"
         v-model="drainageDate"
-        :placeholder="$t('holder.选择日期')"
+        :placeholder="$t('holder.Date')"
         :options="disabledDate"
         format="yyyy-MM-dd"
         style='width:230px;float:left;'
       ></DatePicker>
-      <div class="drainage-submit" v-on:click="searchData">{{ $t('查询') }}</div>
-      <div class="drainage-submit drainage-reset" v-on:click="reset">{{ $t('重置') }}</div>
+      <div class="drainage-submit" v-on:click="searchData">{{ $t('query') }}</div>
+      <div class="drainage-submit drainage-reset" v-on:click="reset">{{ $t('reset') }}</div>
     </div>
     <div class="new-path-center">
       <div id="fengMap" v-if="isFengMap"></div>
       <div class="shield"></div>
     </div>
-    
+
     <div class="maps">
       <pathTab title="游逛深度（个）" :numbers="number1"></pathTab>
       <img  :src="pathColor" alt="">
@@ -55,7 +55,7 @@ export default {
     }
   },
   computed: {
-  
+
   },
   watch: {
     drainageDate (val) {

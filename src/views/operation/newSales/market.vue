@@ -14,7 +14,7 @@
             >
              <template>
               <div class="flex justify-between items-center mr-10">
-                <span class="whitespace-no-wrap mx-4 text-sm">{{$t('楼层')}}:</span>
+                <span class="whitespace-no-wrap mx-4 text-sm">{{$t('floor')}}:</span>
                 <vs-select autocomplete
                            v-model="floorAction"
                             style="width:150px"
@@ -105,12 +105,12 @@ export default {
       switch (this.parameter.type) {
         case 'enter':
         case 'occupancy':
-          return this.$t('人次')
+          return this.$t('personTime')
         case 'SquaerMetre':
-          return this.$t('元/m²')
+          return this.$t('effUnit')
         case 'UnitPrice':
         case 'SaleAmount':
-          return this.$t('元')
+          return this.$t('yuanUnit')
         case 'CloseRate':
           return '%'
       }
@@ -179,16 +179,16 @@ export default {
       this.xAxisObj.data = Object.keys(data[0].list)
       switch(this.parameter.type){
         case 'SaleAmount':
-          this.extraOptWithYaxis.yaxis.title.text = this.$t('销售额（元）')
+          this.extraOptWithYaxis.yaxis.title.text = this.$t('salesWithUnit')
           break
         case 'SquaerMetre':
-          this.extraOptWithYaxis.yaxis.title.text = this.$t('坪效（元/平方米）')
+          this.extraOptWithYaxis.yaxis.title.text = this.$t('flatEffWithUnit')
           break
         case 'UnitPrice':
-          this.extraOptWithYaxis.yaxis.title.text = this.$t('客单价（元）')
+          this.extraOptWithYaxis.yaxis.title.text = this.$t('cusPriceWithUnit')
           break
         case 'CloseRate':
-          this.extraOptWithYaxis.yaxis.title.text = this.$t('成交率')+'（%）'
+          this.extraOptWithYaxis.yaxis.title.text = this.$t('turnoverRate')+'（%）'
           break
       }
       if (this.xAxisObj.data.length == 1) {

@@ -7,16 +7,16 @@
 						<div class="data-picker">
 							<div class="account-seach-text">
 								<!-- <Icon size='24' type="ios-search" /> -->
-								<input type="text" v-model="searchText" :placeholder="$t('holder.请输入用户名')">
+								<input type="text" v-model="searchText" :placeholder="$t('fn.inputHolder',[$t('accountName')])">
 							</div>
 							<div class="account-seach-text" style="margin-left:10px;">
-								<input type="text" v-model="searchRole" :placeholder="$t('holder.请输入角色')">
+								<input type="text" v-model="searchRole" :placeholder="$t('fn.inputHolder',[$t('role')])">
 							</div>
 							<div class="account-add-remove">
-                <span class="account-add" :title="$t('添加')" @click="addData">
+                <span class="account-add" :title="$t('add')" @click="addData">
                   <Icon type="md-add"/>
                 </span>
-								<span :title="$t('删除')" @click="allRemoveData">
+								<span :title="$t('del')" @click="allRemoveData">
                   <Icon type="md-remove"/>
                 </span>
 							</div>
@@ -67,9 +67,9 @@
         searchRole: '',
         dataList: {},
         colorAlert: '#00a0e9',
-        titleName: '用户信息列表',
+        titleName: 'userList',
         tableName: [
-          '头像', '用户名', '姓名', '角色', '性别', '手机号', '邮箱', '操作'
+          'avator', 'accountName', 'userName', 'role', 'gender', 'phoneNumber', 'mail', 'operate'
         ],
         tableList: [],
         userId: '',
@@ -252,11 +252,11 @@
       delUser (id) {
         deleteUserData(id).then((res) => {
           if (res.data.code === 200) {
-            this.$message.success(this.$t('删除成功'))
-            this.initData()
+			  this.$message.success(this.$t('fn.successTo',[this.$t('del')]))
+			  this.initData()
           } else {
-            this.$message.error(this.$t('删除失败'))
-          }
+		  	this.$message.error(this.$t('fn.failedTo',[this.$t('del')]))
+		  }
         })
       },
       tableSelect (value) {
@@ -268,7 +268,7 @@
       },
       allRemoveData () {
         this.$alert({
-          content: this.$t('确认删除选中用户信息？'),
+          content: this.$t('userDelConfirm'),
           cancel () {
           },
           confirm: () => {
@@ -278,7 +278,7 @@
       },
       removeData (value) {
         this.$alert({
-          content: this.$t('确认删除此用户信息？'),
+          content: this.$t('theUserDelConfirm'),
           cancel () {
           },
           confirm: () => {
@@ -294,19 +294,19 @@
 	#content-overlay {
 		background-color: #f5f5f5;
 	}
-	
+
 	.account-center {
 		.account-text {
 			margin-top: 25px;
-			
+
 			.account-text-right {
 				width: 100%;
 				height: auto;
-				
+
 				.account-seach {
 					width: 100%;
 					height: 43px;
-					
+
 					.data-picker {
 						margin-bottom: 20px;
 						overflow: hidden;
@@ -316,7 +316,7 @@
 						box-shadow: 0px 0px 9px 0px rgba(166, 168, 169, .4);
 						border-radius: 6px;
 					}
-					
+
 					.account-seach-text {
 						width: 252px;
 						height: 100%;
@@ -325,11 +325,11 @@
 						padding: 5px;
 						float: left;
 						background-color: #fff;
-						
+
 						.ivu-icon {
 							float: left;
 						}
-						
+
 						input {
 							display: inline-block;
 							width: 195px;
@@ -340,11 +340,11 @@
 							background-color: rgba(93, 144, 255, 0.0);
 						}
 					}
-					
+
 					.account-add-remove {
 						float: right;
 						margin-right: 10px;
-						
+
 						span {
 							display: flex;
 							align-items: center;
@@ -358,12 +358,12 @@
 							color: #fff;
 							margin-left: 20px;
 							cursor: pointer;
-							
+
 							&:nth-child(1) {
 								margin-top: 9px;
 								background-color: #2BD9CF;
 							}
-							
+
 							&:nth-child(2) {
 								margin-top: 9px;
 								background-color: #FEB33D;
@@ -371,14 +371,14 @@
 						}
 					}
 				}
-				
+
 				.account-table {
 					margin-top: 52px;
 					background: rgba(255, 255, 255, 1);
 					box-shadow: 0px 2px 9px 1px rgba(175, 175, 176, 0.25);
 					border-radius: 6px;
 					overflow: auto;
-					
+
 					::v-deep img {
 						width: 38px;
 						height: 38px;

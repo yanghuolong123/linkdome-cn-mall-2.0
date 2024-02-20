@@ -52,27 +52,27 @@ const selectMixin = {
       typeOptions: [
         {
           value: 'not',
-          label: i18n.t('无对比')
+          label: i18n.t('noComp')
         }, {
           value: 'entity',
-          label: i18n.t('实体对比')
+          label: i18n.t('entityComp')
         }, {
           value: 'time',
-          label: i18n.t('自定义时间对比')
+          label: i18n.t('cusTimeCompare')
         },
         {
           value: 'onYear',
-          label: i18n.t('同比')
+          label: i18n.t('YOY')
         },
         {
           value: 'onChain',
-          label: i18n.t('环比')
+          label: i18n.t('QOQ')
         }
       ],
       customType: [
         {
           value: '0',
-          label: this.$t('全部客流')
+          label: this.$t('allEnter')
         }
       ],
       storeCascadeOpiton: [],//商铺级联数据
@@ -156,7 +156,7 @@ const selectMixin = {
     selectOptions(){
       const all = {
         id: -1,
-        name: i18n.t('全部实体')
+        name: i18n.t('allEntity')
       }
       if(this.entitySelectObj[this.entityType]){
         return [all,...this.entitySelectObj[this.entityType]]
@@ -167,21 +167,21 @@ const selectMixin = {
     entityOptions(){
       return [
         {
-          label: this.$t('楼层'),
+          label: this.$t('floor'),
           value: 'floor'
         },
         {
-          label:`${this.$t('业态')}/${this.$t('店铺')}`,
+          label:`${this.$t('bussinessType')}/${this.$t('store')}`,
           value: 'bussiness',
           cascadeOption:this.bussinessCascadeOpiton,
           cascadeData:this.busiCascadeData
         },
         {
-          label: this.$t('区域'),
+          label: this.$t('area'),
           value: 'area'
         },
         {
-          label: this.$t('出入口'),
+          label: this.$t('gate'),
           value: 'gate',
           type_name:'gate',
           cascadeOption:this.gateCascadeOpiton,
@@ -200,7 +200,7 @@ const selectMixin = {
         res = res.data.data
         this.bussinessTypeOptions = [{
           id: -1,
-          name: this.$t('全部业态')
+          name: this.$t('allBussType')
         }]
         if (res) {
           for (let key in res) {
@@ -306,7 +306,7 @@ const selectMixin = {
           }
           if (this.$store.state.home.headerAction != 0) {
             if (!copySelect) {
-              alert(i18n.t('fn.请选择',[i18n.t('实体')]))
+              alert(i18n.t('fn.select',[i18n.t('entity')]))
               return
             }
           } else {
@@ -319,7 +319,7 @@ const selectMixin = {
         }
       }else if(this.compareType === 'businessType'){//实体客流中有业态对比
         if(!this.queryParams.bussinessType.length){
-          alert(i18n.t('fn.请选择',[i18n.t('业态')]));
+          alert(i18n.t('fn.select',[i18n.t('bussinessType')]));
           return
         }
         let bussinessType;
@@ -371,7 +371,7 @@ const selectMixin = {
       }
       if(entitys.length===0){
         this.$alert({
-          content:i18n.t('fn.请选择',[i18n.t('实体')])
+          content:i18n.t('fn.select',[i18n.t('entity')])
         })
         return false
       }else if(this.maxEntity && entitys.length>25){
@@ -383,7 +383,6 @@ const selectMixin = {
       this.$emit('paramsPrepare',this.queryParams)
     },
     resetClick () {
-      console.log(33)
       this.queryParams.date1Array = [yesterday,yesterday];
       this.compareType = 'not';
       this.setEntityCascaderDataDefaultValue()
@@ -407,7 +406,7 @@ const selectMixin = {
     bussinessTreeReq () {
       return new Promise((resolve, reject) => {
         if (!this.$store.state.home.headerAction) {
-          reject(i18n.t('fn.请选择',[i18n.t('购物中心')]))
+          reject(i18n.t('fn.select',[i18n.t('shopmall')]))
           return
         }
         getBzoneTree({property_id:this.$store.state.home.headerAction}).then(res=>{
@@ -443,7 +442,7 @@ const selectMixin = {
         const parent_id = levelNode[levelNode.length - 1].parent_id
         levelNode.unshift({
           id: 'all' + parent_id,
-          name: i18n.t('全部')
+          name: i18n.t('all')
         })
       }
     },
