@@ -297,7 +297,7 @@
       },
       floorStoreTitle () {
         return {
-          name: '当日各楼层TOP10店铺客流分析',
+          name: this.$t('report.todayFloorStoreTop10'),
           text:
             `${this.$t('report.enterTime')}:` +
             this.saveHeaderData.year +

@@ -525,6 +525,7 @@
         "thisWeekStoreTop10": "Comparative analysis of TOP10 store customer flow this week",
         "thisPeriodStoreTop10Compate": "Comparative analysis of the top 10 store customer flow in this issue",
         "todayStoreTop10Compare": "Comparative analysis of the top 10 store customer flows on the day",
+        "todayFloorStoreTop10": "Customer flow analysis of TOP10 stores on each floor on the day",
         "thisWeekFloorStoreTop10": "Customer flow analysis of TOP10 stores on each floor this week",
         "thisMonthFloorStoreTop10": "Customer flow analysis of TOP10 stores on each floor this month",
         "thisPeriodFloorStoreTop10": "Customer flow analysis of TOP10 stores on each floor in this issue",
