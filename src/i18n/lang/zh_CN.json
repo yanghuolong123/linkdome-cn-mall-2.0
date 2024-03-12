@@ -397,7 +397,7 @@
         "Data_indicators": "数据指标：",
         "enter": "@.capitalize:(enter)",
         "sales": "@.capitalize:sales",
-        "salesVolume": "@.capitalize:salesVolume（@:(yuan)）"
+        "salesVolume": "@.capitalize:salesVolume（@:(USD)）"
     },
     "notices": {
         "wrongPassword": "您的账号或密码输入错误",
@@ -525,7 +525,6 @@
         "thisWeekStoreTop10": "本周店铺客流TOP10对比分析",
         "thisPeriodStoreTop10Compate": "本期店铺客流TOP10对比分析",
         "todayStoreTop10Compare": "当日店铺客流TOP10对比分析",
-        "todayFloorStoreTop10": "当日各楼层TOP10店铺客流分析",
         "thisWeekFloorStoreTop10": "本周各楼层TOP10店铺客流分析",
         "thisMonthFloorStoreTop10": "本月各楼层TOP10店铺客流分析",
         "thisPeriodFloorStoreTop10": "本期各楼层TOP10店铺客流分析",
