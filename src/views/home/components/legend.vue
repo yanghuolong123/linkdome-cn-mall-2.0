@@ -7,7 +7,7 @@
                         <icons :size="20" :type="item.icon" :color="item.color"></icons>
                         <span class="font-medium ml-2">{{item.title}}</span>
                     </span>
-                    <span style="margin-left:30px;line-height:30px;" class="text-grey-darker">{{Number(item.value).toLocaleString()}}{{unit}} </span>
+                    <span style="margin-left:30px;line-height:30px;" class="text-grey-darker">{{Number(item.value).toLocaleString()}} {{unit}} </span>
                 </p>
             </li>
         </ul>

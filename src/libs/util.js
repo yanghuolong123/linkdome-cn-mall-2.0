@@ -628,3 +628,38 @@ export const findParentNodes = (id,tree,hasSelf = false)=>{
   }
   return parentNodes
 }
+//单词首字母大写
+export const capitalize = (str)=>{
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+//大写消息中每个单词的第一个字符
+export const titleCase = (str,ignoreList) => {
+  function fnname (msg) {
+    function capitalize(msg) {
+      if(ignoreList !== undefined) {
+        if(ignoreList.includes(msg)) {
+          return msg;
+        }
+      }
+      return msg.charAt(0).toUpperCase() + msg.slice(1)
+    }
+    let arr = msg.split(' ');
+    arr.forEach( (item,index,arr) => {
+      arr[index] = capitalize(item);
+    })
+    return arr.join(" ");
+  }
+  return fnname (str);
+}
+
+export const mf = function mf(textgroup, fn) {
+  // 该函数将一个对象内所有数据进行格式化
+  if (typeof textgroup !== "object") {
+    if (textgroup === undefined) return false;
+    return true;
+  }
+  for (let i in textgroup) {
+    if (mf(textgroup[i], fn)) textgroup[i] = fn(textgroup[i]);
+  }
+  return false;
+};

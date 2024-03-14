@@ -597,11 +597,11 @@ export default {
           value: 1,
         },
         {
-          text: this.$t("同比"),
+          text: this.$t("YOY"),
           value: 2,
         },
         {
-          text: this.$t("环比"),
+          text: this.$t("QOQ"),
           value: 3,
         },
       ];

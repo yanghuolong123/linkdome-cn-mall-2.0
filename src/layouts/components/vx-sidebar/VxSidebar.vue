@@ -100,6 +100,7 @@
                 <span
                   v-show="!sidebarItemsMin"
                   class="truncate"
+                  :title="$t(sidebarItem.i18n) || sidebarItem.name"
                   style="font-weight:bold"
                 >{{ $t(sidebarItem.i18n) || sidebarItem.name }}</span>
                 <vs-chip

@@ -209,7 +209,7 @@
     methods: {
       downloadReport (type, time) {
         if (!this.storeSelected) {
-          this.$alert({ content: this.$t('fn.select', [this.$t('店铺')]) })
+          this.$alert({ content: this.$t('fn.select', [this.$t('store')]) })
           return false
         }
         if (time === '') {
@@ -238,7 +238,7 @@
             var downloadElement = document.createElement('a')
             var href = window.URL.createObjectURL(blob) // 创建下载的链接
             downloadElement.href = href
-            downloadElement.download = filename + this.$t('门店日报') + this.storeNames + '.pdf' // 下载后文件名
+            downloadElement.download = filename + this.$t('storeReport') + this.storeNames + '.pdf' // 下载后文件名
             document.body.appendChild(downloadElement)
             downloadElement.click() // 点击下载
             document.body.removeChild(downloadElement) // 下载完成移除元素

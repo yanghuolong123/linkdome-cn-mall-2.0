@@ -216,14 +216,14 @@
         tableColumn:[
 					{
 					  key:'entity',
-						title:'实体',
+						title:this.$t('entity'),
 					},{
             key:'valid',
-            title:'有效客流',
+            title:this.$t('effEnter'),
             width:100
           },{
             key:'repeat',
-            title:'repEnter',
+            title:this.$t('repEnter'),
             width:100
           },
 				],
@@ -580,7 +580,7 @@
         pieConfigCopy.legend.textStyle = {
           rich: {
             a: {
-              width: 100
+              width: 120
             }
           }
         }

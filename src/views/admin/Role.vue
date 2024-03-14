@@ -194,6 +194,7 @@ export default {
         }
         let theRole = _.find(this.roleList, ['id', Number(value[0])])
         let pages = theRole.pages_privilege ? theRole.pages_privilege.split(',') : []
+
         menuListData = this.dealWithSelect(pages, menuListData)
         this.menuListData = menuListData
       }
@@ -205,10 +206,10 @@ export default {
     *@return {Array} menuListData
     */
     dealWithSelect (pages, menuListData) {
-      menuListData.forEach(function (m) {
+      menuListData.forEach( (m)=> {
         let findIndex = _.indexOf(pages, m.id + '')
         m.enable = findIndex > -1 ? 1 : 0
-        m.subpagesList.forEach(function (k) {
+        m.subpagesList.forEach( (k)=> {
           let findIndex2 = _.indexOf(pages, k.id + '')
           k.enable = findIndex2 > -1 ? 1 : 0
         })
@@ -267,7 +268,7 @@ export default {
       var that = this
       this.showAddRole = true
       this.$nextTick(() => {
-        that.$refs.addRole.editRoleTitle = that.$t('fn.add',[that.t('role')])
+        that.$refs.addRole.editRoleTitle = that.$t('fn.add',[that.$t('role')])
         that.$refs.addRole.isModify = false
       })
     },

@@ -8,10 +8,10 @@
 				type="daterange"
 				@on-change="val=>selectDateTime = val"
 				:options="options3"
-				placeholder="选择日期">
+				>
 			</DatePicker>
 			<Button type="primary" class="m-l-20" @click="reportQuery" size="large">{{ $t('query') }}</Button>
-			<div class="icon-download" @click="downloadReport('customize',callData)" title="下载报告">
+			<div class="icon-download" @click="downloadReport('customize',callData)" :title="$t('report.reportDwonload')">
 				<icons type="daoru" color="#2a7dc1" :size=20></icons>
 			</div>
 		</div>
@@ -213,7 +213,7 @@
       // 查询
       async reportQuery () {
         if (!this.callData) {
-          this.$alert({ content: '请选择时间' })
+          this.$alert({ content: this.$t('fn.select',[this.$t('time')]) })
           return
         }
         if (this.callData === 'same') {
@@ -222,7 +222,7 @@
         }
         await this.getReportSetting()
         if(!this.enabledModules.length){
-          this.$alert({ content: "未配置相关模块！" });
+          this.$alert({ content: this.$t('report.noConfig') });
           return
         }
         this.headerDate(this.selectDateTime)

@@ -331,32 +331,10 @@ export default{
       let type = smooth.ratio > 0 ? this.$t("report.growth") : this.$t("report.decrease");
       let type2 = maxHighest.ratio > 0 ? this.$t("report.growth") : this.$t("report.decrease");
 
-      let text1 =this.language==='en-US'?(
-          `On ${smooth.date}, the passenger flow ${type} steadily, reaching ${smooth.enter} people, an ${type} of ${Math.abs(smooth.ratio)}% compared to the previous period`
-        ):
-        ("本期" +
-          smooth.date +
-          "客流" +
-          type +
-          "平稳，为" +
-          smooth.enter +
-          "人次，比上期环比" +
-          type +
-          Math.abs(smooth.ratio) +
-          "%");
-      let text2 =this.language==='en-US'?(
-          `The passenger flow ${type2} reached its peak on ${maxHighest.date}, with ${maxHighest.enter} people, a ${Math.abs(maxHighest.ratio)}% ${type2} compared to the previous period's month on month growth`
-        ):
-        ("本期" +
-          maxHighest.date +
-          "客流" +
-          type2 +
-          "达到顶峰，为" +
-          maxHighest.enter +
-          "人次，比上期环比" +
-          type2 +
-          Math.abs(maxHighest.ratio) +
-          "%");      if (smooth.ratio !== '') this.trendChartData.remarkData.push(text1)
+      let text1 = this.$t('report.period_summary.summary1',[smooth.date,type,smooth.enter,Math.abs(smooth.ratio)])
+      let text2 = this.$t('report.period_summary.summary2',[maxHighest.date,type2,maxHighest.enter,Math.abs(maxHighest.ratio)])
+
+      if (smooth.ratio !== '') this.trendChartData.remarkData.push(text1)
       if (maxHighest.ratio !== '') this.trendChartData.remarkData.push(text2)
     },
     gateDataList (gateData) {

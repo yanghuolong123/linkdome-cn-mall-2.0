@@ -430,7 +430,7 @@ export default {
         },{
           id:3,
           count:2+this.floorGateChartData.length,
-          name:this.$t('出入口客流'),
+          name:this.$t('gateEnter'),
         },{
           id:4,
           count:1,
@@ -450,11 +450,11 @@ export default {
         },{
           id:8,
           count:1,
-          name:`${this.$t("report.storeEnter")}-${this.$t('无序')}`,
+          name:`${this.$t("report.storeEnter")}-${this.$t('report.unordered')}`,
         },{
           id:9,
           count:1,
-          name:`${this.$t("report.storeEnter")}-${this.$t('有序')}`,
+          name:`${this.$t("report.storeEnter")}-${this.$t('report.orderly')}`,
         },{
           id:10,
           count:1,
@@ -462,7 +462,7 @@ export default {
         },{
           id:11,
           count:1,
-          name:`${this.$t("report.dwellTime")}-${this.$t('店铺')}`,
+          name:`${this.$t("report.dwellTime")}-${this.$t('store')}`,
         }
       ]
     },

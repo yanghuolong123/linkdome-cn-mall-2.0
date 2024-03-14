@@ -202,7 +202,7 @@
       },
       dateFormat() {
         if (this.dateType === "week") {
-          return this.$i18n.locale === "zh-CN" ? "yyyy 第 WW 周" : "yyyy WW week";
+          return this.$t('datepicker_format')
         } else {
           return "";
         }

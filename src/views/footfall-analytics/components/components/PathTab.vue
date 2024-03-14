@@ -1,14 +1,14 @@
 <template>
-    <div class="pathTab">
+    <div class="pathTab flex-center">
       <div class="circle">
-          <icons type="zoulu" :size="40" color="#857AEF" style="cursor:pointer" v-if="!parking"></icons>
+          <icons type="zoulu"  color="#857AEF" style="cursor:pointer" v-if="!parking"></icons>
           <p class="parking" v-if="parking">P</p>
       </div>
-      <div class="right">
+      <div class="right flex-column">
         <p class="title">{{ $t(title) }}</p>
-        <p class="number" :style="{right:right}">{{numbers}}</p>
+        <p class="number">{{numbers}}</p>
       </div>
-    
+
     </div>
 </template>
 
@@ -57,30 +57,27 @@ export default {
   .number{
     color:#3E3C3C;
     font-size:1rem;
+      margin-top:10px;
   }
 .right{
-  padding-left 5rem
-  margin-top 20px
+  padding-left 30px
 }
   .circle{
-    width: 3.125rem;
-    height: 3.125rem;
+    width: 50px
+    height:50px;
+      line-height 50px
     border-radius: 50%;
     background-color: #eae8fd;
-    margin-top 20px
-    float left
+      text-align:center;
+      flex:none;
     .parking{
         font-size: 28px;
-        left: 16px;
-        top: 5px;
         color:#857AEF;
         font-weight: 800;
     }
-    .iconfont{
-      position: relative;
-      left: 3px;
-      top: -4px;
-    }
+     /deep/ .iconzoulu{
+          font-size 40px!important
+      }
   }
 }
 </style>

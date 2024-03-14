@@ -3,39 +3,6 @@
 		<img src="../../../assets/images/fixation_img/logo/white-logo.png" class="property-logo" style=" width: 276px;" alt="">
 		<img class="earth" src="../../../assets/images/fixation_img/bg/earth.png" alt="">
 		<div class="report-text" style=" bottom: 110px; padding: 0 82px;">
-			<h2 style="
-                font-size: 36px;
-                width: 360px;
-                margin: 0 auto ;
-                white-space:nowrap;
-            ">{{$t('report.linkdome')}}</h2>
-			<p style="
-                font-size: 26px;
-                width: 360px;
-                margin-top: 48px;
-                margin: 48px auto 0 auto;
-            "> {{$t('report.web')}}：www.linkdome.cn </p>
-			<p style="
-                font-size: 26px;
-                width: 360px;
-                margin-top: 48px;
-                margin: 48px auto 0 auto;
-                white-space:nowrap;
-            "> {{$t('mail')}}：support@linkdome.cn</p>
-			<p
-				style="
-                font-size: 26px;
-                width: 360px;
-                margin-top: 48px;
-                margin: 48px auto 0 auto;
-            "> {{$t('report.tel')}}：4006699330</p>
-			<p style="
-                width:360px;
-                text-align: center;
-                font-size: 26px;
-                margin: 48px auto 0 auto;
-                white-space:nowrap;
-            " v-if="language!=='en-US'"> {{$t('report.addr')}}：陕西省西安市雁塔区旺座曲江A座23层</p>
 			<span style="
                 margin-top:180px;
                 padding-bottom: 10px;

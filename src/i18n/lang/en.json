@@ -60,8 +60,8 @@
     },
     "temperature": "Weather",
     "account": "Account",
-    "accountNum": "Account",
-    "password": "Password",
+    "accountNum": "account",
+    "password": "password",
     "analysisPlatform": "Smart business comprehensive analysis platform",
     "forgetPassword": "Forget the password?",
     "rememberPassword": "Remember password",
@@ -574,16 +574,16 @@
         "web": "URL",
         "dataAnaly": "Statistics",
         "reportDwonload": "Download",
-        "linkdomeWeekReport": "Lingtu Wisdom Weekly",
-        "linkdomeDailyReport": "Lingtu Smart Daily",
-        "linkdomeMonthReport": "Lingtu Wisdom Monthly Report",
-        "linkdomeReport": "Lingtu Smart Report",
+        "linkdomeWeekReport": "Wisdom Weekly",
+        "linkdomeDailyReport": "Smart Daily",
+        "linkdomeMonthReport": "Wisdom Monthly Report",
+        "linkdomeReport": "Smart Report",
         "accumEnter": "Cumulative Footfall",
         "avgEnter": "Average Footfall",
         "effectEnter": "Effective footfall",
         "occuPeak": "Peak Visitors",
         "personTimesPerDay": "Person\/day",
-        "linkdomeReview": "Lingtu wisdom review",
+        "linkdomeReview": "Wisdom review",
         "hour": "Hour",
         "day": "Sky",
         "todayEnter": "Today's footfall",
@@ -619,8 +619,25 @@
         "storetotalFlow": "Today's total footfall",
         "ageGenderenterFlowTrend": "Today's footfall by gender and age",
         "ageGenderexitFlowTrend": "Today's footfall by gender and age",
-        "ageGendertotalFlowTrend": "Today's footfall by gender and age"
+        "ageGendertotalFlowTrend": "Today's footfall by gender and age",
+        "summary":{
+            "summary1": "After opening for an hour, the passenger flow was {0} people on the same day, {1} people yesterday, and {2} people on the same day last week",
+            "summary2": "One hour before the end of business, the passenger flow was {0} on the same day, {1} on the same day yesterday, and {2} on the same day last week",
+            "summary3": "On the same day, the peak passenger flow reached {2} people from {0} to {1}; Yesterday from {3} to {4}, the peak passenger flow reached {5} people; Last week, from {6} to {7} on the same day, the peak passenger flow reached {8} people"
+        },
+        "week_summary": {
+            "summary1":"On {0}, the footfall {1} steadily, reaching {2} people, an {1} of {3}% compared to the previous week",
+            "summary2": "The passenger flow {1} reached its peak on {0}, with {2} people, a {3}% {1} compared to the previous week's month on month growth"
+        },
+        "period_summary": {
+            "summary1":"On {0}, the footfall {1} steadily, reaching {2} people, an {1} of {3}% compared to the previous period",
+            "summary2": "The footfall {1} reached its peak on {0}, with {2} people, a {3}% {1} compared to the previous period's month on month growth"
+        },
+        "period_week": "Passenger flow Cyc:Week {1},{0}"
+
     },
+    "datepicker_format_display": "Week {1},{0}",
+    "datepicker_format": "yyyy WW week",
     "enabled": "Enable",
     "disabled": "Disable",
     "PassengerFlow": "Footfall",

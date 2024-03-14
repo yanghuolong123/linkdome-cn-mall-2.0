@@ -79,9 +79,10 @@
         this.outRange = moment(val).format('YYYY-MM-DD')
       },
       floorId () {
-        this.number1 = _.filter(this.floorNumber, (o) => {
-          return o.id === this.floorId
-        })[0].number
+      	const filters =  _.filter(this.floorNumber, (o) => {
+			return o.id === this.floorId
+		})
+	  	this.number1 = filters[0] && filters[0].number
       }
     },
     created () {
@@ -104,7 +105,7 @@
         return new Promise((resolve, reject) => {
           getFengmapId({ property_id: this.$store.state.home.headerAction }).then(res => {
             this.mapInfo = res.data.data
-            if (this.mapInfo.length) {
+			  if (this.mapInfo.length) {
               this.mapIndex = 0
             } else {
               this.$store.commit('UPDATE_LOADING_STATUS', false)
@@ -125,7 +126,7 @@
           if (res.data.code === 200) {
             this.isFengMap = true
             let data = res.data.data
-            this.number1 = data[0].depthOfWandering
+			  this.number1 = data[0]&&data[0].depthOfWandering||0
             let allData = []
             data.map((list, index) => {
               this.floorNumber.push({
@@ -143,7 +144,6 @@
               // list.paths = _.sortBy(list.paths,function (m) {
 							// 	return m.enter
               // }).reverse()
-              console.log(list.paths)
               const front = Math.floor(list.paths.length/3);
               const back = list.paths.length - front
               list.paths.map((val, i) => {
@@ -170,11 +170,10 @@
             allData.forEach(o=>{
               o.forEach(m=>{
               	if(m.x === 	13027706.896595905){
-                  console.log(o)
+
                 }
 							})
 						})
-            console.log(allData)
             allData.reverse()
             setTimeout(() => {
               openMap(this, allData, this.mapOptions)

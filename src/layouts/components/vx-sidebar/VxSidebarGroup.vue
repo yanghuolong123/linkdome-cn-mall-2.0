@@ -22,7 +22,7 @@
           :svgClasses="{ 'w-3 h-3' : groupIndex % 1 != 0 }"
           v-if="group.icon || (this.groupIndex > Math.floor(this.groupIndex))"
         />
-        <span v-show="!sidebarItemsMin" class="truncate mr-3">{{ $t(group.i18n) || group.name }}</span>
+        <span v-show="!sidebarItemsMin" class="truncate mr-3" :title="$t(group.i18n) || group.name ">{{ $t(group.i18n) || group.name }}</span>
         <vs-chip
           class="ml-auto mr-4"
           :color="group.tagColor"
@@ -54,7 +54,7 @@
           :icon="itemIcon(groupIndex + '.' + index)"
           icon-small
           :target="groupItem.target">
-          <span class="truncate">{{ $t(groupItem.i18n) || groupItem.name }}</span>
+          <span class="truncate" :title="$t(groupItem.i18n) || groupItem.name">{{ $t(groupItem.i18n) || groupItem.name }}</span>
           <vs-chip
             v-if="groupItem.tag"
             class="ml-auto"

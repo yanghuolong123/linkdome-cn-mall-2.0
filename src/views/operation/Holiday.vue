@@ -743,8 +743,13 @@ export default {
         if(res.list && res.list.time1){
           let index = 1;
           for(let key in res.list.time1){
-            xaxis.push(this.$t("fn.dayTh", [this.$t(index)]))
-            index++
+            if(params.range === 'Date'){
+              xaxis.push(this.$t("fn.dayTh", [this.$t(index)]))
+              index++
+            }else {
+              xaxis.push(key.substring(11,16))
+            }
+
           }
           if (Moment(compare1.start_date).isAfter(Moment(new Date()))) {
             resData1 = xaxis.map(function(m, index) {

@@ -7,7 +7,7 @@
           v-model="selectDateTime"
           @change="selectTimeDate"
           type="week"
-          :format="dateFormat"
+          :format="$t('datepicker_format')"
           :picker-options="{ firstDayOfWeek: 1, disabledDate: disabledDate }"
           placeholder="选择周"
         >
@@ -273,19 +273,11 @@ export default {
     };
   },
   computed: {
-    dateFormat() {
-      return this.$i18n.locale === "zh-CN" ? "yyyy 第 WW 周" : "yyyy WW week";
-    },
     oneListData() {
       return [
         {
           name: this.$t('report.theWeekOverview'),
-          text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):( "客流周期:" +
-                  this.saveHeaderData.year +
-                  "年第" +
-                  this.saveHeaderData.period +
-                  "周")
-           ,
+          text:this.$t('report.period_week',[this.saveHeaderData.year,this.saveHeaderData.period]),
         },
         {
           name: this.$t('report.lastWeekEnterOverview'),
@@ -296,86 +288,48 @@ export default {
     trendTitle() {
       return {
         name:this.$t('report.thisWeekEnterTrend'),
-        text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):("客流周期:" +
-                this.saveHeaderData.year +
-                "年第" +
-                this.saveHeaderData.period +
-                "周"),
+        text:this.$t('report.period_week',[this.saveHeaderData.year,this.saveHeaderData.period]),
       };
     },
     gateTitle() {
       return {
         name: this.$t('report.thisWeekGateTop10Compare'),
-        text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):("客流周期:" +
-                this.saveHeaderData.year +
-                "年第" +
-                this.saveHeaderData.period +
-                "周")
-          ,
+        text:this.$t('report.period_week',[this.saveHeaderData.year,this.saveHeaderData.period]),
       };
     },
     gateTableTitle() {
       return {
         name: this.$t('report.thisWeekGateTop10'),
-        text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):("客流周期:" +
-                this.saveHeaderData.year +
-                "年第" +
-                this.saveHeaderData.period +
-                "周"),
+        text:this.$t('report.period_week',[this.saveHeaderData.year,this.saveHeaderData.period]),
       };
     },
     shopTitle() {
       return {
         name: this.$t('report.thisWeekStoreTop10'),
-        text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
-          ("客流周期:" +
-          this.saveHeaderData.year +
-          "年第" +
-          this.saveHeaderData.period +
-          "周"),
+        text:this.$t('report.period_week',[this.saveHeaderData.year,this.saveHeaderData.period]),
       };
     },
     floorStoreTitle() {
       return {
         name: this.$t('report.thisWeekFloorStoreTop10'),
-        text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
-          ("客流周期:" +
-          this.saveHeaderData.year +
-          "年第" +
-          this.saveHeaderData.period +
-          "周"),
+        text:this.$t('report.period_week',[this.saveHeaderData.year,this.saveHeaderData.period]),
       };
     },
     formatStoreTitle() {
       return {
         name: this.$t('report.thisWeekBussStoreTop10'),
-        text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
-          ("客流周期:" +
-          this.saveHeaderData.year +
-          "年第" +
-          this.saveHeaderData.period +
-          "周"),
+        text:this.$t('report.period_week',[this.saveHeaderData.year,this.saveHeaderData.period]),
       };
     },
     orderlyTitle() {
       return {
         relevancy: {
           name: this.$t('report.thisWeekUnorderTop10'),
-          text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
-            ("客流周期:" +
-            this.saveHeaderData.year +
-            "年第" +
-            this.saveHeaderData.period +
-            "周"),
+          text:this.$t('report.period_week',[this.saveHeaderData.year,this.saveHeaderData.period]),
         },
         inversion: {
           name: this.$t('report.thisWeekUnorderConversionTop10'),
-          text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
-            ("客流周期:" +
-            this.saveHeaderData.year +
-            "年第" +
-            this.saveHeaderData.period +
-            "周"),
+          text:this.$t('report.period_week',[this.saveHeaderData.year,this.saveHeaderData.period]),
         },
       };
     },
@@ -383,44 +337,24 @@ export default {
       return {
         relevancy: {
           name: this.$t('report.thisWeekOrderTop10'),
-          text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
-           ("客流周期:" +
-            this.saveHeaderData.year +
-            "年第" +
-            this.saveHeaderData.period +
-            "周"),
+          text:this.$t('report.period_week',[this.saveHeaderData.year,this.saveHeaderData.period]),
         },
         inversion: {
           name:this.$t('report.thisWeekOrderConversionTop10'),
-          text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
-            ("客流周期:" +
-            this.saveHeaderData.year +
-            "年第" +
-            this.saveHeaderData.period +
-            "周"),
+          text:this.$t('report.period_week',[this.saveHeaderData.year,this.saveHeaderData.period]),
         },
       };
     },
     dwellTitle() {
       return {
         name: this.$t('report.thisWeekDwellTimeTop10'),
-        text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
-          ("客流周期:" +
-          this.saveHeaderData.year +
-          "年第" +
-          this.saveHeaderData.period +
-          "周"),
+        text:this.$t('report.period_week',[this.saveHeaderData.year,this.saveHeaderData.period]),
       };
     },
     formatDwellStoreTitle() {
       return {
         name: this.$t('report.thisWeekDwellTimeStoreTop10'),
-        text:this.language==='en-US'?(`Passenger flow Cyc:Week ${this.saveHeaderData.period},${this.saveHeaderData.year}`):
-          ("客流周期:" +
-          this.saveHeaderData.year +
-          "年第" +
-          this.saveHeaderData.period +
-          "周"),
+        text:this.$t('report.period_week',[this.saveHeaderData.year,this.saveHeaderData.period]),
       };
     },
     ratioTableColumn(){
@@ -722,12 +656,7 @@ export default {
           moment(start).format("MM.DD") + " - " + moment(end).format("MM.DD"),
         week: "",
         type: "week",
-        yester:
-        this.language === 'en-US'?`Week ${moment(yester).format("WW")},${moment(yester).format("YYYY")}`:
-         ( moment(yester).format("YYYY") +
-          "年第" +
-          moment(yester).format("WW") +
-          "周"),
+        yester:this.$t('datepicker_format_display',[moment(yester).format("YYYY"),moment(yester).format("WW")]),
         reportDate:
           moment(value)
             .startOf("isoweek")
@@ -846,33 +775,9 @@ export default {
       this.trendChartData.remarkData = [];
       let type = smooth.ratio > 0 ? this.$t("report.growth") : this.$t("report.decrease");
       let type2 = maxHighest.ratio > 0 ? this.$t("report.growth") : this.$t("report.decrease");
+      let text1 = this.$t('report.week_summary.summary1',[smooth.date,type,smooth.enter,Math.abs(smooth.ratio)])
+      let text2 = this.$t('report.week_summary.summary2',[maxHighest.date,type2,maxHighest.enter,Math.abs(maxHighest.ratio)])
 
-      let text1 =this.language==='en-US'?(
-              `On ${smooth.date}, the passenger flow ${type} steadily, reaching ${smooth.enter} people, an ${type} of ${Math.abs(smooth.ratio)}% compared to the previous week`
-              ):
-        ("本周" +
-        smooth.date +
-        "客流" +
-        type +
-        "平稳，为" +
-        smooth.enter +
-        "人次，比上周环比" +
-        type +
-        Math.abs(smooth.ratio) +
-        "%");
-      let text2 =this.language==='en-US'?(
-              `The passenger flow ${type2} reached its peak on ${maxHighest.date}, with ${maxHighest.enter} people, a ${Math.abs(maxHighest.ratio)}% ${type2} compared to the previous week's month on month growth`
-              ):
-        ("本周" +
-        maxHighest.date +
-        "客流" +
-        type2 +
-        "达到顶峰，为" +
-        maxHighest.enter +
-        "人次，比上周环比" +
-        type2 +
-        Math.abs(maxHighest.ratio) +
-        "%");
       if (smooth.ratio !== "") this.trendChartData.remarkData.push(text1);
       if (maxHighest.ratio !== "") this.trendChartData.remarkData.push(text2);
     },

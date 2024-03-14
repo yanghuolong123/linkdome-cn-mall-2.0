@@ -7,9 +7,9 @@
           <icons :type="item.icon" :size='28'  :color="item.color" class="icons"></icons>
         </div>
       </div>
-      <div class="right">
+      <div class="right flex-column">
         <p class="title">{{ $t(item.title) }}</p>
-        <p class="number">{{Number(item.total1).toLocaleString()}}</p>
+        <p class="number m-t-20">{{Number(item.total1).toLocaleString()}}</p>
       </div>
     </template>
 
@@ -20,7 +20,7 @@
             <icons :type="item.icon" :size='28'  :color="item.color" class="icons"></icons>
           </div>
         </div>
-        <div class="right">
+        <div class="right flex-column">
           <p class="title">{{ $t(item.title) }}</p>
         </div>
       </div>
@@ -84,39 +84,36 @@ export default {
   flex-wrap: wrap;
   border-radius:5%;
   .left{
-    width:46%;
+    width:40%;
+    position relative
     .circles{
       width:60px;
       height:60px;
       border-radius:50%;
-      position:relative;
+      position:absolute;
         left:50%;
         top:50%;
-        margin-top:-30px;
-        margin-left:-30px;
+        transform translate(-50%,-50%)
       .icons{
         position:absolute;
         left:50%;
         top:50%;
-        margin-top:-20px;
-        margin-left:-14px;
+        transform translate(-50%,-50%)
       }
     }
   }
   .right{
-    width:54%;
+    flex: 1;
+    justify-content :center;
+
     .title{
-        position: relative;
-        top: 30%;
-        left: 0%;
+
         font-size: 18px;
         color: #2B2A2A;
         font-weight: bold;
     }
     .number{
-        position: relative;
-        top: 46%;
-        left: 0%;
+
         font-size: 18px;
         color: #3E3C3C;
         font-weight: 400;

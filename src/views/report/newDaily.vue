@@ -408,11 +408,11 @@
           }, {
             id: 8,
             count: 1,
-            name: `${this.$t('report.storeEnter')}-${this.$t('无序')}`,
+            name: `${this.$t('report.storeEnter')}-${this.$t('report.unordered')}`,
           }, {
             id: 9,
             count: 1,
-            name: `${this.$t('report.storeEnter')}-${this.$t('有序')}`,
+            name: `${this.$t('report.storeEnter')}-${this.$t('report.orderly')}`,
           }, {
             id: 10,
             count: 1,
@@ -728,51 +728,12 @@
         let enterNumber = this.trendChartData.option.series[0].data
         let yestNum = this.trendChartData.option.series[1].data
         let weekNum = this.trendChartData.option.series[2].data
-        this.trendChartData.remarkData = this.language === 'en-US' ? [
-          `After opening for an hour, the passenger flow was ${enterNumber[0].toLocaleString()} people on the same day, ${yestNum[0].toLocaleString()} people yesterday, and ${weekNum[0].toLocaleString()} people on the same day last week`,
-          `One hour before the end of business, the passenger flow was ${enterNumber[enterNumber.length - 1].toLocaleString()} on the same day, ${yestNum[yestNum.length - 1].toLocaleString()} on the same day yesterday, and ${weekNum[weekNum.length - 1].toLocaleString()} on the same day last week`,
-          `On the same day, the peak passenger flow reached ${highest.number.toLocaleString()} people from ${highest.time} to ${(highest.time + 1)}; Yesterday from ${highestYest.time} to ${(highestYest.time + 1)}, the peak passenger flow reached ${highestYest.number.toLocaleString()} people; Last week, from ${(highestWeek.time ? highestWeek.time : 0)} to ${highestWeek.time + 1} on the same day, the peak passenger flow reached ${highestWeek.number.toLocaleString()} people`
-        ] : [
-          '开始营业后一小时间客流量 当日 ' +
-          enterNumber[0].toLocaleString() +
-          '人次' +
-          ' 昨日 ' +
-          yestNum[0].toLocaleString() +
-          '人次' +
-          ' 上周同日 ' +
-          +weekNum[0].toLocaleString() +
-          '人次',
-          '结束营业前一小时间客流量 当日 ' +
-          enterNumber[enterNumber.length - 1].toLocaleString() +
-          '人次' +
-          ' 昨日 ' +
-          yestNum[yestNum.length - 1].toLocaleString() +
-          '人次' +
-          ' 上周同日 ' +
-          weekNum[weekNum.length - 1].toLocaleString() +
-          '人次',
-          '当日' +
-          highest.time +
-          '点到' +
-          (highest.time + 1) +
-          '点达到客流峰值' +
-          highest.number.toLocaleString() +
-          '人次；' +
-          '昨日' +
-          highestYest.time +
-          '点到' +
-          (highestYest.time + 1) +
-          '点达到客流峰值' +
-          highestYest.number.toLocaleString() +
-          '人次；' +
-          '上周同日' +
-          (highestWeek.time ? highestWeek.time : 0) +
-          '点到' +
-          (highestWeek.time + 1) +
-          '点达到客流峰值' +
-          highestWeek.number.toLocaleString() +
-          '人次',
+        this.trendChartData.remarkData = [
+          this.$t('report.summary.summary1',[enterNumber[0].toLocaleString(),yestNum[0].toLocaleString(),weekNum[0].toLocaleString()]),
+          this.$t('report.summary.summary2',[enterNumber[enterNumber.length - 1].toLocaleString(),yestNum[yestNum.length - 1].toLocaleString(),weekNum[weekNum.length - 1].toLocaleString()]),
+          this.$t('report.summary.summary3',[highest.time,(highest.time + 1),highest.number.toLocaleString(),highestYest.time,(highestYest.time + 1),highestYest.number.toLocaleString(),(highestWeek.time ? highestWeek.time : 0),(highestWeek.time + 1),highestWeek.number.toLocaleString()])
         ]
+
       },
       gateDataList (gateData) {
         this.gateChartData.option = _.cloneDeep(this.enterOption)

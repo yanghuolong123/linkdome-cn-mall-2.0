@@ -34,14 +34,11 @@
         <vs-spacer></vs-spacer>
         <div class="flex-center">
           <div v-show="comprotModel!==0&&weathers.id" class="weather-box flex-center">
-            <span
+            <span class="flex-center"
             >{{$t('city')}}:&nbsp;{{ weathers.city_name }}&nbsp; &nbsp;| &nbsp; &nbsp;
-              <img
-              style="width:20px;height:20px;"
-              :src="weathers.weather_icon"
-            />
-              &nbsp;{{ weathers.condition }}&nbsp;
-            {{ weathers.low_temperature }}℃-{{ weathers.high_temperature }}℃
+              <img style="width:20px;height:20px;" :src="weathers.weather_icon"/>
+<!--              &nbsp;{{ weathers.condition }}&nbsp;-->
+            <span class="m-l-10">{{ weathers.low_temperature }}℃-{{ weathers.high_temperature }}℃</span>
             </span>
 
           </div>
@@ -207,7 +204,6 @@ export default {
   mounted() {
     var GroupCompany = _.find(this.menuList, ["name", "Dashboard"]).subpagesList;
     GroupCompany = _.find(GroupCompany, ["name", "GroupCompany"]).id + "";
-    console.log(GroupCompany)
     var showCompany;
     if (this.$store.state.user.role_id < 3) {
       this.showCompany = true;
@@ -254,7 +250,6 @@ export default {
         : (showCompany = false); // 判断是否显示集团
       this.showCompany = showCompany;
       let role_property = this.$store.state.user.checklist;
-      let allBzid = this.$store.state.user.bzid;
       if (role_property.length) {
         this.comprotList = [];
         this.comprotModel = "";
@@ -264,11 +259,6 @@ export default {
             text: data.name,
             value: 0,
             img: data.map_url,
-            show_actual_val:data.show_actual_val,
-            show_add_count:data.show_add_count,
-            show_arrival_dist:data.show_mod.show_arrival_dist === 'true',//是否显示首页的到店次数
-            show_new_old_customer:data.show_mod.show_new_old_customer === 'true',//是否显示首页的新老顾客
-            show_counting_demension:data.show_counting_demension,
           };
           this.comprotList.push(obj);
         }
@@ -280,6 +270,9 @@ export default {
                 bzId: list.bzid,
                 value: list.property_id,
                 img: list.map_url,
+                show_actual_val:list.show_actual_val,
+                show_add_count:list.show_add_count,
+                show_counting_demension:data.show_counting_demension,
                 show_arrival_dist:list.show_mod.show_arrival_dist === 'true',//是否显示首页的到店次数
                 show_new_old_customer:list.show_mod.show_new_old_customer === 'true',//是否显示首页的新老顾客
               };
@@ -287,10 +280,13 @@ export default {
             }
           });
         }
-        this.$store.commit("headerData", this.comprotList[0] || {});
+        const lastProperty = _.find(this.comprotList,o=>{
+          return o.value === this.$store.state.home.headerAction
+        })
+        this.$store.commit("headerData", lastProperty||this.comprotList[0]||{});
         this.showCompany = this.comprotList.length > 1;
-        this.comprotModel = this.$store.state.home.headerAction;
-        this.$store.commit("headerImg", this.comprotList[0].img);
+        this.comprotModel = lastProperty.value || this.comprotList[0].value;
+        this.$store.commit("headerImg", lastProperty.img);
         this.$store.commit("saveComprotList", this.comprotList);
       }
     }

@@ -405,13 +405,13 @@ export default {
           let weather = "";
           if (w && w.id) {
             if (w.type === 1)
-              weather = `   温度${w.temperature}℃  ${
+              weather = `   ${this.$t('temperature')}${w.temperature}℃  ${
                 w.condition
               }  <img style="width:20px;height:20px;vertical-align: middle;" src="${
                 w.weather_icon
               }"></img>`;
             else
-              weather = `   温度${w.low_temperature}℃-${w.high_temperature}℃  ${
+              weather = `   ${this.$t('temperature')}${w.low_temperature}℃-${w.high_temperature}℃  ${
                 w.condition
               }  <img style="width:20px;height:20px;vertical-align: middle;" src="${
                 w.weather_icon

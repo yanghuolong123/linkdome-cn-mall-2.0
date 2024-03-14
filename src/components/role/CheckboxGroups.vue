@@ -10,7 +10,8 @@
       </Checkbox>
     </div>
     <CheckboxGroup v-model="checkValues" class="checkList" @on-change="onchange">
-      <Checkbox class="margin-t-b ellipsis-1" :title="$t(item.name)" :label="$t(item.name)" :disabled="disabled" v-for=" item in checkDatas.subpagesList"></Checkbox>
+      <Checkbox class="margin-t-b ellipsis-1" :title="$t(item.name)" :label="$t(item.name)"
+                :disabled="disabled" v-for=" item in checkDatas.subpagesList"></Checkbox>
     </CheckboxGroup>
   </div>
 </template>
@@ -49,9 +50,9 @@ export default {
       }
       let checkValues = []
       this.checkAll = !!this.checkData.enable
-      this.checkData.subpagesList.forEach(function (m) {
+      this.checkData.subpagesList.forEach( (m)=> {
         if (m.enable) {
-          checkValues.push(m.cname)
+          checkValues.push(this.$t(m.name))
         }
       })
       this.checkValues = checkValues
@@ -70,8 +71,8 @@ export default {
       this.indeterminate = false
 
       if (this.checkAll) {
-        this.checkValues = this.checkData.subpagesList.map(function (m) {
-          return m.cname
+        this.checkValues = this.checkData.subpagesList.map( (m)=> {
+          return this.$t(m.name)
         })
         this.checkData.enable = 1
         this.checkData.subpagesList.forEach(function (m) {
@@ -99,8 +100,8 @@ export default {
         if (this.checkData.subpagesList) {
           length = this.checkData.subpagesList.length
 
-          this.checkData.subpagesList.forEach(function (m) {
-            let findIndex = _.indexOf(data, m.cname)
+          this.checkData.subpagesList.forEach( (m)=> {
+            let findIndex = _.indexOf(data, this.$t(m.name))
             if (findIndex > -1) {
               m.enable = 1
               that.checkData.enable = 1
