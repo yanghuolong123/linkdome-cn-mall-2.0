@@ -2,6 +2,7 @@
     "english": "English",
     "chinese": "简体中文",
     "japanese": "日本語",
+    "language": "language",
     "mainTitle": "Smart mall management system",
     "fn": {
         "_": "{0} {1}",
@@ -526,6 +527,7 @@
         "thisWeekStoreTop10": "Comparative analysis of TOP10 store footfall this week",
         "thisPeriodStoreTop10Compate": "Comparative analysis of the top 10 store footfall",
         "todayStoreTop10Compare": "Today's Comparative analysis of the top 10 store footfall",
+        "todayFloorStoreTop10": "Customer flow analysis of the top 10 stores on each floor on the day",
         "thisWeekFloorStoreTop10": "Visitor flow analysis of TOP10 stores on each floor this week",
         "thisMonthFloorStoreTop10": "Visitor flow analysis of TOP10 stores on each floor this month",
         "thisPeriodFloorStoreTop10": "Visitor flow analysis of TOP10 stores on each floor in this issue",
