@@ -24,6 +24,9 @@
           }, {
             value:'zh-CN',
             name:'chinese'
+          }, {
+            value:'ja-JP',
+            name:'japanese'
           }
         ]
       }
@@ -32,7 +35,8 @@
       translatedText () {
         const map = {
           'en-US': this.$t('english'),
-          'zh-CN': this.$t('chinese')
+          'zh-CN': this.$t('chinese'),
+          'ja-JP': this.$t('japanese'),
         }
         return map[this.$i18n.locale]
       }

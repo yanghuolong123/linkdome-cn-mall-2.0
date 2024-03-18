@@ -14,9 +14,12 @@ import VueI18n from 'vue-i18n'
 
 import zh from './lang/zh_CN.json'
 import en from './lang/en.json'
+import ja from './lang/ja.json'
 import ivuZh from 'view-design/dist/locale/zh-CN';
 import ivuEn from 'view-design/dist/locale/en-US';
+import ivuJa from 'view-design/dist/locale/ja-JP';
 import enLocale from 'element-ui/lib/locale/lang/en'
+import jaLocale from 'element-ui/lib/locale/lang/ja'
 import zhLocale from 'element-ui/lib/locale/lang/zh-CN'
 Vue.use(VueI18n);
 
@@ -26,7 +29,8 @@ const i18n = new VueI18n({
 	silentTranslationWarn: true,
   messages: {
 		'zh-CN': Object.assign(zh, zhLocale,ivuZh),
-		'en-US': Object.assign(en, enLocale,ivuEn)
+		'en-US': Object.assign(en, enLocale,ivuEn),
+		'ja-JP': Object.assign(ja, jaLocale,ivuJa),
 	}
 })
 
