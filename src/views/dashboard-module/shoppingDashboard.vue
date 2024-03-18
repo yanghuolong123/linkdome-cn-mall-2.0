@@ -178,7 +178,6 @@ import { mapMutations,mapState } from "vuex";
 import Moment from "moment";
 import _ from "lodash";
 import { gotInnerRange, downloadEx } from "@/libs/util";
-import customerNameDict from "../home/seriesDict";
 import salesMixin from "../operation/salseMixin";
 import salesDict from "@/views/home/components/salesIndicatorDict.js";
 import exportMenu from "@/views/operation/components/ExportMenu.vue";
@@ -281,6 +280,54 @@ export default {
       companyId: state => state.user.companyId,
       headerData:state => state.home.headerData,
     }),
+    customerNameDict(){
+      return {
+        newNum: {
+          name: this.$t('newCustomer'),
+          icon: 'kehulianxiren1'
+        },
+        oldNum: {
+          name:  this.$t('reCustomer'),
+          icon: 'kehulianxiren'
+        },
+        ordinaryNum: {
+          name: '普通顾客',
+          icon: 'xingming'
+        },
+        vipNum: {
+          name: 'VIP顾客',
+          icon: 'shengjivip'
+        },
+        clertNum: {
+          name: '工作人员',
+          icon: 'yingpinzhiwei'
+        },
+        customerNum: {
+          name: '顾客',
+          icon: 'Group-'
+        },
+        '1': {
+          name: this.$t('fn.times',[1]),
+          icon: 'circle'
+        },
+        '2': {
+          name:this.$t('fn.times',[2]),
+          icon: 'circle'
+        },
+        '3': {
+          name: this.$t('fn.times',[3]),
+          icon: 'circle'
+        },
+        '4': {
+          name: this.$t('fn.times',[4]),
+          icon: 'circle'
+        },
+        '5': {
+          name: this.$t('over5times'),
+          icon: 'circle'
+        }
+      }
+    },
     tootipText() {
       return this.$t("passages.tootipText7");
     },
@@ -346,8 +393,8 @@ export default {
           chartObj.labels = {
             name: this.$t("type"),
             key: e,
-            data: Object.keys(data[e]).map((e) => customerNameDict[e].name),
-            icons: Object.keys(data[e]).map((e) => customerNameDict[e].icon),
+            data: Object.keys(data[e]).map((e) => this.customerNameDict[e].name),
+            icons: Object.keys(data[e]).map((e) => this.customerNameDict[e].icon),
           };
           chartObj.series = Object.values(data[e]);
         }

@@ -138,7 +138,6 @@ import { mapMutations } from "vuex";
 import Moment from "moment";
 import _ from "lodash";
 import { gotInnerRange } from "@/libs/util";
-import customerNameDict from "../home/seriesDict";
 import salesMixin from "../operation/salseMixin";
 import salesDict from "@/views/home/components/salesIndicatorDict.js";
 import NP from "number-precision";
