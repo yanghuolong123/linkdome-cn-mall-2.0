@@ -19,7 +19,7 @@
           <span>{{time}}</span>
         </template>
       </div>
-      <div class="tab-bar-right">
+      <div class="tab-bar-right flex">
         <slot name="select"></slot>
         <ul>
           <li
@@ -156,7 +156,6 @@ export default {
   .tab-bar
     display flex
     padding 27px 10px 10px 19px
-    flex-wrap wrap
     justify-content space-between
     position relative
     .tab-bar-left

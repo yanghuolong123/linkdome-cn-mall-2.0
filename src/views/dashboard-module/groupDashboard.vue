@@ -139,7 +139,6 @@ import Moment from "moment";
 import _ from "lodash";
 import { gotInnerRange } from "@/libs/util";
 import salesMixin from "../operation/salseMixin";
-import salesDict from "@/views/home/components/salesIndicatorDict.js";
 import NP from "number-precision";
 export default {
   name: "groupDashboard",
@@ -290,10 +289,79 @@ export default {
       var arr = [...this.historyKpiData, ...this.summarySalse];
       return arr; // 合并数组 组成一个新的数组
     },
+    salesDict(){
+      return {
+        SaleAmount: {
+          name: this.$t('salesVolume'),
+          icon: 'dangrixiaoshoue',
+          color: '#F64F61',
+          unit: this.$t('rmbUnit'),
+          yaxis: {
+            title: {
+              text: this.$t('salesWithUnit')
+            },
+            labels: {
+              formatter (value) {
+                return value !== null ? value.toLocaleString() : ''
+              }
+            }
+          }
+        },
+        SquaerMetre: {
+          name: this.$t('floorEffect'),
+          icon: 'xingxiaoxiaoguo',
+          color: '#1DD9D1',
+          unit: this.$t('flatEffUnit'),
+          yaxis: {
+            title: {
+              text: this.$t('flatEffWithUnit')
+            },
+            labels: {
+              formatter (value) {
+                return value !== null ? value.toLocaleString() : ''
+              }
+            }
+          }
+        },
+        CloseRate: {
+          name: this.$t('turnoverRate'),
+          icon: 'chengjiaohuafen',
+          color: '#857AEF',
+          unit: '(%)',
+          yaxis: {
+            title: {
+              text:  this.$t('turnoverRate')+'（%）'
+            },
+            labels: {
+              formatter (value) {
+                var size = Math.floor(Number(value) * 100) / 100
+                if (typeof (size) === 'number') { return `${size}%` }
+              }
+            }
+          }
+        },
+        UnitPrice: {
+          name: this.$t('UnitPrice'),
+          icon: 'jiage',
+          color: '#33B3ED',
+          unit:  this.$t('rmbUnit'),
+          yaxis: {
+            title: {
+              text: this.$t('cusPriceWithUnit')
+            },
+            labels: {
+              formatter (value) {
+                return value !== null ? value.toLocaleString() : ''
+              }
+            }
+          }
+        }
+      }
+    },
     rankingIndicators() {
       return {
         ...{ enter: { name: "Incoming" }, dwell: { name: "dwellTime" } },
-        ...salesDict,
+        ...this.salesDict,
       };
     },
     filterFootfallData() {
@@ -357,7 +425,7 @@ export default {
           },
         },
       };
-      return { ...footfallYaxis, ...salesDict };
+      return { ...footfallYaxis, ...this.salesDict };
     },
   },
   mounted() {

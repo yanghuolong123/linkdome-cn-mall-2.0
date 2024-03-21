@@ -397,7 +397,7 @@
         "day": "空",
         "sales_yuan": "@:(営業)（@:(元)）",
         "Data_indicators": "データ指標:",
-        "enter": "@.capitalize:(入力)",
+        "enter": "@.capitalize:(enter)",
         "sales": "@.capitalize:sales",
         "salesVolume": "@.capitalize:salesVolume(@:(USD))"
     },
