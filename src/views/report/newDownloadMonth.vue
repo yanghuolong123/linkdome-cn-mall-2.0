@@ -185,7 +185,7 @@ import {
   newReportMonthlyGate,
 } from "@/api/new_report";
 
-import { setToken } from "@/libs/util";
+import { setToken,replaceBraces } from "@/libs/util";
 import axios from "axios";
 import _ from "lodash";
 import Bus from "@/libs/bus.js";
@@ -811,9 +811,12 @@ export default {
         averageObj,
         lastObj,
       ];
-      this.trendChartData.remarkData = remarkData.comment
-        ? remarkData.comment
-        : [];
+      this.trendChartData.remarkData = [];
+      remarkData.comment.forEach(o=>{
+        this.trendChartData.remarkData.push(replaceBraces(o,(match,p1)=>{
+          return this.$t(p1)||match
+        }))
+      })
     },
     trendTableData(data) {
       this.ratioTableData = [];
@@ -903,7 +906,12 @@ export default {
       if(this.showLastYearData){
         this.gateTop10.option.series.push(threeObj)
       }
-      this.gateTop10.remarkData = data.comment ? data.comment : [];
+      this.gateTop10.remarkData = []
+      data.comment.forEach(o=>{
+        this.gateTop10.remarkData.push(replaceBraces(o,(match,p1)=>{
+          return this.$t(p1)||match
+        }))
+      })
     },
     shopDataList(data) {
       this.shop10Data.option = _.cloneDeep(this.enterOption);
@@ -934,7 +942,12 @@ export default {
         this.shop10Data.option.xAxis.categories.push(list.name);
       });
       this.shop10Data.option.series = [oneObj, twoObj];
-      this.shop10Data.remarkData = data.comment ? data.comment : [];
+      this.shop10Data.remarkData = []
+      data.comment.forEach(o=>{
+        this.shop10Data.remarkData.push(replaceBraces(o,(match,p1)=>{
+          return this.$t(p1)||match
+        }))
+      })
     },
     floorGateData(data) {
       this.floorGateChartData = [];

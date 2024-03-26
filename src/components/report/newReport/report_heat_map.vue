@@ -80,7 +80,6 @@ export default {
   },
   methods: {
      initFlowDstrbtCharts (data = [], maxAvg = 100, workingtime = []) {
-       console.log(data)
        let dome = document.getElementById(`${'passengerFlowDistribution'+this.page}`)
        if(dome){
           flowDistributionCharts = echarts.init(dome)

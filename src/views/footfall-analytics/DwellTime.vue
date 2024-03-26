@@ -425,12 +425,9 @@ export default {
         .then((res) => {
           // 表格数据
           that.tableList = [];
-          console.log(res.data.data.zones)
           res.data.data.zones.map((d) => {
             var obj = {};
             obj.name = d.name;
-            // todo
-            //接口数据 类型为中文  d.type
             obj.type = this.$t(d.type == null ? "gate" : d.type);
             if (!this.oParams.isDateCompare()) obj.time = "";
             else {
@@ -440,7 +437,12 @@ export default {
                 if (arr[0] === arr[1]) {
                   date = arr[0];
                 } else {
-                  date = `${arr[0]} - ${arr[1]}`;
+                  if(arr[1]){
+                    date = `${arr[0]} - ${arr[1]}`;
+                  }else {
+                    date = arr[0];
+                  }
+
                 }
               }
               obj.time = d.date ? date : (obj.time = " ");

@@ -189,6 +189,7 @@
     newReportDwellStore,
     newReportDwellFormat,
   } from '@/api/new_report'
+  import {replaceBraces} from '../../libs/util'
 
   export default {
     name: 'report-day',
@@ -809,7 +810,12 @@
         if (this.showLastYearData) {
           this.gateChartData.option.series.splice(-1, 0, lastObj)
         }
-        this.gateChartData.remarkData = gateData.comment ? gateData.comment : []
+        this.gateChartData.remarkData = []
+        gateData.comment.forEach(o=>{
+          this.gateChartData.remarkData.push(replaceBraces(o,(match,p1)=>{
+            return this.$t(p1)||match
+          }))
+        })
       },
       shopDataList (shopData) {
         this.shopChartData.option = _.cloneDeep(this.enterOption)
@@ -857,7 +863,12 @@
           })
         }
         this.shopChartData.option.series = [currentObj, yesterObj, lastObj]
-        this.shopChartData.remarkData = shopData.comment ? shopData.comment : []
+        this.shopChartData.remarkData = []
+        shopData.comment.forEach(o=>{
+          this.shopChartData.remarkData.push(replaceBraces(o,(match,p1)=>{
+            return this.$t(p1)||match
+          }))
+        })
       },
       headerDate (value) {
         let headerDate = {

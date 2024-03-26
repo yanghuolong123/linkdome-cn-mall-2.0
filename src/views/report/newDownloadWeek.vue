@@ -158,7 +158,7 @@
   import moment from 'moment'
   import _ from 'lodash'
   import Bus from '@/libs/bus.js'
-  import { setToken } from '@/libs/util'
+  import { setToken,replaceBraces } from '@/libs/util'
   import axios from 'axios'
   import mixins from './reportMixin.js'
   import reportGateTable from '@/components/report/newReport/new_report_week_gateTable'
@@ -907,7 +907,12 @@
         if (this.showLastYearData) {
           this.gateChartData.option.series.push(lastObj)
         }
-        this.gateChartData.remarkData = gateData.comment ? gateData.comment : []
+        this.gateChartData.remarkData = []
+        gateData.comment.forEach(o=>{
+          this.gateChartData.remarkData.push(replaceBraces(o,(match,p1)=>{
+            return this.$t(p1)||match
+          }))
+        })
       },
       shopDataList (shopData) {
         this.shopChartData.option = _.cloneDeep(this.enterOption)
@@ -939,7 +944,12 @@
           })
         }
         this.shopChartData.option.series = [currentObj, yesterObj]
-        this.shopChartData.remarkData = shopData.comment ? shopData.comment : []
+        this.shopChartData.remarkData = []
+        shopData.comment.forEach(o=>{
+          this.shopChartData.remarkData.push(replaceBraces(o,(match,p1)=>{
+            return this.$t(p1)||match
+          }))
+        })
       },
       floorDataList (data) {
         this.allFloorStore = _.chunk(data, 8)

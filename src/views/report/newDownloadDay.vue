@@ -139,7 +139,7 @@ import reportChartMulti from "@/components/report/newReport/report_chart_multi";
 import moment from "moment";
 import _ from "lodash";
 import Bus from "@/libs/bus.js";
-import { setToken } from "@/libs/util";
+import { setToken,replaceBraces } from "@/libs/util";
 import axios from "axios";
 import mixins from "./reportMixin.js";
 
@@ -794,7 +794,12 @@ export default {
       if(this.showLastYearData){
         this.gateChartData.option.series.splice(-1,0,lastObj)
       }
-      this.gateChartData.remarkData = gateData.comment;
+      this.gateChartData.remarkData = []
+      gateData.comment.forEach(o=>{
+        this.gateChartData.remarkData.push(replaceBraces(o,(match,p1)=>{
+          return this.$t(p1)||match
+        }))
+      })
     },
     shopDataList(shopData) {
       this.shopChartData.option = _.cloneDeep(this.enterOption);
@@ -841,7 +846,12 @@ export default {
         });
       }
       this.shopChartData.option.series = [currentObj, yesterObj, lastObj];
-      this.shopChartData.remarkData = shopData.comment;
+      this.shopChartData.remarkData = []
+      shopData.comment.forEach(o=>{
+        this.shopChartData.remarkData.push(replaceBraces(o,(match,p1)=>{
+          return this.$t(p1)||match
+        }))
+      })
     },
 
     floorDataList(data) {

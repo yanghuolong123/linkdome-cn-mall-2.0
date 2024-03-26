@@ -663,3 +663,8 @@ export const mf = function mf(textgroup, fn) {
   }
   return false;
 };
+export const replaceBraces= function (str, replacement) {
+  // 正则表达式匹配{{和}}，并且它们之间可以有任何字符（包括另一个大括号表示字面量）
+  const regex = /{{([^}{}]*)}}/g;
+  return str.replace(regex, replacement);
+}

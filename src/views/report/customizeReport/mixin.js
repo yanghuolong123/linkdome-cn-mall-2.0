@@ -12,7 +12,7 @@ import reportChartMulti from '@/components/report/newReport/report_chart_multi'
 
 import reportGateTable from '@/components/report/newReport/new_report_week_gateTable'
 import moment from 'moment'
-import { getCompareDate } from '@/libs/util'
+import { getCompareDate,replaceBraces } from '@/libs/util'
 import Bus from '@/libs/bus.js'
 import { mapState } from "vuex";
 export default{
@@ -383,7 +383,12 @@ export default{
       if(this.showLastYearData){
         this.gateChartData.option.series.push(lastObj)
       }
-      this.gateChartData.remarkData = gateData.comment ? gateData.comment : []
+      this.gateChartData.remarkData = []
+      gateData.comment.forEach(o=>{
+        this.gateChartData.remarkData.push(replaceBraces(o,(match,p1)=>{
+          return this.$t(p1)||match
+        }))
+      })
     },
     shopDataList (shopData) {
       this.shopChartData.option = _.cloneDeep(this.enterOption)
@@ -415,7 +420,12 @@ export default{
         })
       }
       this.shopChartData.option.series = [currentObj, yesterObj]
-      this.shopChartData.remarkData = shopData.comment ? shopData.comment : []
+      this.shopChartData.remarkData = []
+      shopData.comment.forEach(o=>{
+        this.shopChartData.remarkData.push(replaceBraces(o,(match,p1)=>{
+          return this.$t(p1)||match
+        }))
+      })
     },
     floorDataList (data) {
       this.allFloorStore = []

@@ -1,6 +1,6 @@
 import moment from "moment";
 import _ from "lodash";
-import { getToken } from "@/libs/util";
+import { getToken,replaceBraces } from "@/libs/util";
 import axios from "axios";
 import NP from "number-precision";
 import { mapState } from "vuex";
@@ -298,8 +298,13 @@ export default {
       let tOTime = contrastData.occupancy.highest.timeRange;
       let tEDate = tETime.split(" ")[0] + " " + tETime.split(" ")[2];
       let tOPDate = tOTime.split(" ")[0] + " " + tOTime.split(" ")[2];
-      console.log(data)
-      let textList = Object.values(data.comment);
+
+      let textList = []
+      Object.values(data.comment).forEach(o=>{
+        textList.push(replaceBraces(o,(match,p1)=>{
+          return this.$t(p1)||match
+        }))
+      })
       let type = this.saveHeaderData.type === "daily" ? this.$t('report.hour') : this.$t('report.day');
 
       this.enterData = [
