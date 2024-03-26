@@ -225,16 +225,11 @@ export default {
           if (c.key === "temperature") {
             let w = this.weathers[index];
             if (w && w.id) {
-              if (w.type) itemData = w.temperature + "℃" + " " + w.condition;
+              // if (w.type) itemData = w.temperature + "℃" + " " + w.condition;
+              if (w.type) itemData = w.temperature + "℃";
               else
-                itemData =
-                  w.low_temperature +
-                  "℃" +
-                  "-" +
-                  w.high_temperature +
-                  "℃" +
-                  " " +
-                  w.condition;
+                // itemData = w.low_temperature + "℃" + "-" + w.high_temperature + "℃" + " " + w.condition;
+                itemData = w.low_temperature + "℃" + "-" + w.high_temperature + "℃"
             } else {
               itemData = "-";
             }
@@ -405,17 +400,11 @@ export default {
           let weather = "";
           if (w && w.id) {
             if (w.type === 1)
-              weather = `   ${this.$t('temperature')}${w.temperature}℃  ${
-                w.condition
-              }  <img style="width:20px;height:20px;vertical-align: middle;" src="${
-                w.weather_icon
-              }"></img>`;
+              // weather = `   ${this.$t('temperature')}${w.temperature}℃  ${w.condition}  <img style="width:20px;height:20px;vertical-align: middle;" src="${w.weather_icon}"></img>`;
+              weather = `   ${this.$t('temperature')}${w.temperature}℃  <img style="width:20px;height:20px;vertical-align: middle;" src="${w.weather_icon}"></img>`;
             else
-              weather = `   ${this.$t('temperature')}${w.low_temperature}℃-${w.high_temperature}℃  ${
-                w.condition
-              }  <img style="width:20px;height:20px;vertical-align: middle;" src="${
-                w.weather_icon
-              }"></img>`;
+              // weather = `   ${this.$t('temperature')}${w.low_temperature}℃-${w.high_temperature}℃  ${w.condition}  <img style="width:20px;height:20px;vertical-align: middle;" src="${w.weather_icon}"></img>`;
+              weather = `   ${this.$t('temperature')}${w.low_temperature}℃-${w.high_temperature}℃  <img style="width:20px;height:20px;vertical-align: middle;" src="${w.weather_icon}"></img>`;
           }
           if (Array.isArray(this.tooltipUnit))
             unit = this.tooltipUnit[p.seriesIndex].name;

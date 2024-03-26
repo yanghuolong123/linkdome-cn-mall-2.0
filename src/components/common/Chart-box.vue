@@ -144,17 +144,17 @@
               let w1 = this.weathers1[i]
               if (w1 && w1.id) {
                 if (w1.type) {
-                  data[i]['temperature1'] =
-                    w1.temperature + '℃' + ' ' + w1.condition
+                  // data[i]['temperature1'] = w1.temperature + '℃' + ' ' + w1.condition
+                  data[i]['temperature1'] = w1.temperature + '℃'
                 } else {
                   data[i]['temperature1'] =
                     w1.low_temperature +
                     '℃' +
                     '-' +
                     w1.high_temperature +
-                    '℃' +
-                    ' ' +
-                    w1.condition
+                    '℃'
+                    // ' ' +
+                    // w1.condition
                 }
               } else {
                 data[i]['temperature1'] = '-'
@@ -163,17 +163,17 @@
               let w2 = this.weathers2[i]
               if (w2 && w2.id) {
                 if (w2.type) {
-                  data[i]['temperature2'] =
-                    w2.temperature + '℃' + ' ' + w2.condition
+                  // data[i]['temperature2'] = w2.temperature + '℃' + ' ' + w2.condition
+                  data[i]['temperature2'] = w2.temperature + '℃'
                 } else {
                   data[i]['temperature2'] =
                     w2.low_temperature +
                     '℃' +
                     '-' +
                     w2.high_temperature +
-                    '℃' +
-                    ' ' +
-                    w2.condition
+                    '℃'
+                    // ' ' +
+                    // w2.condition
                 }
               } else {
                 data[i]['temperature2'] = '-'
@@ -183,17 +183,17 @@
               let w = this.weathers1[i]
               if (w && w.id) {
                 if (w.type) {
-                  data[i]['temperature'] =
-                    w.temperature + '℃' + ' ' + w.condition
+                  // data[i]['temperature'] = w.temperature + '℃' + ' ' + w.condition
+                  data[i]['temperature'] = w.temperature + '℃'
                 } else {
                   data[i]['temperature'] =
                     w.low_temperature +
                     '℃' +
                     '-' +
                     w.high_temperature +
-                    '℃' +
-                    ' ' +
-                    w.condition
+                    '℃'
+                    // ' ' +
+                    // w.condition
                 }
               } else {
                 data[i]['temperature'] = '-'

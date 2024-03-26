@@ -35,7 +35,9 @@
         <div class="flex-center">
           <div v-show="comprotModel!==0&&weathers.id" class="weather-box flex-center">
             <span class="flex-center"
-            >{{$t('city')}}:&nbsp;{{ weathers.city_name }}&nbsp; &nbsp;| &nbsp; &nbsp;
+            >{{$t('city')}}:&nbsp;Xi'an
+<!--              {{ weathers.city_name }}-->
+              &nbsp; &nbsp;| &nbsp; &nbsp;
               <img style="width:20px;height:20px;" :src="weathers.weather_icon"/>
 <!--              &nbsp;{{ weathers.condition }}&nbsp;-->
             <span class="m-l-10">{{ weathers.low_temperature }}℃-{{ weathers.high_temperature }}℃</span>
